@@ -1,0 +1,3792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolboard</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%20%3Crect%20width%3D%22290%22%20height%3D%22290%22%20fill%3D%22%23444%22%20rx%3D%2210%22%20ry%3D%2210%22%20%2F%3E%20%20%3Cdefs%3E%20%20%20%20%3Cpattern%20id%3D%22peg-grid%22%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2230%22%20height%3D%2230%22%20patternUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%2210.5%22%20fill%3D%22%23000%22%20%2F%3E%20%20%20%20%3C%2Fpattern%3E%20%20%3C%2Fdefs%3E%20%20%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22275%22%20height%3D%22275%22%20fill%3D%22url(%23peg-grid)%22%20%2F%3E%20%20%3Cg%20fill%3D%22%23ff8%22%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    font-size: 12px;
+}
+
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10002;
+}
+
+header h1 {
+    font-size: 1.5rem;
+}
+
+.header-title-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-settings-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.header-settings-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.toolboard-version {
+    font-size: 10px;
+    opacity: 0.7;
+    font-weight: normal;
+    margin-left: 8px;
+    background: rgba(255,255,255,0.15);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.noteboard-settings {
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    padding: 12px;
+    z-index: 10001;
+    min-width: 250px;
+    display: none;
+    color: #333;
+}
+
+.noteboard-settings.open {
+    display: block;
+}
+
+.noteboard-settings label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.noteboard-settings input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.noteboard-settings input[type="text"]:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-controls button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.board-selector-wrapper {
+    position: relative;
+}
+
+#boardSelector {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background: #9b59b6;
+    color: white;
+    min-width: 150px;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 30px;
+}
+
+#boardSelector:hover {
+    background: #8e44ad;
+}
+
+.board-selector-wrapper::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 10px;
+    pointer-events: none;
+}
+
+#editVariablesBtn {
+    background: #3498db;
+    color: white;
+}
+
+#editVariablesBtn:hover {
+    background: #2980b9;
+}
+
+#addNoteBtn {
+    background: #27ae60;
+    color: white;
+}
+
+#addNoteBtn:hover {
+    background: #219a52;
+}
+
+#deleteBoardBtn {
+    background: #e74c3c;
+    color: white;
+}
+
+#deleteBoardBtn:hover {
+    background: #c0392b;
+}
+
+#deleteBoardBtn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+#importExportBtn {
+    background: #1abc9c;
+    color: white;
+}
+
+#importExportBtn:hover {
+    background: #16a085;
+}
+
+/* Import/Export Modal */
+.import-export-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10010;
+    justify-content: center;
+    align-items: center;
+}
+
+.import-export-modal.open {
+    display: flex;
+}
+
+.import-export-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.import-export-content h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.import-export-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.import-export-tab {
+    padding: 8px 16px;
+    border: none;
+    background: #ecf0f1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.import-export-tab.active {
+    background: #3498db;
+    color: white;
+}
+
+.import-export-note {
+    display: none;
+    margin-bottom: 15px;
+}
+
+.import-export-note.active {
+    display: block;
+}
+
+.import-export-note h3 {
+    margin-bottom: 10px;
+    color: #34495e;
+    font-size: 14px;
+}
+
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.export-option label {
+    flex: 1;
+}
+
+.export-btn, .import-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.export-btn {
+    background: #27ae60;
+    color: white;
+}
+
+.export-btn:hover {
+    background: #219a52;
+}
+
+.import-btn {
+    background: #3498db;
+    color: white;
+}
+
+.import-btn:hover {
+    background: #2980b9;
+}
+
+.checkbox-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.checkbox-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.checkbox-list label:hover {
+    background: #f8f9fa;
+}
+
+.import-textarea {
+    width: 100%;
+    height: 150px;
+    font-family: monospace;
+    font-size: 12px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.import-file-input {
+    margin-bottom: 10px;
+}
+
+.import-export-close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    color: #7f8c8d;
+    line-height: 1;
+}
+
+.import-export-close:hover {
+    color: #2c3e50;
+}
+
+.select-all-row {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.import-result {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.import-result.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.import-result.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+main#noteboard {
+    position: relative;
+    min-height: calc(100vh - 60px);
+    padding: 20px;
+}
+
+.note {
+    position: absolute;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: visible;
+    transition: box-shadow 0.2s;
+    min-width: 150px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Resize handles */
+.resize-handle {
+    position: absolute;
+    background: transparent;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+}
+
+.note:hover .resize-handle {
+    opacity: 1;
+}
+
+.resize-handle:hover {
+    background: rgba(52, 152, 219, 0.4);
+}
+
+.resize-handle.active {
+    background: rgba(52, 152, 219, 0.6);
+    opacity: 1;
+}
+
+/* Corner handles */
+.resize-handle-nw {
+    top: -4px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nw-resize;
+    border-radius: 4px 0 0 0;
+}
+
+.resize-handle-ne {
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: ne-resize;
+    border-radius: 0 4px 0 0;
+}
+
+.resize-handle-sw {
+    bottom: -4px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: sw-resize;
+    border-radius: 0 0 0 4px;
+}
+
+.resize-handle-se {
+    bottom: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: se-resize;
+    border-radius: 0 0 4px 0;
+}
+
+/* Edge handles */
+.resize-handle-n {
+    top: -4px;
+    left: 12px;
+    right: 12px;
+    height: 8px;
+    cursor: n-resize;
+}
+
+.resize-handle-s {
+    bottom: -4px;
+    left: 12px;
+    right: 12px;
+    height: 8px;
+    cursor: s-resize;
+}
+
+.resize-handle-w {
+    top: 12px;
+    bottom: 12px;
+    left: -4px;
+    width: 8px;
+    cursor: w-resize;
+}
+
+.resize-handle-e {
+    top: 12px;
+    bottom: 12px;
+    right: -4px;
+    width: 8px;
+    cursor: e-resize;
+}
+
+.note:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.note.dragging {
+    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    z-index: 1000 !important;
+}
+
+.note-header {
+    background: #34495e;
+    color: white;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    user-select: none;
+    flex-shrink: 0;
+    border-radius: 8px 8px 0 0;
+}
+
+.note-header:active {
+    cursor: grabbing;
+}
+
+.note-header .drag-handle {
+    opacity: 0.7;
+}
+
+.note-header .header-buttons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.note-header .header-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+    padding: 0;
+}
+
+.note:hover .header-btn {
+    opacity: 1;
+}
+
+.header-btn:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+.note.minimized .note-content {
+    display: none;
+}
+
+.note.minimized {
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.note.minimized .resize-handle {
+    display: none;
+}
+
+.note.minimized .note-header {
+    border-radius: 8px;
+}
+
+.minimize-btn.minimized {
+    transform: rotate(180deg);
+}
+
+/* Note settings popup */
+.note-settings {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    padding: 12px;
+    z-index: 10000;
+    min-width: 220px;
+    display: none;
+    color: #333;
+    font-weight: normal;
+}
+
+.note-settings.open {
+    display: block;
+}
+
+.note-settings label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.note-settings input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.note-settings input[type="text"]:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.color-picker-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.color-swatch.selected {
+    border-color: #333;
+}
+
+/* Content editor */
+.edit-content-btn {
+    width: 100%;
+    padding: 6px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.edit-content-btn:hover {
+    background: #2980b9;
+}
+
+.delete-note-btn {
+    width: 100%;
+    padding: 6px 12px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.delete-note-btn:hover {
+    background: #c0392b;
+}
+
+.content-editor-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 20000;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-editor-overlay.open {
+    display: flex;
+}
+
+.content-editor {
+    background: white;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1400px;
+    height: 90vh;
+    min-width: 500px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+}
+
+.content-editor-resize {
+    position: absolute;
+    background: transparent;
+    z-index: 10;
+}
+
+.content-editor-resize-e {
+    top: 10px;
+    bottom: 10px;
+    right: -4px;
+    width: 8px;
+    cursor: e-resize;
+}
+
+.content-editor-resize-s {
+    left: 10px;
+    right: 10px;
+    bottom: -4px;
+    height: 8px;
+    cursor: s-resize;
+}
+
+.content-editor-resize-se {
+    right: -4px;
+    bottom: -4px;
+    width: 16px;
+    height: 16px;
+    cursor: se-resize;
+}
+
+.content-editor-header {
+    padding: 15px 20px;
+    background: #34495e;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    user-select: none;
+}
+
+.content-editor-header:active {
+    cursor: grabbing;
+}
+
+.content-editor-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.content-editor-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.content-editor-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.content-editor-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.content-editor-resizer {
+    width: 6px;
+    background: #e0e0e0;
+    cursor: col-resize;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.content-editor-resizer:hover,
+.content-editor-resizer.active {
+    background: #3498db;
+}
+
+.content-editor-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.content-editor-label {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    font-size: 11px;
+    color: #666;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+}
+
+.content-editor-textarea {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 12px;
+    resize: none;
+    outline: none;
+}
+
+.content-editor-preview-area {
+    flex: 1;
+    padding: 12px;
+    overflow: auto;
+    font-size: 12px;
+}
+
+.content-editor-footer {
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.content-editor-footer button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.content-editor-save {
+    background: #27ae60;
+    color: white;
+}
+
+.content-editor-save:hover {
+    background: #219a52;
+}
+
+.content-editor-reset {
+    background: #e74c3c;
+    color: white;
+}
+
+.content-editor-reset:hover {
+    background: #c0392b;
+}
+
+.content-editor-cancel {
+    background: #95a5a6;
+    color: white;
+}
+
+.content-editor-cancel:hover {
+    background: #7f8c8d;
+}
+
+/* Markdown rendered styles */
+.markdown-content h1, .markdown-content h2, .markdown-content h3,
+.markdown-content h4, .markdown-content h5, .markdown-content h6 {
+    margin-top: 0.5em;
+    margin-bottom: 0.3em;
+    color: #2c3e50;
+}
+
+.markdown-content h1 { font-size: 1.4em; }
+.markdown-content h2 { font-size: 1.2em; }
+.markdown-content h3 { font-size: 1.1em; }
+
+.markdown-content p {
+    margin: 0.5em 0;
+}
+
+.markdown-content ul, .markdown-content ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+.markdown-content code {
+    background: #f4f4f4;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.markdown-content pre {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.markdown-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.markdown-content blockquote {
+    border-left: 3px solid #3498db;
+    margin: 0.5em 0;
+    padding-left: 1em;
+    color: #666;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1em 0;
+}
+
+.markdown-content strong {
+    font-weight: 600;
+}
+
+.markdown-content a {
+    color: #3498db;
+}
+
+.markdown-content img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    margin: 0.5em 0;
+    display: block;
+}
+
+.markdown-content table {
+    margin: 0.5em 0;
+}
+
+.note-content {
+    padding: 15px;
+    overflow: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+.note.resizing {
+    user-select: none;
+}
+
+.note.resizing .note-content {
+    pointer-events: none;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 11px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tr:hover {
+    background: #e8f4fd;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background: white;
+    margin: 50px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #e74c3c;
+}
+
+/* Feature Selection Modal */
+.feature-select-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10010;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-select-modal.open {
+    display: flex;
+}
+
+.feature-select-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.feature-select-content h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.feature-select-close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    color: #7f8c8d;
+    line-height: 1;
+}
+
+.feature-select-close:hover {
+    color: #2c3e50;
+}
+
+.feature-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.feature-select-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.feature-select-item:hover {
+    background: #f8f9fa;
+    border-color: #3498db;
+}
+
+.feature-select-item:active {
+    background: #e8f4fd;
+}
+
+.feature-select-icon {
+    font-size: 24px;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.feature-select-info {
+    flex: 1;
+}
+
+.feature-select-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+.feature-select-description {
+    font-size: 11px;
+    color: #7f8c8d;
+}
+
+/* Number formatting */
+.currency::before {
+    content: '$';
+}
+
+.percent::after {
+    content: '%';
+}
+
+/* Snap guides */
+.snap-guide {
+    opacity: 0.8;
+    box-shadow: 0 0 4px rgba(52, 152, 219, 0.8);
+}
+
+.note.snapping {
+    transition: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <div class="header-title-area">
+            <img alt="Toolboard Logo" style="width: 32px; height: 32px;" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%20%3Crect%20width%3D%22290%22%20height%3D%22290%22%20fill%3D%22%23444%22%20rx%3D%2210%22%20ry%3D%2210%22%20%2F%3E%20%20%3Cdefs%3E%20%20%20%20%3Cpattern%20id%3D%22peg-grid%22%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2230%22%20height%3D%2230%22%20patternUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%2210.5%22%20fill%3D%22%23000%22%20%2F%3E%20%20%20%20%3C%2Fpattern%3E%20%20%3C%2Fdefs%3E%20%20%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22275%22%20height%3D%22275%22%20fill%3D%22url(%23peg-grid)%22%20%2F%3E%20%20%3Cg%20fill%3D%22%23ff8%22%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E">
+            <h1 id="noteboardTitle">My Toolboard</h1>
+            <button id="noteboardSettingsBtn" class="header-settings-btn" title="Edit Toolboard">&#9881;</button>
+            <span id="toolboardVersion" class="toolboard-version"></span>
+        </div>
+        <div class="header-controls">
+            <div class="board-selector-wrapper">
+                <select id="boardSelector"></select>
+            </div>
+            <button id="addNoteBtn">+ Add Note</button>
+            <button id="deleteBoardBtn">Delete Board</button>
+            <button id="importExportBtn">Import/Export</button>
+        </div>
+        <div id="noteboardSettings" class="noteboard-settings">
+            <label>Board Title</label>
+            <input type="text" id="noteboardTitleInput" placeholder="Board title">
+            <label>Header Color</label>
+            <div class="color-picker-row" id="noteboardColorPicker"></div>
+        </div>
+    </header>
+
+    <!-- Import/Export Modal -->
+    <div id="importExportModal" class="import-export-modal">
+        <div class="import-export-content">
+            <span class="import-export-close">&times;</span>
+            <h2>Import / Export</h2>
+
+            <div class="import-export-tabs">
+                <button class="import-export-tab active" data-tab="export">Export</button>
+                <button class="import-export-tab" data-tab="import">Import</button>
+                <button class="import-export-tab" data-tab="restore">Restore</button>
+            </div>
+
+            <!-- Export Note -->
+            <div id="exportNote" class="import-export-note active">
+                <h3>Export Notes</h3>
+                <div id="exportNotesList" class="checkbox-list"></div>
+                <button id="exportSelectedNotes" class="export-btn">Export Selected Notes</button>
+
+                <h3 style="margin-top: 15px;">Export Boards</h3>
+                <div id="exportBoardsList" class="checkbox-list"></div>
+                <button id="exportSelectedBoards" class="export-btn">Export Selected Boards</button>
+            </div>
+
+            <!-- Import Note -->
+            <div id="importNote" class="import-export-note">
+                <h3>Import from File</h3>
+                <input type="file" id="importFileInput" class="import-file-input" accept=".json">
+
+                <h3>Or Paste JSON</h3>
+                <textarea id="importTextarea" class="import-textarea" placeholder="Paste JSON data here..."></textarea>
+
+                <button id="importDataBtn" class="import-btn">Import Data</button>
+                <div id="importResult"></div>
+            </div>
+
+            <!-- Restore Note -->
+            <div id="restoreNote" class="import-export-note">
+                <h3>Restore Hidden Notes</h3>
+                <p style="color: #7f8c8d; margin-bottom: 10px; font-size: 12px;">These built-in notes have been hidden. Select notes to restore them to your board.</p>
+                <div id="hiddenNotesList" class="checkbox-list"></div>
+                <button id="restoreSelectedNotes" class="import-btn">Restore Selected</button>
+                <div id="restoreResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <main id="noteboard">
+        <!-- Notes will be dynamically generated -->
+    </main>
+
+    <!-- Content Editor Modal -->
+    <div id="contentEditorOverlay" class="content-editor-overlay">
+        <div class="content-editor">
+            <div class="content-editor-header">
+                <h3>Edit Content: <span id="editorNoteTitle"></span></h3>
+                <button class="content-editor-close">&times;</button>
+            </div>
+            <div class="content-editor-body">
+                <div class="content-editor-input">
+                    <div class="content-editor-label">Markdown</div>
+                    <textarea class="content-editor-textarea" id="contentEditorTextarea" placeholder="Enter markdown content..."></textarea>
+                </div>
+                <div class="content-editor-resizer" id="editorResizer"></div>
+                <div class="content-editor-preview">
+                    <div class="content-editor-label">Preview</div>
+                    <div class="content-editor-preview-area markdown-content" id="contentEditorPreview"></div>
+                </div>
+            </div>
+            <div class="content-editor-footer">
+                <button class="content-editor-reset">Reset to Default</button>
+                <button class="content-editor-cancel">Cancel</button>
+                <button class="content-editor-save">Save</button>
+            </div>
+            <div class="content-editor-resize content-editor-resize-e" data-resize="e"></div>
+            <div class="content-editor-resize content-editor-resize-s" data-resize="s"></div>
+            <div class="content-editor-resize content-editor-resize-se" data-resize="se"></div>
+        </div>
+    </div>
+
+    <!-- Feature Selection Modal -->
+    <div id="featureSelectModal" class="feature-select-modal">
+        <div class="feature-select-content">
+            <span class="feature-select-close">&times;</span>
+            <h2>Choose Note Type</h2>
+            <div id="featureSelectList" class="feature-select-list"></div>
+        </div>
+    </div>
+
+    <script>
+// Default variables - empty for generic noteboard, import a board to add data
+const DEFAULT_VARIABLES = {};
+
+// Built-in notes - empty for generic noteboard, import notes/boards to add
+const SECTIONS = [];
+
+// Generate default positions (empty for generic noteboard)
+function generateDefaultPositions() {
+    return {};
+}
+
+const DEFAULT_POSITIONS = generateDefaultPositions();
+
+// Note templates for feature selection
+const NOTE_TEMPLATES = {
+    'blank': {
+        id: 'blank',
+        name: 'Blank Note',
+        description: 'Start with an empty note',
+        icon: '📝',
+        title: 'New Note',
+        content: ''
+    },
+    'dynamic-investment-calculator': {
+        id: 'dynamic-investment-calculator',
+        name: 'Investment Growth Calculator',
+        description: 'Interactive calculator with inputs for initial amount, monthly contribution, rate, and years',
+        icon: '📈',
+        title: 'Investment Growth Calculator',
+        content: `<div style="background:#f8f9fa;padding:15px;border-radius:6px;">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Initial Investment</label>
+<input type="number" id="growthInitial" value="10000" oninput="calculateGrowth()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Monthly Contribution</label>
+<input type="number" id="growthMonthly" value="500" oninput="calculateGrowth()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Annual Return (%)</label>
+<input type="number" id="growthRate" value="7" step="0.1" oninput="calculateGrowth()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Years</label>
+<input type="number" id="growthYears" value="30" oninput="calculateGrowth()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+</div>
+<div style="margin-bottom:15px;">
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Compounding</label>
+<div style="display:flex;gap:0;border:1px solid #ddd;border-radius:4px;overflow:hidden;">
+<label style="flex:1;margin:0;"><input type="radio" name="growthCompound" value="monthly" checked onchange="calculateGrowth()" style="display:none;"><span id="compoundMonthlyBtn" style="display:block;padding:8px;text-align:center;cursor:pointer;background:#3498db;color:white;font-size:12px;">Monthly</span></label>
+<label style="flex:1;margin:0;"><input type="radio" name="growthCompound" value="annual" onchange="calculateGrowth()" style="display:none;"><span id="compoundAnnualBtn" style="display:block;padding:8px;text-align:center;cursor:pointer;background:white;color:#333;font-size:12px;">Annual</span></label>
+</div>
+</div>
+<div id="growthResults"></div>
+</div>`,
+        onInit: 'calculateGrowth'
+    },
+    'simple-calculator': {
+        id: 'simple-calculator',
+        name: 'Simple Calculator',
+        description: 'Basic arithmetic calculator for quick math',
+        icon: '🔢',
+        title: 'Calculator',
+        content: `<div style="background:#2c3e50;padding:15px;border-radius:8px;max-width:240px;">
+<input type="text" id="calcDisplay" value="0" readonly style="width:100%;padding:12px;font-size:24px;text-align:right;border:none;border-radius:4px;margin-bottom:10px;background:#ecf0f1;font-family:monospace;">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+<button onclick="calcClear()" style="grid-column:span 2;padding:15px;font-size:16px;border:none;border-radius:4px;background:#e74c3c;color:white;cursor:pointer;">C</button>
+<button onclick="calcBackspace()" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#95a5a6;color:white;cursor:pointer;">⌫</button>
+<button onclick="calcOp('/')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#3498db;color:white;cursor:pointer;">÷</button>
+<button onclick="calcNum('7')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">7</button>
+<button onclick="calcNum('8')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">8</button>
+<button onclick="calcNum('9')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">9</button>
+<button onclick="calcOp('*')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#3498db;color:white;cursor:pointer;">×</button>
+<button onclick="calcNum('4')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">4</button>
+<button onclick="calcNum('5')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">5</button>
+<button onclick="calcNum('6')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">6</button>
+<button onclick="calcOp('-')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#3498db;color:white;cursor:pointer;">−</button>
+<button onclick="calcNum('1')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">1</button>
+<button onclick="calcNum('2')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">2</button>
+<button onclick="calcNum('3')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">3</button>
+<button onclick="calcOp('+')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#3498db;color:white;cursor:pointer;">+</button>
+<button onclick="calcNum('0')" style="grid-column:span 2;padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">0</button>
+<button onclick="calcNum('.')" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#ecf0f1;cursor:pointer;">.</button>
+<button onclick="calcEquals()" style="padding:15px;font-size:16px;border:none;border-radius:4px;background:#27ae60;color:white;cursor:pointer;">=</button>
+</div>
+</div>`,
+        onInit: 'calcInit'
+    },
+    'dynamic-tax-calculator': {
+        id: 'dynamic-tax-calculator',
+        name: 'Tax Calculator',
+        description: 'Interactive calculator for estimating federal income tax',
+        icon: '🧾',
+        title: 'Tax Calculator',
+        content: `<div style="background:#f8f9fa;padding:15px;border-radius:6px;">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Annual Income</label>
+<input type="number" id="taxIncome" value="75000" oninput="calculateTax()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Filing Status</label>
+<select id="taxStatus" onchange="calculateTax()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;background:white;">
+<option value="single">Single</option>
+<option value="married">Married Filing Jointly</option>
+</select>
+</div>
+</div>
+<div id="taxResults"></div>
+</div>`,
+        onInit: 'calculateTax'
+    }
+};
+
+// Board management
+function loadBoards() {
+    const stored = localStorage.getItem('financeBoards');
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return [{ id: 'default', name: 'Toolboard' }];
+        }
+    }
+    return [{ id: 'default', name: 'Toolboard' }];
+}
+
+function saveBoards(boards) {
+    localStorage.setItem('financeBoards', JSON.stringify(boards));
+}
+
+function getCurrentBoardId() {
+    return localStorage.getItem('financeCurrentBoard') || 'default';
+}
+
+function setCurrentBoardId(boardId) {
+    localStorage.setItem('financeCurrentBoard', boardId);
+}
+
+let boards = loadBoards();
+let currentBoardId = getCurrentBoardId();
+
+// Migrate old data to new board-specific format (one-time migration)
+function migrateOldData() {
+    // Check if migration already done
+    if (localStorage.getItem('financeMigrationDone')) return;
+
+    // Map of old keys to new key suffixes
+    const migrations = {
+        'financeVariables': 'variables',
+        'financeNotePositions': 'positions',
+        'financeNoteCustomizations': 'noteCustomizations',
+        'financeCustomNotes': 'customNotes',
+        'financeNoteboardSettings': 'noteboardSettings'
+    };
+
+    let hadOldData = false;
+    for (const [oldKey, newSuffix] of Object.entries(migrations)) {
+        const oldData = localStorage.getItem(oldKey);
+        if (oldData) {
+            hadOldData = true;
+            // Copy to default board
+            localStorage.setItem(`finance_default_${newSuffix}`, oldData);
+            // Remove old key
+            localStorage.removeItem(oldKey);
+        }
+    }
+
+    if (hadOldData) {
+        console.log('Migrated old data to default board');
+    }
+
+    localStorage.setItem('financeMigrationDone', 'true');
+}
+
+migrateOldData();
+
+// Helper to get board-specific storage key
+function boardKey(key) {
+    return `finance_${currentBoardId}_${key}`;
+}
+
+// Load variables from localStorage or use defaults
+function loadVariables() {
+    const stored = localStorage.getItem(boardKey('variables'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            console.error('Error parsing stored variables:', e);
+            return DEFAULT_VARIABLES;
+        }
+    }
+    return DEFAULT_VARIABLES;
+}
+
+// Save variables to localStorage
+function saveVariables(variables) {
+    localStorage.setItem(boardKey('variables'), JSON.stringify(variables));
+}
+
+// Load note positions from localStorage or use defaults
+function loadPositions() {
+    const stored = localStorage.getItem(boardKey('positions'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            console.error('Error parsing stored positions:', e);
+            return { ...DEFAULT_POSITIONS };
+        }
+    }
+    return { ...DEFAULT_POSITIONS };
+}
+
+// Save note positions to localStorage
+function savePositions(positions) {
+    localStorage.setItem(boardKey('positions'), JSON.stringify(positions));
+}
+
+// Reset everything
+function resetVariables() {
+    localStorage.removeItem(boardKey('variables'));
+    return DEFAULT_VARIABLES;
+}
+
+function resetPositions() {
+    localStorage.removeItem(boardKey('positions'));
+    return { ...generateDefaultPositions() };
+}
+
+// Helper functions for calculations
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+}
+
+function formatNumber(num) {
+    return new Intl.NumberFormat('en-US').format(Math.round(num));
+}
+
+// Main application
+let variables = loadVariables();
+let positions = loadPositions();
+let maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 1);
+
+// Snap threshold in pixels
+const SNAP_THRESHOLD = 15;
+
+// Drag state
+let dragState = {
+    isDragging: false,
+    note: null,
+    startX: 0,
+    startY: 0,
+    offsetX: 0,
+    offsetY: 0
+};
+
+// Resize state
+let resizeState = {
+    isResizing: false,
+    note: null,
+    handle: null,
+    startX: 0,
+    startY: 0,
+    startWidth: 0,
+    startHeight: 0,
+    startLeft: 0,
+    startTop: 0
+};
+
+// Initialize the noteboard
+function init() {
+    populateBoardSelector();
+    applyNoteboardSettings();
+    setupNoteboardSettings();
+    renderNoteboard();
+    setupDragging();
+    setupResizing();
+    setupNoteControls();
+    setupContentEditor();
+    setupButtons();
+    setupImportExport();
+    setupFeatureSelect();
+    displayVersion();
+}
+
+// Display Toolboard version based on file modification date
+function displayVersion() {
+    const versionEl = document.getElementById('toolboardVersion');
+    if (versionEl) {
+        const lastMod = new Date(document.lastModified);
+        const version = lastMod.toISOString().slice(0, 10).replace(/-/g, '.');
+        versionEl.textContent = 'v' + version;
+        versionEl.title = 'Toolboard version (last modified: ' + lastMod.toLocaleString() + ')';
+    }
+}
+
+// Setup note minimize and settings controls
+function setupNoteControls() {
+    const noteboard = document.getElementById('noteboard');
+
+    // Minimize button
+    noteboard.addEventListener('click', (e) => {
+        if (e.target.closest('.minimize-btn')) {
+            e.stopPropagation();
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            const btn = e.target.closest('.minimize-btn');
+
+            note.classList.toggle('minimized');
+            btn.classList.toggle('minimized');
+
+            // Save state
+            noteCustomizations[noteId] = noteCustomizations[noteId] || {};
+            noteCustomizations[noteId].minimized = note.classList.contains('minimized');
+            saveNoteCustomizations(noteCustomizations);
+        }
+    });
+
+    // Settings button
+    noteboard.addEventListener('click', (e) => {
+        if (e.target.closest('.settings-btn')) {
+            e.stopPropagation();
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            const settingsPanel = note.querySelector('.note-settings');
+
+            // Close other open settings panels
+            document.querySelectorAll('.note-settings.open').forEach(panel => {
+                if (panel !== settingsPanel) panel.classList.remove('open');
+            });
+
+            // Bring note to front when opening settings
+            if (!settingsPanel.classList.contains('open')) {
+                // Find the highest z-index among all notes and go above it
+                let highestZ = 0;
+                document.querySelectorAll('.note').forEach(s => {
+                    const z = parseInt(s.style.zIndex) || 0;
+                    if (z > highestZ) highestZ = z;
+                });
+                maxZ = highestZ + 1;
+                note.style.zIndex = maxZ;
+                positions[noteId] = positions[noteId] || {};
+                positions[noteId].z = maxZ;
+            }
+
+            settingsPanel.classList.toggle('open');
+        }
+    });
+
+    // Color swatch click
+    noteboard.addEventListener('click', (e) => {
+        if (e.target.classList.contains('color-swatch')) {
+            e.stopPropagation();
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            const color = e.target.getAttribute('data-color');
+            const header = note.querySelector('.note-header');
+
+            // Update UI
+            header.style.background = color;
+            note.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+            e.target.classList.add('selected');
+
+            // Save
+            noteCustomizations[noteId] = noteCustomizations[noteId] || {};
+            noteCustomizations[noteId].color = color;
+            saveNoteCustomizations(noteCustomizations);
+        }
+    });
+
+    // Title input change
+    noteboard.addEventListener('input', (e) => {
+        if (e.target.classList.contains('title-input')) {
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            const titleSpan = note.querySelector('.note-title');
+            const newTitle = e.target.value;
+
+            // Update UI
+            titleSpan.textContent = newTitle;
+
+            // Save
+            noteCustomizations[noteId] = noteCustomizations[noteId] || {};
+            noteCustomizations[noteId].title = newTitle;
+            saveNoteCustomizations(noteCustomizations);
+        }
+    });
+
+    // Close settings when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.note-settings') && !e.target.closest('.settings-btn')) {
+            document.querySelectorAll('.note-settings.open').forEach(panel => {
+                panel.classList.remove('open');
+            });
+        }
+    });
+
+    // Edit content button
+    noteboard.addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-content-btn')) {
+            e.stopPropagation();
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            // Close settings panel
+            note.querySelector('.note-settings').classList.remove('open');
+            openContentEditor(noteId);
+        }
+    });
+
+    // Delete note button
+    noteboard.addEventListener('click', (e) => {
+        if (e.target.classList.contains('delete-note-btn')) {
+            e.stopPropagation();
+            const note = e.target.closest('.note');
+            const noteId = note.getAttribute('data-note');
+            // Close settings panel
+            note.querySelector('.note-settings').classList.remove('open');
+            deleteNote(noteId);
+        }
+    });
+
+    // Prevent dragging when interacting with settings
+    noteboard.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.note-settings') || e.target.closest('.header-btn')) {
+            e.stopPropagation();
+        }
+    });
+}
+
+// Render all notes
+function renderNoteboard() {
+    const noteboard = document.getElementById('noteboard');
+    noteboard.innerHTML = '';
+
+    // Render built-in notes (excluding hidden ones)
+    SECTIONS.forEach(noteId => {
+        if (hiddenNotes.includes(noteId)) return;
+        const note = createNote(noteId);
+        if (note) {
+            noteboard.appendChild(note);
+        }
+    });
+
+    // Render custom notes
+    customNotes.forEach(noteId => {
+        const note = createNote(noteId);
+        if (note) {
+            noteboard.appendChild(note);
+        }
+    });
+
+    // Initialize dynamic calculators if present
+    initializeCalculators();
+}
+
+function initializeCalculators() {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+        if (document.getElementById('taxIncome')) calculateTax();
+        if (document.getElementById('growthInitial')) calculateGrowth();
+    }, 50);
+}
+
+// Dynamic Calculator Functions
+const taxBrackets = {
+    single: [
+        {min: 0, max: 12400, rate: 0.10},
+        {min: 12400, max: 50400, rate: 0.12},
+        {min: 50400, max: 105700, rate: 0.22},
+        {min: 105700, max: 201775, rate: 0.24},
+        {min: 201775, max: 256225, rate: 0.32},
+        {min: 256225, max: 640800, rate: 0.35},
+        {min: 640800, max: Infinity, rate: 0.37}
+    ],
+    married: [
+        {min: 0, max: 24800, rate: 0.10},
+        {min: 24800, max: 100800, rate: 0.12},
+        {min: 100800, max: 211400, rate: 0.22},
+        {min: 211400, max: 403550, rate: 0.24},
+        {min: 403550, max: 512450, rate: 0.32},
+        {min: 512450, max: 788700, rate: 0.35},
+        {min: 788700, max: Infinity, rate: 0.37}
+    ]
+};
+const stdDeductions = {single: 16100, married: 32200};
+
+function calculateTax() {
+    const incomeEl = document.getElementById('taxIncome');
+    const statusEl = document.getElementById('taxStatus');
+    const resultsEl = document.getElementById('taxResults');
+    if (!incomeEl || !statusEl || !resultsEl) return;
+
+    const income = parseFloat(incomeEl.value) || 0;
+    const status = statusEl.value;
+    const ded = stdDeductions[status];
+    const taxable = Math.max(0, income - ded);
+    let totalTax = 0;
+    let breakdown = '';
+
+    for (const b of taxBrackets[status]) {
+        if (taxable > b.min) {
+            const amt = Math.min(taxable, b.max) - b.min;
+            const tax = amt * b.rate;
+            totalTax += tax;
+            if (amt > 0) {
+                breakdown += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee;"><span>${(b.rate*100)}%</span><span>$${amt.toLocaleString()}</span><span style="color:#c0392b">$${tax.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span></div>`;
+            }
+        }
+    }
+
+    const effRate = income > 0 ? (totalTax / income * 100).toFixed(1) : 0;
+    const margBracket = taxBrackets[status].find(b => taxable >= b.min && taxable < b.max);
+    const margRate = margBracket ? margBracket.rate * 100 : 37;
+
+    resultsEl.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Standard Deduction</div>
+                <div style="font-size:18px;font-weight:600;color:#27ae60;">$${ded.toLocaleString()}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Taxable Income</div>
+                <div style="font-size:18px;font-weight:600;">$${taxable.toLocaleString()}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Total Tax</div>
+                <div style="font-size:18px;font-weight:600;color:#c0392b;">$${totalTax.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Effective / Marginal</div>
+                <div style="font-size:18px;font-weight:600;">${effRate}% / ${margRate}%</div>
+            </div>
+        </div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:#7f8c8d;">TAX BY BRACKET</div>
+        ${breakdown}
+        <div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:600;">
+            <span>Take Home (Monthly)</span>
+            <span style="color:#27ae60;">$${((income - totalTax) / 12).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span>
+        </div>
+    `;
+}
+
+// Simple Calculator State
+let calcState = { current: '0', previous: '', operator: '', newNumber: true };
+
+function calcInit() {
+    calcState = { current: '0', previous: '', operator: '', newNumber: true };
+    const display = document.getElementById('calcDisplay');
+    if (display) {
+        display.value = '0';
+        // Add keyboard support
+        display.removeAttribute('readonly');
+        display.addEventListener('keydown', calcKeyHandler);
+        display.addEventListener('input', calcInputHandler);
+        display.focus();
+    }
+}
+
+function calcKeyHandler(e) {
+    const key = e.key;
+
+    // Prevent default for keys we handle
+    if (/^[0-9.]$/.test(key) || ['+', '-', '*', '/', 'Enter', 'Escape', 'Backspace', '='].includes(key)) {
+        e.preventDefault();
+    }
+
+    if (/^[0-9.]$/.test(key)) {
+        calcNum(key);
+    } else if (['+', '-', '*', '/'].includes(key)) {
+        calcOp(key);
+    } else if (key === 'Enter' || key === '=') {
+        calcEquals();
+    } else if (key === 'Escape' || key === 'Delete') {
+        calcClear();
+    } else if (key === 'Backspace') {
+        calcBackspace();
+    }
+}
+
+function calcInputHandler(e) {
+    // Reset display to current state (prevent direct typing)
+    const display = document.getElementById('calcDisplay');
+    if (display) display.value = calcState.current;
+}
+
+function calcNum(num) {
+    const display = document.getElementById('calcDisplay');
+    if (!display) return;
+
+    if (calcState.newNumber) {
+        calcState.current = (num === '.') ? '0.' : num;
+        calcState.newNumber = false;
+    } else {
+        if (num === '.' && calcState.current.includes('.')) return;
+        calcState.current += num;
+    }
+    display.value = calcState.current;
+}
+
+function calcOp(op) {
+    const display = document.getElementById('calcDisplay');
+    if (!display) return;
+
+    if (calcState.operator && !calcState.newNumber) {
+        calcEquals();
+    }
+    calcState.previous = calcState.current;
+    calcState.operator = op;
+    calcState.newNumber = true;
+}
+
+function calcEquals() {
+    const display = document.getElementById('calcDisplay');
+    if (!display || !calcState.operator) return;
+
+    const prev = parseFloat(calcState.previous);
+    const curr = parseFloat(calcState.current);
+    let result;
+
+    switch (calcState.operator) {
+        case '+': result = prev + curr; break;
+        case '-': result = prev - curr; break;
+        case '*': result = prev * curr; break;
+        case '/': result = curr !== 0 ? prev / curr : 'Error'; break;
+        default: return;
+    }
+
+    calcState.current = typeof result === 'number' ? String(Math.round(result * 1e10) / 1e10) : result;
+    calcState.operator = '';
+    calcState.newNumber = true;
+    display.value = calcState.current;
+}
+
+function calcClear() {
+    calcInit();
+}
+
+function calcBackspace() {
+    const display = document.getElementById('calcDisplay');
+    if (!display) return;
+
+    if (calcState.current.length > 1) {
+        calcState.current = calcState.current.slice(0, -1);
+    } else {
+        calcState.current = '0';
+        calcState.newNumber = true;
+    }
+    display.value = calcState.current;
+}
+
+function calculateGrowth() {
+    const initialEl = document.getElementById('growthInitial');
+    const monthlyEl = document.getElementById('growthMonthly');
+    const rateEl = document.getElementById('growthRate');
+    const yearsEl = document.getElementById('growthYears');
+    const resultsEl = document.getElementById('growthResults');
+    const compoundEl = document.querySelector('input[name="growthCompound"]:checked');
+    const monthlyBtn = document.getElementById('compoundMonthlyBtn');
+    const annualBtn = document.getElementById('compoundAnnualBtn');
+    if (!initialEl || !monthlyEl || !rateEl || !yearsEl || !resultsEl) return;
+
+    const initial = parseFloat(initialEl.value) || 0;
+    const monthly = parseFloat(monthlyEl.value) || 0;
+    const rate = (parseFloat(rateEl.value) || 0) / 100;
+    const years = parseInt(yearsEl.value) || 0;
+    const isMonthly = !compoundEl || compoundEl.value === 'monthly';
+
+    // Update toggle button styles
+    if (monthlyBtn && annualBtn) {
+        monthlyBtn.style.background = isMonthly ? '#3498db' : 'white';
+        monthlyBtn.style.color = isMonthly ? 'white' : '#333';
+        annualBtn.style.background = isMonthly ? 'white' : '#3498db';
+        annualBtn.style.color = isMonthly ? '#333' : 'white';
+    }
+
+    const months = years * 12;
+    const totalContrib = initial + (monthly * months);
+
+    let fv = initial;
+    if (isMonthly) {
+        // Monthly compounding
+        const monthlyRate = rate / 12;
+        for (let i = 0; i < months; i++) {
+            fv = fv * (1 + monthlyRate) + monthly;
+        }
+    } else {
+        // Annual compounding
+        for (let i = 0; i < years; i++) {
+            fv = fv * (1 + rate) + (monthly * 12);
+        }
+    }
+    const growth = fv - totalContrib;
+
+    // Calculate timeline milestones
+    const milestones = [5, 10, 15, 20, 25, 30, 35, 40].filter(y => y <= years);
+    let timeline = '';
+    for (const y of milestones) {
+        let val = initial;
+        if (isMonthly) {
+            const monthlyRate = rate / 12;
+            for (let i = 0; i < y * 12; i++) val = val * (1 + monthlyRate) + monthly;
+        } else {
+            for (let i = 0; i < y; i++) val = val * (1 + rate) + (monthly * 12);
+        }
+        timeline += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee;"><span>${y} years</span><span style="color:#27ae60;font-weight:600;">$${val.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span></div>`;
+    }
+
+    resultsEl.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Future Value</div>
+                <div style="font-size:20px;font-weight:700;color:#27ae60;">$${fv.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Total Contributions</div>
+                <div style="font-size:20px;font-weight:600;">$${totalContrib.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Investment Growth</div>
+                <div style="font-size:20px;font-weight:600;color:#27ae60;">$${growth.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Growth Multiple</div>
+                <div style="font-size:20px;font-weight:600;">${totalContrib > 0 ? (fv / totalContrib).toFixed(1) : '0.0'}x</div>
+            </div>
+        </div>
+        ${timeline ? `<div style="font-size:12px;font-weight:600;margin-bottom:8px;color:#7f8c8d;">GROWTH TIMELINE</div>${timeline}` : ''}
+    `;
+}
+
+// Simple Markdown Parser
+function parseMarkdown(text) {
+    if (!text) return '';
+
+    // Split into blocks (separated by blank lines)
+    const blocks = text.split(/\n\n+/);
+    const htmlBlocks = [];
+
+    for (let block of blocks) {
+        block = block.trim();
+        if (!block) continue;
+
+        // Check if this block is a table
+        const lines = block.split('\n');
+        if (lines.length >= 2 &&
+            lines[0].trim().startsWith('|') &&
+            /^\|[\s\-:|]+\|?$/.test(lines[1].trim())) {
+            htmlBlocks.push(convertTableToHtml(lines));
+            continue;
+        }
+
+        // Check if this is a code block
+        if (block.startsWith('```')) {
+            const match = block.match(/```(\w*)\n([\s\S]*?)```/);
+            if (match) {
+                htmlBlocks.push(`<pre><code>${escapeHtml(match[2])}</code></pre>`);
+                continue;
+            }
+        }
+
+        // Check if this is a header
+        const headerMatch = block.match(/^(#{1,6})\s+(.*)$/);
+        if (headerMatch) {
+            const level = headerMatch[1].length;
+            htmlBlocks.push(`<h${level}>${parseInline(headerMatch[2])}</h${level}>`);
+            continue;
+        }
+
+        // Check if this is a horizontal rule
+        if (/^(-{3,}|\*{3,})$/.test(block)) {
+            htmlBlocks.push('<hr>');
+            continue;
+        }
+
+        // Check if this is a list
+        if (/^[\*\-]\s/.test(block) || /^\d+\.\s/.test(block)) {
+            const listItems = block.split('\n').map(line => {
+                const content = line.replace(/^[\*\-]\s+/, '').replace(/^\d+\.\s+/, '');
+                return `<li>${parseInline(content)}</li>`;
+            }).join('');
+            const listType = /^\d+\./.test(block) ? 'ol' : 'ul';
+            htmlBlocks.push(`<${listType}>${listItems}</${listType}>`);
+            continue;
+        }
+
+        // Check if this is a blockquote
+        if (block.startsWith('>')) {
+            const content = block.split('\n').map(line => line.replace(/^>\s*/, '')).join('<br>');
+            htmlBlocks.push(`<blockquote>${parseInline(content)}</blockquote>`);
+            continue;
+        }
+
+        // Regular paragraph - convert single newlines to <br>
+        const paraContent = block.split('\n').map(line => parseInline(line)).join('<br>');
+        htmlBlocks.push(`<p>${paraContent}</p>`);
+    }
+
+    return htmlBlocks.join('\n');
+}
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function parseInline(text) {
+    return text
+        // Bold and italic
+        .replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/___([^_]+)___/g, '<strong><em>$1</em></strong>')
+        .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+        .replace(/_([^_]+)_/g, '<em>$1</em>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Images: ![alt](src)
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+}
+
+function convertTableToHtml(tableLines) {
+    if (tableLines.length < 2) return tableLines.join('\n');
+
+    const parseRow = (line) => {
+        // Remove leading/trailing pipes and split by |
+        return line.trim().replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
+    };
+
+    const headerCells = parseRow(tableLines[0]);
+    const alignments = parseRow(tableLines[1]).map(cell => {
+        if (cell.startsWith(':') && cell.endsWith(':')) return 'center';
+        if (cell.endsWith(':')) return 'right';
+        return 'left';
+    });
+
+    let html = '<table>\n<thead>\n<tr>\n';
+    headerCells.forEach((cell, idx) => {
+        const align = alignments[idx] || 'left';
+        html += `<th style="text-align: ${align}">${parseInline(cell)}</th>\n`;
+    });
+    html += '</tr>\n</thead>\n<tbody>\n';
+
+    // Process body rows (skip header and separator)
+    for (let i = 2; i < tableLines.length; i++) {
+        const cells = parseRow(tableLines[i]);
+        html += '<tr>\n';
+        cells.forEach((cell, idx) => {
+            const align = alignments[idx] || 'left';
+            html += `<td style="text-align: ${align}">${parseInline(cell)}</td>\n`;
+        });
+        html += '</tr>\n';
+    }
+
+    html += '</tbody>\n</table>';
+    return html;
+}
+
+// Content Editor State
+let currentEditingNote = null;
+
+function setupContentEditor() {
+    const overlay = document.getElementById('contentEditorOverlay');
+    const editor = overlay.querySelector('.content-editor');
+    const header = overlay.querySelector('.content-editor-header');
+    const textarea = document.getElementById('contentEditorTextarea');
+    const preview = document.getElementById('contentEditorPreview');
+    const titleSpan = document.getElementById('editorNoteTitle');
+    const closeBtn = overlay.querySelector('.content-editor-close');
+    const saveBtn = overlay.querySelector('.content-editor-save');
+    const cancelBtn = overlay.querySelector('.content-editor-cancel');
+    const resetBtn = overlay.querySelector('.content-editor-reset');
+    const resizer = document.getElementById('editorResizer');
+    const inputPane = overlay.querySelector('.content-editor-input');
+    const previewPane = overlay.querySelector('.content-editor-preview');
+
+    // Live preview
+    textarea.addEventListener('input', () => {
+        preview.innerHTML = parseMarkdown(textarea.value);
+    });
+
+    // Handle pasting images from clipboard
+    textarea.addEventListener('paste', (e) => {
+        const html = e.clipboardData?.getData('text/html');
+        if (!html) return; // No HTML = likely screenshot, ignore
+
+        // Extract image src from pasted HTML
+        const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (match && match[1]) {
+            const imageUrl = match[1];
+            // Skip data URLs (base64)
+            if (imageUrl.startsWith('data:')) return;
+
+            e.preventDefault();
+            const cursorPos = textarea.selectionStart;
+            const before = textarea.value.substring(0, cursorPos);
+            const after = textarea.value.substring(textarea.selectionEnd);
+            textarea.value = before + `![image](${imageUrl})` + after;
+            textarea.selectionStart = textarea.selectionEnd = cursorPos + `![image](${imageUrl})`.length;
+            textarea.dispatchEvent(new Event('input')); // Trigger preview update
+        }
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('open');
+        currentEditingNote = null;
+    });
+
+    // Cancel button
+    cancelBtn.addEventListener('click', () => {
+        overlay.classList.remove('open');
+        currentEditingNote = null;
+    });
+
+    // Save button
+    saveBtn.addEventListener('click', () => {
+        if (currentEditingNote) {
+            const noteId = currentEditingNote;
+            noteCustomizations[noteId] = noteCustomizations[noteId] || {};
+            noteCustomizations[noteId].customContent = textarea.value;
+            saveNoteCustomizations(noteCustomizations);
+
+            // Update the note content
+            const note = document.querySelector(`[data-note="${noteId}"]`);
+            if (note) {
+                const contentDiv = note.querySelector('.note-content');
+                contentDiv.innerHTML = `<div class="markdown-content">${parseMarkdown(textarea.value)}</div>`;
+            }
+        }
+        overlay.classList.remove('open');
+        currentEditingNote = null;
+    });
+
+    // Reset button
+    resetBtn.addEventListener('click', () => {
+        if (currentEditingNote && confirm('Reset to default content? This will remove your custom content.')) {
+            const noteId = currentEditingNote;
+            if (noteCustomizations[noteId]) {
+                delete noteCustomizations[noteId].customContent;
+                saveNoteCustomizations(noteCustomizations);
+            }
+
+            // Restore default content
+            const note = document.querySelector(`[data-note="${noteId}"]`);
+            if (note) {
+                const content = getNoteContent(noteId);
+                const contentDiv = note.querySelector('.note-content');
+                contentDiv.innerHTML = content.html;
+            }
+
+            overlay.classList.remove('open');
+            currentEditingNote = null;
+        }
+    });
+
+    // Close on overlay click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.classList.remove('open');
+            currentEditingNote = null;
+        }
+    });
+
+    // Editor dragging
+    let editorDrag = { isDragging: false, startX: 0, startY: 0, startLeft: 0, startTop: 0 };
+
+    header.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.content-editor-close')) return;
+        editorDrag.isDragging = true;
+        editorDrag.startX = e.clientX;
+        editorDrag.startY = e.clientY;
+        const rect = editor.getBoundingClientRect();
+        editorDrag.startLeft = rect.left;
+        editorDrag.startTop = rect.top;
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!editorDrag.isDragging) return;
+        const dx = e.clientX - editorDrag.startX;
+        const dy = e.clientY - editorDrag.startY;
+        const newLeft = Math.max(0, Math.min(window.innerWidth - editor.offsetWidth, editorDrag.startLeft + dx));
+        const newTop = Math.max(0, Math.min(window.innerHeight - editor.offsetHeight, editorDrag.startTop + dy));
+        editor.style.left = newLeft + 'px';
+        editor.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        editorDrag.isDragging = false;
+    });
+
+    // Resizer for markdown/preview split
+    let resizerState = { isResizing: false, startX: 0, startInputWidth: 0 };
+
+    resizer.addEventListener('mousedown', (e) => {
+        resizerState.isResizing = true;
+        resizerState.startX = e.clientX;
+        resizerState.startInputWidth = inputPane.offsetWidth;
+        resizer.classList.add('active');
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!resizerState.isResizing) return;
+        const dx = e.clientX - resizerState.startX;
+        const editorBody = overlay.querySelector('.content-editor-body');
+        const totalWidth = editorBody.offsetWidth - resizer.offsetWidth;
+        const newInputWidth = Math.max(200, Math.min(totalWidth - 200, resizerState.startInputWidth + dx));
+        const newPreviewWidth = totalWidth - newInputWidth;
+        inputPane.style.flex = 'none';
+        inputPane.style.width = newInputWidth + 'px';
+        previewPane.style.flex = 'none';
+        previewPane.style.width = newPreviewWidth + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (resizerState.isResizing) {
+            resizerState.isResizing = false;
+            resizer.classList.remove('active');
+        }
+    });
+
+    // Editor window resize
+    let editorResize = { isResizing: false, handle: null, startX: 0, startY: 0, startWidth: 0, startHeight: 0 };
+
+    editor.querySelectorAll('.content-editor-resize').forEach(handle => {
+        handle.addEventListener('mousedown', (e) => {
+            editorResize.isResizing = true;
+            editorResize.handle = handle.getAttribute('data-resize');
+            editorResize.startX = e.clientX;
+            editorResize.startY = e.clientY;
+            editorResize.startWidth = editor.offsetWidth;
+            editorResize.startHeight = editor.offsetHeight;
+            e.preventDefault();
+        });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!editorResize.isResizing) return;
+        const dx = e.clientX - editorResize.startX;
+        const dy = e.clientY - editorResize.startY;
+
+        if (editorResize.handle.includes('e')) {
+            const newWidth = Math.max(500, editorResize.startWidth + dx);
+            editor.style.width = newWidth + 'px';
+        }
+        if (editorResize.handle.includes('s')) {
+            const newHeight = Math.max(300, editorResize.startHeight + dy);
+            editor.style.height = newHeight + 'px';
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        editorResize.isResizing = false;
+        editorResize.handle = null;
+    });
+}
+
+function openContentEditor(noteId) {
+    const overlay = document.getElementById('contentEditorOverlay');
+    const editor = overlay.querySelector('.content-editor');
+    const textarea = document.getElementById('contentEditorTextarea');
+    const preview = document.getElementById('contentEditorPreview');
+    const titleSpan = document.getElementById('editorNoteTitle');
+    const inputPane = overlay.querySelector('.content-editor-input');
+    const previewPane = overlay.querySelector('.content-editor-preview');
+
+    currentEditingNote = noteId;
+
+    // Get note info
+    const custom = noteCustomizations[noteId] || {};
+    const content = getNoteContent(noteId);
+    const displayTitle = custom.title || content.title;
+
+    titleSpan.textContent = displayTitle;
+
+    // Load existing custom content or convert default to markdown hint
+    if (custom.customContent) {
+        textarea.value = custom.customContent;
+    } else {
+        // Provide a hint with the note name
+        textarea.value = `# ${content.title}\n\nEdit this content using Markdown.\n\n**Note:** The default dynamic content will be replaced with your custom content.`;
+    }
+
+    // Reset pane widths to default 50/50
+    inputPane.style.flex = '1';
+    inputPane.style.width = '';
+    previewPane.style.flex = '1';
+    previewPane.style.width = '';
+
+    // Center the editor
+    editor.style.left = '';
+    editor.style.top = '';
+
+    preview.innerHTML = parseMarkdown(textarea.value);
+    overlay.classList.add('open');
+
+    // Center after opening (when dimensions are known)
+    requestAnimationFrame(() => {
+        const editorRect = editor.getBoundingClientRect();
+        editor.style.left = (window.innerWidth - editorRect.width) / 2 + 'px';
+        editor.style.top = (window.innerHeight - editorRect.height) / 2 + 'px';
+    });
+
+    textarea.focus();
+}
+
+// Noteboard settings
+const DASHBOARD_COLORS = [
+    '#2c3e50', '#34495e', '#1a252f', '#2980b9', '#3498db',
+    '#8e44ad', '#9b59b6', '#16a085', '#1abc9c', '#27ae60',
+    '#d35400', '#e67e22', '#c0392b', '#e74c3c', '#7f8c8d'
+];
+
+function loadNoteboardSettings() {
+    const stored = localStorage.getItem(boardKey('noteboardSettings'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return { title: 'My Toolboard', color: '#2c3e50' };
+        }
+    }
+    return { title: 'My Toolboard', color: '#2c3e50' };
+}
+
+function saveNoteboardSettings(settings) {
+    localStorage.setItem(boardKey('noteboardSettings'), JSON.stringify(settings));
+}
+
+let noteboardSettings = loadNoteboardSettings();
+
+function applyNoteboardSettings() {
+    const header = document.getElementById('mainHeader');
+    const title = document.getElementById('noteboardTitle');
+    const titleInput = document.getElementById('noteboardTitleInput');
+    const colorPicker = document.getElementById('noteboardColorPicker');
+
+    title.textContent = noteboardSettings.title;
+    header.style.background = noteboardSettings.color;
+    titleInput.value = noteboardSettings.title;
+
+    // Update browser tab title
+    document.title = noteboardSettings.title + ' - Toolboard';
+
+    // Populate color picker
+    colorPicker.innerHTML = DASHBOARD_COLORS.map(c =>
+        `<div class="color-swatch${noteboardSettings.color === c ? ' selected' : ''}" style="background: ${c}" data-color="${c}"></div>`
+    ).join('');
+}
+
+function setupNoteboardSettings() {
+    const settingsBtn = document.getElementById('noteboardSettingsBtn');
+    const settingsPanel = document.getElementById('noteboardSettings');
+    const titleInput = document.getElementById('noteboardTitleInput');
+    const colorPicker = document.getElementById('noteboardColorPicker');
+    const header = document.getElementById('mainHeader');
+    const title = document.getElementById('noteboardTitle');
+
+    // Toggle settings panel
+    settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close note settings panels
+        document.querySelectorAll('.note-settings.open').forEach(p => p.classList.remove('open'));
+        settingsPanel.classList.toggle('open');
+    });
+
+    // Title input
+    titleInput.addEventListener('input', (e) => {
+        noteboardSettings.title = e.target.value;
+        title.textContent = e.target.value;
+        saveNoteboardSettings(noteboardSettings);
+        // Update board name to match noteboard title
+        renameBoardInSelector();
+    });
+
+    // Color picker
+    colorPicker.addEventListener('click', (e) => {
+        if (e.target.classList.contains('color-swatch')) {
+            const color = e.target.getAttribute('data-color');
+            noteboardSettings.color = color;
+            header.style.background = color;
+            colorPicker.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+            e.target.classList.add('selected');
+            saveNoteboardSettings(noteboardSettings);
+        }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.noteboard-settings') && !e.target.closest('#noteboardSettingsBtn')) {
+            settingsPanel.classList.remove('open');
+        }
+    });
+}
+
+// Available colors for note headers
+const HEADER_COLORS = [
+    '#8e44ad', '#9b59b6', '#3498db', '#2980b9', '#1abc9c',
+    '#16a085', '#27ae60', '#2ecc71', '#f39c12', '#e67e22',
+    '#d35400', '#e74c3c', '#c0392b', '#34495e', '#7f8c8d'
+];
+
+// Load note customizations
+function loadNoteCustomizations() {
+    const stored = localStorage.getItem(boardKey('noteCustomizations'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return {};
+        }
+    }
+    return {};
+}
+
+// Save note customizations
+function saveNoteCustomizations(customizations) {
+    localStorage.setItem(boardKey('noteCustomizations'), JSON.stringify(customizations));
+}
+
+// Custom notes storage
+function loadCustomNotes() {
+    const stored = localStorage.getItem(boardKey('customNotes'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return [];
+        }
+    }
+    return [];
+}
+
+function saveCustomNotes(notes) {
+    localStorage.setItem(boardKey('customNotes'), JSON.stringify(notes));
+}
+
+// Hidden notes storage (for built-in notes that have been deleted)
+function loadHiddenNotes() {
+    const stored = localStorage.getItem(boardKey('hiddenNotes'));
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch (e) {
+            return [];
+        }
+    }
+    return [];
+}
+
+function saveHiddenNotes(notes) {
+    localStorage.setItem(boardKey('hiddenNotes'), JSON.stringify(notes));
+}
+
+let noteCustomizations = loadNoteCustomizations();
+let customNotes = loadCustomNotes();
+let hiddenNotes = loadHiddenNotes();
+
+// Create a note element
+function createNote(noteId) {
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.setAttribute('data-note', noteId);
+
+    const content = getNoteContent(noteId);
+    if (!content) return null;
+
+    // Get customizations for this note
+    const custom = noteCustomizations[noteId] || {};
+    const displayTitle = custom.title || content.title;
+    const headerColor = custom.color || null;
+    const isMinimized = custom.minimized || false;
+    const isCustomNote = customNotes.includes(noteId);
+
+    note.innerHTML = `
+        <div class="note-header"${headerColor ? ` style="background: ${headerColor}"` : ''}>
+            <span class="note-title">${displayTitle}</span>
+            <div class="header-buttons">
+                <button class="header-btn minimize-btn${isMinimized ? ' minimized' : ''}" title="Minimize">&#9650;</button>
+                <button class="header-btn settings-btn" title="Settings">&#9881;</button>
+            </div>
+            <div class="note-settings">
+                <label>Title</label>
+                <input type="text" class="title-input" value="${displayTitle}" placeholder="Note title">
+                <label>Color</label>
+                <div class="color-picker-row">
+                    ${HEADER_COLORS.map(c => `<div class="color-swatch${headerColor === c ? ' selected' : ''}" style="background: ${c}" data-color="${c}"></div>`).join('')}
+                </div>
+                <button class="edit-content-btn">Edit Content</button>
+                <button class="delete-note-btn">${isCustomNote ? 'Delete Note' : 'Hide Note'}</button>
+            </div>
+        </div>
+        <div class="note-content">
+            ${custom.customContent ? `<div class="markdown-content">${parseMarkdown(custom.customContent)}</div>` : content.html}
+        </div>
+        <div class="resize-handle resize-handle-n" data-resize="n"></div>
+        <div class="resize-handle resize-handle-s" data-resize="s"></div>
+        <div class="resize-handle resize-handle-e" data-resize="e"></div>
+        <div class="resize-handle resize-handle-w" data-resize="w"></div>
+        <div class="resize-handle resize-handle-nw" data-resize="nw"></div>
+        <div class="resize-handle resize-handle-ne" data-resize="ne"></div>
+        <div class="resize-handle resize-handle-sw" data-resize="sw"></div>
+        <div class="resize-handle resize-handle-se" data-resize="se"></div>
+    `;
+
+    // Apply minimized state
+    if (isMinimized) {
+        note.classList.add('minimized');
+    }
+
+    // Apply position and size
+    const pos = positions[noteId] || { x: 20, y: 20, z: 1 };
+    note.style.left = pos.x + 'px';
+    note.style.top = pos.y + 'px';
+    note.style.zIndex = pos.z || 1;
+
+    // Apply saved dimensions if they exist
+    if (pos.width) {
+        note.style.width = pos.width + 'px';
+    }
+    if (pos.height) {
+        note.style.height = pos.height + 'px';
+    }
+
+    return note;
+}
+
+// Get content for each note
+function getNoteContent(noteId) {
+    // All notes are custom notes in the generic noteboard
+    if (customNotes.includes(noteId)) {
+        const custom = noteCustomizations[noteId] || {};
+
+        // Check if this note uses a template with HTML content
+        if (custom.templateId && NOTE_TEMPLATES[custom.templateId]) {
+            const template = NOTE_TEMPLATES[custom.templateId];
+            const isHtml = template.content.trim().startsWith('<');
+            if (isHtml) {
+                return {
+                    title: custom.title || template.title,
+                    html: template.content
+                };
+            }
+        }
+
+        return {
+            title: custom.title || 'New Note',
+            html: custom.customContent ? `<div class="markdown-content">${parseMarkdown(custom.customContent)}</div>` : '<p>Click the settings gear and "Edit Content" to add content to this note.</p>'
+        };
+    }
+    return null;
+}
+
+// Free-form Drag functionality
+function setupDragging() {
+    const noteboard = document.getElementById('noteboard');
+
+    // Mouse down on note header starts drag
+    noteboard.addEventListener('mousedown', (e) => {
+        const header = e.target.closest('.note-header');
+        if (!header) return;
+
+        // Don't drag if clicking buttons or settings
+        if (e.target.closest('.header-btn') || e.target.closest('.note-settings')) return;
+
+        const note = header.closest('.note');
+        if (!note) return;
+
+        e.preventDefault();
+
+        // Bring to front
+        maxZ++;
+        note.style.zIndex = maxZ;
+
+        const noteId = note.getAttribute('data-note');
+        positions[noteId] = positions[noteId] || { x: 0, y: 0, z: 1 };
+        positions[noteId].z = maxZ;
+
+        // Start dragging
+        dragState.isDragging = true;
+        dragState.note = note;
+        dragState.startX = e.clientX;
+        dragState.startY = e.clientY;
+        dragState.offsetX = note.offsetLeft;
+        dragState.offsetY = note.offsetTop;
+
+        note.classList.add('dragging');
+    });
+
+    // Mouse move updates position with snapping
+    document.addEventListener('mousemove', (e) => {
+        if (!dragState.isDragging) return;
+
+        const dx = e.clientX - dragState.startX;
+        const dy = e.clientY - dragState.startY;
+
+        let newX = Math.max(0, dragState.offsetX + dx);
+        let newY = Math.max(0, dragState.offsetY + dy);
+
+        // Get snap positions
+        const snapped = getSnapPosition(dragState.note, newX, newY);
+        newX = snapped.x;
+        newY = snapped.y;
+
+        dragState.note.style.left = newX + 'px';
+        dragState.note.style.top = newY + 'px';
+
+        // Show/hide snap guides
+        updateSnapGuides(snapped.guides);
+    });
+
+    // Mouse up ends drag and saves position
+    document.addEventListener('mouseup', () => {
+        if (!dragState.isDragging) return;
+
+        const note = dragState.note;
+        const noteId = note.getAttribute('data-note');
+
+        // Save position (preserve existing width/height if set)
+        const existing = positions[noteId] || {};
+        positions[noteId] = {
+            x: note.offsetLeft,
+            y: note.offsetTop,
+            z: parseInt(note.style.zIndex) || 1,
+            width: existing.width || note.offsetWidth,
+            height: existing.height || note.offsetHeight
+        };
+        savePositions(positions);
+
+        note.classList.remove('dragging');
+        dragState.isDragging = false;
+        dragState.note = null;
+
+        // Hide snap guides
+        updateSnapGuides([]);
+    });
+
+    // Click on note brings it to front
+    noteboard.addEventListener('mousedown', (e) => {
+        const note = e.target.closest('.note');
+        if (!note) return;
+
+        // Only bring to front if not clicking header (header handles its own)
+        if (!e.target.closest('.note-header')) {
+            maxZ++;
+            note.style.zIndex = maxZ;
+            const noteId = note.getAttribute('data-note');
+            positions[noteId] = positions[noteId] || { x: note.offsetLeft, y: note.offsetTop, z: 1 };
+            positions[noteId].z = maxZ;
+            savePositions(positions);
+        }
+    });
+}
+
+// Resize functionality
+function setupResizing() {
+    const noteboard = document.getElementById('noteboard');
+
+    // Double-click on resize handle for auto-resize
+    noteboard.addEventListener('dblclick', (e) => {
+        const handle = e.target.closest('.resize-handle');
+        if (!handle) return;
+
+        const note = handle.closest('.note');
+        if (!note) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const handleType = handle.getAttribute('data-resize');
+        autoResizeNote(note, handleType);
+    });
+
+    // Mouse down on resize handle starts resize
+    noteboard.addEventListener('mousedown', (e) => {
+        const handle = e.target.closest('.resize-handle');
+        if (!handle) return;
+
+        const note = handle.closest('.note');
+        if (!note) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Bring to front
+        maxZ++;
+        note.style.zIndex = maxZ;
+
+        const noteId = note.getAttribute('data-note');
+        positions[noteId] = positions[noteId] || { x: 0, y: 0, z: 1 };
+        positions[noteId].z = maxZ;
+
+        // Start resizing
+        resizeState.isResizing = true;
+        resizeState.note = note;
+        resizeState.handle = handle.getAttribute('data-resize');
+        resizeState.startX = e.clientX;
+        resizeState.startY = e.clientY;
+        resizeState.startWidth = note.offsetWidth;
+        resizeState.startHeight = note.offsetHeight;
+        resizeState.startLeft = note.offsetLeft;
+        resizeState.startTop = note.offsetTop;
+
+        handle.classList.add('active');
+        note.classList.add('resizing');
+    });
+
+    // Mouse move updates size
+    document.addEventListener('mousemove', (e) => {
+        if (!resizeState.isResizing) return;
+
+        const dx = e.clientX - resizeState.startX;
+        const dy = e.clientY - resizeState.startY;
+        const note = resizeState.note;
+        const handle = resizeState.handle;
+
+        let newWidth = resizeState.startWidth;
+        let newHeight = resizeState.startHeight;
+        let newLeft = resizeState.startLeft;
+        let newTop = resizeState.startTop;
+
+        const minWidth = 150;
+        const minHeight = 100;
+
+        // Handle resize based on which handle is being dragged
+        if (handle.includes('e')) {
+            newWidth = Math.max(minWidth, resizeState.startWidth + dx);
+        }
+        if (handle.includes('w')) {
+            const proposedWidth = resizeState.startWidth - dx;
+            if (proposedWidth >= minWidth) {
+                newWidth = proposedWidth;
+                newLeft = resizeState.startLeft + dx;
+            }
+        }
+        if (handle.includes('s')) {
+            newHeight = Math.max(minHeight, resizeState.startHeight + dy);
+        }
+        if (handle.includes('n')) {
+            const proposedHeight = resizeState.startHeight - dy;
+            if (proposedHeight >= minHeight) {
+                newHeight = proposedHeight;
+                newTop = resizeState.startTop + dy;
+            }
+        }
+
+        // Apply snapping for resize edges
+        const snapped = getResizeSnapPosition(note, newLeft, newTop, newWidth, newHeight, handle);
+
+        note.style.width = snapped.width + 'px';
+        note.style.height = snapped.height + 'px';
+        note.style.left = snapped.left + 'px';
+        note.style.top = snapped.top + 'px';
+
+        updateSnapGuides(snapped.guides);
+    });
+
+    // Mouse up ends resize and saves dimensions
+    document.addEventListener('mouseup', () => {
+        if (!resizeState.isResizing) return;
+
+        const note = resizeState.note;
+        const noteId = note.getAttribute('data-note');
+
+        // Save position and dimensions
+        positions[noteId] = {
+            x: note.offsetLeft,
+            y: note.offsetTop,
+            z: parseInt(note.style.zIndex) || 1,
+            width: note.offsetWidth,
+            height: note.offsetHeight
+        };
+        savePositions(positions);
+
+        // Clean up
+        document.querySelectorAll('.resize-handle.active').forEach(h => h.classList.remove('active'));
+        note.classList.remove('resizing');
+        resizeState.isResizing = false;
+        resizeState.note = null;
+        resizeState.handle = null;
+
+        updateSnapGuides([]);
+    });
+}
+
+// Auto-resize note to fit content
+function autoResizeNote(note, handleType) {
+    const noteId = note.getAttribute('data-note');
+    const content = note.querySelector('.note-content');
+    const header = note.querySelector('.note-header');
+
+    // Determine which dimensions to auto-resize
+    const autoWidth = handleType.includes('e') || handleType.includes('w');
+    const autoHeight = handleType.includes('s') || handleType.includes('n');
+
+    // Store current dimensions
+    const currentWidth = note.style.width;
+    const currentHeight = note.style.height;
+
+    // Temporarily remove constraints to measure natural size
+    if (autoWidth) {
+        note.style.width = 'auto';
+        content.style.overflow = 'visible';
+    }
+    if (autoHeight) {
+        note.style.height = 'auto';
+        content.style.overflow = 'visible';
+    }
+
+    // Force reflow
+    note.offsetHeight;
+
+    // Measure natural dimensions
+    let newWidth = note.offsetWidth;
+    let newHeight = note.offsetHeight;
+
+    // Add some padding for comfortable viewing
+    if (autoWidth) {
+        newWidth = Math.max(150, Math.min(800, content.scrollWidth + 30));
+    }
+    if (autoHeight) {
+        newHeight = Math.max(100, Math.min(600, content.scrollHeight + header.offsetHeight + 10));
+    }
+
+    // Restore overflow
+    content.style.overflow = '';
+
+    // Apply new dimensions with animation
+    note.style.transition = 'width 0.2s ease, height 0.2s ease';
+
+    if (autoWidth) {
+        note.style.width = newWidth + 'px';
+    } else {
+        note.style.width = currentWidth;
+    }
+
+    if (autoHeight) {
+        note.style.height = newHeight + 'px';
+    } else {
+        note.style.height = currentHeight;
+    }
+
+    // Remove transition after animation
+    setTimeout(() => {
+        note.style.transition = '';
+    }, 200);
+
+    // Save new dimensions
+    const existing = positions[noteId] || { x: note.offsetLeft, y: note.offsetTop, z: 1 };
+    positions[noteId] = {
+        x: existing.x,
+        y: existing.y,
+        z: existing.z,
+        width: autoWidth ? newWidth : (existing.width || note.offsetWidth),
+        height: autoHeight ? newHeight : (existing.height || note.offsetHeight)
+    };
+    savePositions(positions);
+}
+
+// Snapping for resize operations
+function getResizeSnapPosition(note, left, top, width, height, handle) {
+    const noteboard = document.getElementById('noteboard');
+    const notes = noteboard.querySelectorAll('.note');
+
+    const right = left + width;
+    const bottom = top + height;
+
+    let snapLeft = left;
+    let snapTop = top;
+    let snapWidth = width;
+    let snapHeight = height;
+    const guides = [];
+
+    // Collect edges from other notes
+    const verticalEdges = [0];
+    const horizontalEdges = [0];
+
+    notes.forEach(s => {
+        if (s === note) return;
+
+        const sLeft = s.offsetLeft;
+        const sTop = s.offsetTop;
+        const sRight = sLeft + s.offsetWidth;
+        const sBottom = sTop + s.offsetHeight;
+
+        verticalEdges.push(sLeft, sRight);
+        horizontalEdges.push(sTop, sBottom);
+    });
+
+    // Snap right edge (when resizing east)
+    if (handle.includes('e')) {
+        for (const edge of verticalEdges) {
+            if (Math.abs(right - edge) < SNAP_THRESHOLD) {
+                snapWidth = edge - left;
+                guides.push({ type: 'vertical', pos: edge });
+                break;
+            }
+        }
+    }
+
+    // Snap left edge (when resizing west)
+    if (handle.includes('w')) {
+        for (const edge of verticalEdges) {
+            if (Math.abs(left - edge) < SNAP_THRESHOLD) {
+                const diff = left - edge;
+                snapLeft = edge;
+                snapWidth = width + diff;
+                guides.push({ type: 'vertical', pos: edge });
+                break;
+            }
+        }
+    }
+
+    // Snap bottom edge (when resizing south)
+    if (handle.includes('s')) {
+        for (const edge of horizontalEdges) {
+            if (Math.abs(bottom - edge) < SNAP_THRESHOLD) {
+                snapHeight = edge - top;
+                guides.push({ type: 'horizontal', pos: edge });
+                break;
+            }
+        }
+    }
+
+    // Snap top edge (when resizing north)
+    if (handle.includes('n')) {
+        for (const edge of horizontalEdges) {
+            if (Math.abs(top - edge) < SNAP_THRESHOLD) {
+                const diff = top - edge;
+                snapTop = edge;
+                snapHeight = height + diff;
+                guides.push({ type: 'horizontal', pos: edge });
+                break;
+            }
+        }
+    }
+
+    return {
+        left: Math.max(0, snapLeft),
+        top: Math.max(0, snapTop),
+        width: Math.max(150, snapWidth),
+        height: Math.max(100, snapHeight),
+        guides
+    };
+}
+
+// Snapping functionality
+function getSnapPosition(draggedNote, x, y) {
+    const noteboard = document.getElementById('noteboard');
+    const notes = noteboard.querySelectorAll('.note');
+    const width = draggedNote.offsetWidth;
+    const height = draggedNote.offsetHeight;
+
+    // Dragged note edges
+    const dragLeft = x;
+    const dragRight = x + width;
+    const dragTop = y;
+    const dragBottom = y + height;
+
+    let snapX = x;
+    let snapY = y;
+    let bestDiffX = SNAP_THRESHOLD;
+    let bestDiffY = SNAP_THRESHOLD;
+    const guides = [];
+
+    // Collect all edges from other notes
+    const verticalEdges = [0]; // Noteboard left edge
+    const horizontalEdges = [0]; // Noteboard top edge
+
+    notes.forEach(note => {
+        if (note === draggedNote) return;
+
+        const left = note.offsetLeft;
+        const top = note.offsetTop;
+        const right = left + note.offsetWidth;
+        const bottom = top + note.offsetHeight;
+
+        verticalEdges.push(left, right);
+        horizontalEdges.push(top, bottom);
+    });
+
+    // Find best vertical snap (X position)
+    for (const edge of verticalEdges) {
+        // Snap left edge of dragged to this edge
+        const diffLeft = Math.abs(dragLeft - edge);
+        if (diffLeft < bestDiffX) {
+            bestDiffX = diffLeft;
+            snapX = edge;
+        }
+
+        // Snap right edge of dragged to this edge
+        const diffRight = Math.abs(dragRight - edge);
+        if (diffRight < bestDiffX) {
+            bestDiffX = diffRight;
+            snapX = edge - width;
+        }
+    }
+
+    // Find best horizontal snap (Y position)
+    for (const edge of horizontalEdges) {
+        // Snap top edge of dragged to this edge
+        const diffTop = Math.abs(dragTop - edge);
+        if (diffTop < bestDiffY) {
+            bestDiffY = diffTop;
+            snapY = edge;
+        }
+
+        // Snap bottom edge of dragged to this edge
+        const diffBottom = Math.abs(dragBottom - edge);
+        if (diffBottom < bestDiffY) {
+            bestDiffY = diffBottom;
+            snapY = edge - height;
+        }
+    }
+
+    // Add guides for snapped edges
+    if (bestDiffX < SNAP_THRESHOLD) {
+        // Determine which edge we snapped to
+        const snappedEdge = (snapX === x) ? snapX : snapX + width;
+        guides.push({ type: 'vertical', pos: snappedEdge });
+    }
+
+    if (bestDiffY < SNAP_THRESHOLD) {
+        const snappedEdge = (snapY === y) ? snapY : snapY + height;
+        guides.push({ type: 'horizontal', pos: snappedEdge });
+    }
+
+    return { x: Math.max(0, snapX), y: Math.max(0, snapY), guides };
+}
+
+function updateSnapGuides(guides) {
+    // Remove existing guides
+    document.querySelectorAll('.snap-guide').forEach(el => el.remove());
+
+    if (guides.length === 0) return;
+
+    const noteboard = document.getElementById('noteboard');
+
+    guides.forEach(guide => {
+        const el = document.createElement('div');
+        el.className = 'snap-guide';
+
+        if (guide.type === 'vertical') {
+            el.style.cssText = `
+                position: absolute;
+                left: ${guide.pos}px;
+                top: 0;
+                width: 2px;
+                height: 100%;
+                background: #3498db;
+                pointer-events: none;
+                z-index: 9999;
+            `;
+        } else {
+            el.style.cssText = `
+                position: absolute;
+                left: 0;
+                top: ${guide.pos}px;
+                width: 100%;
+                height: 2px;
+                background: #3498db;
+                pointer-events: none;
+                z-index: 9999;
+            `;
+        }
+
+        noteboard.appendChild(el);
+    });
+}
+
+// Import/Export functionality
+function setupImportExport() {
+    const modal = document.getElementById('importExportModal');
+    const closeBtn = modal.querySelector('.import-export-close');
+    const tabs = modal.querySelectorAll('.import-export-tab');
+    const exportNote = document.getElementById('exportNote');
+    const importNote = document.getElementById('importNote');
+
+    // Open modal
+    document.getElementById('importExportBtn').onclick = () => {
+        populateExportLists();
+        modal.classList.add('open');
+    };
+
+    // Close modal
+    closeBtn.onclick = () => modal.classList.remove('open');
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.classList.remove('open');
+    };
+
+    const restoreNote = document.getElementById('restoreNote');
+
+    // Tab switching
+    tabs.forEach(tab => {
+        tab.onclick = () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            exportNote.classList.remove('active');
+            importNote.classList.remove('active');
+            restoreNote.classList.remove('active');
+
+            if (tab.dataset.tab === 'export') {
+                exportNote.classList.add('active');
+            } else if (tab.dataset.tab === 'import') {
+                importNote.classList.add('active');
+            } else if (tab.dataset.tab === 'restore') {
+                restoreNote.classList.add('active');
+                populateHiddenNotesList();
+            }
+        };
+    });
+
+    // Export buttons
+    document.getElementById('exportSelectedNotes').onclick = exportNotes;
+    document.getElementById('exportSelectedBoards').onclick = exportBoards;
+
+    // Import
+    document.getElementById('importDataBtn').onclick = importData;
+    document.getElementById('importFileInput').onchange = handleFileImport;
+
+    // Restore
+    document.getElementById('restoreSelectedNotes').onclick = restoreSelectedNotes;
+}
+
+// Feature Selection Modal
+function setupFeatureSelect() {
+    const modal = document.getElementById('featureSelectModal');
+    const closeBtn = modal.querySelector('.feature-select-close');
+    const list = document.getElementById('featureSelectList');
+
+    // Close modal
+    closeBtn.onclick = () => modal.classList.remove('open');
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.classList.remove('open');
+    };
+
+    // Populate list
+    populateFeatureList();
+
+    // Handle feature selection
+    list.addEventListener('click', (e) => {
+        const item = e.target.closest('.feature-select-item');
+        if (!item) return;
+
+        const templateId = item.getAttribute('data-template');
+        modal.classList.remove('open');
+        createNoteWithTemplate(templateId);
+    });
+}
+
+function populateFeatureList() {
+    const list = document.getElementById('featureSelectList');
+    list.innerHTML = Object.values(NOTE_TEMPLATES).map(template => `
+        <div class="feature-select-item" data-template="${template.id}">
+            <div class="feature-select-icon">${template.icon}</div>
+            <div class="feature-select-info">
+                <div class="feature-select-name">${template.name}</div>
+                <div class="feature-select-description">${template.description}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openFeatureSelectModal() {
+    const modal = document.getElementById('featureSelectModal');
+    modal.classList.add('open');
+}
+
+function createNoteWithTemplate(templateId) {
+    const template = NOTE_TEMPLATES[templateId];
+    if (!template) return;
+
+    // Generate unique ID
+    const noteId = 'custom-' + Date.now();
+
+    // Add to custom notes list
+    customNotes.push(noteId);
+    saveCustomNotes(customNotes);
+
+    // Determine if content is HTML or Markdown
+    const isHtml = template.content.trim().startsWith('<');
+
+    // Initialize customizations with template content
+    noteCustomizations[noteId] = {
+        title: template.title,
+        templateId: templateId, // Store template ID for HTML templates
+        customContent: isHtml ? '' : template.content // Only store markdown in customContent
+    };
+    saveNoteCustomizations(noteCustomizations);
+
+    // Create and add the note to the noteboard
+    const note = createNote(noteId);
+    if (note) {
+        const noteboard = document.getElementById('noteboard');
+        noteboard.appendChild(note);
+
+        // Position it in a visible area with slight offset from others
+        const offset = customNotes.length * 20;
+        note.style.left = (100 + offset) + 'px';
+        note.style.top = (100 + offset) + 'px';
+        note.style.width = '400px';
+        note.style.height = '350px';
+
+        // Bring to front
+        maxZ++;
+        note.style.zIndex = maxZ;
+
+        // Save position
+        positions[noteId] = {
+            x: 100 + offset,
+            y: 100 + offset,
+            width: 400,
+            height: 350,
+            z: maxZ
+        };
+        savePositions(positions);
+
+        // Call onInit if specified
+        if (template.onInit && typeof window[template.onInit] === 'function') {
+            setTimeout(() => window[template.onInit](), 50);
+        }
+
+        // For blank notes, open the content editor immediately
+        if (templateId === 'blank') {
+            openContentEditor(noteId);
+        }
+    }
+}
+
+function populateExportLists() {
+    // Populate notes list (exclude hidden notes)
+    const notesList = document.getElementById('exportNotesList');
+    const visibleBuiltIn = SECTIONS.filter(id => !hiddenNotes.includes(id));
+    const allNotes = [...visibleBuiltIn, ...customNotes];
+
+    notesList.innerHTML = `
+        <label class="select-all-row">
+            <input type="checkbox" id="selectAllNotes"> <strong>Select All</strong>
+        </label>
+        ${allNotes.map(noteId => {
+            const custom = noteCustomizations[noteId] || {};
+            const content = getNoteContent(noteId);
+            const title = custom.title || (content ? content.title : noteId);
+            const isCustom = customNotes.includes(noteId);
+            return `<label>
+                <input type="checkbox" class="note-checkbox" value="${noteId}">
+                ${title}${isCustom ? ' <em>(custom)</em>' : ''}
+            </label>`;
+        }).join('')}
+    `;
+
+    // Select all for notes
+    document.getElementById('selectAllNotes').onchange = (e) => {
+        notesList.querySelectorAll('.note-checkbox').forEach(cb => {
+            cb.checked = e.target.checked;
+        });
+    };
+
+    // Populate boards list
+    const boardsList = document.getElementById('exportBoardsList');
+    boardsList.innerHTML = `
+        <label class="select-all-row">
+            <input type="checkbox" id="selectAllBoards"> <strong>Select All</strong>
+        </label>
+        ${boards.map(board => `<label>
+            <input type="checkbox" class="board-checkbox" value="${board.id}"${board.id === currentBoardId ? ' checked' : ''}>
+            ${board.name}${board.id === currentBoardId ? ' <em>(current)</em>' : ''}
+        </label>`).join('')}
+    `;
+
+    // Select all for boards
+    document.getElementById('selectAllBoards').onchange = (e) => {
+        boardsList.querySelectorAll('.board-checkbox').forEach(cb => {
+            cb.checked = e.target.checked;
+        });
+    };
+}
+
+function populateHiddenNotesList() {
+    const list = document.getElementById('hiddenNotesList');
+    const resultDiv = document.getElementById('restoreResult');
+    resultDiv.innerHTML = '';
+
+    if (hiddenNotes.length === 0) {
+        list.innerHTML = '<p style="color: #7f8c8d; padding: 10px;">No hidden notes. All built-in notes are visible.</p>';
+        return;
+    }
+
+    list.innerHTML = `
+        <label class="select-all-row">
+            <input type="checkbox" id="selectAllHidden"> <strong>Select All</strong>
+        </label>
+        ${hiddenNotes.map(noteId => {
+            const content = getNoteContent(noteId);
+            const title = content ? content.title : noteId;
+            return `<label>
+                <input type="checkbox" class="hidden-note-checkbox" value="${noteId}">
+                ${title}
+            </label>`;
+        }).join('')}
+    `;
+
+    document.getElementById('selectAllHidden').onchange = (e) => {
+        list.querySelectorAll('.hidden-note-checkbox').forEach(cb => {
+            cb.checked = e.target.checked;
+        });
+    };
+}
+
+function restoreSelectedNotes() {
+    const checkboxes = document.querySelectorAll('.hidden-note-checkbox:checked');
+    const resultDiv = document.getElementById('restoreResult');
+
+    if (checkboxes.length === 0) {
+        alert('Please select at least one note to restore.');
+        return;
+    }
+
+    const notesToRestore = [];
+    checkboxes.forEach(cb => {
+        notesToRestore.push(cb.value);
+    });
+
+    // Remove from hidden notes
+    hiddenNotes = hiddenNotes.filter(id => !notesToRestore.includes(id));
+    saveHiddenNotes(hiddenNotes);
+
+    // Refresh UI
+    renderNoteboard();
+    populateHiddenNotesList();
+    populateExportLists();
+
+    resultDiv.className = 'import-result success';
+    resultDiv.textContent = `Successfully restored ${notesToRestore.length} note(s).`;
+}
+
+function exportNotes() {
+    const checkboxes = document.querySelectorAll('.note-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Please select at least one note to export.');
+        return;
+    }
+
+    const exportData = {
+        type: 'notes',
+        exportedAt: new Date().toISOString(),
+        notes: []
+    };
+
+    checkboxes.forEach(cb => {
+        const noteId = cb.value;
+        const noteData = {
+            id: noteId,
+            isCustom: customNotes.includes(noteId),
+            customizations: noteCustomizations[noteId] || {},
+            position: positions[noteId] || null
+        };
+        exportData.notes.push(noteData);
+    });
+
+    downloadJSON(exportData, `notes-export-${Date.now()}.json`);
+}
+
+function exportBoards() {
+    const checkboxes = document.querySelectorAll('.board-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert('Please select at least one board to export.');
+        return;
+    }
+
+    const exportData = {
+        type: 'boards',
+        exportedAt: new Date().toISOString(),
+        boards: []
+    };
+
+    checkboxes.forEach(cb => {
+        const boardId = cb.value;
+        const board = boards.find(b => b.id === boardId);
+
+        // Get board-specific data
+        const boardData = {
+            id: boardId,
+            name: board.name,
+            variables: JSON.parse(localStorage.getItem(`finance_${boardId}_variables`) || 'null'),
+            positions: JSON.parse(localStorage.getItem(`finance_${boardId}_positions`) || '{}'),
+            noteCustomizations: JSON.parse(localStorage.getItem(`finance_${boardId}_noteCustomizations`) || '{}'),
+            customNotes: JSON.parse(localStorage.getItem(`finance_${boardId}_customNotes`) || '[]'),
+            hiddenNotes: JSON.parse(localStorage.getItem(`finance_${boardId}_hiddenNotes`) || '[]'),
+            noteboardSettings: JSON.parse(localStorage.getItem(`finance_${boardId}_noteboardSettings`) || 'null')
+        };
+
+        exportData.boards.push(boardData);
+    });
+
+    downloadJSON(exportData, `boards-export-${Date.now()}.json`);
+}
+
+function downloadJSON(data, filename) {
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function handleFileImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        document.getElementById('importTextarea').value = event.target.result;
+    };
+    reader.readAsText(file);
+}
+
+function importData() {
+    const textarea = document.getElementById('importTextarea');
+    const resultDiv = document.getElementById('importResult');
+
+    try {
+        const data = JSON.parse(textarea.value);
+
+        if (data.type === 'notes') {
+            importNotes(data);
+            resultDiv.className = 'import-result success';
+            resultDiv.textContent = `Successfully imported ${data.notes.length} note(s).`;
+        } else if (data.type === 'boards') {
+            importBoards(data);
+            resultDiv.className = 'import-result success';
+            resultDiv.textContent = `Successfully imported ${data.boards.length} board(s).`;
+        } else {
+            throw new Error('Unknown export format. Expected "notes" or "boards" type.');
+        }
+
+        // Refresh the UI
+        renderNoteboard();
+        populateBoardSelector();
+        populateExportLists();
+
+    } catch (err) {
+        resultDiv.className = 'import-result error';
+        resultDiv.textContent = `Error: ${err.message}`;
+    }
+}
+
+function importNotes(data) {
+    data.notes.forEach(noteData => {
+        let noteId = noteData.id;
+
+        // If it's a custom note, check for conflicts
+        if (noteData.isCustom) {
+            // Generate new ID if already exists
+            if (customNotes.includes(noteId)) {
+                noteId = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            }
+            // Add to custom notes
+            if (!customNotes.includes(noteId)) {
+                customNotes.push(noteId);
+            }
+        }
+
+        // Import customizations
+        if (noteData.customizations && Object.keys(noteData.customizations).length > 0) {
+            noteCustomizations[noteId] = { ...noteData.customizations };
+        }
+
+        // Import position (with offset if position exists)
+        if (noteData.position) {
+            const pos = { ...noteData.position };
+            // Offset if position already taken
+            if (positions[noteId]) {
+                pos.x = (pos.x || 0) + 30;
+                pos.y = (pos.y || 0) + 30;
+            }
+            pos.z = ++maxZ;
+            positions[noteId] = pos;
+        }
+    });
+
+    // Save changes
+    saveCustomNotes(customNotes);
+    saveNoteCustomizations(noteCustomizations);
+    savePositions(positions);
+}
+
+function importBoards(data) {
+    data.boards.forEach(boardData => {
+        let boardId = boardData.id;
+
+        // Check for conflicts and generate new ID if needed
+        if (boards.some(b => b.id === boardId)) {
+            boardId = 'board-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+        }
+
+        // Add board to list
+        boards.push({
+            id: boardId,
+            name: boardData.name || 'Imported Board'
+        });
+
+        // Save board-specific data
+        if (boardData.variables) {
+            localStorage.setItem(`finance_${boardId}_variables`, JSON.stringify(boardData.variables));
+        }
+        if (boardData.positions) {
+            localStorage.setItem(`finance_${boardId}_positions`, JSON.stringify(boardData.positions));
+        }
+        if (boardData.noteCustomizations) {
+            localStorage.setItem(`finance_${boardId}_noteCustomizations`, JSON.stringify(boardData.noteCustomizations));
+        }
+        if (boardData.customNotes) {
+            localStorage.setItem(`finance_${boardId}_customNotes`, JSON.stringify(boardData.customNotes));
+        }
+        if (boardData.hiddenNotes) {
+            localStorage.setItem(`finance_${boardId}_hiddenNotes`, JSON.stringify(boardData.hiddenNotes));
+        }
+        if (boardData.noteboardSettings) {
+            localStorage.setItem(`finance_${boardId}_noteboardSettings`, JSON.stringify(boardData.noteboardSettings));
+        }
+    });
+
+    // Save updated boards list
+    saveBoards(boards);
+}
+
+function setupButtons() {
+    document.getElementById('addNoteBtn').onclick = addNewNote;
+
+    // Delete board button
+    document.getElementById('deleteBoardBtn').onclick = deleteCurrentBoard;
+
+    // Board selector
+    document.getElementById('boardSelector').onchange = (e) => {
+        const value = e.target.value;
+        if (value === '__new__') {
+            createNewBoard();
+        } else {
+            switchToBoard(value);
+        }
+    };
+}
+
+// Add a new custom note - now shows feature selection modal
+function addNewNote() {
+    openFeatureSelectModal();
+}
+
+// Delete a custom note
+function deleteNote(noteId) {
+    const isCustom = customNotes.includes(noteId);
+    const isBuiltIn = SECTIONS.includes(noteId);
+
+    if (!isCustom && !isBuiltIn) return;
+
+    const message = isCustom
+        ? 'Delete this note? This cannot be undone.'
+        : 'Hide this note? You can restore it later from the Import/Export menu.';
+
+    if (confirm(message)) {
+        if (isCustom) {
+            // Remove from customNotes array
+            customNotes = customNotes.filter(id => id !== noteId);
+            saveCustomNotes(customNotes);
+
+            // Remove customizations
+            delete noteCustomizations[noteId];
+            saveNoteCustomizations(noteCustomizations);
+
+            // Remove position data
+            delete positions[noteId];
+            savePositions(positions);
+        } else {
+            // Hide built-in note
+            if (!hiddenNotes.includes(noteId)) {
+                hiddenNotes.push(noteId);
+                saveHiddenNotes(hiddenNotes);
+            }
+        }
+
+        // Remove from DOM
+        const note = document.querySelector(`[data-note="${noteId}"]`);
+        if (note) {
+            note.remove();
+        }
+    }
+}
+
+// Board management functions
+function populateBoardSelector() {
+    const selector = document.getElementById('boardSelector');
+    selector.innerHTML = '';
+
+    boards.forEach(board => {
+        const option = document.createElement('option');
+        option.value = board.id;
+        option.textContent = board.name;
+        if (board.id === currentBoardId) {
+            option.selected = true;
+        }
+        selector.appendChild(option);
+    });
+
+    // Add "New Board" option
+    const newOption = document.createElement('option');
+    newOption.value = '__new__';
+    newOption.textContent = '+ New Board...';
+    selector.appendChild(newOption);
+
+    // Update delete button state
+    updateDeleteBoardButton();
+}
+
+function updateDeleteBoardButton() {
+    const deleteBtn = document.getElementById('deleteBoardBtn');
+    // Disable delete if only one board exists
+    deleteBtn.disabled = boards.length <= 1;
+}
+
+function createNewBoard() {
+    const name = prompt('Enter name for new board:', 'New Board');
+    if (!name) {
+        // Reset selector to current board
+        document.getElementById('boardSelector').value = currentBoardId;
+        return;
+    }
+
+    const newBoardId = 'board-' + Date.now();
+    boards.push({ id: newBoardId, name: name });
+    saveBoards(boards);
+
+    // Initialize noteboard settings with the provided name
+    localStorage.setItem(`finance_${newBoardId}_noteboardSettings`, JSON.stringify({ title: name, color: '#2c3e50' }));
+
+    // Switch to the new board
+    switchToBoard(newBoardId);
+}
+
+function switchToBoard(boardId) {
+    if (boardId === currentBoardId) return;
+
+    currentBoardId = boardId;
+    setCurrentBoardId(boardId);
+
+    // Reload all board-specific data
+    variables = loadVariables();
+    positions = loadPositions();
+    noteCustomizations = loadNoteCustomizations();
+    customNotes = loadCustomNotes();
+    hiddenNotes = loadHiddenNotes();
+    noteboardSettings = loadNoteboardSettings();
+    maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 1);
+
+    // Update UI
+    populateBoardSelector();
+    applyNoteboardSettings();
+    renderNoteboard();
+}
+
+function deleteCurrentBoard() {
+    if (boards.length <= 1) {
+        alert('Cannot delete the last board.');
+        return;
+    }
+
+    const currentBoard = boards.find(b => b.id === currentBoardId);
+    if (!confirm(`Delete board "${currentBoard.name}"? This cannot be undone.`)) {
+        return;
+    }
+
+    // Remove board-specific data from localStorage
+    localStorage.removeItem(boardKey('variables'));
+    localStorage.removeItem(boardKey('positions'));
+    localStorage.removeItem(boardKey('noteCustomizations'));
+    localStorage.removeItem(boardKey('customNotes'));
+    localStorage.removeItem(boardKey('hiddenNotes'));
+    localStorage.removeItem(boardKey('noteboardSettings'));
+
+    // Remove from boards array
+    boards = boards.filter(b => b.id !== currentBoardId);
+    saveBoards(boards);
+
+    // Switch to first available board
+    switchToBoard(boards[0].id);
+}
+
+function renameBoardInSelector() {
+    const currentBoard = boards.find(b => b.id === currentBoardId);
+    if (currentBoard && noteboardSettings.title !== currentBoard.name) {
+        currentBoard.name = noteboardSettings.title;
+        saveBoards(boards);
+        populateBoardSelector();
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
