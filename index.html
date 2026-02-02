@@ -3192,6 +3192,35 @@ const NOTE_TEMPLATES = {
 </div>`,
         onInit: 'calculateTax'
     },
+    'loan-calculator': {
+        id: 'loan-calculator',
+        name: 'Loan Calculator',
+        description: 'Calculate monthly payments, total interest, and amortization',
+        icon: '🏦',
+        title: 'Loan Calculator',
+        content: `<div style="background:#f8f9fa;padding:15px;border-radius:6px;">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Loan Amount</label>
+<input type="number" id="loanAmount" value="300000" oninput="calculateLoan()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Interest Rate (%)</label>
+<input type="number" id="loanRate" value="6.5" step="0.125" oninput="calculateLoan()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Loan Term (years)</label>
+<input type="number" id="loanYears" value="30" oninput="calculateLoan()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+<div>
+<label style="display:block;font-size:11px;color:#666;margin-bottom:4px;">Extra Monthly Payment</label>
+<input type="number" id="loanExtra" value="0" oninput="calculateLoan()" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px;">
+</div>
+</div>
+<div id="loanResults"></div>
+</div>`,
+        onInit: 'calculateLoan'
+    },
     'checklist': {
         id: 'checklist',
         name: 'Checklist',
@@ -3889,6 +3918,97 @@ function calculateTax() {
             <span>Take Home (Monthly)</span>
             <span style="color:#27ae60;">$${((income - totalTax) / 12).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span>
         </div>
+    `;
+}
+
+// Loan Calculator
+function calculateLoan() {
+    const amountEl = document.getElementById('loanAmount');
+    const rateEl = document.getElementById('loanRate');
+    const yearsEl = document.getElementById('loanYears');
+    const extraEl = document.getElementById('loanExtra');
+    const resultsEl = document.getElementById('loanResults');
+    if (!amountEl || !rateEl || !yearsEl || !resultsEl) return;
+
+    const principal = parseFloat(amountEl.value) || 0;
+    const annualRate = (parseFloat(rateEl.value) || 0) / 100;
+    const years = parseInt(yearsEl.value) || 0;
+    const extraPayment = parseFloat(extraEl.value) || 0;
+    const monthlyRate = annualRate / 12;
+    const numPayments = years * 12;
+
+    if (principal <= 0 || annualRate <= 0 || years <= 0) {
+        resultsEl.innerHTML = '<div style="color:#7f8c8d;text-align:center;padding:20px;">Enter loan details above</div>';
+        return;
+    }
+
+    // Standard monthly payment formula: M = P * [r(1+r)^n] / [(1+r)^n - 1]
+    const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    const totalPayment = monthlyPayment * numPayments;
+    const totalInterest = totalPayment - principal;
+
+    // Calculate with extra payments
+    let balance = principal;
+    let totalInterestWithExtra = 0;
+    let monthsWithExtra = 0;
+    while (balance > 0 && monthsWithExtra < numPayments * 2) {
+        const interestPayment = balance * monthlyRate;
+        const principalPayment = Math.min(balance, monthlyPayment - interestPayment + extraPayment);
+        totalInterestWithExtra += interestPayment;
+        balance -= principalPayment;
+        monthsWithExtra++;
+        if (balance < 0.01) balance = 0;
+    }
+    const yearsWithExtra = Math.floor(monthsWithExtra / 12);
+    const monthsRemainder = monthsWithExtra % 12;
+    const interestSaved = totalInterest - totalInterestWithExtra;
+
+    // Amortization milestones
+    let milestones = '';
+    const checkYears = [1, 5, 10, 15, 20, 25, 30].filter(y => y <= years);
+    let bal = principal;
+    let paidPrincipal = 0;
+    let paidInterest = 0;
+    for (let m = 1; m <= numPayments; m++) {
+        const intPmt = bal * monthlyRate;
+        const prinPmt = monthlyPayment - intPmt;
+        paidInterest += intPmt;
+        paidPrincipal += prinPmt;
+        bal -= prinPmt;
+        if (checkYears.includes(m / 12)) {
+            milestones += `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eee;font-size:12px;"><span>Year ${m/12}</span><span>Balance: $${Math.max(0,bal).toLocaleString(undefined,{maximumFractionDigits:0})}</span><span style="color:#7f8c8d;">Paid: $${paidPrincipal.toLocaleString(undefined,{maximumFractionDigits:0})}</span></div>`;
+        }
+    }
+
+    resultsEl.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Monthly Payment</div>
+                <div style="font-size:20px;font-weight:600;color:#2980b9;">$${monthlyPayment.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Total Interest</div>
+                <div style="font-size:20px;font-weight:600;color:#c0392b;">$${totalInterest.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Total Cost</div>
+                <div style="font-size:18px;font-weight:600;">$${totalPayment.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
+            </div>
+            <div style="background:#fff;padding:10px;border-radius:4px;text-align:center;">
+                <div style="font-size:12px;color:#7f8c8d;">Interest Ratio</div>
+                <div style="font-size:18px;font-weight:600;">${(totalInterest/principal*100).toFixed(1)}%</div>
+            </div>
+        </div>
+        ${extraPayment > 0 ? `
+        <div style="background:#e8f5e9;padding:10px;border-radius:4px;margin-bottom:15px;">
+            <div style="font-size:12px;font-weight:600;color:#2e7d32;margin-bottom:5px;">WITH $${extraPayment.toLocaleString()}/mo EXTRA</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span>Payoff: ${yearsWithExtra}y ${monthsRemainder}m</span>
+                <span style="color:#27ae60;font-weight:600;">Save $${interestSaved.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+            </div>
+        </div>` : ''}
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:#7f8c8d;">AMORTIZATION</div>
+        ${milestones}
     `;
 }
 
