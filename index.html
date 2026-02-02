@@ -72,6 +72,19 @@ body {
     font-size: 12px;
     color: var(--text-primary);
     transition: background 0.3s, color 0.3s;
+    overscroll-behavior: none;
+}
+
+/* Prevent pull-to-refresh and overscroll when dragging */
+html {
+    overscroll-behavior: none;
+}
+
+/* Prevent scrolling when actively dragging/resizing */
+body.is-dragging,
+body.is-resizing {
+    overflow: hidden;
+    touch-action: none;
 }
 
 header {
@@ -472,9 +485,11 @@ main#noteboard {
     z-index: 10;
     opacity: 0;
     transition: opacity 0.15s, background 0.15s;
+    touch-action: none;
 }
 
-.note:hover .resize-handle {
+.note:hover .resize-handle,
+.note:active .resize-handle {
     opacity: 1;
 }
 
@@ -522,6 +537,24 @@ main#noteboard {
     height: 12px;
     cursor: se-resize;
     border-radius: 0 0 4px 0;
+}
+
+/* Visible resize grip indicator on SE corner */
+.resize-handle-se::after {
+    content: '';
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid rgba(52, 152, 219, 0.5);
+    border-bottom: 2px solid rgba(52, 152, 219, 0.5);
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.note:hover .resize-handle-se::after {
+    opacity: 1;
 }
 
 /* Edge handles */
@@ -585,6 +618,10 @@ main#noteboard {
 
 .note-header:active {
     cursor: grabbing;
+}
+
+.note-header {
+    touch-action: none;
 }
 
 .note-header .drag-handle {
@@ -866,6 +903,7 @@ main#noteboard {
     position: absolute;
     background: transparent;
     z-index: 10;
+    touch-action: none;
 }
 
 .content-editor-resize-e {
@@ -901,6 +939,7 @@ main#noteboard {
     align-items: center;
     cursor: grab;
     user-select: none;
+    touch-action: none;
 }
 
 .content-editor-header:active {
@@ -941,6 +980,7 @@ main#noteboard {
     cursor: col-resize;
     flex-shrink: 0;
     transition: background 0.15s;
+    touch-action: none;
 }
 
 .content-editor-resizer:hover,
@@ -1381,6 +1421,456 @@ tr:hover {
     color: #e74c3c;
 }
 
+/* Calendar Widget Styles */
+.note-content:has(.calendar-widget) {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-widget {
+    padding: 10px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.calendar-year-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-year-nav button {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.calendar-year-nav button:hover {
+    background: var(--table-hover);
+}
+
+.calendar-year-nav span {
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.calendar-manage-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.calendar-manage-btn:hover {
+    background: #2980b9;
+}
+
+.calendar-year-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+    flex: 1;
+    min-height: 0;
+}
+
+.calendar-month {
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.calendar-month-name {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--text-heading);
+    flex-shrink: 0;
+}
+
+.calendar-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto repeat(6, 1fr);
+    gap: 1px;
+    flex: 1;
+    min-height: 0;
+}
+
+.calendar-dow {
+    text-align: center;
+    font-size: 8px;
+    color: var(--text-muted);
+    padding: 2px 0;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 2px;
+    font-size: 9px;
+    position: relative;
+    min-height: 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-day:hover {
+    background: var(--table-hover);
+}
+
+.calendar-day.other-month {
+    cursor: default;
+}
+
+.calendar-day.today {
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+}
+
+.calendar-day.other-month {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
+.calendar-event-dots {
+    display: flex;
+    justify-content: center;
+    gap: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.calendar-event-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-light);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.calendar-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.calendar-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.calendar-legend-count {
+    color: var(--text-muted);
+    margin-left: 2px;
+}
+
+/* Calendar Management Modal */
+.calendar-manage-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--overlay-bg);
+    z-index: 10020;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar-manage-modal.open {
+    display: flex;
+}
+
+.calendar-manage-content {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 20px;
+    width: 90%;
+    max-width: 450px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.calendar-manage-content h3 {
+    margin-bottom: 15px;
+    color: var(--text-heading);
+}
+
+.calendar-manage-close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+.calendar-manage-close:hover {
+    color: var(--text-heading);
+}
+
+.calendar-list {
+    margin-bottom: 15px;
+}
+
+.calendar-list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.calendar-list-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.calendar-list-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.calendar-list-count {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.calendar-list-remove {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 2px 6px;
+}
+
+.calendar-list-remove:hover {
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 4px;
+}
+
+.calendar-add-form {
+    border-top: 1px solid var(--border-light);
+    padding-top: 15px;
+}
+
+.calendar-add-form h4 {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-heading);
+}
+
+.calendar-add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.calendar-add-name {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.calendar-color-picker {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.calendar-color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.calendar-color-option:hover {
+    transform: scale(1.1);
+}
+
+.calendar-color-option.selected {
+    border-color: var(--text-heading);
+}
+
+.calendar-add-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.calendar-add-btn:hover {
+    background: #229954;
+}
+
+.calendar-import-section {
+    border-top: 1px solid var(--border-light);
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.calendar-import-section h4 {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-heading);
+}
+
+.calendar-import-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.calendar-import-file {
+    flex: 1;
+}
+
+.calendar-import-select {
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+/* Calendar Day Tooltip */
+.calendar-day-tooltip {
+    position: absolute;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 150px;
+    max-width: 250px;
+    z-index: 10030;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 11px;
+}
+
+.calendar-day-tooltip-date {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-heading);
+}
+
+.calendar-day-tooltip-event {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+}
+
+.calendar-day-tooltip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.calendar-day-add-form {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
+}
+
+.calendar-day-add-input {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 11px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.calendar-day-add-select {
+    padding: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 10px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    max-width: 80px;
+}
+
+.calendar-day-add-btn {
+    padding: 4px 8px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.calendar-day-add-btn:hover {
+    background: #229954;
+}
+
 /* Feature Selection Modal */
 .feature-select-modal {
     display: none;
@@ -1498,11 +1988,187 @@ tr:hover {
     header {
         flex-direction: column;
         gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .header-title-area {
+        width: 100%;
+        justify-content: center;
+    }
+
+    header h1 {
+        font-size: 1.2rem;
     }
 
     .header-controls {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .header-controls button {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    #boardSelector {
+        min-width: 120px;
+        padding: 10px 12px;
+    }
+
+    main#noteboard {
+        padding: 10px;
+    }
+
+    .note {
+        min-width: 120px;
+        min-height: 80px;
+    }
+
+    .note-header {
+        padding: 12px 10px;
+        font-size: 0.85rem;
+    }
+
+    /* Larger touch targets for resize handles on mobile */
+    .resize-handle {
+        opacity: 0.5;
+    }
+
+    .resize-handle-nw,
+    .resize-handle-ne,
+    .resize-handle-sw,
+    .resize-handle-se {
+        width: 24px;
+        height: 24px;
+    }
+
+    .resize-handle-nw {
+        top: -8px;
+        left: -8px;
+    }
+
+    .resize-handle-ne {
+        top: -8px;
+        right: -8px;
+    }
+
+    .resize-handle-sw {
+        bottom: -8px;
+        left: -8px;
+    }
+
+    .resize-handle-se {
+        bottom: -8px;
+        right: -8px;
+        /* Add visible indicator for primary resize handle */
+        background: rgba(52, 152, 219, 0.3);
+        border-radius: 0 0 8px 0;
+    }
+
+    .resize-handle-n,
+    .resize-handle-s {
+        height: 16px;
+        left: 24px;
+        right: 24px;
+    }
+
+    .resize-handle-n {
+        top: -8px;
+    }
+
+    .resize-handle-s {
+        bottom: -8px;
+    }
+
+    .resize-handle-w,
+    .resize-handle-e {
+        width: 16px;
+        top: 24px;
+        bottom: 24px;
+    }
+
+    .resize-handle-w {
+        left: -8px;
+    }
+
+    .resize-handle-e {
+        right: -8px;
+    }
+
+    /* Content editor adjustments for mobile */
+    .content-editor {
+        width: 100% !important;
+        height: 100vh !important;
+        max-width: 100% !important;
+        min-width: unset !important;
+        border-radius: 0;
+        left: 0 !important;
+        top: 0 !important;
+    }
+
+    .content-editor-body {
+        flex-direction: column;
+    }
+
+    .content-editor-resizer {
+        width: 100%;
+        height: 6px;
+        cursor: row-resize;
+    }
+
+    .content-editor-input,
+    .content-editor-preview {
+        min-width: 100%;
+        min-height: 150px;
+    }
+
+    /* Note settings modal adjustments */
+    .note-settings {
+        width: 90%;
+        max-width: 320px;
+    }
+
+    /* Import/Export modal adjustments */
+    .import-export-content {
+        width: 95%;
+        max-height: 90vh;
+        padding: 15px;
+    }
+
+    /* Better tap feedback */
+    .header-btn {
+        opacity: 1;
+        width: 28px;
+        height: 28px;
+    }
+
+    .noteboard-settings {
+        left: 10px;
+        right: 10px;
+        min-width: unset;
+    }
+}
+
+/* Touch-specific improvements */
+@media (pointer: coarse) {
+    .note-header {
+        cursor: grab;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .resize-handle {
+        opacity: 0.6;
+    }
+
+    .resize-handle-se {
+        background: rgba(52, 152, 219, 0.4);
+    }
+
+    .header-btn {
+        opacity: 1;
     }
 }
     </style>
@@ -1769,6 +2435,26 @@ const NOTE_TEMPLATES = {
 <div class="checklist-summary" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border-light);font-size:11px;color:var(--text-muted);"></div>
 </div>`,
         onInit: 'checklistInit'
+    },
+    'calendar': {
+        id: 'calendar',
+        name: 'Calendar',
+        description: 'Year view calendar with .ics import and event tracking',
+        icon: '📅',
+        title: 'Calendar ' + new Date().getFullYear(),
+        content: `<div class="calendar-widget">
+<div class="calendar-header">
+<div class="calendar-year-nav">
+<button onclick="calendarPrevYear(this)">&lt;</button>
+<span class="calendar-year-display">${new Date().getFullYear()}</span>
+<button onclick="calendarNextYear(this)">&gt;</button>
+</div>
+<button class="calendar-manage-btn" onclick="calendarOpenManage(this)">Manage Calendars</button>
+</div>
+<div class="calendar-year-grid"></div>
+<div class="calendar-legend"></div>
+</div>`,
+        onInit: 'calendarInit'
     }
 };
 
@@ -2177,12 +2863,20 @@ function renderNoteboard() {
     const noteboard = document.getElementById('noteboard');
     noteboard.innerHTML = '';
 
+    const notesToAutoFit = [];
+
     // Render built-in notes (excluding hidden ones)
     SECTIONS.forEach(noteId => {
         if (hiddenNotes.includes(noteId)) return;
         const note = createNote(noteId);
         if (note) {
             noteboard.appendChild(note);
+            // Check if note needs auto-fitting (no saved dimensions and has content)
+            const pos = positions[noteId];
+            const custom = noteCustomizations[noteId] || {};
+            if ((!pos || (!pos.width && !pos.height)) && custom.customContent) {
+                notesToAutoFit.push(note);
+            }
         }
     });
 
@@ -2191,11 +2885,24 @@ function renderNoteboard() {
         const note = createNote(noteId);
         if (note) {
             noteboard.appendChild(note);
+            // Check if note needs auto-fitting (no saved dimensions)
+            const pos = positions[noteId];
+            const custom = noteCustomizations[noteId] || {};
+            if ((!pos || (!pos.width && !pos.height)) && (custom.customContent || custom.templateId)) {
+                notesToAutoFit.push(note);
+            }
         }
     });
 
     // Initialize dynamic calculators if present
     initializeCalculators();
+
+    // Auto-fit notes after DOM is ready
+    if (notesToAutoFit.length > 0) {
+        requestAnimationFrame(() => {
+            notesToAutoFit.forEach(note => autoFitNoteContent(note, true));
+        });
+    }
 }
 
 function initializeCalculators() {
@@ -2204,6 +2911,7 @@ function initializeCalculators() {
         if (document.getElementById('taxIncome')) calculateTax();
         if (document.getElementById('growthInitial')) calculateGrowth();
         if (document.querySelector('.checklist-widget')) checklistInit();
+        if (document.querySelector('.calendar-widget')) calendarInit();
     }, 50);
 }
 
@@ -2782,6 +3490,828 @@ function calculateGrowth() {
     `;
 }
 
+// Calendar Widget
+const CALENDAR_COLORS = [
+    '#3498db', '#e74c3c', '#27ae60', '#9b59b6',
+    '#f39c12', '#1abc9c', '#e67e22', '#34495e'
+];
+
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAY_NAMES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+function calendarGetNoteId(widget) {
+    const note = widget.closest('.note');
+    return note ? note.dataset.note : null;
+}
+
+function calendarGetData(noteId) {
+    const customizations = loadNoteCustomizations();
+    const custom = customizations[noteId] || {};
+    const data = custom.calendarData || { calendars: [], events: [] };
+    return data;
+}
+
+function calendarSaveData(noteId, data) {
+    const customizations = loadNoteCustomizations();
+    if (!customizations[noteId]) customizations[noteId] = {};
+    customizations[noteId].calendarData = data;
+    saveNoteCustomizations(customizations);
+}
+
+function calendarInit() {
+    document.querySelectorAll('.calendar-widget').forEach(widget => {
+        const noteId = calendarGetNoteId(widget);
+        if (!noteId) return;
+
+        const data = calendarGetData(noteId);
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    });
+}
+
+function calendarRender(widget, noteId, year) {
+    const data = calendarGetData(noteId);
+    const grid = widget.querySelector('.calendar-year-grid');
+    const legend = widget.querySelector('.calendar-legend');
+    const yearDisplay = widget.querySelector('.calendar-year-display');
+
+    if (yearDisplay) yearDisplay.textContent = year;
+
+    // Render 12 months
+    let html = '';
+    for (let month = 0; month < 12; month++) {
+        html += calendarRenderMonth(year, month, data);
+    }
+    grid.innerHTML = html;
+
+    // Render legend with event counts
+    const counts = calendarCountByType(data, year);
+    let legendHtml = '';
+    data.calendars.forEach(cal => {
+        const count = counts[cal.id] || 0;
+        legendHtml += `<div class="calendar-legend-item">
+            <span class="calendar-legend-dot" style="background:${cal.color}"></span>
+            <span>${cal.name}</span>
+            <span class="calendar-legend-count">${count}</span>
+        </div>`;
+    });
+    legend.innerHTML = legendHtml;
+}
+
+function calendarRenderMonth(year, month, data) {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startDow = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
+
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+    const todayDate = today.getDate();
+
+    let html = `<div class="calendar-month">
+        <div class="calendar-month-name">${MONTH_NAMES[month]}</div>
+        <div class="calendar-month-grid">`;
+
+    // Day of week headers
+    DAY_NAMES.forEach(d => {
+        html += `<div class="calendar-dow">${d}</div>`;
+    });
+
+    // Empty cells before first day
+    for (let i = 0; i < startDow; i++) {
+        html += `<div class="calendar-day other-month"></div>`;
+    }
+
+    // Days of month
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayEvents = calendarGetEventsForDate(data, dateStr);
+        const isToday = isCurrentMonth && day === todayDate;
+
+        let classes = 'calendar-day';
+        if (isToday) classes += ' today';
+        if (dayEvents.length > 0) classes += ' has-events';
+
+        html += `<div class="${classes}" data-date="${dateStr}" onclick="calendarShowDayEvents(this, '${dateStr}')">
+            ${day}`;
+
+        if (dayEvents.length > 0) {
+            html += `<div class="calendar-event-dots">`;
+            // Show up to 3 dots
+            const uniqueCals = [...new Set(dayEvents.map(e => e.calendarId))];
+            uniqueCals.slice(0, 3).forEach(calId => {
+                const cal = data.calendars.find(c => c.id === calId);
+                if (cal) {
+                    html += `<span class="calendar-event-dot" style="background:${cal.color}"></span>`;
+                }
+            });
+            html += `</div>`;
+        }
+
+        html += `</div>`;
+    }
+
+    html += `</div></div>`;
+    return html;
+}
+
+function calendarGetEventsForDate(data, dateStr) {
+    return data.events.filter(event => {
+        // Check if date falls within event range or matches single day
+        const startDate = event.startDate.split('T')[0];
+        const endDate = event.endDate ? event.endDate.split('T')[0] : startDate;
+        return dateStr >= startDate && dateStr <= endDate;
+    });
+}
+
+function calendarCountByType(data, year) {
+    const counts = {};
+    data.calendars.forEach(cal => counts[cal.id] = 0);
+
+    const yearStart = new Date(year, 0, 1);
+    const yearEnd = new Date(year, 11, 31);
+
+    data.events.forEach(event => {
+        if (!counts.hasOwnProperty(event.calendarId)) return;
+
+        const startDate = new Date(event.startDate.split('T')[0]);
+        const endDate = new Date((event.endDate || event.startDate).split('T')[0]);
+
+        // Clamp to year boundaries
+        const countStart = startDate < yearStart ? yearStart : startDate;
+        const countEnd = endDate > yearEnd ? yearEnd : endDate;
+
+        if (countStart <= countEnd) {
+            // Count number of days
+            const days = Math.round((countEnd - countStart) / (1000 * 60 * 60 * 24)) + 1;
+            counts[event.calendarId] += days;
+        }
+    });
+
+    return counts;
+}
+
+function calendarCountTotal(data) {
+    const counts = {};
+    data.calendars.forEach(cal => counts[cal.id] = 0);
+
+    data.events.forEach(event => {
+        if (!counts.hasOwnProperty(event.calendarId)) return;
+
+        const startDate = new Date(event.startDate.split('T')[0]);
+        const endDate = new Date((event.endDate || event.startDate).split('T')[0]);
+
+        // Count number of days
+        const days = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        counts[event.calendarId] += days;
+    });
+
+    return counts;
+}
+
+function calendarPrevYear(btn) {
+    const widget = btn.closest('.calendar-widget');
+    const noteId = calendarGetNoteId(widget);
+    const yearDisplay = widget.querySelector('.calendar-year-display');
+    const year = parseInt(yearDisplay.textContent) - 1;
+    calendarRender(widget, noteId, year);
+}
+
+function calendarNextYear(btn) {
+    const widget = btn.closest('.calendar-widget');
+    const noteId = calendarGetNoteId(widget);
+    const yearDisplay = widget.querySelector('.calendar-year-display');
+    const year = parseInt(yearDisplay.textContent) + 1;
+    calendarRender(widget, noteId, year);
+}
+
+function calendarShowDayEvents(dayEl, dateStr) {
+    // Remove existing tooltip
+    document.querySelectorAll('.calendar-day-tooltip').forEach(t => t.remove());
+
+    const widget = dayEl.closest('.calendar-widget');
+    const noteId = calendarGetNoteId(widget);
+    const data = calendarGetData(noteId);
+    const events = calendarGetEventsForDate(data, dateStr);
+
+    const date = new Date(dateStr + 'T00:00:00');
+    const dateFormatted = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+    let html = `<div class="calendar-day-tooltip" data-note-id="${noteId}" data-date="${dateStr}">
+        <div class="calendar-day-tooltip-date">${dateFormatted}</div>`;
+
+    events.forEach(event => {
+        const cal = data.calendars.find(c => c.id === event.calendarId);
+        const color = cal ? cal.color : '#999';
+        html += `<div class="calendar-day-tooltip-event">
+            <span class="calendar-day-tooltip-dot" style="background:${color}"></span>
+            <span>${event.summary}</span>
+        </div>`;
+    });
+
+    // Add event form
+    if (data.calendars.length > 0) {
+        const calendarOptions = data.calendars.map(cal =>
+            `<option value="${cal.id}">${cal.name}</option>`
+        ).join('');
+        html += `<div class="calendar-day-add-form">
+            <input type="text" class="calendar-day-add-input" placeholder="New event..." id="calendarDayEventTitle">
+            <select class="calendar-day-add-select" id="calendarDayEventCalendar">${calendarOptions}</select>
+            <button class="calendar-day-add-btn" onclick="calendarAddEventFromDay(this)">+</button>
+        </div>`;
+    } else {
+        html += `<div style="font-size:10px;color:var(--text-muted);margin-top:6px;">Add a calendar first to create events</div>`;
+    }
+
+    html += `</div>`;
+
+    const tooltip = document.createElement('div');
+    tooltip.innerHTML = html;
+    const tooltipEl = tooltip.firstChild;
+    document.body.appendChild(tooltipEl);
+
+    // Position tooltip
+    const rect = dayEl.getBoundingClientRect();
+    let left = rect.left + window.scrollX;
+    let top = rect.bottom + window.scrollY + 5;
+
+    // Adjust if tooltip would go off-screen
+    tooltipEl.style.left = left + 'px';
+    tooltipEl.style.top = top + 'px';
+
+    // Focus the input and add Enter key support
+    setTimeout(() => {
+        const input = tooltipEl.querySelector('.calendar-day-add-input');
+        if (input) {
+            input.focus();
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const btn = tooltipEl.querySelector('.calendar-day-add-btn');
+                    if (btn) btn.click();
+                }
+            });
+        }
+    }, 0);
+
+    // Close on click outside
+    const closeHandler = (e) => {
+        if (!tooltipEl.contains(e.target) && e.target !== dayEl) {
+            tooltipEl.remove();
+            document.removeEventListener('click', closeHandler);
+        }
+    };
+    setTimeout(() => document.addEventListener('click', closeHandler), 0);
+}
+
+function calendarOpenManage(btn) {
+    const widget = btn.closest('.calendar-widget');
+    const noteId = calendarGetNoteId(widget);
+    const data = calendarGetData(noteId);
+
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('calendarManageModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'calendarManageModal';
+        modal.className = 'calendar-manage-modal';
+        modal.innerHTML = `
+            <div class="calendar-manage-content">
+                <span class="calendar-manage-close" onclick="calendarCloseManage()">&times;</span>
+                <h3>Manage Calendars</h3>
+                <div class="calendar-list" id="calendarManageList"></div>
+                <div class="calendar-add-form">
+                    <h4>Add New Calendar</h4>
+                    <div class="calendar-add-row">
+                        <input type="text" class="calendar-add-name" id="calendarAddName" placeholder="Calendar name...">
+                    </div>
+                    <div class="calendar-color-picker" id="calendarColorPicker"></div>
+                    <button class="calendar-add-btn" onclick="calendarAddCalendar()">Add Calendar</button>
+                </div>
+                <div class="calendar-import-section">
+                    <h4>Add Event</h4>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">Title:</label>
+                        <input type="text" class="calendar-add-name" id="calendarEventTitle" placeholder="Event title..." style="flex:1;">
+                    </div>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">Start:</label>
+                        <input type="date" class="calendar-add-name" id="calendarEventStart" style="flex:1;">
+                    </div>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">End:</label>
+                        <input type="date" class="calendar-add-name" id="calendarEventEnd" style="flex:1;">
+                    </div>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">Calendar:</label>
+                        <select class="calendar-import-select" id="calendarEventCalendar" style="flex:1;"></select>
+                    </div>
+                    <button class="calendar-add-btn" onclick="calendarAddEvent()">Add Event</button>
+                </div>
+                <div class="calendar-import-section">
+                    <h4>Import .ics</h4>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">From file:</label>
+                        <input type="file" class="calendar-import-file" id="calendarImportFile" accept=".ics">
+                    </div>
+                    <div class="calendar-import-row" style="margin-bottom:8px;">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">From URL:</label>
+                        <input type="text" class="calendar-add-name" id="calendarImportUrl" placeholder="https://example.com/calendar.ics" style="flex:1;">
+                        <button class="calendar-add-btn" onclick="calendarImportFromUrl()" style="padding:6px 10px;">Fetch</button>
+                    </div>
+                    <div class="calendar-import-row">
+                        <label style="font-size:11px;color:var(--text-muted);min-width:60px;">To calendar:</label>
+                        <select class="calendar-import-select" id="calendarImportSelect"></select>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // File import handler
+        document.getElementById('calendarImportFile').addEventListener('change', calendarHandleFileImport);
+    }
+
+    modal.dataset.noteId = noteId;
+    modal.classList.add('open');
+
+    // Render color picker
+    const colorPicker = document.getElementById('calendarColorPicker');
+    colorPicker.innerHTML = CALENDAR_COLORS.map((color, i) =>
+        `<div class="calendar-color-option${i === 0 ? ' selected' : ''}"
+             style="background:${color}"
+             data-color="${color}"
+             onclick="calendarSelectColor(this)"></div>`
+    ).join('');
+
+    // Render calendar list
+    calendarRenderManageList(data);
+}
+
+function calendarCloseManage() {
+    const modal = document.getElementById('calendarManageModal');
+    if (modal) modal.classList.remove('open');
+}
+
+function calendarSelectColor(el) {
+    document.querySelectorAll('.calendar-color-option').forEach(opt => opt.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+function calendarRenderManageList(data) {
+    const list = document.getElementById('calendarManageList');
+    const importSelect = document.getElementById('calendarImportSelect');
+    const eventSelect = document.getElementById('calendarEventCalendar');
+
+    if (data.calendars.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-size:12px;">No calendars yet. Add one below.</p>';
+        const emptyOption = '<option value="">Add a calendar first</option>';
+        importSelect.innerHTML = emptyOption;
+        eventSelect.innerHTML = emptyOption;
+        importSelect.disabled = true;
+        eventSelect.disabled = true;
+    } else {
+        const counts = calendarCountTotal(data);
+
+        list.innerHTML = data.calendars.map(cal => `
+            <div class="calendar-list-item">
+                <span class="calendar-list-color" style="background:${cal.color}"></span>
+                <span class="calendar-list-name">${cal.name}</span>
+                <span class="calendar-list-count">${counts[cal.id] || 0} days</span>
+                <button class="calendar-list-remove" onclick="calendarRemoveCalendar('${cal.id}')">&times;</button>
+            </div>
+        `).join('');
+
+        const calendarOptions = data.calendars.map(cal =>
+            `<option value="${cal.id}">${cal.name}</option>`
+        ).join('');
+        importSelect.innerHTML = calendarOptions;
+        eventSelect.innerHTML = calendarOptions;
+        importSelect.disabled = false;
+        eventSelect.disabled = false;
+    }
+}
+
+function calendarAddCalendar() {
+    const modal = document.getElementById('calendarManageModal');
+    const noteId = modal.dataset.noteId;
+    const nameInput = document.getElementById('calendarAddName');
+    const colorEl = document.querySelector('.calendar-color-option.selected');
+
+    const name = nameInput.value.trim();
+    if (!name) {
+        nameInput.focus();
+        return;
+    }
+
+    const color = colorEl ? colorEl.dataset.color : CALENDAR_COLORS[0];
+    const data = calendarGetData(noteId);
+
+    const newCal = {
+        id: 'cal_' + Date.now(),
+        name: name,
+        color: color
+    };
+
+    data.calendars.push(newCal);
+    calendarSaveData(noteId, data);
+
+    nameInput.value = '';
+    calendarRenderManageList(data);
+
+    // Re-render calendar
+    const widget = document.querySelector(`.note[data-note="${noteId}"] .calendar-widget`);
+    if (widget) {
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    }
+}
+
+function calendarAddEvent() {
+    const modal = document.getElementById('calendarManageModal');
+    const noteId = modal.dataset.noteId;
+
+    const titleInput = document.getElementById('calendarEventTitle');
+    const startInput = document.getElementById('calendarEventStart');
+    const endInput = document.getElementById('calendarEventEnd');
+    const calendarSelect = document.getElementById('calendarEventCalendar');
+
+    const title = titleInput.value.trim();
+    const startDate = startInput.value;
+    const endDate = endInput.value || startDate;
+    const calendarId = calendarSelect.value;
+
+    if (!title) {
+        titleInput.focus();
+        return;
+    }
+
+    if (!startDate) {
+        startInput.focus();
+        return;
+    }
+
+    if (!calendarId) {
+        alert('Please create a calendar first.');
+        return;
+    }
+
+    const data = calendarGetData(noteId);
+
+    const newEvent = {
+        uid: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        calendarId: calendarId,
+        summary: title,
+        startDate: startDate,
+        endDate: endDate
+    };
+
+    data.events.push(newEvent);
+    calendarSaveData(noteId, data);
+
+    // Clear inputs
+    titleInput.value = '';
+    startInput.value = '';
+    endInput.value = '';
+
+    calendarRenderManageList(data);
+
+    // Re-render calendar
+    const widget = document.querySelector(`.note[data-note="${noteId}"] .calendar-widget`);
+    if (widget) {
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    }
+}
+
+function calendarAddEventFromDay(btn) {
+    const tooltip = btn.closest('.calendar-day-tooltip');
+    const noteId = tooltip.dataset.noteId;
+    const dateStr = tooltip.dataset.date;
+
+    const titleInput = tooltip.querySelector('.calendar-day-add-input');
+    const calendarSelect = tooltip.querySelector('.calendar-day-add-select');
+
+    const title = titleInput.value.trim();
+    const calendarId = calendarSelect.value;
+
+    if (!title) {
+        titleInput.focus();
+        return;
+    }
+
+    const data = calendarGetData(noteId);
+
+    const newEvent = {
+        uid: 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        calendarId: calendarId,
+        summary: title,
+        startDate: dateStr,
+        endDate: dateStr
+    };
+
+    data.events.push(newEvent);
+    calendarSaveData(noteId, data);
+
+    // Close tooltip
+    tooltip.remove();
+
+    // Re-render calendar
+    const widget = document.querySelector(`.note[data-note="${noteId}"] .calendar-widget`);
+    if (widget) {
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    }
+}
+
+function calendarRemoveCalendar(calId) {
+    const modal = document.getElementById('calendarManageModal');
+    const noteId = modal.dataset.noteId;
+    const data = calendarGetData(noteId);
+
+    data.calendars = data.calendars.filter(c => c.id !== calId);
+    data.events = data.events.filter(e => e.calendarId !== calId);
+    calendarSaveData(noteId, data);
+
+    calendarRenderManageList(data);
+
+    // Re-render calendar
+    const widget = document.querySelector(`.note[data-note="${noteId}"] .calendar-widget`);
+    if (widget) {
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    }
+}
+
+function calendarHandleFileImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const content = evt.target.result;
+        calendarImportICS(content);
+    };
+    reader.readAsText(file);
+
+    // Clear the input
+    e.target.value = '';
+}
+
+async function calendarImportFromUrl() {
+    const urlInput = document.getElementById('calendarImportUrl');
+    const url = urlInput.value.trim();
+
+    if (!url) {
+        urlInput.focus();
+        return;
+    }
+
+    // Validate URL
+    try {
+        new URL(url);
+    } catch {
+        alert('Please enter a valid URL.');
+        return;
+    }
+
+    const select = document.getElementById('calendarImportSelect');
+    if (!select.value) {
+        alert('Please create a calendar first before importing events.');
+        return;
+    }
+
+    // Show loading state
+    const fetchBtn = document.querySelector('.calendar-import-section .calendar-add-btn');
+    const originalText = fetchBtn.textContent;
+    fetchBtn.textContent = 'Fetching...';
+    fetchBtn.disabled = true;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const content = await response.text();
+
+        if (!content.includes('BEGIN:VCALENDAR')) {
+            throw new Error('The URL does not appear to contain valid ICS data.');
+        }
+
+        calendarImportICS(content);
+        urlInput.value = '';
+    } catch (error) {
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+            alert('Could not fetch the URL. This may be due to CORS restrictions. Try downloading the .ics file and importing it manually.');
+        } else {
+            alert('Error fetching calendar: ' + error.message);
+        }
+    } finally {
+        fetchBtn.textContent = originalText;
+        fetchBtn.disabled = false;
+    }
+}
+
+function calendarImportICS(content) {
+    const modal = document.getElementById('calendarManageModal');
+    const noteId = modal.dataset.noteId;
+    const select = document.getElementById('calendarImportSelect');
+    const calendarId = select.value;
+
+    if (!calendarId) {
+        alert('Please create a calendar first before importing events.');
+        return;
+    }
+
+    const events = parseICSContent(content, calendarId);
+
+    if (events.length === 0) {
+        alert('No events found in the ICS file.');
+        return;
+    }
+
+    const data = calendarGetData(noteId);
+
+    // Add events (avoiding duplicates by UID)
+    const existingUids = new Set(data.events.map(e => e.uid));
+    let added = 0;
+
+    events.forEach(event => {
+        if (!existingUids.has(event.uid)) {
+            data.events.push(event);
+            existingUids.add(event.uid);
+            added++;
+        }
+    });
+
+    calendarSaveData(noteId, data);
+    calendarRenderManageList(data);
+
+    // Re-render calendar
+    const widget = document.querySelector(`.note[data-note="${noteId}"] .calendar-widget`);
+    if (widget) {
+        const year = parseInt(widget.querySelector('.calendar-year-display')?.textContent) || new Date().getFullYear();
+        calendarRender(widget, noteId, year);
+    }
+
+    alert(`Imported ${added} event(s).`);
+}
+
+function parseICSContent(text, calendarId) {
+    const events = [];
+    const lines = text.replace(/\r\n /g, '').replace(/\r/g, '\n').split('\n');
+
+    let inEvent = false;
+    let currentEvent = {};
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        if (line === 'BEGIN:VEVENT') {
+            inEvent = true;
+            currentEvent = { calendarId };
+        } else if (line === 'END:VEVENT') {
+            if (currentEvent.startDate && currentEvent.summary) {
+                if (!currentEvent.uid) {
+                    currentEvent.uid = 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                }
+                if (!currentEvent.endDate) {
+                    currentEvent.endDate = currentEvent.startDate;
+                }
+                events.push(currentEvent);
+            }
+            inEvent = false;
+            currentEvent = {};
+        } else if (inEvent) {
+            const colonIndex = line.indexOf(':');
+            if (colonIndex === -1) continue;
+
+            let key = line.substring(0, colonIndex);
+            const value = line.substring(colonIndex + 1);
+
+            // Handle parameters in key (e.g., DTSTART;VALUE=DATE:20240101)
+            const semiIndex = key.indexOf(';');
+            if (semiIndex !== -1) {
+                key = key.substring(0, semiIndex);
+            }
+
+            switch (key) {
+                case 'UID':
+                    currentEvent.uid = value;
+                    break;
+                case 'SUMMARY':
+                    currentEvent.summary = value.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\n/g, '\n');
+                    break;
+                case 'DTSTART':
+                    currentEvent.startDate = parseICSDate(value);
+                    break;
+                case 'DTEND':
+                    currentEvent.endDate = parseICSDate(value);
+                    break;
+                case 'RRULE':
+                    // Basic recurring event support - expand first year of occurrences
+                    currentEvent.rrule = value;
+                    break;
+            }
+        }
+    }
+
+    // Expand recurring events for current year
+    const expandedEvents = [];
+    events.forEach(event => {
+        if (event.rrule) {
+            const expanded = expandRRULE(event);
+            expandedEvents.push(...expanded);
+        } else {
+            expandedEvents.push(event);
+        }
+    });
+
+    return expandedEvents;
+}
+
+function parseICSDate(value) {
+    // Handle formats: 20240115, 20240115T103000, 20240115T103000Z
+    const cleaned = value.replace('Z', '');
+
+    if (cleaned.length === 8) {
+        // Date only: YYYYMMDD
+        return `${cleaned.substring(0, 4)}-${cleaned.substring(4, 6)}-${cleaned.substring(6, 8)}`;
+    } else if (cleaned.length >= 15) {
+        // DateTime: YYYYMMDDTHHMMSS
+        return `${cleaned.substring(0, 4)}-${cleaned.substring(4, 6)}-${cleaned.substring(6, 8)}T${cleaned.substring(9, 11)}:${cleaned.substring(11, 13)}:${cleaned.substring(13, 15)}`;
+    }
+
+    return value;
+}
+
+function expandRRULE(event) {
+    const events = [event];
+    const rrule = event.rrule;
+
+    // Parse RRULE components
+    const parts = {};
+    rrule.split(';').forEach(part => {
+        const [key, val] = part.split('=');
+        parts[key] = val;
+    });
+
+    if (!parts.FREQ) return events;
+
+    const startDate = new Date(event.startDate);
+    const endDate = event.endDate ? new Date(event.endDate) : new Date(event.startDate);
+    const duration = endDate - startDate;
+
+    const count = parts.COUNT ? parseInt(parts.COUNT) : 52; // Default to 1 year of weekly events
+    const interval = parts.INTERVAL ? parseInt(parts.INTERVAL) : 1;
+
+    let until = parts.UNTIL ? new Date(parseICSDate(parts.UNTIL)) : null;
+    if (!until) {
+        until = new Date(startDate);
+        until.setFullYear(until.getFullYear() + 1);
+    }
+
+    let currentDate = new Date(startDate);
+    let occurrences = 1;
+
+    while (occurrences < count && currentDate < until) {
+        // Advance to next occurrence
+        switch (parts.FREQ) {
+            case 'DAILY':
+                currentDate.setDate(currentDate.getDate() + interval);
+                break;
+            case 'WEEKLY':
+                currentDate.setDate(currentDate.getDate() + (7 * interval));
+                break;
+            case 'MONTHLY':
+                currentDate.setMonth(currentDate.getMonth() + interval);
+                break;
+            case 'YEARLY':
+                currentDate.setFullYear(currentDate.getFullYear() + interval);
+                break;
+            default:
+                return events;
+        }
+
+        if (currentDate > until) break;
+
+        const newEndDate = new Date(currentDate.getTime() + duration);
+        events.push({
+            ...event,
+            uid: event.uid + '_' + occurrences,
+            startDate: currentDate.toISOString().split('T')[0],
+            endDate: newEndDate.toISOString().split('T')[0],
+            rrule: undefined
+        });
+
+        occurrences++;
+    }
+
+    return events;
+}
+
 // Simple Markdown Parser
 function parseMarkdown(text) {
     if (!text) return '';
@@ -2983,6 +4513,11 @@ function setupContentEditor() {
             if (note) {
                 const contentDiv = note.querySelector('.note-content');
                 contentDiv.innerHTML = `<div class="markdown-content">${parseMarkdown(textarea.value)}</div>`;
+
+                // Auto-resize note to fit new content
+                requestAnimationFrame(() => {
+                    autoFitNoteContent(note, false);
+                });
             }
         }
         overlay.classList.remove('open');
@@ -3019,84 +4554,143 @@ function setupContentEditor() {
         }
     });
 
+    // Helper to get coords from mouse or touch event (local to this scope)
+    function getCoords(e) {
+        if (e.touches && e.touches.length > 0) {
+            return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+        }
+        if (e.changedTouches && e.changedTouches.length > 0) {
+            return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+        }
+        return { clientX: e.clientX, clientY: e.clientY };
+    }
+
     // Editor dragging
     let editorDrag = { isDragging: false, startX: 0, startY: 0, startLeft: 0, startTop: 0 };
 
-    header.addEventListener('mousedown', (e) => {
+    function startEditorDrag(e) {
         if (e.target.closest('.content-editor-close')) return;
+        const coords = getCoords(e);
         editorDrag.isDragging = true;
-        editorDrag.startX = e.clientX;
-        editorDrag.startY = e.clientY;
+        editorDrag.startX = coords.clientX;
+        editorDrag.startY = coords.clientY;
         const rect = editor.getBoundingClientRect();
         editorDrag.startLeft = rect.left;
         editorDrag.startTop = rect.top;
         e.preventDefault();
-    });
+    }
 
-    document.addEventListener('mousemove', (e) => {
+    header.addEventListener('mousedown', startEditorDrag);
+    header.addEventListener('touchstart', startEditorDrag, { passive: false });
+
+    function moveEditorDrag(e) {
         if (!editorDrag.isDragging) return;
-        const dx = e.clientX - editorDrag.startX;
-        const dy = e.clientY - editorDrag.startY;
+        const coords = getCoords(e);
+        const dx = coords.clientX - editorDrag.startX;
+        const dy = coords.clientY - editorDrag.startY;
         const newLeft = Math.max(0, Math.min(window.innerWidth - editor.offsetWidth, editorDrag.startLeft + dx));
         const newTop = Math.max(0, Math.min(window.innerHeight - editor.offsetHeight, editorDrag.startTop + dy));
         editor.style.left = newLeft + 'px';
         editor.style.top = newTop + 'px';
-    });
+    }
 
-    document.addEventListener('mouseup', () => {
+    document.addEventListener('mousemove', moveEditorDrag);
+    document.addEventListener('touchmove', moveEditorDrag, { passive: false });
+
+    function endEditorDrag() {
         editorDrag.isDragging = false;
-    });
+    }
+
+    document.addEventListener('mouseup', endEditorDrag);
+    document.addEventListener('touchend', endEditorDrag);
+    document.addEventListener('touchcancel', endEditorDrag);
 
     // Resizer for markdown/preview split
-    let resizerState = { isResizing: false, startX: 0, startInputWidth: 0 };
+    let resizerState = { isResizing: false, startX: 0, startY: 0, startInputWidth: 0, startInputHeight: 0 };
 
-    resizer.addEventListener('mousedown', (e) => {
+    function startResizerDrag(e) {
+        const coords = getCoords(e);
         resizerState.isResizing = true;
-        resizerState.startX = e.clientX;
+        resizerState.startX = coords.clientX;
+        resizerState.startY = coords.clientY;
         resizerState.startInputWidth = inputPane.offsetWidth;
+        resizerState.startInputHeight = inputPane.offsetHeight;
         resizer.classList.add('active');
         e.preventDefault();
-    });
+    }
 
-    document.addEventListener('mousemove', (e) => {
+    resizer.addEventListener('mousedown', startResizerDrag);
+    resizer.addEventListener('touchstart', startResizerDrag, { passive: false });
+
+    function moveResizerDrag(e) {
         if (!resizerState.isResizing) return;
-        const dx = e.clientX - resizerState.startX;
+        const coords = getCoords(e);
         const editorBody = overlay.querySelector('.content-editor-body');
-        const totalWidth = editorBody.offsetWidth - resizer.offsetWidth;
-        const newInputWidth = Math.max(200, Math.min(totalWidth - 200, resizerState.startInputWidth + dx));
-        const newPreviewWidth = totalWidth - newInputWidth;
-        inputPane.style.flex = 'none';
-        inputPane.style.width = newInputWidth + 'px';
-        previewPane.style.flex = 'none';
-        previewPane.style.width = newPreviewWidth + 'px';
-    });
 
-    document.addEventListener('mouseup', () => {
+        // Check if we're in mobile vertical layout
+        const isMobileLayout = window.innerWidth <= 768;
+
+        if (isMobileLayout) {
+            // Vertical resizing on mobile
+            const dy = coords.clientY - resizerState.startY;
+            const totalHeight = editorBody.offsetHeight - resizer.offsetHeight;
+            const newInputHeight = Math.max(100, Math.min(totalHeight - 100, resizerState.startInputHeight + dy));
+            const newPreviewHeight = totalHeight - newInputHeight;
+            inputPane.style.flex = 'none';
+            inputPane.style.height = newInputHeight + 'px';
+            previewPane.style.flex = 'none';
+            previewPane.style.height = newPreviewHeight + 'px';
+        } else {
+            // Horizontal resizing on desktop
+            const dx = coords.clientX - resizerState.startX;
+            const totalWidth = editorBody.offsetWidth - resizer.offsetWidth;
+            const newInputWidth = Math.max(200, Math.min(totalWidth - 200, resizerState.startInputWidth + dx));
+            const newPreviewWidth = totalWidth - newInputWidth;
+            inputPane.style.flex = 'none';
+            inputPane.style.width = newInputWidth + 'px';
+            previewPane.style.flex = 'none';
+            previewPane.style.width = newPreviewWidth + 'px';
+        }
+    }
+
+    document.addEventListener('mousemove', moveResizerDrag);
+    document.addEventListener('touchmove', moveResizerDrag, { passive: false });
+
+    function endResizerDrag() {
         if (resizerState.isResizing) {
             resizerState.isResizing = false;
             resizer.classList.remove('active');
         }
-    });
+    }
+
+    document.addEventListener('mouseup', endResizerDrag);
+    document.addEventListener('touchend', endResizerDrag);
+    document.addEventListener('touchcancel', endResizerDrag);
 
     // Editor window resize
     let editorResize = { isResizing: false, handle: null, startX: 0, startY: 0, startWidth: 0, startHeight: 0 };
 
     editor.querySelectorAll('.content-editor-resize').forEach(handle => {
-        handle.addEventListener('mousedown', (e) => {
+        function startEditorResize(e) {
+            const coords = getCoords(e);
             editorResize.isResizing = true;
             editorResize.handle = handle.getAttribute('data-resize');
-            editorResize.startX = e.clientX;
-            editorResize.startY = e.clientY;
+            editorResize.startX = coords.clientX;
+            editorResize.startY = coords.clientY;
             editorResize.startWidth = editor.offsetWidth;
             editorResize.startHeight = editor.offsetHeight;
             e.preventDefault();
-        });
+        }
+
+        handle.addEventListener('mousedown', startEditorResize);
+        handle.addEventListener('touchstart', startEditorResize, { passive: false });
     });
 
-    document.addEventListener('mousemove', (e) => {
+    function moveEditorResize(e) {
         if (!editorResize.isResizing) return;
-        const dx = e.clientX - editorResize.startX;
-        const dy = e.clientY - editorResize.startY;
+        const coords = getCoords(e);
+        const dx = coords.clientX - editorResize.startX;
+        const dy = coords.clientY - editorResize.startY;
 
         if (editorResize.handle.includes('e')) {
             const newWidth = Math.max(500, editorResize.startWidth + dx);
@@ -3106,18 +4700,25 @@ function setupContentEditor() {
             const newHeight = Math.max(300, editorResize.startHeight + dy);
             editor.style.height = newHeight + 'px';
         }
-    });
+    }
 
-    document.addEventListener('mouseup', () => {
+    document.addEventListener('mousemove', moveEditorResize);
+    document.addEventListener('touchmove', moveEditorResize, { passive: false });
+
+    function endEditorResize() {
         editorResize.isResizing = false;
         editorResize.handle = null;
-    });
+    }
+
+    document.addEventListener('mouseup', endEditorResize);
+    document.addEventListener('touchend', endEditorResize);
+    document.addEventListener('touchcancel', endEditorResize);
 
     // Double-click on note content to edit
     const noteboard = document.getElementById('noteboard');
     noteboard.addEventListener('dblclick', (e) => {
         // Don't trigger on interactive elements
-        if (e.target.closest('input, button, select, textarea, a, .checklist-widget')) return;
+        if (e.target.closest('input, button, select, textarea, a, .checklist-widget, .calendar-widget')) return;
 
         const noteContent = e.target.closest('.note-content');
         if (!noteContent) return;
@@ -3419,12 +5020,23 @@ function getNoteContent(noteId) {
     return null;
 }
 
+// Helper to get coordinates from mouse or touch event
+function getEventCoords(e) {
+    if (e.touches && e.touches.length > 0) {
+        return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    }
+    if (e.changedTouches && e.changedTouches.length > 0) {
+        return { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY };
+    }
+    return { clientX: e.clientX, clientY: e.clientY };
+}
+
 // Free-form Drag functionality
 function setupDragging() {
     const noteboard = document.getElementById('noteboard');
 
-    // Mouse down on note header starts drag
-    noteboard.addEventListener('mousedown', (e) => {
+    // Start drag handler (mouse and touch)
+    function startDrag(e) {
         const header = e.target.closest('.note-header');
         if (!header) return;
 
@@ -3435,6 +5047,8 @@ function setupDragging() {
         if (!note) return;
 
         e.preventDefault();
+
+        const coords = getEventCoords(e);
 
         // Bring to front
         maxZ++;
@@ -3447,20 +5061,26 @@ function setupDragging() {
         // Start dragging
         dragState.isDragging = true;
         dragState.note = note;
-        dragState.startX = e.clientX;
-        dragState.startY = e.clientY;
+        dragState.startX = coords.clientX;
+        dragState.startY = coords.clientY;
         dragState.offsetX = note.offsetLeft;
         dragState.offsetY = note.offsetTop;
 
         note.classList.add('dragging');
-    });
+        document.body.classList.add('is-dragging');
+    }
 
-    // Mouse move updates position with snapping
-    document.addEventListener('mousemove', (e) => {
+    // Mouse/touch down on note header starts drag
+    noteboard.addEventListener('mousedown', startDrag);
+    noteboard.addEventListener('touchstart', startDrag, { passive: false });
+
+    // Move handler (mouse and touch)
+    function moveDrag(e) {
         if (!dragState.isDragging) return;
 
-        const dx = e.clientX - dragState.startX;
-        const dy = e.clientY - dragState.startY;
+        const coords = getEventCoords(e);
+        const dx = coords.clientX - dragState.startX;
+        const dy = coords.clientY - dragState.startY;
 
         let newX = Math.max(0, dragState.offsetX + dx);
         let newY = Math.max(0, dragState.offsetY + dy);
@@ -3475,10 +5095,14 @@ function setupDragging() {
 
         // Show/hide snap guides
         updateSnapGuides(snapped.guides);
-    });
+    }
 
-    // Mouse up ends drag and saves position
-    document.addEventListener('mouseup', () => {
+    // Mouse/touch move updates position with snapping
+    document.addEventListener('mousemove', moveDrag);
+    document.addEventListener('touchmove', moveDrag, { passive: false });
+
+    // End drag handler (mouse and touch)
+    function endDrag() {
         if (!dragState.isDragging) return;
 
         const note = dragState.note;
@@ -3496,12 +5120,18 @@ function setupDragging() {
         savePositions(positions);
 
         note.classList.remove('dragging');
+        document.body.classList.remove('is-dragging');
         dragState.isDragging = false;
         dragState.note = null;
 
         // Hide snap guides
         updateSnapGuides([]);
-    });
+    }
+
+    // Mouse/touch up ends drag and saves position
+    document.addEventListener('mouseup', endDrag);
+    document.addEventListener('touchend', endDrag);
+    document.addEventListener('touchcancel', endDrag);
 
     // Click on note brings it to front
     noteboard.addEventListener('mousedown', (e) => {
@@ -3524,7 +5154,7 @@ function setupDragging() {
 function setupResizing() {
     const noteboard = document.getElementById('noteboard');
 
-    // Double-click on resize handle for auto-resize
+    // Double-click/double-tap on resize handle for auto-resize
     noteboard.addEventListener('dblclick', (e) => {
         const handle = e.target.closest('.resize-handle');
         if (!handle) return;
@@ -3539,8 +5169,8 @@ function setupResizing() {
         autoResizeNote(note, handleType);
     });
 
-    // Mouse down on resize handle starts resize
-    noteboard.addEventListener('mousedown', (e) => {
+    // Start resize handler (mouse and touch)
+    function startResize(e) {
         const handle = e.target.closest('.resize-handle');
         if (!handle) return;
 
@@ -3549,6 +5179,8 @@ function setupResizing() {
 
         e.preventDefault();
         e.stopPropagation();
+
+        const coords = getEventCoords(e);
 
         // Bring to front
         maxZ++;
@@ -3562,8 +5194,8 @@ function setupResizing() {
         resizeState.isResizing = true;
         resizeState.note = note;
         resizeState.handle = handle.getAttribute('data-resize');
-        resizeState.startX = e.clientX;
-        resizeState.startY = e.clientY;
+        resizeState.startX = coords.clientX;
+        resizeState.startY = coords.clientY;
         resizeState.startWidth = note.offsetWidth;
         resizeState.startHeight = note.offsetHeight;
         resizeState.startLeft = note.offsetLeft;
@@ -3571,14 +5203,20 @@ function setupResizing() {
 
         handle.classList.add('active');
         note.classList.add('resizing');
-    });
+        document.body.classList.add('is-resizing');
+    }
 
-    // Mouse move updates size
-    document.addEventListener('mousemove', (e) => {
+    // Mouse/touch down on resize handle starts resize
+    noteboard.addEventListener('mousedown', startResize);
+    noteboard.addEventListener('touchstart', startResize, { passive: false });
+
+    // Move resize handler (mouse and touch)
+    function moveResize(e) {
         if (!resizeState.isResizing) return;
 
-        const dx = e.clientX - resizeState.startX;
-        const dy = e.clientY - resizeState.startY;
+        const coords = getEventCoords(e);
+        const dx = coords.clientX - resizeState.startX;
+        const dy = coords.clientY - resizeState.startY;
         const note = resizeState.note;
         const handle = resizeState.handle;
 
@@ -3621,10 +5259,14 @@ function setupResizing() {
         note.style.top = snapped.top + 'px';
 
         updateSnapGuides(snapped.guides);
-    });
+    }
 
-    // Mouse up ends resize and saves dimensions
-    document.addEventListener('mouseup', () => {
+    // Mouse/touch move updates size
+    document.addEventListener('mousemove', moveResize);
+    document.addEventListener('touchmove', moveResize, { passive: false });
+
+    // End resize handler (mouse and touch)
+    function endResize() {
         if (!resizeState.isResizing) return;
 
         const note = resizeState.note;
@@ -3643,12 +5285,69 @@ function setupResizing() {
         // Clean up
         document.querySelectorAll('.resize-handle.active').forEach(h => h.classList.remove('active'));
         note.classList.remove('resizing');
+        document.body.classList.remove('is-resizing');
         resizeState.isResizing = false;
         resizeState.note = null;
         resizeState.handle = null;
 
         updateSnapGuides([]);
-    });
+    }
+
+    // Mouse/touch up ends resize and saves dimensions
+    document.addEventListener('mouseup', endResize);
+    document.addEventListener('touchend', endResize);
+    document.addEventListener('touchcancel', endResize);
+}
+
+// Auto-fit note to its content (used on initial render)
+function autoFitNoteContent(note, skipAnimation = false) {
+    const noteId = note.getAttribute('data-note');
+    const content = note.querySelector('.note-content');
+    const header = note.querySelector('.note-header');
+
+    if (!content || !header) return;
+
+    // Temporarily remove constraints to measure natural size
+    const originalWidth = note.style.width;
+    const originalHeight = note.style.height;
+    note.style.width = 'auto';
+    note.style.height = 'auto';
+    content.style.overflow = 'visible';
+
+    // Force reflow
+    note.offsetHeight;
+
+    // Measure natural dimensions with reasonable bounds
+    const newWidth = Math.max(200, Math.min(600, content.scrollWidth + 30));
+    const newHeight = Math.max(120, Math.min(500, content.scrollHeight + header.offsetHeight + 20));
+
+    // Restore overflow
+    content.style.overflow = '';
+
+    // Apply dimensions
+    if (!skipAnimation) {
+        note.style.transition = 'width 0.2s ease, height 0.2s ease';
+    }
+
+    note.style.width = newWidth + 'px';
+    note.style.height = newHeight + 'px';
+
+    if (!skipAnimation) {
+        setTimeout(() => {
+            note.style.transition = '';
+        }, 200);
+    }
+
+    // Save dimensions
+    const existing = positions[noteId] || { x: note.offsetLeft, y: note.offsetTop, z: 1 };
+    positions[noteId] = {
+        x: existing.x,
+        y: existing.y,
+        z: existing.z,
+        width: newWidth,
+        height: newHeight
+    };
+    savePositions(positions);
 }
 
 // Auto-resize note to fit content
@@ -4066,22 +5765,25 @@ function createNoteWithTemplate(templateId) {
         const offset = customNotes.length * 20;
         note.style.left = (100 + offset) + 'px';
         note.style.top = (100 + offset) + 'px';
-        note.style.width = '400px';
-        note.style.height = '350px';
 
         // Bring to front
         maxZ++;
         note.style.zIndex = maxZ;
 
-        // Save position
-        positions[noteId] = {
-            x: 100 + offset,
-            y: 100 + offset,
-            width: 400,
-            height: 350,
-            z: maxZ
-        };
-        savePositions(positions);
+        // Auto-fit note to content after DOM is ready
+        requestAnimationFrame(() => {
+            autoFitNoteContent(note, false);
+
+            // Update position with auto-fit dimensions
+            positions[noteId] = {
+                x: 100 + offset,
+                y: 100 + offset,
+                width: note.offsetWidth,
+                height: note.offsetHeight,
+                z: maxZ
+            };
+            savePositions(positions);
+        });
 
         // Call onInit if specified
         if (template.onInit && typeof window[template.onInit] === 'function') {
