@@ -2515,6 +2515,27 @@ body.dark-mode .diff-line.deletion .diff-gutter {
     fill: none;
 }
 
+.seq-note-box {
+    fill: #ffffcc;
+    stroke: #cccc00;
+    stroke-width: 1;
+}
+
+.seq-note-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 10px;
+    fill: #333;
+}
+
+body.dark-mode .seq-note-box {
+    fill: #4a4a2a;
+    stroke: #8a8a3a;
+}
+
+body.dark-mode .seq-note-text {
+    fill: #e4e4e7;
+}
+
 .seq-error-message {
     padding: 20px;
     text-align: center;
@@ -2917,7 +2938,7 @@ body.dark-mode .seq-dashed-number-bg {
 <body>
     <header id="mainHeader">
         <div class="header-title-area">
-            <img alt="Toolboard Logo" style="width: 32px; height: 32px;" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%20%3Crect%20width%3D%22290%22%20height%3D%22290%22%20fill%3D%22%23444%22%20rx%3D%2210%22%20ry%3D%2210%22%20%2F%3E%20%20%3Cdefs%3E%20%20%20%20%3Cpattern%20id%3D%22peg-grid%22%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2230%22%20height%3D%2230%22%20patternUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%2210.5%22%20fill%3D%22%23000%22%20%2F%3E%20%20%20%20%3C%2Fpattern%3E%20%20%3C%2Fdefs%3E%20%20%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22275%22%20height%3D%22275%22%20fill%3D%22url(%23peg-grid)%22%20%2F%3E%20%20%3Cg%20fill%3D%22%23ff8%22%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E">
+            <a href="https://toolboard.me" title="Visit Toolboard.me"><img alt="Toolboard Logo" style="width: 32px; height: 32px;" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%20%3Crect%20width%3D%22290%22%20height%3D%22290%22%20fill%3D%22%23444%22%20rx%3D%2210%22%20ry%3D%2210%22%20%2F%3E%20%20%3Cdefs%3E%20%20%20%20%3Cpattern%20id%3D%22peg-grid%22%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2230%22%20height%3D%2230%22%20patternUnits%3D%22userSpaceOnUse%22%3E%20%20%20%20%20%20%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%2210.5%22%20fill%3D%22%23000%22%20%2F%3E%20%20%20%20%3C%2Fpattern%3E%20%20%3C%2Fdefs%3E%20%20%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22275%22%20height%3D%22275%22%20fill%3D%22url(%23peg-grid)%22%20%2F%3E%20%20%3Cg%20fill%3D%22%23ff8%22%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2225%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2255%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%2285%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22205%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22235%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2225%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2255%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22265%22%20cy%3D%2285%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22115%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22145%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22175%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22205%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22235%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22115%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22145%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%20%20%3Ccircle%20cx%3D%22175%22%20cy%3D%22265%22%20r%3D%2210.5%22%20%2F%3E%20%20%3C%2Fg%3E%3C%2Fsvg%3E"></a>
             <h1 id="noteboardTitle">My Toolboard</h1>
             <button id="noteboardSettingsBtn" class="header-settings-btn" title="Edit Toolboard">&#9881;</button>
             <span id="toolboardVersion" class="toolboard-version"></span>
@@ -2960,6 +2981,13 @@ body.dark-mode .seq-dashed-number-bg {
                 <h3 style="margin-top: 15px;">Export Boards</h3>
                 <div id="exportBoardsList" class="checkbox-list"></div>
                 <button id="exportSelectedBoards" class="export-btn">Export Selected Boards</button>
+
+                <h3 style="margin-top: 15px;">Export Current Board View</h3>
+                <p style="color: #7f8c8d; margin-bottom: 10px; font-size: 12px;">Export the current board as a standalone file.</p>
+                <div style="display: flex; gap: 10px;">
+                    <button id="exportBoardAsHTML" class="export-btn">Export as HTML</button>
+                    <button id="exportBoardAsPNG" class="export-btn">Export as PNG</button>
+                </div>
             </div>
 
             <!-- Import Note -->
@@ -3276,7 +3304,7 @@ Charlie --> Bob: Reply" oninput="seqOnInput(this)"></textarea>
 <div class="seq-diagram"></div>
 </div>
 <div class="seq-help-text">
-Syntax: <code>Actor -> Actor: Message</code> (solid) or <code>Actor --> Actor: Message</code> (dashed)
+<code>A -> B: msg</code> | <code>Note over A: text</code> | Colors: <code>[red]</code> or <code>[line:red, text:blue]</code>
 </div>
 </div>`,
         onInit: 'seqInit'
@@ -5679,18 +5707,31 @@ function seqShowHelp(btn) {
             <div class="seq-help-content">
                 <span class="seq-help-close" onclick="this.closest('.seq-help-modal').classList.remove('open')">&times;</span>
                 <h3>Sequence Diagram Syntax</h3>
-                <p>Each line defines a message between participants:</p>
+                <p><strong>Messages:</strong></p>
                 <pre>Participant1 -> Participant2: Message text</pre>
-                <p><strong>Arrow types:</strong></p>
                 <p><code>-></code> Solid arrow (request/call)</p>
                 <p><code>--></code> Dashed arrow (response/return)</p>
                 <p><strong>Self-messages:</strong></p>
                 <pre>Alice -> Alice: Think about it</pre>
+                <p><strong>Notes:</strong></p>
+                <pre>Note left of Actor: Text
+Note right of Actor: Text
+Note over Actor: Text
+Note over Actor1, Actor2: Text</pre>
+                <p><strong>Colors:</strong></p>
+                <p>Add <code>[color]</code> at end of line:</p>
+                <pre>A -> B: Request [red]
+A -> B: Request [line:red, text:blue]
+Note over A: Info [#90EE90]
+Note over A: Info [bg:pink, text:black]</pre>
+                <p>Message options: <code>line</code>, <code>text</code>, <code>number</code></p>
+                <p>Note options: <code>bg</code>, <code>text</code>, <code>border</code></p>
                 <p><strong>Example:</strong></p>
-                <pre>Client -> Server: HTTP Request
-Server -> Database: Query
-Database --> Server: Results
-Server --> Client: HTTP Response</pre>
+                <pre>Client -> Server: HTTP Request [green]
+Note right of Server: Validate [#ffe0b0]
+Server -> Database: Query [blue]
+Database --> Server: Results [purple]
+Server --> Client: HTTP Response [green]</pre>
                 <p>Participants are automatically detected. Each arrow is numbered sequentially.</p>
             </div>
         `;
@@ -5704,13 +5745,78 @@ Server --> Client: HTTP Response</pre>
     modal.classList.add('open');
 }
 
+function seqParseColors(text) {
+    // Parse color options from end of text: [color] or [bg:color, line:color, text:color]
+    const colorMatch = text.match(/\s*\[([^\]]+)\]\s*$/);
+    if (!colorMatch) {
+        return { text: text.trim(), colors: {} };
+    }
+
+    const cleanText = text.substring(0, text.lastIndexOf('[')).trim();
+    const colorStr = colorMatch[1].trim();
+    const colors = {};
+
+    // Check if it's a simple color or key:value pairs
+    if (colorStr.includes(':')) {
+        // Parse key:value pairs like "bg:yellow, line:red, text:black"
+        colorStr.split(',').forEach(part => {
+            const [key, value] = part.split(':').map(s => s.trim());
+            if (key && value) {
+                colors[key] = value;
+            }
+        });
+    } else {
+        // Simple color - use as primary (line for messages, bg for notes)
+        colors.primary = colorStr;
+    }
+
+    return { text: cleanText, colors };
+}
+
 function seqParseText(text) {
     const lines = text.split('\n').filter(line => line.trim());
     const participants = [];
-    const messages = [];
+    const items = []; // Can be messages or notes
     const participantSet = new Set();
+    let messageCount = 0;
 
     lines.forEach((line, index) => {
+        // Match note syntax: Note left/right/over Actor: Text
+        // or: Note over Actor1, Actor2: Text
+        const noteMatch = line.match(/^\s*note\s+(left\s+of|right\s+of|over)\s+([^:]+?)\s*:\s*(.*)$/i);
+        if (noteMatch) {
+            const position = noteMatch[1].toLowerCase().replace(/\s+/g, '');
+            const actorsStr = noteMatch[2].trim();
+            const rawNoteText = noteMatch[3].trim();
+
+            // Parse colors from note text
+            const { text: noteText, colors } = seqParseColors(rawNoteText);
+
+            // Parse actors (can be comma-separated for "over")
+            const actors = actorsStr.split(',').map(a => a.trim()).filter(a => a);
+
+            // Add actors to participants if not already present
+            actors.forEach(actor => {
+                if (!participantSet.has(actor)) {
+                    participantSet.add(actor);
+                    participants.push(actor);
+                }
+            });
+
+            items.push({
+                type: 'note',
+                position: position, // 'leftof', 'rightof', or 'over'
+                actors: actors,
+                text: noteText,
+                colors: {
+                    bg: colors.bg || colors.primary || null,
+                    text: colors.text || null,
+                    border: colors.border || colors.line || null
+                }
+            });
+            return;
+        }
+
         // Match: Participant1 -> Participant2: Message
         // or: Participant1 --> Participant2: Message
         const match = line.match(/^\s*([^-]+?)\s*(-->|->)\s*([^:]+?)\s*:\s*(.*)$/);
@@ -5718,7 +5824,10 @@ function seqParseText(text) {
             const from = match[1].trim();
             const arrowType = match[2];
             const to = match[3].trim();
-            const message = match[4].trim();
+            const rawMessage = match[4].trim();
+
+            // Parse colors from message
+            const { text: message, colors } = seqParseColors(rawMessage);
 
             // Add participants in order of appearance
             if (!participantSet.has(from)) {
@@ -5730,17 +5839,24 @@ function seqParseText(text) {
                 participants.push(to);
             }
 
-            messages.push({
+            messageCount++;
+            items.push({
+                type: 'message',
                 from,
                 to,
                 message,
                 dashed: arrowType === '-->',
-                number: messages.length + 1
+                number: messageCount,
+                colors: {
+                    line: colors.line || colors.primary || null,
+                    text: colors.text || null,
+                    number: colors.number || colors.bg || null
+                }
             });
         }
     });
 
-    return { participants, messages };
+    return { participants, items };
 }
 
 function seqRenderDiagram(widget, noteId, containerSelector) {
@@ -5754,10 +5870,10 @@ function seqRenderDiagram(widget, noteId, containerSelector) {
         return;
     }
 
-    const { participants, messages } = seqParseText(data.text);
+    const { participants, items } = seqParseText(data.text);
 
     if (participants.length === 0) {
-        container.innerHTML = '<div class="seq-error-message">No valid messages found. Use syntax: Actor -> Actor: Message</div>';
+        container.innerHTML = '<div class="seq-error-message">No valid entries found. Use syntax: Actor -> Actor: Message</div>';
         return;
     }
 
@@ -5765,13 +5881,16 @@ function seqRenderDiagram(widget, noteId, containerSelector) {
     const boxWidth = 100;
     const boxHeight = 36;
     const boxPadding = 40;
-    const messageSpacing = 50;
+    const itemSpacing = 50;
     const topMargin = 20;
     const bottomMargin = 50;
     const numberRadius = 10;
+    const noteWidth = 120;
+    const noteHeight = 30;
+    const notePadding = 8;
 
     const totalWidth = participants.length * (boxWidth + boxPadding) - boxPadding + 40;
-    const totalHeight = topMargin + boxHeight + (messages.length * messageSpacing) + boxHeight + bottomMargin;
+    const totalHeight = topMargin + boxHeight + (items.length * itemSpacing) + boxHeight + bottomMargin;
 
     // Build SVG
     let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">`;
@@ -5806,51 +5925,110 @@ function seqRenderDiagram(widget, noteId, containerSelector) {
         svg += `<text class="seq-participant-text" x="${participantX[p]}" y="${y + boxHeight / 2}">${escapeHtml(p)}</text>`;
     });
 
-    // Draw messages
-    messages.forEach((msg, i) => {
-        const y = topMargin + boxHeight + (i + 1) * messageSpacing - messageSpacing / 2;
-        const fromX = participantX[msg.from];
-        const toX = participantX[msg.to];
-        const dashedClass = msg.dashed ? ' dashed' : '';
+    // Draw items (messages and notes)
+    items.forEach((item, i) => {
+        const y = topMargin + boxHeight + (i + 1) * itemSpacing - itemSpacing / 2;
 
-        if (msg.from === msg.to) {
-            // Self-message: loop to the right
-            const loopWidth = 30;
-            const loopHeight = 20;
-            svg += `<path class="seq-self-arrow${dashedClass}" d="M ${fromX} ${y}
-                    L ${fromX + loopWidth} ${y}
-                    L ${fromX + loopWidth} ${y + loopHeight}
-                    L ${fromX + 8} ${y + loopHeight}" />`;
-            // Arrow head
-            svg += `<polygon class="seq-arrow-head" points="${fromX + 8},${y + loopHeight - 4} ${fromX + 8},${y + loopHeight + 4} ${fromX},${y + loopHeight}" />`;
-            // Label
-            svg += `<text class="seq-arrow-label" x="${fromX + loopWidth + 5}" y="${y + loopHeight / 2}">${escapeHtml(msg.message)}</text>`;
-            // Number
-            const numBgClass = msg.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
-            svg += `<circle class="${numBgClass}" cx="${fromX + loopWidth}" cy="${y}" r="${numberRadius}" />`;
-            svg += `<text class="seq-arrow-number" x="${fromX + loopWidth}" y="${y}" text-anchor="middle" dominant-baseline="middle">${msg.number}</text>`;
-        } else {
-            // Regular message
-            const direction = toX > fromX ? 1 : -1;
-            const arrowLength = 8;
+        if (item.type === 'note') {
+            // Render note with optional colors
+            const actor = item.actors[0];
+            const actorX = participantX[actor] || 0;
+            let noteX, textAnchor;
 
-            // Arrow line
-            svg += `<line class="seq-arrow${dashedClass}" x1="${fromX}" y1="${y}" x2="${toX - direction * arrowLength}" y2="${y}" />`;
+            // Build style strings for colors
+            const noteColors = item.colors || {};
+            let boxStyle = '';
+            let textStyle = '';
+            if (noteColors.bg) boxStyle += `fill:${noteColors.bg};`;
+            if (noteColors.border) boxStyle += `stroke:${noteColors.border};`;
+            if (noteColors.text) textStyle += `fill:${noteColors.text};`;
 
-            // Arrow head
-            const headX = toX;
-            const headY = y;
-            svg += `<polygon class="seq-arrow-head" points="${headX},${headY} ${headX - direction * arrowLength},${headY - 4} ${headX - direction * arrowLength},${headY + 4}" />`;
+            if (item.position === 'leftof') {
+                noteX = actorX - boxWidth / 2 - noteWidth - 10;
+                textAnchor = 'start';
+            } else if (item.position === 'rightof') {
+                noteX = actorX + boxWidth / 2 + 10;
+                textAnchor = 'start';
+            } else if (item.position === 'over') {
+                if (item.actors.length > 1) {
+                    // Note spanning multiple actors
+                    const actor2 = item.actors[1];
+                    const actor2X = participantX[actor2] || actorX;
+                    const minX = Math.min(actorX, actor2X);
+                    const maxX = Math.max(actorX, actor2X);
+                    noteX = minX - noteWidth / 2;
+                    const spanWidth = maxX - minX + noteWidth;
+                    svg += `<rect class="seq-note-box" x="${noteX}" y="${y - noteHeight / 2}" width="${spanWidth}" height="${noteHeight}" rx="2"${boxStyle ? ` style="${boxStyle}"` : ''} />`;
+                    svg += `<text class="seq-note-text" x="${(minX + maxX) / 2}" y="${y}" text-anchor="middle" dominant-baseline="middle"${textStyle ? ` style="${textStyle}"` : ''}>${escapeHtml(item.text)}</text>`;
+                    return;
+                } else {
+                    noteX = actorX - noteWidth / 2;
+                    textAnchor = 'middle';
+                }
+            }
 
-            // Label (centered above arrow)
-            const labelX = (fromX + toX) / 2;
-            svg += `<text class="seq-arrow-label" x="${labelX}" y="${y - 8}" text-anchor="middle">${escapeHtml(msg.message)}</text>`;
+            svg += `<rect class="seq-note-box" x="${noteX}" y="${y - noteHeight / 2}" width="${noteWidth}" height="${noteHeight}" rx="2"${boxStyle ? ` style="${boxStyle}"` : ''} />`;
+            const textX = item.position === 'over' ? actorX : noteX + notePadding;
+            svg += `<text class="seq-note-text" x="${textX}" y="${y}" text-anchor="${textAnchor}" dominant-baseline="middle"${textStyle ? ` style="${textStyle}"` : ''}>${escapeHtml(item.text)}</text>`;
 
-            // Number badge (at the start of arrow)
-            const numX = fromX + direction * 15;
-            const numBgClass = msg.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
-            svg += `<circle class="${numBgClass}" cx="${numX}" cy="${y}" r="${numberRadius}" />`;
-            svg += `<text class="seq-arrow-number" x="${numX}" y="${y}" text-anchor="middle" dominant-baseline="middle">${msg.number}</text>`;
+        } else if (item.type === 'message') {
+            // Render message with optional colors
+            const fromX = participantX[item.from];
+            const toX = participantX[item.to];
+            const dashedClass = item.dashed ? ' dashed' : '';
+
+            // Build style strings for colors
+            const msgColors = item.colors || {};
+            let lineStyle = '';
+            let headStyle = '';
+            let labelStyle = '';
+            let numBgStyle = '';
+            if (msgColors.line) {
+                lineStyle = `stroke:${msgColors.line};`;
+                headStyle = `fill:${msgColors.line};`;
+            }
+            if (msgColors.text) labelStyle = `fill:${msgColors.text};`;
+            if (msgColors.number) numBgStyle = `fill:${msgColors.number};`;
+
+            if (item.from === item.to) {
+                // Self-message: loop to the right
+                const loopWidth = 30;
+                const loopHeight = 20;
+                svg += `<path class="seq-self-arrow${dashedClass}" d="M ${fromX} ${y}
+                        L ${fromX + loopWidth} ${y}
+                        L ${fromX + loopWidth} ${y + loopHeight}
+                        L ${fromX + 8} ${y + loopHeight}"${lineStyle ? ` style="${lineStyle}"` : ''} />`;
+                // Arrow head
+                svg += `<polygon class="seq-arrow-head" points="${fromX + 8},${y + loopHeight - 4} ${fromX + 8},${y + loopHeight + 4} ${fromX},${y + loopHeight}"${headStyle ? ` style="${headStyle}"` : ''} />`;
+                // Label
+                svg += `<text class="seq-arrow-label" x="${fromX + loopWidth + 5}" y="${y + loopHeight / 2}"${labelStyle ? ` style="${labelStyle}"` : ''}>${escapeHtml(item.message)}</text>`;
+                // Number
+                const numBgClass = item.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
+                svg += `<circle class="${numBgClass}" cx="${fromX + loopWidth}" cy="${y}" r="${numberRadius}"${numBgStyle ? ` style="${numBgStyle}"` : ''} />`;
+                svg += `<text class="seq-arrow-number" x="${fromX + loopWidth}" y="${y}" text-anchor="middle" dominant-baseline="middle">${item.number}</text>`;
+            } else {
+                // Regular message
+                const direction = toX > fromX ? 1 : -1;
+                const arrowLength = 8;
+
+                // Arrow line
+                svg += `<line class="seq-arrow${dashedClass}" x1="${fromX}" y1="${y}" x2="${toX - direction * arrowLength}" y2="${y}"${lineStyle ? ` style="${lineStyle}"` : ''} />`;
+
+                // Arrow head
+                const headX = toX;
+                const headY = y;
+                svg += `<polygon class="seq-arrow-head" points="${headX},${headY} ${headX - direction * arrowLength},${headY - 4} ${headX - direction * arrowLength},${headY + 4}"${headStyle ? ` style="${headStyle}"` : ''} />`;
+
+                // Label (centered above arrow)
+                const labelX = (fromX + toX) / 2;
+                svg += `<text class="seq-arrow-label" x="${labelX}" y="${y - 8}" text-anchor="middle"${labelStyle ? ` style="${labelStyle}"` : ''}>${escapeHtml(item.message)}</text>`;
+
+                // Number badge (at the start of arrow)
+                const numX = fromX + direction * 15;
+                const numBgClass = item.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
+                svg += `<circle class="${numBgClass}" cx="${numX}" cy="${y}" r="${numberRadius}"${numBgStyle ? ` style="${numBgStyle}"` : ''} />`;
+                svg += `<text class="seq-arrow-number" x="${numX}" y="${y}" text-anchor="middle" dominant-baseline="middle">${item.number}</text>`;
+            }
         }
     });
 
@@ -6502,7 +6680,7 @@ function createNote(noteId) {
             <span class="note-title">${displayTitle}</span>
             <div class="header-buttons">
                 <button class="header-btn minimize-btn${isMinimized ? ' minimized' : ''}" title="Minimize">&#9650;</button>
-                <button class="header-btn fullscreen-btn" title="Fullscreen">&#9974;</button>
+                <button class="header-btn fullscreen-btn" title="Fullscreen"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="0" y="0" width="12" height="12" rx="1" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                 <button class="header-btn settings-btn" title="Settings">&#9881;</button>
             </div>
         </div>
@@ -7227,6 +7405,8 @@ function setupImportExport() {
     // Export buttons
     document.getElementById('exportSelectedNotes').onclick = exportNotes;
     document.getElementById('exportSelectedBoards').onclick = exportBoards;
+    document.getElementById('exportBoardAsHTML').onclick = exportBoardAsHTML;
+    document.getElementById('exportBoardAsPNG').onclick = exportBoardAsPNG;
 
     // Import
     document.getElementById('importDataBtn').onclick = importData;
@@ -7475,7 +7655,7 @@ function exportNotes() {
         exportData.notes.push(noteData);
     });
 
-    downloadJSON(exportData, `notes-export-${Date.now()}.json`);
+    downloadJSON(exportData, `notes-export-${getTimestamp()}.json`);
 }
 
 function exportBoards() {
@@ -7510,7 +7690,18 @@ function exportBoards() {
         exportData.boards.push(boardData);
     });
 
-    downloadJSON(exportData, `boards-export-${Date.now()}.json`);
+    downloadJSON(exportData, `boards-export-${getTimestamp()}.json`);
+}
+
+function getTimestamp() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return now.getFullYear() +
+        pad(now.getMonth() + 1) +
+        pad(now.getDate()) +
+        pad(now.getHours()) +
+        pad(now.getMinutes()) +
+        pad(now.getSeconds());
 }
 
 function downloadJSON(data, filename) {
@@ -7525,6 +7716,118 @@ function downloadJSON(data, filename) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+function exportBoardAsHTML() {
+    // Get current board data
+    const boardTitle = document.getElementById('noteboardTitle').textContent || 'toolboard';
+    const safeTitle = boardTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+
+    const embeddedData = {
+        boards: [{ id: 'default', name: boardTitle }],
+        currentBoard: 'default',
+        variables: variables,
+        positions: positions,
+        noteCustomizations: noteCustomizations,
+        customNotes: customNotes,
+        hiddenNotes: hiddenNotes,
+        noteboardSettings: noteboardSettings
+    };
+
+    // Close modal before capturing HTML
+    const modal = document.getElementById('importExportModal');
+    modal.classList.remove('open');
+
+    // Get the full HTML of the current document
+    const originalHTML = document.documentElement.outerHTML;
+
+    // Reopen modal briefly so user sees it close after download
+    modal.classList.add('open');
+
+    // Create the embedded data script that will auto-import on load
+    // Note: <\/script> is escaped to prevent breaking the outer script block
+    const embedScript = '<scr' + 'ipt id="embedded-board-data" type="application/json">\n' +
+        JSON.stringify(embeddedData, null, 2) +
+        '\n<\/scr' + 'ipt>\n' +
+        '<scr' + 'ipt>\n' +
+        '// Auto-import embedded board data on load\n' +
+        '(function() {\n' +
+        '    var dataScript = document.getElementById("embedded-board-data");\n' +
+        '    if (!dataScript) return;\n' +
+        '    try {\n' +
+        '        var data = JSON.parse(dataScript.textContent);\n' +
+        '        localStorage.setItem("financeBoards", JSON.stringify(data.boards));\n' +
+        '        localStorage.setItem("financeCurrentBoard", "default");\n' +
+        '        localStorage.setItem("finance_default_variables", JSON.stringify(data.variables));\n' +
+        '        localStorage.setItem("finance_default_positions", JSON.stringify(data.positions));\n' +
+        '        localStorage.setItem("finance_default_noteCustomizations", JSON.stringify(data.noteCustomizations));\n' +
+        '        localStorage.setItem("finance_default_customNotes", JSON.stringify(data.customNotes));\n' +
+        '        localStorage.setItem("finance_default_hiddenNotes", JSON.stringify(data.hiddenNotes));\n' +
+        '        localStorage.setItem("finance_default_noteboardSettings", JSON.stringify(data.noteboardSettings));\n' +
+        '        dataScript.remove();\n' +
+        '    } catch (e) { console.error("Failed to import embedded board data:", e); }\n' +
+        '})();\n' +
+        '<\/scr' + 'ipt>\n';
+
+    // Insert the embed script just before </head>
+    const htmlContent = '<!DOCTYPE html>\n' + originalHTML.replace('</head>', embedScript + '</head>');
+
+    // Download
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${safeTitle}-${getTimestamp()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Close modal
+    document.getElementById('importExportModal').classList.remove('open');
+}
+
+function exportBoardAsPNG() {
+    // Load html2canvas dynamically if not already loaded
+    if (typeof html2canvas === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload = () => captureAndDownloadPNG();
+        script.onerror = () => alert('Failed to load image export library. Please check your internet connection.');
+        document.head.appendChild(script);
+    } else {
+        captureAndDownloadPNG();
+    }
+}
+
+function captureAndDownloadPNG() {
+    const boardTitle = document.getElementById('noteboardTitle').textContent || 'toolboard';
+    const safeTitle = boardTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+
+    // Close modal first so it's not in the screenshot
+    document.getElementById('importExportModal').classList.remove('open');
+
+    // Small delay to let the modal close
+    setTimeout(() => {
+        // Capture the entire page
+        html2canvas(document.body, {
+            backgroundColor: getComputedStyle(document.body).backgroundColor || '#1a1a2e',
+            scale: 2, // Higher quality
+            useCORS: true,
+            logging: false,
+            windowWidth: document.documentElement.scrollWidth,
+            windowHeight: document.documentElement.scrollHeight
+        }).then(canvas => {
+            // Download the image
+            const link = document.createElement('a');
+            link.download = `${safeTitle}-${getTimestamp()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error('PNG export error:', err);
+            alert('Failed to export as PNG. Please try again.');
+        });
+    }, 100);
 }
 
 function handleFileImport(e) {
