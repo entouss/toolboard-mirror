@@ -3419,6 +3419,618 @@ body.dark-mode .seq-dashed-number-bg {
     color: #27ae60;
 }
 
+/* Cron Expression Widget Styles */
+.tool-content:has(.cron-widget) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.cron-widget {
+    padding: 12px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 0;
+    gap: 12px;
+}
+
+.cron-input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cron-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cron-input {
+    flex: 1;
+    padding: 10px 12px;
+    font-family: monospace;
+    font-size: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.cron-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.cron-input.valid {
+    border-color: #27ae60;
+}
+
+.cron-input.invalid {
+    border-color: #e74c3c;
+}
+
+.cron-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cron-preset-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.cron-preset-btn:hover {
+    background: var(--table-hover);
+    color: var(--text-primary);
+}
+
+.cron-explanation {
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    min-height: 40px;
+}
+
+.cron-explanation-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.cron-explanation-text strong {
+    color: #3498db;
+}
+
+.cron-error {
+    color: #e74c3c;
+    font-size: 13px;
+}
+
+.cron-fields {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.cron-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 6px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.cron-field-value {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 4px;
+}
+
+.cron-field-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cron-field-desc {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    text-align: center;
+}
+
+.cron-schedule {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.cron-schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.cron-schedule-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.cron-schedule-count {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.cron-schedule-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 150px;
+}
+
+.cron-schedule-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.cron-schedule-item:first-child {
+    background: rgba(39, 174, 96, 0.1);
+    border: 1px solid rgba(39, 174, 96, 0.3);
+}
+
+.cron-schedule-date {
+    color: var(--text-primary);
+    font-family: monospace;
+}
+
+.cron-schedule-relative {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+/* Regex Tester Widget Styles */
+.tool-content:has(.regex-widget) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.regex-widget {
+    padding: 10px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+.regex-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.regex-flags {
+    display: flex;
+    gap: 10px;
+}
+
+.regex-flags label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: monospace;
+}
+
+.regex-flags input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.regex-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.regex-action-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+.regex-action-btn:hover {
+    background: var(--table-hover);
+}
+
+.regex-input-row {
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.regex-input-row label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.regex-pattern {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    box-sizing: border-box;
+}
+
+.regex-pattern:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.regex-container {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    min-height: 0;
+}
+
+.regex-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.regex-pane label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.regex-test-string {
+    flex: 1;
+    resize: none;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.regex-test-string:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.regex-results-pane {
+    min-width: 0;
+}
+
+.regex-results {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    overflow: auto;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    min-height: 80px;
+}
+
+.regex-results .match-highlight {
+    background: #f1c40f;
+    color: #000;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.regex-results .match-group {
+    background: #3498db;
+    color: #fff;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.regex-results .match-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.regex-results .match-item {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.regex-results .match-index {
+    color: var(--text-muted);
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+.regex-results .match-value {
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.regex-results .match-groups {
+    margin-top: 4px;
+    padding-left: 10px;
+    border-left: 2px solid var(--border-color);
+}
+
+.regex-results .group-item {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.regex-results .no-match {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.regex-resizer {
+    width: 6px;
+    background: var(--border-color);
+    cursor: col-resize;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.regex-resizer:hover {
+    background: #3498db;
+}
+
+.regex-status {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    min-height: 16px;
+    flex-shrink: 0;
+}
+
+.regex-status.error {
+    color: #e74c3c;
+}
+
+.regex-status.success {
+    color: #27ae60;
+}
+
+/* Epoch Converter Widget Styles */
+.tool-content:has(.epoch-widget) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.epoch-widget {
+    padding: 12px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.epoch-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.epoch-section > label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.epoch-current {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.epoch-now-value {
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.epoch-action-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+.epoch-action-btn:hover {
+    background: var(--table-hover);
+}
+
+.epoch-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.epoch-timestamp-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.epoch-timestamp-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.epoch-unit-select,
+.epoch-tz-select {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.epoch-datetime-inputs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.epoch-date-input,
+.epoch-time-input {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-family: monospace;
+}
+
+.epoch-date-input:focus,
+.epoch-time-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.epoch-result {
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    min-height: 20px;
+}
+
+.epoch-result .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.epoch-result .result-label {
+    color: var(--text-secondary);
+}
+
+.epoch-result .result-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.epoch-result .result-value.copyable {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.epoch-result .result-value.copyable:hover {
+    background: var(--table-hover);
+}
+
+.epoch-reference {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.epoch-ref-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+}
+
+.epoch-ref-item span {
+    color: var(--text-secondary);
+}
+
+.epoch-ref-item code {
+    font-family: monospace;
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
 /* Feature Selection Modal */
 .feature-select-modal {
     display: none;
@@ -4319,6 +4931,128 @@ Charlie --> Bob: Reply" oninput="seqOnInput(this)"></textarea>
 <div class="fmt-status"></div>
 </div>`,
         onInit: 'fmtInit'
+    },
+    'cron-expression': {
+        id: 'cron-expression',
+        name: 'Cron Expression',
+        description: 'Interactive cron expression parser with schedule preview',
+        icon: '⏰',
+        title: 'Cron Expression',
+        content: `<div class="cron-widget">
+<div class="cron-input-section">
+<div class="cron-input-row">
+<input type="text" class="cron-input" placeholder="* * * * *" value="0 9 * * MON-FRI" oninput="cronParse(this)">
+</div>
+<div class="cron-presets">
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '* * * * *')">Every minute</button>
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '0 * * * *')">Every hour</button>
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '0 0 * * *')">Daily midnight</button>
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '0 9 * * MON-FRI')">Weekdays 9am</button>
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '0 0 * * 0')">Weekly Sunday</button>
+<button class="cron-preset-btn" onclick="cronSetPreset(this, '0 0 1 * *')">Monthly 1st</button>
+</div>
+</div>
+<div class="cron-explanation">
+<div class="cron-explanation-text"></div>
+</div>
+<div class="cron-fields"></div>
+<div class="cron-schedule">
+<div class="cron-schedule-header">
+<span class="cron-schedule-title">Next scheduled runs</span>
+<span class="cron-schedule-count"></span>
+</div>
+<div class="cron-schedule-list"></div>
+</div>
+</div>`,
+        onInit: 'cronInit'
+    },
+    'regex-tester': {
+        id: 'regex-tester',
+        name: 'Regex Tester',
+        description: 'Test regular expressions with real-time matching and highlighting',
+        icon: '🔍',
+        title: 'Regex Tester',
+        content: `<div class="regex-widget">
+<div class="regex-toolbar">
+<div class="regex-flags">
+<label title="Global - find all matches"><input type="checkbox" class="regex-flag" data-flag="g" checked onchange="regexOnInput(this)"> g</label>
+<label title="Case insensitive"><input type="checkbox" class="regex-flag" data-flag="i" onchange="regexOnInput(this)"> i</label>
+<label title="Multiline - ^ and $ match line boundaries"><input type="checkbox" class="regex-flag" data-flag="m" onchange="regexOnInput(this)"> m</label>
+<label title="Dot matches newlines"><input type="checkbox" class="regex-flag" data-flag="s" onchange="regexOnInput(this)"> s</label>
+</div>
+<div class="regex-actions">
+<button class="regex-action-btn" onclick="regexCopy(this)">Copy Regex</button>
+<button class="regex-action-btn" onclick="regexClear(this)">Clear</button>
+</div>
+</div>
+<div class="regex-input-row">
+<label>Pattern</label>
+<input type="text" class="regex-pattern" placeholder="Enter regex pattern..." oninput="regexOnInput(this)">
+</div>
+<div class="regex-container">
+<div class="regex-pane">
+<label>Test String</label>
+<textarea class="regex-test-string" placeholder="Enter text to test against..." oninput="regexOnInput(this)"></textarea>
+</div>
+<div class="regex-resizer"></div>
+<div class="regex-pane regex-results-pane">
+<label>Match Results</label>
+<div class="regex-results"></div>
+</div>
+</div>
+<div class="regex-status"></div>
+</div>`,
+        onInit: 'regexInit'
+    },
+    'epoch-converter': {
+        id: 'epoch-converter',
+        name: 'Epoch Converter',
+        description: 'Convert between Unix timestamps and human-readable dates',
+        icon: '⏱️',
+        title: 'Epoch Converter',
+        content: `<div class="epoch-widget">
+<div class="epoch-section">
+<label>Current Time</label>
+<div class="epoch-current">
+<span class="epoch-now-value">-</span>
+<button class="epoch-action-btn" onclick="epochCopyNow(this)">Copy</button>
+<button class="epoch-action-btn" onclick="epochUseNow(this)">Use</button>
+</div>
+</div>
+<div class="epoch-section">
+<label>Unix Timestamp (seconds or milliseconds)</label>
+<div class="epoch-input-row">
+<input type="text" class="epoch-timestamp-input" placeholder="e.g. 1700000000 or 1700000000000" oninput="epochFromTimestamp(this)">
+<select class="epoch-unit-select" onchange="epochFromTimestamp(this)">
+<option value="auto">Auto-detect</option>
+<option value="s">Seconds</option>
+<option value="ms">Milliseconds</option>
+</select>
+</div>
+<div class="epoch-result epoch-from-ts"></div>
+</div>
+<div class="epoch-section">
+<label>Human Date/Time</label>
+<div class="epoch-datetime-inputs">
+<input type="date" class="epoch-date-input" oninput="epochFromDatetime(this)">
+<input type="time" class="epoch-time-input" step="1" oninput="epochFromDatetime(this)">
+<select class="epoch-tz-select" onchange="epochFromDatetime(this)">
+<option value="local">Local Time</option>
+<option value="utc">UTC</option>
+</select>
+</div>
+<div class="epoch-result epoch-from-dt"></div>
+</div>
+<div class="epoch-section">
+<label>Quick Reference</label>
+<div class="epoch-reference">
+<div class="epoch-ref-item"><span>Start of today:</span><code class="epoch-ref-today">-</code></div>
+<div class="epoch-ref-item"><span>Start of year:</span><code class="epoch-ref-year">-</code></div>
+<div class="epoch-ref-item"><span>Unix epoch:</span><code>0 (Jan 1, 1970 00:00:00 UTC)</code></div>
+</div>
+</div>
+</div>`,
+        onInit: 'epochInit'
     }
 };
 
@@ -4961,6 +5695,9 @@ function initializeCalculators() {
         if (document.querySelector('.seq-widget')) seqInit();
         if (document.querySelector('.jwt-widget')) jwtInit();
         if (document.querySelector('.fmt-widget')) fmtInit();
+        if (document.querySelector('.cron-widget')) cronInit();
+        if (document.querySelector('.regex-widget')) regexInit();
+        if (document.querySelector('.epoch-widget')) epochInit();
     }, 50);
 }
 
@@ -7713,6 +8450,226 @@ function jwtClear() {
     jwtDecode(textarea);
 }
 
+// Epoch Converter Widget
+let epochIntervalId = null;
+
+function epochInit() {
+    document.querySelectorAll('.epoch-widget').forEach(widget => {
+        // Update current time display
+        epochUpdateNow(widget);
+
+        // Update reference values
+        epochUpdateReference(widget);
+
+        // Start interval for live updates
+        if (!epochIntervalId) {
+            epochIntervalId = setInterval(() => {
+                document.querySelectorAll('.epoch-widget').forEach(w => epochUpdateNow(w));
+            }, 1000);
+        }
+    });
+}
+
+function epochUpdateNow(widget) {
+    const nowDisplay = widget.querySelector('.epoch-now-value');
+    if (nowDisplay) {
+        const now = Math.floor(Date.now() / 1000);
+        nowDisplay.textContent = now;
+    }
+}
+
+function epochUpdateReference(widget) {
+    const todayEl = widget.querySelector('.epoch-ref-today');
+    const yearEl = widget.querySelector('.epoch-ref-year');
+
+    if (todayEl) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        todayEl.textContent = Math.floor(today.getTime() / 1000);
+    }
+
+    if (yearEl) {
+        const year = new Date(new Date().getFullYear(), 0, 1);
+        yearEl.textContent = Math.floor(year.getTime() / 1000);
+    }
+}
+
+function epochCopyNow(btn) {
+    const widget = btn.closest('.epoch-widget');
+    const now = Math.floor(Date.now() / 1000);
+    navigator.clipboard.writeText(now.toString());
+
+    const originalText = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = originalText, 1000);
+}
+
+function epochUseNow(btn) {
+    const widget = btn.closest('.epoch-widget');
+    const input = widget.querySelector('.epoch-timestamp-input');
+    const now = Math.floor(Date.now() / 1000);
+    input.value = now;
+    epochFromTimestamp(input);
+}
+
+function epochFromTimestamp(element) {
+    const widget = element.closest('.epoch-widget');
+    const input = widget.querySelector('.epoch-timestamp-input');
+    const unitSelect = widget.querySelector('.epoch-unit-select');
+    const resultDiv = widget.querySelector('.epoch-from-ts');
+
+    const value = input.value.trim();
+    if (!value) {
+        resultDiv.innerHTML = '<span style="color: var(--text-muted);">Enter a timestamp to convert...</span>';
+        return;
+    }
+
+    const numValue = parseInt(value);
+    if (isNaN(numValue)) {
+        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid number</span>';
+        return;
+    }
+
+    // Determine if seconds or milliseconds
+    let unit = unitSelect?.value || 'auto';
+    let timestamp = numValue;
+
+    if (unit === 'auto') {
+        // If number is larger than year 3000 in seconds, assume milliseconds
+        if (numValue > 32503680000) {
+            unit = 'ms';
+        } else {
+            unit = 's';
+        }
+    }
+
+    if (unit === 'ms') {
+        timestamp = numValue;
+    } else {
+        timestamp = numValue * 1000;
+    }
+
+    const date = new Date(timestamp);
+
+    if (isNaN(date.getTime())) {
+        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid date</span>';
+        return;
+    }
+
+    const localStr = date.toLocaleString();
+    const utcStr = date.toUTCString();
+    const isoStr = date.toISOString();
+    const relativeStr = epochRelativeTime(date);
+
+    resultDiv.innerHTML = `
+        <div class="result-row">
+            <span class="result-label">Local:</span>
+            <span class="result-value copyable" onclick="epochCopyValue(this)">${localStr}</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">UTC:</span>
+            <span class="result-value copyable" onclick="epochCopyValue(this)">${utcStr}</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">ISO 8601:</span>
+            <span class="result-value copyable" onclick="epochCopyValue(this)">${isoStr}</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">Relative:</span>
+            <span class="result-value">${relativeStr}</span>
+        </div>
+        <div class="result-row" style="margin-top: 4px; font-size: 10px; color: var(--text-muted);">
+            Detected: ${unit === 'ms' ? 'milliseconds' : 'seconds'}
+        </div>
+    `;
+}
+
+function epochFromDatetime(element) {
+    const widget = element.closest('.epoch-widget');
+    const dateInput = widget.querySelector('.epoch-date-input');
+    const timeInput = widget.querySelector('.epoch-time-input');
+    const tzSelect = widget.querySelector('.epoch-tz-select');
+    const resultDiv = widget.querySelector('.epoch-from-dt');
+
+    const dateValue = dateInput.value;
+    const timeValue = timeInput.value || '00:00:00';
+
+    if (!dateValue) {
+        resultDiv.innerHTML = '<span style="color: var(--text-muted);">Select a date to convert...</span>';
+        return;
+    }
+
+    let date;
+    const tz = tzSelect?.value || 'local';
+
+    if (tz === 'utc') {
+        date = new Date(`${dateValue}T${timeValue}Z`);
+    } else {
+        date = new Date(`${dateValue}T${timeValue}`);
+    }
+
+    if (isNaN(date.getTime())) {
+        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid date/time</span>';
+        return;
+    }
+
+    const seconds = Math.floor(date.getTime() / 1000);
+    const milliseconds = date.getTime();
+
+    resultDiv.innerHTML = `
+        <div class="result-row">
+            <span class="result-label">Seconds:</span>
+            <span class="result-value copyable" onclick="epochCopyValue(this)">${seconds}</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">Milliseconds:</span>
+            <span class="result-value copyable" onclick="epochCopyValue(this)">${milliseconds}</span>
+        </div>
+    `;
+}
+
+function epochRelativeTime(date) {
+    const now = new Date();
+    const diffMs = date.getTime() - now.getTime();
+    const diffSec = Math.abs(Math.floor(diffMs / 1000));
+    const isFuture = diffMs > 0;
+
+    const units = [
+        { name: 'year', seconds: 31536000 },
+        { name: 'month', seconds: 2592000 },
+        { name: 'week', seconds: 604800 },
+        { name: 'day', seconds: 86400 },
+        { name: 'hour', seconds: 3600 },
+        { name: 'minute', seconds: 60 },
+        { name: 'second', seconds: 1 }
+    ];
+
+    for (const unit of units) {
+        const value = Math.floor(diffSec / unit.seconds);
+        if (value >= 1) {
+            const plural = value !== 1 ? 's' : '';
+            return isFuture
+                ? `in ${value} ${unit.name}${plural}`
+                : `${value} ${unit.name}${plural} ago`;
+        }
+    }
+
+    return 'just now';
+}
+
+function epochCopyValue(element) {
+    const text = element.textContent;
+    navigator.clipboard.writeText(text);
+
+    const original = element.textContent;
+    element.textContent = 'Copied!';
+    element.style.color = 'var(--success-color)';
+    setTimeout(() => {
+        element.textContent = original;
+        element.style.color = '';
+    }, 1000);
+}
+
 // Code Formatter Widget
 function fmtGetToolId(element) {
     const widget = element.closest('.fmt-widget');
@@ -8147,6 +9104,616 @@ function fmtMinifySQL(input) {
         .replace(/\s*([(),])\s*/g, '$1')   // Remove space around punctuation
         .replace(/\s*([=<>!]+)\s*/g, ' $1 ')  // Normalize operators
         .trim();
+}
+
+// Cron Expression Functions
+function cronGetToolId(element) {
+    const tool = element.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function cronGetData(toolId) {
+    const customizations = loadToolCustomizations();
+    return (customizations[toolId] && customizations[toolId].cronData) || { expression: '0 9 * * MON-FRI' };
+}
+
+function cronSaveData(toolId, data) {
+    const customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].cronData = data;
+    saveToolCustomizations(customizations);
+}
+
+function cronInit() {
+    document.querySelectorAll('.cron-widget').forEach(widget => {
+        const toolId = cronGetToolId(widget);
+        if (!toolId) return;
+
+        const data = cronGetData(toolId);
+        const input = widget.querySelector('.cron-input');
+        if (input && data.expression) {
+            input.value = data.expression;
+        }
+        cronParse(input);
+    });
+}
+
+function cronSetPreset(btn, expression) {
+    const widget = btn.closest('.cron-widget');
+    const input = widget.querySelector('.cron-input');
+    input.value = expression;
+    cronParse(input);
+}
+
+function cronParse(input) {
+    const widget = input.closest('.cron-widget');
+    const expression = input.value.trim();
+    const explanationEl = widget.querySelector('.cron-explanation-text');
+    const fieldsEl = widget.querySelector('.cron-fields');
+    const scheduleList = widget.querySelector('.cron-schedule-list');
+    const scheduleCount = widget.querySelector('.cron-schedule-count');
+
+    // Save the expression
+    const toolId = cronGetToolId(widget);
+    if (toolId) {
+        cronSaveData(toolId, { expression });
+    }
+
+    // Parse the expression
+    const result = cronParseExpression(expression);
+
+    if (result.error) {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        explanationEl.innerHTML = `<span class="cron-error">${result.error}</span>`;
+        fieldsEl.innerHTML = '';
+        scheduleList.innerHTML = '';
+        scheduleCount.textContent = '';
+        return;
+    }
+
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+
+    // Render explanation
+    explanationEl.innerHTML = result.explanation;
+
+    // Render field breakdown
+    fieldsEl.innerHTML = result.fields.map(f => `
+        <div class="cron-field">
+            <div class="cron-field-value">${escapeHtml(f.value)}</div>
+            <div class="cron-field-name">${f.name}</div>
+            <div class="cron-field-desc">${f.desc}</div>
+        </div>
+    `).join('');
+
+    // Render next runs
+    const nextRuns = cronGetNextRuns(result.parsed, 10);
+    scheduleCount.textContent = `Next ${nextRuns.length} runs`;
+    scheduleList.innerHTML = nextRuns.map((run, i) => `
+        <div class="cron-schedule-item">
+            <span class="cron-schedule-date">${cronFormatDate(run)}</span>
+            <span class="cron-schedule-relative">${cronRelativeTime(run)}</span>
+        </div>
+    `).join('');
+}
+
+function cronParseExpression(expr) {
+    const parts = expr.split(/\s+/);
+    if (parts.length !== 5) {
+        return { error: `Invalid cron expression: expected 5 fields, got ${parts.length}` };
+    }
+
+    const fieldDefs = [
+        { name: 'Minute', min: 0, max: 59 },
+        { name: 'Hour', min: 0, max: 23 },
+        { name: 'Day', min: 1, max: 31 },
+        { name: 'Month', min: 1, max: 12 },
+        { name: 'Weekday', min: 0, max: 7 }
+    ];
+
+    const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    const parsed = [];
+    const fields = [];
+
+    for (let i = 0; i < 5; i++) {
+        const part = parts[i];
+        const def = fieldDefs[i];
+        const result = cronParseField(part, def.min, def.max, i);
+
+        if (result.error) {
+            return { error: `${def.name}: ${result.error}` };
+        }
+
+        parsed.push(result.values);
+        fields.push({
+            value: part,
+            name: def.name,
+            desc: cronDescribeField(result.values, i, monthNames, dayNames)
+        });
+    }
+
+    // Build explanation
+    const explanation = cronBuildExplanation(parts, parsed, monthNames, dayNames);
+
+    return { parsed, fields, explanation };
+}
+
+function cronParseField(field, min, max, fieldIndex) {
+    // Handle named values for months and weekdays
+    const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+    const dayMap = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+
+    let normalized = field.toLowerCase();
+    if (fieldIndex === 3) { // Month
+        for (const [name, val] of Object.entries(monthMap)) {
+            normalized = normalized.replace(new RegExp(name, 'gi'), val);
+        }
+    } else if (fieldIndex === 4) { // Weekday
+        for (const [name, val] of Object.entries(dayMap)) {
+            normalized = normalized.replace(new RegExp(name, 'gi'), val);
+        }
+    }
+
+    const values = new Set();
+
+    // Split by comma for lists
+    const parts = normalized.split(',');
+    for (const part of parts) {
+        // Handle step values (*/2 or 1-10/2)
+        const stepMatch = part.match(/^(.+)\/(\d+)$/);
+        let range = stepMatch ? stepMatch[1] : part;
+        const step = stepMatch ? parseInt(stepMatch[2]) : 1;
+
+        if (step < 1) {
+            return { error: 'Step must be at least 1' };
+        }
+
+        let start, end;
+
+        if (range === '*') {
+            start = min;
+            end = max;
+        } else if (range.includes('-')) {
+            const [s, e] = range.split('-').map(Number);
+            if (isNaN(s) || isNaN(e)) {
+                return { error: 'Invalid range' };
+            }
+            start = s;
+            end = e;
+        } else {
+            const val = parseInt(range);
+            if (isNaN(val)) {
+                return { error: `Invalid value: ${range}` };
+            }
+            start = val;
+            end = val;
+        }
+
+        // Normalize weekday 7 to 0 (both mean Sunday)
+        if (fieldIndex === 4) {
+            if (start === 7) start = 0;
+            if (end === 7) end = 0;
+        }
+
+        // Validate range
+        const actualMin = fieldIndex === 4 ? 0 : min;
+        const actualMax = fieldIndex === 4 ? 6 : max;
+        if (start < actualMin || start > actualMax || end < actualMin || end > actualMax) {
+            return { error: `Value out of range (${actualMin}-${actualMax})` };
+        }
+
+        // Handle wrap-around for weekdays
+        if (start > end && fieldIndex === 4) {
+            for (let v = start; v <= 6; v += step) values.add(v);
+            for (let v = 0; v <= end; v += step) values.add(v);
+        } else if (start > end) {
+            return { error: 'Start of range must be less than end' };
+        } else {
+            for (let v = start; v <= end; v += step) {
+                values.add(v);
+            }
+        }
+    }
+
+    return { values: Array.from(values).sort((a, b) => a - b) };
+}
+
+function cronDescribeField(values, fieldIndex, monthNames, dayNames) {
+    const fieldDefs = [
+        { min: 0, max: 59, name: 'minute' },
+        { min: 0, max: 23, name: 'hour' },
+        { min: 1, max: 31, name: 'day' },
+        { min: 1, max: 12, name: 'month' },
+        { min: 0, max: 6, name: 'weekday' }
+    ];
+
+    const def = fieldDefs[fieldIndex];
+
+    // Check if it's all values (wildcard)
+    const allValues = [];
+    for (let i = def.min; i <= def.max; i++) allValues.push(i);
+    if (values.length === allValues.length && values.every((v, i) => v === allValues[i])) {
+        return 'every ' + def.name;
+    }
+
+    // Format the values
+    if (fieldIndex === 3) { // Month
+        return values.map(v => monthNames[v]).join(', ');
+    } else if (fieldIndex === 4) { // Weekday
+        return values.map(v => dayNames[v]).join(', ');
+    } else if (values.length === 1) {
+        return 'at ' + values[0];
+    } else if (values.length <= 3) {
+        return values.join(', ');
+    } else {
+        return `${values.length} values`;
+    }
+}
+
+function cronBuildExplanation(parts, parsed, monthNames, dayNames) {
+    const [minutes, hours, days, months, weekdays] = parsed;
+
+    let result = 'Runs <strong>';
+
+    // Time description
+    const isEveryMinute = minutes.length === 60;
+    const isEveryHour = hours.length === 24;
+
+    if (isEveryMinute && isEveryHour) {
+        result += 'every minute';
+    } else if (isEveryMinute) {
+        result += 'every minute';
+        if (hours.length === 1) {
+            result += ` during hour ${hours[0]}`;
+        } else {
+            result += ` during hours ${hours.join(', ')}`;
+        }
+    } else if (isEveryHour) {
+        if (minutes.length === 1) {
+            result += `at minute ${minutes[0]} of every hour`;
+        } else {
+            result += `at minutes ${minutes.join(', ')} of every hour`;
+        }
+    } else {
+        // Specific times
+        if (hours.length === 1 && minutes.length === 1) {
+            result += `at ${String(hours[0]).padStart(2, '0')}:${String(minutes[0]).padStart(2, '0')}`;
+        } else if (hours.length <= 3 && minutes.length === 1) {
+            const times = hours.map(h => `${String(h).padStart(2, '0')}:${String(minutes[0]).padStart(2, '0')}`);
+            result += `at ${times.join(', ')}`;
+        } else {
+            result += `at minute ${minutes.join(', ')} past hour ${hours.join(', ')}`;
+        }
+    }
+
+    result += '</strong>';
+
+    // Day/month description
+    const isEveryDay = days.length === 31;
+    const isEveryMonth = months.length === 12;
+    const isEveryWeekday = weekdays.length === 7;
+
+    if (!isEveryDay || !isEveryWeekday) {
+        if (!isEveryDay && !isEveryWeekday) {
+            result += ` on day ${days.join(', ')} and ${weekdays.map(w => dayNames[w]).join(', ')}`;
+        } else if (!isEveryDay) {
+            result += ` on day ${days.join(', ')} of the month`;
+        } else if (!isEveryWeekday) {
+            if (weekdays.length === 5 && !weekdays.includes(0) && !weekdays.includes(6)) {
+                result += ' on weekdays';
+            } else if (weekdays.length === 2 && weekdays.includes(0) && weekdays.includes(6)) {
+                result += ' on weekends';
+            } else {
+                result += ` on ${weekdays.map(w => dayNames[w]).join(', ')}`;
+            }
+        }
+    }
+
+    if (!isEveryMonth) {
+        result += ` in ${months.map(m => monthNames[m]).join(', ')}`;
+    }
+
+    return result;
+}
+
+function cronGetNextRuns(parsed, count) {
+    const [minutes, hours, days, months, weekdays] = parsed;
+    const runs = [];
+    const now = new Date();
+    let current = new Date(now);
+
+    // Start from next minute
+    current.setSeconds(0);
+    current.setMilliseconds(0);
+    current.setMinutes(current.getMinutes() + 1);
+
+    const maxIterations = 100000; // Prevent infinite loops
+    let iterations = 0;
+
+    while (runs.length < count && iterations < maxIterations) {
+        iterations++;
+
+        // Check if current time matches the cron pattern
+        const minute = current.getMinutes();
+        const hour = current.getHours();
+        const day = current.getDate();
+        const month = current.getMonth() + 1;
+        const weekday = current.getDay();
+
+        if (months.includes(month) &&
+            (days.includes(day) || weekdays.includes(weekday)) &&
+            hours.includes(hour) &&
+            minutes.includes(minute)) {
+            runs.push(new Date(current));
+        }
+
+        // Move to next minute
+        current.setMinutes(current.getMinutes() + 1);
+    }
+
+    return runs;
+}
+
+function cronFormatDate(date) {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const dateNum = date.getDate();
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}, ${month} ${dateNum}, ${year} ${hours}:${minutes}`;
+}
+
+function cronRelativeTime(date) {
+    const now = new Date();
+    const diffMs = date - now;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) {
+        return `in ${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+    } else if (diffHours < 24) {
+        const mins = diffMins % 60;
+        return `in ${diffHours}h ${mins}m`;
+    } else if (diffDays < 7) {
+        return `in ${diffDays} day${diffDays !== 1 ? 's' : ''}`;
+    } else {
+        const weeks = Math.floor(diffDays / 7);
+        return `in ${weeks} week${weeks !== 1 ? 's' : ''}`;
+    }
+}
+
+// Regex Tester Functions
+function regexGetToolId(element) {
+    const tool = element.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function regexGetData(toolId) {
+    const customizations = loadToolCustomizations();
+    return (customizations[toolId] && customizations[toolId].regexData) || {
+        pattern: '',
+        testString: '',
+        flags: { g: true, i: false, m: false, s: false }
+    };
+}
+
+function regexSaveData(toolId, data) {
+    const customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].regexData = data;
+    saveToolCustomizations(customizations);
+}
+
+function regexInit() {
+    document.querySelectorAll('.regex-widget').forEach(widget => {
+        const toolId = regexGetToolId(widget);
+        if (!toolId) return;
+
+        const data = regexGetData(toolId);
+        const patternInput = widget.querySelector('.regex-pattern');
+        const testInput = widget.querySelector('.regex-test-string');
+
+        if (patternInput && data.pattern) patternInput.value = data.pattern;
+        if (testInput && data.testString) testInput.value = data.testString;
+
+        if (data.flags) {
+            widget.querySelectorAll('.regex-flag').forEach(checkbox => {
+                const flag = checkbox.getAttribute('data-flag');
+                if (flag && data.flags[flag] !== undefined) {
+                    checkbox.checked = data.flags[flag];
+                }
+            });
+        }
+
+        regexSetupResizer(widget);
+        regexExecute(widget);
+    });
+}
+
+function regexSetupResizer(widget) {
+    const resizer = widget.querySelector('.regex-resizer');
+    const container = widget.querySelector('.regex-container');
+    const leftPane = container.querySelector('.regex-pane:first-child');
+    const rightPane = container.querySelector('.regex-pane:last-child');
+
+    if (!resizer) return;
+
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const total = rect.width - 6;
+        const leftWidth = Math.max(100, Math.min(x, total - 100));
+        const rightWidth = total - leftWidth;
+        leftPane.style.flex = `0 0 ${leftWidth}px`;
+        rightPane.style.flex = `0 0 ${rightWidth}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
+    });
+}
+
+function regexOnInput(element) {
+    const widget = element.closest('.regex-widget');
+    const toolId = regexGetToolId(widget);
+
+    if (toolId) {
+        const data = regexGetData(toolId);
+        data.pattern = widget.querySelector('.regex-pattern').value;
+        data.testString = widget.querySelector('.regex-test-string').value;
+        data.flags = {};
+        widget.querySelectorAll('.regex-flag').forEach(checkbox => {
+            const flag = checkbox.getAttribute('data-flag');
+            if (flag) data.flags[flag] = checkbox.checked;
+        });
+        regexSaveData(toolId, data);
+    }
+
+    regexExecute(widget);
+}
+
+function regexGetFlags(widget) {
+    let flags = '';
+    widget.querySelectorAll('.regex-flag:checked').forEach(checkbox => {
+        flags += checkbox.getAttribute('data-flag') || '';
+    });
+    return flags;
+}
+
+function regexExecute(widget) {
+    const pattern = widget.querySelector('.regex-pattern').value;
+    const testString = widget.querySelector('.regex-test-string').value;
+    const resultsDiv = widget.querySelector('.regex-results');
+    const statusDiv = widget.querySelector('.regex-status');
+    const flags = regexGetFlags(widget);
+
+    if (!pattern) {
+        resultsDiv.innerHTML = '<span class="no-match">Enter a regex pattern to see matches</span>';
+        statusDiv.textContent = '';
+        statusDiv.className = 'regex-status';
+        return;
+    }
+
+    try {
+        const regex = new RegExp(pattern, flags);
+        const matches = [];
+        let match;
+
+        if (flags.includes('g')) {
+            while ((match = regex.exec(testString)) !== null) {
+                matches.push({
+                    value: match[0],
+                    index: match.index,
+                    groups: match.slice(1)
+                });
+                if (match.index === regex.lastIndex) regex.lastIndex++;
+            }
+        } else {
+            match = regex.exec(testString);
+            if (match) {
+                matches.push({
+                    value: match[0],
+                    index: match.index,
+                    groups: match.slice(1)
+                });
+            }
+        }
+
+        if (matches.length === 0) {
+            resultsDiv.innerHTML = '<span class="no-match">No matches found</span>';
+            statusDiv.textContent = 'No matches';
+            statusDiv.className = 'regex-status';
+            return;
+        }
+
+        let highlighted = '';
+        let lastIndex = 0;
+        for (const m of matches) {
+            highlighted += regexEscapeHtml(testString.slice(lastIndex, m.index));
+            highlighted += `<span class="match-highlight">${regexEscapeHtml(m.value)}</span>`;
+            lastIndex = m.index + m.value.length;
+        }
+        highlighted += regexEscapeHtml(testString.slice(lastIndex));
+
+        let details = '<div class="match-info"><strong>Match Details:</strong>';
+        matches.forEach((m, i) => {
+            details += `<div class="match-item">`;
+            details += `<div class="match-index">Match ${i + 1} at index ${m.index}</div>`;
+            details += `<div class="match-value">${regexEscapeHtml(m.value)}</div>`;
+            if (m.groups.length > 0) {
+                details += '<div class="match-groups">';
+                m.groups.forEach((g, gi) => {
+                    details += `<div class="group-item">Group ${gi + 1}: ${g !== undefined ? regexEscapeHtml(g) : '<em>undefined</em>'}</div>`;
+                });
+                details += '</div>';
+            }
+            details += '</div>';
+        });
+        details += '</div>';
+
+        resultsDiv.innerHTML = `<div style="white-space:pre-wrap;word-break:break-all;margin-bottom:10px;">${highlighted}</div>${details}`;
+        statusDiv.textContent = `${matches.length} match${matches.length !== 1 ? 'es' : ''} found`;
+        statusDiv.className = 'regex-status success';
+
+    } catch (e) {
+        resultsDiv.innerHTML = `<span class="no-match">Invalid regex: ${regexEscapeHtml(e.message)}</span>`;
+        statusDiv.textContent = 'Invalid pattern';
+        statusDiv.className = 'regex-status error';
+    }
+}
+
+function regexEscapeHtml(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function regexCopy(btn) {
+    const widget = btn.closest('.regex-widget');
+    const pattern = widget.querySelector('.regex-pattern').value;
+    const flags = regexGetFlags(widget);
+
+    if (!pattern) return;
+
+    const regexString = `/${pattern}/${flags}`;
+    navigator.clipboard.writeText(regexString).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 1500);
+    });
+}
+
+function regexClear(btn) {
+    const widget = btn.closest('.regex-widget');
+    widget.querySelector('.regex-pattern').value = '';
+    widget.querySelector('.regex-test-string').value = '';
+    regexOnInput(widget.querySelector('.regex-pattern'));
 }
 
 // Content Editor State
@@ -9583,24 +11150,33 @@ function createNoteWithTemplate(templateId) {
         maxZ++;
         tool.style.zIndex = maxZ;
 
-        // Auto-fit tool to content after DOM is ready
-        requestAnimationFrame(() => {
-            autoFitToolContent(tool, false);
+        // Call onInit first if specified, then auto-fit after dynamic content renders
+        const doAutoFit = () => {
+            requestAnimationFrame(() => {
+                autoFitToolContent(tool, false);
 
-            // Update position with auto-fit dimensions
-            positions[toolId] = {
-                x: 100 + offset,
-                y: 100 + offset,
-                width: tool.offsetWidth,
-                height: tool.offsetHeight,
-                z: maxZ
-            };
-            savePositions(positions);
-        });
+                // Update position with auto-fit dimensions
+                positions[toolId] = {
+                    x: 100 + offset,
+                    y: 100 + offset,
+                    width: tool.offsetWidth,
+                    height: tool.offsetHeight,
+                    z: maxZ
+                };
+                savePositions(positions);
+            });
+        };
 
-        // Call onInit if specified
         if (template.onInit && typeof window[template.onInit] === 'function') {
-            setTimeout(() => window[template.onInit](), 50);
+            // Call onInit first, then auto-fit after dynamic content has rendered
+            setTimeout(() => {
+                window[template.onInit]();
+                // Wait for dynamic content to render before auto-fitting
+                setTimeout(doAutoFit, 50);
+            }, 50);
+        } else {
+            // No onInit, auto-fit immediately
+            doAutoFit();
         }
 
         // For blank tools, open the content editor immediately
