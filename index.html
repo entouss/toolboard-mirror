@@ -86,106 +86,6 @@ body.dark-mode {
     scrollbar-color: #4a4a5a var(--bg-secondary);
 }
 
-/* Calculator Widget Styles */
-.calc-widget {
-    background: var(--bg-tertiary);
-    padding: 15px;
-    border-radius: 6px;
-}
-.calc-widget input, .calc-widget select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 14px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-}
-.calc-widget label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-.calc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-.calc-card {
-    background: var(--bg-secondary);
-    padding: 10px;
-    border-radius: 4px;
-    text-align: center;
-}
-.calc-card-label {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-.calc-card-value {
-    font-size: 18px;
-    font-weight: 600;
-}
-.calc-card-value.large {
-    font-size: 20px;
-}
-.calc-card-value.positive { color: #27ae60; }
-.calc-card-value.negative { color: #c0392b; }
-.calc-card-value.info { color: #2980b9; }
-.calc-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px solid var(--border-light);
-    font-size: 12px;
-}
-.calc-section-title {
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-muted);
-}
-.calc-highlight {
-    background: var(--success-bg);
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-.calc-highlight-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--success-text);
-    margin-bottom: 5px;
-}
-.calc-toggle {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    overflow: hidden;
-}
-.calc-toggle label {
-    flex: 1;
-    margin: 0;
-}
-.calc-toggle span {
-    display: block;
-    padding: 8px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 12px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-}
-.calc-toggle input:checked + span {
-    background: #3498db;
-    color: white;
-}
-.calc-toggle input {
-    display: none;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -2387,1650 +2287,6 @@ tr:hover {
     background: #229954;
 }
 
-/* Diff Viewer Widget Styles */
-.tool-content:has(.diff-widget) {
-    display: flex;
-    flex-direction: column;
-}
-
-.diff-widget {
-    padding: 10px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-}
-
-.diff-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-}
-
-.diff-mode-toggle {
-    display: flex;
-    gap: 4px;
-}
-
-.diff-mode-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    border-radius: 4px;
-}
-
-.diff-mode-btn:first-child {
-    border-radius: 4px 0 0 4px;
-}
-
-.diff-mode-btn:last-child {
-    border-radius: 0 4px 4px 0;
-}
-
-.diff-mode-btn.active {
-    background: #3498db;
-    color: white;
-    border-color: #3498db;
-}
-
-.diff-view-options {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.diff-view-btn {
-    padding: 5px 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 10px;
-    border-radius: 3px;
-}
-
-.diff-view-btn.active {
-    background: #27ae60;
-    color: white;
-    border-color: #27ae60;
-}
-
-.diff-whitespace-toggle {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    color: var(--text-secondary);
-}
-
-.diff-whitespace-toggle input {
-    margin: 0;
-}
-
-.diff-edit-container {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-    min-height: 0;
-}
-
-.diff-edit-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.diff-edit-pane label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    font-size: 11px;
-    color: var(--text-heading);
-}
-
-.diff-edit-pane textarea {
-    flex: 1;
-    resize: none;
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    min-height: 100px;
-}
-
-.diff-edit-pane textarea:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.diff-edit-resizer {
-    width: 6px;
-    background: var(--border-color);
-    cursor: col-resize;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-
-.diff-edit-resizer:hover {
-    background: #3498db;
-}
-
-.diff-view-container {
-    flex: 1;
-    min-height: 0;
-    display: none;
-    flex-direction: column;
-}
-
-.diff-view-container.active {
-    display: flex;
-}
-
-.diff-edit-container.hidden {
-    display: none;
-}
-
-.diff-output {
-    flex: 1;
-    overflow: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-tertiary);
-    font-family: monospace;
-    font-size: 12px;
-}
-
-.diff-split-view {
-    display: flex;
-    min-height: 100%;
-}
-
-.diff-split-pane {
-    flex: 1;
-    min-width: 0;
-}
-
-.diff-split-pane:first-child {
-    border-right: 1px solid var(--border-color);
-}
-
-.diff-split-header {
-    padding: 6px 10px;
-    background: var(--bg-tool-header);
-    color: white;
-    font-weight: 600;
-    font-size: 11px;
-    position: sticky;
-    top: 0;
-}
-
-.diff-unified-view {
-    min-height: 100%;
-}
-
-.diff-line {
-    display: flex;
-    line-height: 1.5;
-    min-height: 20px;
-}
-
-.diff-gutter {
-    width: 40px;
-    padding: 0 6px;
-    text-align: right;
-    color: var(--text-muted);
-    background: var(--bg-tertiary);
-    border-right: 1px solid var(--border-light);
-    flex-shrink: 0;
-    font-size: 10px;
-    user-select: none;
-}
-
-.diff-content {
-    flex: 1;
-    padding: 0 8px;
-    white-space: pre-wrap;
-    word-break: break-all;
-    min-width: 0;
-}
-
-.diff-line.addition {
-    background: rgba(39, 174, 96, 0.15);
-}
-
-.diff-line.addition .diff-gutter {
-    background: rgba(39, 174, 96, 0.3);
-    color: #27ae60;
-}
-
-.diff-line.deletion {
-    background: rgba(231, 76, 60, 0.15);
-}
-
-.diff-line.deletion .diff-gutter {
-    background: rgba(231, 76, 60, 0.3);
-    color: #e74c3c;
-}
-
-.diff-line.unchanged {
-    background: transparent;
-}
-
-.diff-prefix {
-    width: 16px;
-    text-align: center;
-    flex-shrink: 0;
-    font-weight: bold;
-}
-
-.diff-line.addition .diff-prefix {
-    color: #27ae60;
-}
-
-.diff-line.deletion .diff-prefix {
-    color: #e74c3c;
-}
-
-.diff-stats {
-    display: flex;
-    gap: 16px;
-    padding: 8px 0;
-    font-size: 11px;
-    color: var(--text-secondary);
-    border-top: 1px solid var(--border-light);
-    margin-top: 8px;
-    flex-shrink: 0;
-}
-
-.diff-stats-additions {
-    color: #27ae60;
-}
-
-.diff-stats-deletions {
-    color: #e74c3c;
-}
-
-.diff-empty-message {
-    padding: 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-/* Dark mode adjustments for diff */
-body.dark-mode .diff-line.addition {
-    background: rgba(39, 174, 96, 0.2);
-}
-
-body.dark-mode .diff-line.addition .diff-gutter {
-    background: rgba(39, 174, 96, 0.35);
-}
-
-body.dark-mode .diff-line.deletion {
-    background: rgba(231, 76, 60, 0.2);
-}
-
-body.dark-mode .diff-line.deletion .diff-gutter {
-    background: rgba(231, 76, 60, 0.35);
-}
-
-/* Sequence Diagram Widget Styles */
-.tool-content:has(.seq-widget) {
-    display: flex;
-    flex-direction: column;
-}
-
-.seq-widget {
-    padding: 10px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-}
-
-.seq-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-}
-
-.seq-mode-toggle {
-    display: flex;
-    gap: 4px;
-}
-
-.seq-mode-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    border-radius: 4px;
-}
-
-.seq-mode-btn:first-child {
-    border-radius: 4px 0 0 4px;
-}
-
-.seq-mode-btn:last-child {
-    border-radius: 0 4px 4px 0;
-}
-
-.seq-mode-btn.active {
-    background: #3498db;
-    color: white;
-    border-color: #3498db;
-}
-
-.seq-help-btn {
-    padding: 5px 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 10px;
-    border-radius: 3px;
-}
-
-.seq-help-btn:hover {
-    background: var(--table-hover);
-}
-
-.seq-split-container {
-    flex: 1;
-    display: none;
-    gap: 10px;
-    min-height: 0;
-}
-
-.seq-split-container.active {
-    display: flex;
-}
-
-.seq-split-container .seq-edit-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.seq-split-container .seq-edit-pane textarea {
-    flex: 1;
-    resize: none;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    min-height: 100px;
-    line-height: 1.5;
-}
-
-.seq-split-container .seq-edit-pane textarea:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.seq-split-container .seq-view-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-tertiary);
-    overflow: auto;
-}
-
-.seq-split-resizer {
-    width: 6px;
-    background: var(--border-color);
-    cursor: col-resize;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-
-.seq-split-resizer:hover {
-    background: #3498db;
-}
-
-.seq-edit-container {
-    flex: 1;
-    display: none;
-    flex-direction: column;
-    min-height: 0;
-}
-
-.seq-edit-container.active {
-    display: flex;
-}
-
-.seq-edit-container textarea {
-    flex: 1;
-    resize: none;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    min-height: 100px;
-    line-height: 1.5;
-}
-
-.seq-edit-container textarea:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.seq-edit-container textarea::placeholder {
-    color: var(--text-muted);
-}
-
-.seq-view-container {
-    flex: 1;
-    min-height: 0;
-    display: none;
-    flex-direction: column;
-    overflow: auto;
-}
-
-.seq-view-container.active {
-    display: flex;
-}
-
-.seq-diagram {
-    flex: 1;
-    min-height: 200px;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
-
-.seq-diagram svg {
-    max-width: 100%;
-    height: auto;
-}
-
-.seq-participant-box {
-    fill: var(--bg-tertiary);
-    stroke: var(--border-color);
-    stroke-width: 2;
-}
-
-.seq-participant-text {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    fill: var(--text-primary);
-    text-anchor: middle;
-    dominant-baseline: middle;
-}
-
-.seq-lifeline {
-    stroke: var(--border-color);
-    stroke-width: 1;
-    stroke-dasharray: 5, 5;
-}
-
-.seq-arrow {
-    stroke: var(--text-primary);
-    stroke-width: 1.5;
-    fill: none;
-}
-
-.seq-arrow-head {
-    fill: var(--text-primary);
-    stroke: none;
-}
-
-.seq-arrow.dashed {
-    stroke-dasharray: 5, 3;
-}
-
-.seq-arrow-label {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 11px;
-    fill: var(--text-primary);
-    dominant-baseline: middle;
-}
-
-.seq-arrow-number {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    fill: white;
-}
-
-.seq-arrow-number-bg {
-    fill: #3498db;
-}
-
-.seq-arrow.dashed + .seq-arrow-number-bg,
-.seq-dashed-number-bg {
-    fill: #9b59b6;
-}
-
-.seq-self-arrow {
-    stroke: var(--text-primary);
-    stroke-width: 1.5;
-    fill: none;
-}
-
-.seq-note-box {
-    fill: #ffffcc;
-    stroke: #cccc00;
-    stroke-width: 1;
-}
-
-.seq-note-text {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 10px;
-    fill: #333;
-}
-
-body.dark-mode .seq-note-box {
-    fill: #4a4a2a;
-    stroke: #8a8a3a;
-}
-
-body.dark-mode .seq-note-text {
-    fill: #e4e4e7;
-}
-
-.seq-error-message {
-    padding: 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-.seq-help-text {
-    font-size: 10px;
-    color: var(--text-muted);
-    padding: 8px 0;
-    border-top: 1px solid var(--border-light);
-    margin-top: 8px;
-    flex-shrink: 0;
-}
-
-.seq-help-text code {
-    background: var(--code-bg);
-    padding: 1px 4px;
-    border-radius: 3px;
-    font-family: monospace;
-}
-
-/* Sequence Diagram Help Modal */
-.seq-help-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--overlay-bg);
-    z-index: 10015;
-    justify-content: center;
-    align-items: center;
-}
-
-.seq-help-modal.open {
-    display: flex;
-}
-
-.seq-help-content {
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.seq-help-content h3 {
-    margin-bottom: 12px;
-    color: var(--text-heading);
-}
-
-.seq-help-content pre {
-    background: var(--code-bg);
-    padding: 12px;
-    border-radius: 4px;
-    font-size: 11px;
-    overflow-x: auto;
-    margin: 10px 0;
-}
-
-.seq-help-content p {
-    margin: 8px 0;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-.seq-help-close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--text-muted);
-    line-height: 1;
-}
-
-.seq-help-close:hover {
-    color: var(--text-heading);
-}
-
-/* Dark mode adjustments for sequence diagram */
-body.dark-mode .seq-participant-box {
-    fill: var(--bg-tertiary);
-    stroke: var(--border-color);
-}
-
-body.dark-mode .seq-arrow-number-bg {
-    fill: #2980b9;
-}
-
-body.dark-mode .seq-dashed-number-bg {
-    fill: #8e44ad;
-}
-
-/* JWT Decoder Widget */
-.tool-content:has(.jwt-widget) {
-    display: flex;
-    flex-direction: column;
-}
-
-.jwt-widget {
-    padding: 10px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-    gap: 10px;
-}
-
-.jwt-input-section {
-    flex-shrink: 0;
-}
-
-.jwt-input-section label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.jwt-input-section textarea {
-    width: 100%;
-    min-height: 60px;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 11px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    resize: vertical;
-    box-sizing: border-box;
-    word-break: break-all;
-}
-
-.jwt-input-section textarea:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.jwt-output-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: auto;
-}
-
-.jwt-parts {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.jwt-part {
-    background: var(--bg-tertiary);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.jwt-part-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    font-weight: 600;
-    font-size: 11px;
-}
-
-.jwt-part-header.header { background: #e74c3c; color: white; }
-.jwt-part-header.payload { background: #9b59b6; color: white; }
-.jwt-part-header.signature { background: #3498db; color: white; }
-
-.jwt-part-content {
-    padding: 10px 12px;
-    font-family: monospace;
-    font-size: 11px;
-    white-space: pre-wrap;
-    word-break: break-all;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.jwt-part-content.raw {
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.jwt-error {
-    padding: 12px;
-    background: var(--error-bg);
-    color: var(--error-text);
-    border-radius: 6px;
-    font-size: 12px;
-}
-
-.jwt-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-}
-
-.jwt-status.valid {
-    background: var(--success-bg);
-    color: var(--success-text);
-}
-
-.jwt-status.invalid {
-    background: var(--error-bg);
-    color: var(--error-text);
-}
-
-.jwt-status.info {
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-}
-
-.jwt-claims {
-    margin-top: 8px;
-}
-
-.jwt-claim {
-    display: flex;
-    padding: 4px 0;
-    border-bottom: 1px solid var(--border-light);
-    font-size: 11px;
-}
-
-.jwt-claim:last-child {
-    border-bottom: none;
-}
-
-.jwt-claim-key {
-    min-width: 80px;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.jwt-claim-value {
-    flex: 1;
-    color: var(--text-primary);
-    word-break: break-all;
-}
-
-.jwt-claim-value.expired {
-    color: #e74c3c;
-}
-
-.jwt-claim-value.valid {
-    color: #27ae60;
-}
-
-.jwt-copy-btn {
-    padding: 2px 8px;
-    font-size: 10px;
-    border: none;
-    background: rgba(255,255,255,0.2);
-    color: inherit;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.jwt-copy-btn:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-.jwt-toolbar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.jwt-sample-btn {
-    padding: 4px 10px;
-    font-size: 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.jwt-sample-btn:hover {
-    background: var(--table-hover);
-}
-
-/* Code Formatter Widget Styles */
-.tool-content:has(.fmt-widget) {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
-
-.fmt-widget {
-    padding: 10px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-}
-
-.fmt-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-}
-
-.fmt-format-toggle {
-    display: flex;
-    gap: 0;
-}
-
-.fmt-format-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    margin-left: -1px;
-}
-
-.fmt-format-btn:first-child {
-    border-radius: 4px 0 0 4px;
-    margin-left: 0;
-}
-
-.fmt-format-btn:last-child {
-    border-radius: 0 4px 4px 0;
-}
-
-.fmt-format-btn.active {
-    background: #3498db;
-    color: white;
-    border-color: #3498db;
-    z-index: 1;
-}
-
-.fmt-actions {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.fmt-action-btn {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    border-radius: 4px;
-}
-
-.fmt-action-btn:hover {
-    background: var(--table-hover);
-}
-
-.fmt-container {
-    flex: 1;
-    display: flex;
-    gap: 10px;
-    min-height: 0;
-}
-
-.fmt-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.fmt-pane label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-
-.fmt-pane textarea {
-    flex: 1;
-    resize: none;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    min-height: 100px;
-    line-height: 1.4;
-    white-space: pre;
-    overflow-wrap: normal;
-    overflow-x: auto;
-}
-
-.fmt-pane textarea:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.fmt-pane textarea::placeholder {
-    color: var(--text-muted);
-}
-
-.fmt-pane textarea.fmt-output {
-    background: var(--bg-tertiary);
-}
-
-.fmt-resizer {
-    width: 6px;
-    background: var(--border-color);
-    cursor: col-resize;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-
-.fmt-resizer:hover {
-    background: #3498db;
-}
-
-.fmt-status {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    min-height: 16px;
-}
-
-.fmt-status.error {
-    color: #e74c3c;
-}
-
-.fmt-status.success {
-    color: #27ae60;
-}
-
-/* Cron Expression Widget Styles */
-.tool-content:has(.cron-widget) {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
-
-.cron-widget {
-    padding: 12px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-    gap: 12px;
-}
-
-.cron-input-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.cron-input-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.cron-input {
-    flex: 1;
-    padding: 10px 12px;
-    font-family: monospace;
-    font-size: 16px;
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    text-align: center;
-    letter-spacing: 2px;
-}
-
-.cron-input:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.cron-input.valid {
-    border-color: #27ae60;
-}
-
-.cron-input.invalid {
-    border-color: #e74c3c;
-}
-
-.cron-presets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.cron-preset-btn {
-    padding: 4px 10px;
-    font-size: 11px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-
-.cron-preset-btn:hover {
-    background: var(--table-hover);
-    color: var(--text-primary);
-}
-
-.cron-explanation {
-    padding: 12px;
-    background: var(--bg-tertiary);
-    border-radius: 6px;
-    min-height: 40px;
-}
-
-.cron-explanation-text {
-    font-size: 14px;
-    color: var(--text-primary);
-    line-height: 1.5;
-}
-
-.cron-explanation-text strong {
-    color: #3498db;
-}
-
-.cron-error {
-    color: #e74c3c;
-    font-size: 13px;
-}
-
-.cron-fields {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-}
-
-.cron-field {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 6px;
-    background: var(--bg-tertiary);
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-}
-
-.cron-field-value {
-    font-family: monospace;
-    font-size: 18px;
-    font-weight: bold;
-    color: #3498db;
-    margin-bottom: 4px;
-}
-
-.cron-field-name {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.cron-field-desc {
-    font-size: 10px;
-    color: var(--text-secondary);
-    margin-top: 4px;
-    text-align: center;
-}
-
-.cron-schedule {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.cron-schedule-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.cron-schedule-title {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.cron-schedule-count {
-    font-size: 11px;
-    color: var(--text-muted);
-}
-
-.cron-schedule-list {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    max-height: 150px;
-}
-
-.cron-schedule-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 10px;
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.cron-schedule-item:first-child {
-    background: rgba(39, 174, 96, 0.1);
-    border: 1px solid rgba(39, 174, 96, 0.3);
-}
-
-.cron-schedule-date {
-    color: var(--text-primary);
-    font-family: monospace;
-}
-
-.cron-schedule-relative {
-    color: var(--text-muted);
-    font-size: 11px;
-}
-
-/* Regex Tester Widget Styles */
-.tool-content:has(.regex-widget) {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
-
-.regex-widget {
-    padding: 10px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-}
-
-.regex-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    gap: 10px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-}
-
-.regex-flags {
-    display: flex;
-    gap: 10px;
-}
-
-.regex-flags label {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-family: monospace;
-}
-
-.regex-flags input[type="checkbox"] {
-    cursor: pointer;
-}
-
-.regex-actions {
-    display: flex;
-    gap: 6px;
-}
-
-.regex-action-btn {
-    padding: 5px 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    border-radius: 4px;
-}
-
-.regex-action-btn:hover {
-    background: var(--table-hover);
-}
-
-.regex-input-row {
-    margin-bottom: 8px;
-    flex-shrink: 0;
-}
-
-.regex-input-row label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-
-.regex-pattern {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 13px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    box-sizing: border-box;
-}
-
-.regex-pattern:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.regex-container {
-    flex: 1;
-    display: flex;
-    gap: 10px;
-    min-height: 0;
-}
-
-.regex-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.regex-pane label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-
-.regex-test-string {
-    flex: 1;
-    resize: none;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    min-height: 80px;
-    line-height: 1.5;
-}
-
-.regex-test-string:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.regex-results-pane {
-    min-width: 0;
-}
-
-.regex-results {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-tertiary);
-    overflow: auto;
-    font-family: monospace;
-    font-size: 12px;
-    line-height: 1.5;
-    min-height: 80px;
-}
-
-.regex-results .match-highlight {
-    background: #f1c40f;
-    color: #000;
-    padding: 1px 2px;
-    border-radius: 2px;
-}
-
-.regex-results .match-group {
-    background: #3498db;
-    color: #fff;
-    padding: 1px 2px;
-    border-radius: 2px;
-}
-
-.regex-results .match-info {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color);
-}
-
-.regex-results .match-item {
-    margin-bottom: 8px;
-    padding: 6px 8px;
-    background: var(--bg-secondary);
-    border-radius: 4px;
-}
-
-.regex-results .match-index {
-    color: var(--text-muted);
-    font-size: 10px;
-    margin-bottom: 2px;
-}
-
-.regex-results .match-value {
-    color: var(--text-primary);
-    word-break: break-all;
-}
-
-.regex-results .match-groups {
-    margin-top: 4px;
-    padding-left: 10px;
-    border-left: 2px solid var(--border-color);
-}
-
-.regex-results .group-item {
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-.regex-results .no-match {
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-.regex-resizer {
-    width: 6px;
-    background: var(--border-color);
-    cursor: col-resize;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-
-.regex-resizer:hover {
-    background: #3498db;
-}
-
-.regex-status {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    min-height: 16px;
-    flex-shrink: 0;
-}
-
-.regex-status.error {
-    color: #e74c3c;
-}
-
-.regex-status.success {
-    color: #27ae60;
-}
-
-/* Epoch Converter Widget Styles */
-.tool-content:has(.epoch-widget) {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-}
-
-.epoch-widget {
-    padding: 12px;
-    font-size: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.epoch-section {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.epoch-section > label {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-weight: 500;
-}
-
-.epoch-current {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-}
-
-.epoch-now-value {
-    font-family: monospace;
-    font-size: 14px;
-    color: var(--text-primary);
-    flex: 1;
-}
-
-.epoch-action-btn {
-    padding: 4px 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 11px;
-    border-radius: 4px;
-}
-
-.epoch-action-btn:hover {
-    background: var(--table-hover);
-}
-
-.epoch-input-row {
-    display: flex;
-    gap: 8px;
-}
-
-.epoch-timestamp-input {
-    flex: 1;
-    padding: 8px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 13px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-}
-
-.epoch-timestamp-input:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.epoch-unit-select,
-.epoch-tz-select {
-    padding: 8px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    cursor: pointer;
-}
-
-.epoch-datetime-inputs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.epoch-date-input,
-.epoch-time-input {
-    padding: 8px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 12px;
-    background: var(--input-bg);
-    color: var(--text-primary);
-    font-family: monospace;
-}
-
-.epoch-date-input:focus,
-.epoch-time-input:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.epoch-result {
-    padding: 10px;
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    font-family: monospace;
-    font-size: 12px;
-    line-height: 1.6;
-    min-height: 20px;
-}
-
-.epoch-result .result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2px 0;
-}
-
-.epoch-result .result-label {
-    color: var(--text-secondary);
-}
-
-.epoch-result .result-value {
-    color: var(--text-primary);
-    font-weight: 500;
-}
-
-.epoch-result .result-value.copyable {
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 3px;
-}
-
-.epoch-result .result-value.copyable:hover {
-    background: var(--table-hover);
-}
-
-.epoch-reference {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 10px;
-    background: var(--bg-tertiary);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-}
-
-.epoch-ref-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-}
-
-.epoch-ref-item span {
-    color: var(--text-secondary);
-}
-
-.epoch-ref-item code {
-    font-family: monospace;
-    color: var(--text-primary);
-    background: var(--bg-secondary);
-    padding: 2px 6px;
-    border-radius: 3px;
-}
-
 /* Feature Selection Modal */
 .feature-select-modal {
     display: none;
@@ -4121,6 +2377,255 @@ body.dark-mode .seq-dashed-number-bg {
 
 .feature-select-description {
     font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Feature Select Tabs */
+.feature-select-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.feature-tab {
+    flex: 1;
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s, border-color 0.2s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+}
+
+.feature-tab:hover {
+    color: var(--text-primary);
+}
+
+.feature-tab.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+}
+
+.feature-tab-content {
+    display: none;
+}
+
+.feature-tab-content.active {
+    display: block;
+}
+
+/* Feature Search and Filter */
+.feature-search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.feature-search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.feature-search-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.feature-toolbox-filter {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+/* Toolbox Group Header */
+.toolbox-group {
+    margin-bottom: 20px;
+}
+
+.toolbox-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.toolbox-group-icon {
+    font-size: 18px;
+}
+
+.toolbox-group-name {
+    font-weight: 600;
+    color: var(--text-heading);
+    font-size: 14px;
+}
+
+.toolbox-group-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+/* Toolboxes List */
+.toolboxes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.toolbox-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+}
+
+.toolbox-card-icon {
+    font-size: 28px;
+    width: 45px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.toolbox-card-info {
+    flex: 1;
+}
+
+.toolbox-card-name {
+    font-weight: 600;
+    color: var(--text-heading);
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.toolbox-card-description {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.toolbox-card-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.toolbox-tool-preview {
+    font-size: 11px;
+    padding: 2px 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    color: var(--text-secondary);
+}
+
+.toolbox-add-all-btn {
+    padding: 6px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.toolbox-add-all-btn:hover {
+    background: #2980b9;
+}
+
+/* Board Templates List */
+.board-templates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.board-template-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+}
+
+.board-template-icon {
+    font-size: 28px;
+    width: 45px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.board-template-info {
+    flex: 1;
+}
+
+.board-template-name {
+    font-weight: 600;
+    color: var(--text-heading);
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.board-template-description {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.board-template-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.board-template-tool-preview {
+    font-size: 11px;
+    padding: 2px 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    color: var(--text-secondary);
+}
+
+.board-template-use-btn {
+    padding: 6px 12px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.board-template-use-btn:hover {
+    background: #219a52;
+}
+
+.feature-no-results {
+    text-align: center;
+    padding: 30px;
     color: var(--text-muted);
 }
 
@@ -4550,8 +3055,34 @@ body.dark-mode .seq-dashed-number-bg {
     <div id="featureSelectModal" class="feature-select-modal">
         <div class="feature-select-content">
             <span class="feature-select-close">&times;</span>
-            <h2>Choose Tool Type</h2>
-            <div id="featureSelectList" class="feature-select-list"></div>
+            <h2>Add to Board</h2>
+
+            <div class="feature-select-tabs">
+                <button class="feature-tab active" data-tab="tools">Tools</button>
+                <button class="feature-tab" data-tab="toolboxes">Toolboxes</button>
+                <button class="feature-tab" data-tab="templates">Board Templates</button>
+            </div>
+
+            <!-- Tools Tab -->
+            <div id="featureToolsTab" class="feature-tab-content active">
+                <div class="feature-search-row">
+                    <input type="text" id="featureSearchInput" class="feature-search-input" placeholder="Search tools...">
+                    <select id="featureToolboxFilter" class="feature-toolbox-filter">
+                        <option value="all">All Toolboxes</option>
+                    </select>
+                </div>
+                <div id="featureSelectList" class="feature-select-list"></div>
+            </div>
+
+            <!-- Toolboxes Tab -->
+            <div id="featureToolboxesTab" class="feature-tab-content">
+                <div id="toolboxesList" class="toolboxes-list"></div>
+            </div>
+
+            <!-- Board Templates Tab -->
+            <div id="featureTemplatesTab" class="feature-tab-content">
+                <div id="boardTemplatesList" class="board-templates-list"></div>
+            </div>
         </div>
     </div>
 
@@ -4614,6 +3145,18 @@ function generateDefaultPositions() {
 }
 
 const DEFAULT_POSITIONS = generateDefaultPositions();
+
+// Utility: HTML escape function
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// Utility: Parse markdown using marked library
+function parseMarkdown(text) {
+    if (!text) return '';
+    return marked.parse(text);
+}
 
 // Tool templates for feature selection
 const NOTE_TEMPLATES = {
@@ -5056,6 +3599,334 @@ Charlie --> Bob: Reply" oninput="seqOnInput(this)"></textarea>
     }
 };
 
+// ============================================================
+// Plugin Registry System
+// ============================================================
+const PluginRegistry = {
+    tools: new Map(),
+    toolboxes: new Map(),
+    boards: new Map(),
+
+    // Register a tool plugin
+    registerTool(plugin) {
+        if (!plugin.id) {
+            console.error('Plugin tool missing required id:', plugin);
+            return false;
+        }
+        // Normalize plugin structure
+        const normalizedPlugin = {
+            id: plugin.id,
+            name: plugin.name || plugin.id,
+            description: plugin.description || '',
+            icon: plugin.icon || '📝',
+            version: plugin.version || '1.0.0',
+            toolbox: plugin.toolbox || 'uncategorized',
+            tags: plugin.tags || [],
+            title: plugin.title || plugin.name || plugin.id,
+            content: plugin.content || '',
+            contentType: plugin.contentType || (plugin.content && plugin.content.trim().startsWith('<') ? 'html' : 'markdown'),
+            onInit: plugin.onInit || null,
+            styles: plugin.styles || '',
+            defaultWidth: plugin.defaultWidth || null,
+            defaultHeight: plugin.defaultHeight || null,
+            source: plugin.source || 'embedded' // 'embedded' or 'external'
+        };
+        this.tools.set(plugin.id, normalizedPlugin);
+        return true;
+    },
+
+    // Register a toolbox plugin
+    registerToolbox(plugin) {
+        if (!plugin.id) {
+            console.error('Plugin toolbox missing required id:', plugin);
+            return false;
+        }
+        const normalizedPlugin = {
+            id: plugin.id,
+            name: plugin.name || plugin.id,
+            description: plugin.description || '',
+            icon: plugin.icon || '📦',
+            color: plugin.color || '#3498db',
+            version: plugin.version || '1.0.0',
+            tools: plugin.tools || [],
+            source: plugin.source || 'embedded'
+        };
+        this.toolboxes.set(plugin.id, normalizedPlugin);
+        return true;
+    },
+
+    // Register a board template plugin
+    registerBoard(plugin) {
+        if (!plugin.id) {
+            console.error('Plugin board missing required id:', plugin);
+            return false;
+        }
+        const normalizedPlugin = {
+            id: plugin.id,
+            name: plugin.name || plugin.id,
+            description: plugin.description || '',
+            icon: plugin.icon || '📋',
+            version: plugin.version || '1.0.0',
+            settings: plugin.settings || {},
+            tools: plugin.tools || [],
+            source: plugin.source || 'embedded'
+        };
+        this.boards.set(plugin.id, normalizedPlugin);
+        return true;
+    },
+
+    // Getters
+    getTool(id) {
+        return this.tools.get(id) || null;
+    },
+
+    getToolbox(id) {
+        return this.toolboxes.get(id) || null;
+    },
+
+    getBoard(id) {
+        return this.boards.get(id) || null;
+    },
+
+    // Get all tools for a specific toolbox
+    getToolsByToolbox(toolboxId) {
+        const results = [];
+        for (const tool of this.tools.values()) {
+            if (tool.toolbox === toolboxId) {
+                results.push(tool);
+            }
+        }
+        return results;
+    },
+
+    // Search tools by name, description, or tags
+    searchTools(query) {
+        const q = query.toLowerCase();
+        const results = [];
+        for (const tool of this.tools.values()) {
+            const nameMatch = tool.name.toLowerCase().includes(q);
+            const descMatch = tool.description.toLowerCase().includes(q);
+            const tagMatch = tool.tags.some(tag => tag.toLowerCase().includes(q));
+            if (nameMatch || descMatch || tagMatch) {
+                results.push(tool);
+            }
+        }
+        return results;
+    },
+
+    // Get all tools as array
+    getAllTools() {
+        return Array.from(this.tools.values());
+    },
+
+    // Get all toolboxes as array
+    getAllToolboxes() {
+        return Array.from(this.toolboxes.values());
+    },
+
+    // Get all boards as array
+    getAllBoards() {
+        return Array.from(this.boards.values());
+    },
+
+    // Export plugins used by a set of tool IDs for HTML embedding
+    exportForEmbed(toolIds) {
+        const exportedTools = [];
+        const exportedToolboxes = new Set();
+
+        for (const toolId of toolIds) {
+            const tool = this.getTool(toolId);
+            if (tool) {
+                exportedTools.push(tool);
+                if (tool.toolbox) {
+                    exportedToolboxes.add(tool.toolbox);
+                }
+            }
+        }
+
+        const toolboxes = [];
+        for (const toolboxId of exportedToolboxes) {
+            const toolbox = this.getToolbox(toolboxId);
+            if (toolbox) {
+                toolboxes.push(toolbox);
+            }
+        }
+
+        return { tools: exportedTools, toolboxes };
+    }
+};
+
+// ============================================================
+// Plugin Loader System (for external plugins)
+// ============================================================
+const PluginLoader = {
+    STORAGE_KEY: 'toolboard_pluginUrls',
+    loadedUrls: new Set(),
+
+    // Get plugin URLs from localStorage
+    getPluginUrls() {
+        // Skip external plugins if this is an exported HTML (embedded data present)
+        console.log('[PluginLoader] TOOLBOARD_EMBEDDED:', window.TOOLBOARD_EMBEDDED);
+        if (window.TOOLBOARD_EMBEDDED) {
+            console.log('[PluginLoader] Skipping external plugins - embedded mode');
+            return [];
+        }
+        try {
+            const stored = localStorage.getItem(this.STORAGE_KEY);
+            const urls = stored ? JSON.parse(stored) : [];
+            console.log('[PluginLoader] Loading plugins from localStorage:', urls);
+            return urls;
+        } catch (e) {
+            console.error('Error reading plugin URLs:', e);
+            return [];
+        }
+    },
+
+    // Save plugin URLs to localStorage
+    savePluginUrls(urls) {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(urls));
+        updateStorageIndicator();
+    },
+
+    // Add a new plugin URL
+    addPluginUrl(url) {
+        const urls = this.getPluginUrls();
+        if (!urls.includes(url)) {
+            urls.push(url);
+            this.savePluginUrls(urls);
+            return true;
+        }
+        return false;
+    },
+
+    // Remove a plugin URL
+    removePluginUrl(url) {
+        const urls = this.getPluginUrls();
+        const index = urls.indexOf(url);
+        if (index !== -1) {
+            urls.splice(index, 1);
+            this.savePluginUrls(urls);
+            return true;
+        }
+        return false;
+    },
+
+    // Load a plugin from URL (returns a promise)
+    loadFromUrl(url) {
+        return new Promise((resolve, reject) => {
+            if (this.loadedUrls.has(url)) {
+                resolve({ url, status: 'already_loaded' });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = url;
+            script.async = true;
+
+            script.onload = () => {
+                this.loadedUrls.add(url);
+                console.log('Plugin loaded:', url);
+                resolve({ url, status: 'loaded' });
+            };
+
+            script.onerror = (e) => {
+                console.error('Failed to load plugin:', url, e);
+                reject({ url, status: 'error', error: e });
+            };
+
+            document.head.appendChild(script);
+        });
+    },
+
+    // Load all external plugins from localStorage
+    async loadAllExternal() {
+        const urls = this.getPluginUrls();
+        const results = { loaded: [], failed: [] };
+
+        for (const url of urls) {
+            try {
+                const result = await this.loadFromUrl(url);
+                results.loaded.push(result);
+            } catch (error) {
+                results.failed.push(error);
+            }
+        }
+
+        return results;
+    },
+
+    // Get list of loaded plugin URLs
+    getLoadedUrls() {
+        return Array.from(this.loadedUrls);
+    }
+};
+
+// ============================================================
+// Register Core Toolboxes (Productivity and Core only)
+// Developer Tools and Finance are available as external plugins
+// ============================================================
+PluginRegistry.registerToolbox({
+    id: 'productivity',
+    name: 'Productivity',
+    description: 'General productivity tools',
+    icon: '📋',
+    color: '#9b59b6',
+    tools: ['simple-calculator', 'checklist', 'calendar']
+});
+
+PluginRegistry.registerToolbox({
+    id: 'core',
+    name: 'Core',
+    description: 'Basic toolboard tools',
+    icon: '📝',
+    color: '#7f8c8d',
+    tools: ['blank']
+});
+
+// ============================================================
+// Register Core Tools from NOTE_TEMPLATES
+// Only registers productivity and core tools; dev/finance tools
+// are available via external plugins
+// ============================================================
+(function registerCoreTools() {
+    // Tools to register (productivity + core only)
+    const coreToolIds = ['blank', 'simple-calculator', 'checklist', 'calendar'];
+
+    // Toolbox mappings
+    const toolboxMap = {
+        'blank': 'core',
+        'simple-calculator': 'productivity',
+        'checklist': 'productivity',
+        'calendar': 'productivity'
+    };
+
+    // Tag mappings
+    const tagsMap = {
+        'blank': ['blank', 'empty', 'new'],
+        'simple-calculator': ['math', 'arithmetic', 'numbers'],
+        'checklist': ['todo', 'tasks', 'list'],
+        'calendar': ['date', 'events', 'schedule', 'ics']
+    };
+
+    for (const id of coreToolIds) {
+        const template = NOTE_TEMPLATES[id];
+        if (template) {
+            PluginRegistry.registerTool({
+                id: id,
+                name: template.name,
+                description: template.description,
+                icon: template.icon,
+                toolbox: toolboxMap[id] || 'uncategorized',
+                tags: tagsMap[id] || [],
+                title: template.title,
+                content: template.content,
+                onInit: template.onInit,
+                source: 'embedded'
+            });
+        }
+    }
+})();
+
 // Board management
 function loadBoards() {
     const stored = localStorage.getItem('financeBoards');
@@ -5245,8 +4116,19 @@ function setupDarkMode() {
 }
 
 // Initialize the toolboard
-function init() {
+async function init() {
     setupDarkMode();
+
+    // Load external plugins before rendering
+    try {
+        const results = await PluginLoader.loadAllExternal();
+        if (results.failed.length > 0) {
+            console.warn('Some plugins failed to load:', results.failed);
+        }
+    } catch (e) {
+        console.error('Error loading external plugins:', e);
+    }
+
     populateBoardSelector();
     applyToolboardSettings();
     setupToolboardSettings();
@@ -5258,6 +4140,7 @@ function init() {
     setupButtons();
     setupImportExport();
     setupFeatureSelect();
+    setupPluginSettings();
     displayVersion();
     updateStorageIndicator();
 }
@@ -5687,189 +4570,30 @@ function renderToolboard() {
 function initializeCalculators() {
     // Small delay to ensure DOM is ready
     setTimeout(() => {
-        if (document.getElementById('taxIncome')) calculateTax();
-        if (document.getElementById('growthInitial')) calculateGrowth();
         if (document.querySelector('.checklist-widget')) checklistInit();
         if (document.querySelector('.calendar-widget')) calendarInit();
-        if (document.querySelector('.diff-widget')) diffInit();
-        if (document.querySelector('.seq-widget')) seqInit();
-        if (document.querySelector('.jwt-widget')) jwtInit();
-        if (document.querySelector('.fmt-widget')) fmtInit();
-        if (document.querySelector('.cron-widget')) cronInit();
-        if (document.querySelector('.regex-widget')) regexInit();
-        if (document.querySelector('.epoch-widget')) epochInit();
+
+        // Initialize all tools that have an onInit function
+        document.querySelectorAll('.tool').forEach(tool => {
+            const toolId = tool.getAttribute('data-tool');
+            const custom = toolCustomizations[toolId] || {};
+
+            // Check if this tool uses a template with onInit
+            if (custom.templateId) {
+                // Check NOTE_TEMPLATES first
+                let template = NOTE_TEMPLATES[custom.templateId];
+                // Also check PluginRegistry for external plugins
+                if (!template) {
+                    template = PluginRegistry.getTool(custom.templateId);
+                }
+                if (template && template.onInit && typeof window[template.onInit] === 'function') {
+                    window[template.onInit]();
+                }
+            }
+        });
     }, 50);
 }
 
-// Dynamic Calculator Functions
-const taxBrackets = {
-    single: [
-        {min: 0, max: 12400, rate: 0.10},
-        {min: 12400, max: 50400, rate: 0.12},
-        {min: 50400, max: 105700, rate: 0.22},
-        {min: 105700, max: 201775, rate: 0.24},
-        {min: 201775, max: 256225, rate: 0.32},
-        {min: 256225, max: 640800, rate: 0.35},
-        {min: 640800, max: Infinity, rate: 0.37}
-    ],
-    married: [
-        {min: 0, max: 24800, rate: 0.10},
-        {min: 24800, max: 100800, rate: 0.12},
-        {min: 100800, max: 211400, rate: 0.22},
-        {min: 211400, max: 403550, rate: 0.24},
-        {min: 403550, max: 512450, rate: 0.32},
-        {min: 512450, max: 788700, rate: 0.35},
-        {min: 788700, max: Infinity, rate: 0.37}
-    ]
-};
-const stdDeductions = {single: 16100, married: 32200};
-
-function calculateTax() {
-    const incomeEl = document.getElementById('taxIncome');
-    const statusEl = document.getElementById('taxStatus');
-    const resultsEl = document.getElementById('taxResults');
-    if (!incomeEl || !statusEl || !resultsEl) return;
-
-    const income = parseFloat(incomeEl.value) || 0;
-    const status = statusEl.value;
-    const ded = stdDeductions[status];
-    const taxable = Math.max(0, income - ded);
-    let totalTax = 0;
-    let breakdown = '';
-
-    for (const b of taxBrackets[status]) {
-        if (taxable > b.min) {
-            const amt = Math.min(taxable, b.max) - b.min;
-            const tax = amt * b.rate;
-            totalTax += tax;
-            if (amt > 0) {
-                breakdown += `<div class="calc-row"><span>${(b.rate*100)}%</span><span>$${amt.toLocaleString()}</span><span class="calc-card-value negative">$${tax.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span></div>`;
-            }
-        }
-    }
-
-    const effRate = income > 0 ? (totalTax / income * 100).toFixed(1) : 0;
-    const margBracket = taxBrackets[status].find(b => taxable >= b.min && taxable < b.max);
-    const margRate = margBracket ? margBracket.rate * 100 : 37;
-
-    resultsEl.innerHTML = `
-        <div class="calc-grid">
-            <div class="calc-card">
-                <div class="calc-card-label">Standard Deduction</div>
-                <div class="calc-card-value positive">$${ded.toLocaleString()}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Taxable Income</div>
-                <div class="calc-card-value">$${taxable.toLocaleString()}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Total Tax</div>
-                <div class="calc-card-value negative">$${totalTax.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Effective / Marginal</div>
-                <div class="calc-card-value">${effRate}% / ${margRate}%</div>
-            </div>
-        </div>
-        <div class="calc-section-title">TAX BY BRACKET</div>
-        ${breakdown}
-        <div class="calc-row" style="padding:8px 0;font-weight:600;">
-            <span>Take Home (Monthly)</span>
-            <span class="calc-card-value positive">$${((income - totalTax) / 12).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span>
-        </div>
-    `;
-}
-
-// Loan Calculator
-function calculateLoan() {
-    const amountEl = document.getElementById('loanAmount');
-    const rateEl = document.getElementById('loanRate');
-    const yearsEl = document.getElementById('loanYears');
-    const extraEl = document.getElementById('loanExtra');
-    const resultsEl = document.getElementById('loanResults');
-    if (!amountEl || !rateEl || !yearsEl || !resultsEl) return;
-
-    const principal = parseFloat(amountEl.value) || 0;
-    const annualRate = (parseFloat(rateEl.value) || 0) / 100;
-    const years = parseInt(yearsEl.value) || 0;
-    const extraPayment = parseFloat(extraEl.value) || 0;
-    const monthlyRate = annualRate / 12;
-    const numPayments = years * 12;
-
-    if (principal <= 0 || annualRate <= 0 || years <= 0) {
-        resultsEl.innerHTML = '<div style="color:#7f8c8d;text-align:center;padding:20px;">Enter loan details above</div>';
-        return;
-    }
-
-    // Standard monthly payment formula: M = P * [r(1+r)^n] / [(1+r)^n - 1]
-    const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
-    const totalPayment = monthlyPayment * numPayments;
-    const totalInterest = totalPayment - principal;
-
-    // Calculate with extra payments
-    let balance = principal;
-    let totalInterestWithExtra = 0;
-    let monthsWithExtra = 0;
-    while (balance > 0 && monthsWithExtra < numPayments * 2) {
-        const interestPayment = balance * monthlyRate;
-        const principalPayment = Math.min(balance, monthlyPayment - interestPayment + extraPayment);
-        totalInterestWithExtra += interestPayment;
-        balance -= principalPayment;
-        monthsWithExtra++;
-        if (balance < 0.01) balance = 0;
-    }
-    const yearsWithExtra = Math.floor(monthsWithExtra / 12);
-    const monthsRemainder = monthsWithExtra % 12;
-    const interestSaved = totalInterest - totalInterestWithExtra;
-
-    // Amortization milestones
-    let milestones = '';
-    const checkYears = [1, 5, 10, 15, 20, 25, 30].filter(y => y <= years);
-    let bal = principal;
-    let paidPrincipal = 0;
-    let paidInterest = 0;
-    for (let m = 1; m <= numPayments; m++) {
-        const intPmt = bal * monthlyRate;
-        const prinPmt = monthlyPayment - intPmt;
-        paidInterest += intPmt;
-        paidPrincipal += prinPmt;
-        bal -= prinPmt;
-        if (checkYears.includes(m / 12)) {
-            milestones += `<div class="calc-row"><span>Year ${m/12}</span><span>Balance: $${Math.max(0,bal).toLocaleString(undefined,{maximumFractionDigits:0})}</span><span style="color:var(--text-muted);">Paid: $${paidPrincipal.toLocaleString(undefined,{maximumFractionDigits:0})}</span></div>`;
-        }
-    }
-
-    resultsEl.innerHTML = `
-        <div class="calc-grid">
-            <div class="calc-card">
-                <div class="calc-card-label">Monthly Payment</div>
-                <div class="calc-card-value large info">$${monthlyPayment.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Total Interest</div>
-                <div class="calc-card-value large negative">$${totalInterest.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Total Cost</div>
-                <div class="calc-card-value">$${totalPayment.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Interest Ratio</div>
-                <div class="calc-card-value">${(totalInterest/principal*100).toFixed(1)}%</div>
-            </div>
-        </div>
-        ${extraPayment > 0 ? `
-        <div class="calc-highlight">
-            <div class="calc-highlight-title">WITH $${extraPayment.toLocaleString()}/mo EXTRA</div>
-            <div class="calc-row" style="border:none;font-size:13px;">
-                <span>Payoff: ${yearsWithExtra}y ${monthsRemainder}m</span>
-                <span class="calc-card-value positive" style="font-size:13px;">Save $${interestSaved.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
-            </div>
-        </div>` : ''}
-        <div class="calc-section-title">AMORTIZATION</div>
-        ${milestones}
-    `;
-}
 
 // Checklist Widget Functions
 let checklistDragState = { dragging: null, toolId: null, parentIdx: null };
@@ -6287,75 +5011,6 @@ function calcBackspace() {
     display.value = calcState.current;
 }
 
-function calculateGrowth() {
-    const initialEl = document.getElementById('growthInitial');
-    const monthlyEl = document.getElementById('growthMonthly');
-    const rateEl = document.getElementById('growthRate');
-    const yearsEl = document.getElementById('growthYears');
-    const resultsEl = document.getElementById('growthResults');
-    const compoundEl = document.querySelector('input[name="growthCompound"]:checked');
-    if (!initialEl || !monthlyEl || !rateEl || !yearsEl || !resultsEl) return;
-
-    const initial = parseFloat(initialEl.value) || 0;
-    const monthly = parseFloat(monthlyEl.value) || 0;
-    const rate = (parseFloat(rateEl.value) || 0) / 100;
-    const years = parseInt(yearsEl.value) || 0;
-    const isMonthly = !compoundEl || compoundEl.value === 'monthly';
-
-    const months = years * 12;
-    const totalContrib = initial + (monthly * months);
-
-    let fv = initial;
-    if (isMonthly) {
-        // Monthly compounding
-        const monthlyRate = rate / 12;
-        for (let i = 0; i < months; i++) {
-            fv = fv * (1 + monthlyRate) + monthly;
-        }
-    } else {
-        // Annual compounding
-        for (let i = 0; i < years; i++) {
-            fv = fv * (1 + rate) + (monthly * 12);
-        }
-    }
-    const growth = fv - totalContrib;
-
-    // Calculate timeline milestones
-    const milestones = [5, 10, 15, 20, 25, 30, 35, 40].filter(y => y <= years);
-    let timeline = '';
-    for (const y of milestones) {
-        let val = initial;
-        if (isMonthly) {
-            const monthlyRate = rate / 12;
-            for (let i = 0; i < y * 12; i++) val = val * (1 + monthlyRate) + monthly;
-        } else {
-            for (let i = 0; i < y; i++) val = val * (1 + rate) + (monthly * 12);
-        }
-        timeline += `<div class="calc-row"><span>${y} years</span><span class="calc-card-value positive">$${val.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</span></div>`;
-    }
-
-    resultsEl.innerHTML = `
-        <div class="calc-grid">
-            <div class="calc-card">
-                <div class="calc-card-label">Future Value</div>
-                <div class="calc-card-value large positive">$${fv.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Total Contributions</div>
-                <div class="calc-card-value large">$${totalContrib.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Investment Growth</div>
-                <div class="calc-card-value large positive">$${growth.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})}</div>
-            </div>
-            <div class="calc-card">
-                <div class="calc-card-label">Growth Multiple</div>
-                <div class="calc-card-value large">${totalContrib > 0 ? (fv / totalContrib).toFixed(1) : '0.0'}x</div>
-            </div>
-        </div>
-        ${timeline ? `<div class="calc-section-title">GROWTH TIMELINE</div>${timeline}` : ''}
-    `;
-}
 
 // Calendar Widget
 const CALENDAR_COLORS = [
@@ -7389,2332 +6044,6 @@ function expandRRULE(event) {
     return events;
 }
 
-// ==================== Diff Viewer Functions ====================
-
-function diffGetToolId(element) {
-    const tool = element.closest('.tool');
-    return tool ? tool.dataset.tool: null;
-}
-
-function diffGetData(toolId) {
-    const customizations = loadToolCustomizations();
-    const custom = customizations[toolId] || {};
-    return custom.diffData || {
-        original: '',
-        modified: '',
-        mode: 'edit',
-        viewType: 'split',
-        hideWhitespace: false
-    };
-}
-
-function diffSaveData(toolId, data) {
-    const customizations = loadToolCustomizations();
-    if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].diffData = data;
-    saveToolCustomizations(customizations);
-}
-
-function diffInit() {
-    document.querySelectorAll('.diff-widget').forEach(widget => {
-        const toolId = diffGetToolId(widget);
-        if (!toolId) return;
-
-        const data = diffGetData(toolId);
-
-        // Populate textareas
-        const textareas = widget.querySelectorAll('.diff-edit-pane textarea');
-        if (textareas[0]) textareas[0].value = data.original;
-        if (textareas[1]) textareas[1].value = data.modified;
-
-        // Set mode
-        const modeButtons = widget.querySelectorAll('.diff-mode-btn');
-        modeButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.toLowerCase() === data.mode);
-        });
-
-        // Set view type
-        const viewButtons = widget.querySelectorAll('.diff-view-btn');
-        viewButtons.forEach(btn => {
-            const btnView = btn.textContent.toLowerCase();
-            btn.classList.toggle('active', btnView === data.viewType);
-        });
-
-        // Set hide whitespace checkbox
-        const wsCheckbox = widget.querySelector('.diff-whitespace-toggle input');
-        if (wsCheckbox) wsCheckbox.checked = data.hideWhitespace;
-
-        // Show correct container
-        const editContainer = widget.querySelector('.diff-edit-container');
-        const viewContainer = widget.querySelector('.diff-view-container');
-        if (data.mode === 'view') {
-            editContainer.classList.add('hidden');
-            viewContainer.classList.add('active');
-            diffRenderOutput(widget, toolId);
-        } else {
-            editContainer.classList.remove('hidden');
-            viewContainer.classList.remove('active');
-        }
-
-        // Update stats
-        diffUpdateStats(widget, toolId);
-    });
-}
-
-function diffOnInput(textarea, field) {
-    const toolId = diffGetToolId(textarea);
-    if (!toolId) return;
-
-    const data = diffGetData(toolId);
-    data[field] = textarea.value;
-    diffSaveData(toolId, data);
-
-    const widget = textarea.closest('.diff-widget');
-    diffUpdateStats(widget, toolId);
-}
-
-function diffSetMode(btn, mode) {
-    const widget = btn.closest('.diff-widget');
-    const toolId = diffGetToolId(widget);
-    if (!toolId) return;
-
-    const data = diffGetData(toolId);
-    data.mode = mode;
-    diffSaveData(toolId, data);
-
-    // Update button states
-    widget.querySelectorAll('.diff-mode-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent.toLowerCase() === mode);
-    });
-
-    // Toggle containers
-    const editContainer = widget.querySelector('.diff-edit-container');
-    const viewContainer = widget.querySelector('.diff-view-container');
-
-    if (mode === 'view') {
-        editContainer.classList.add('hidden');
-        viewContainer.classList.add('active');
-        diffRenderOutput(widget, toolId);
-    } else {
-        editContainer.classList.remove('hidden');
-        viewContainer.classList.remove('active');
-    }
-}
-
-function diffSetView(btn, viewType) {
-    const widget = btn.closest('.diff-widget');
-    const toolId = diffGetToolId(widget);
-    if (!toolId) return;
-
-    const data = diffGetData(toolId);
-    data.viewType = viewType;
-    diffSaveData(toolId, data);
-
-    // Update button states
-    widget.querySelectorAll('.diff-view-btn').forEach(b => {
-        const bView = b.textContent.toLowerCase();
-        b.classList.toggle('active', bView === viewType);
-    });
-
-    // Re-render if in view mode
-    if (data.mode === 'view') {
-        diffRenderOutput(widget, toolId);
-    }
-}
-
-function diffToggleWhitespace(checkbox) {
-    const widget = checkbox.closest('.diff-widget');
-    const toolId = diffGetToolId(widget);
-    if (!toolId) return;
-
-    const data = diffGetData(toolId);
-    data.hideWhitespace = checkbox.checked;
-    diffSaveData(toolId, data);
-
-    // Re-render if in view mode
-    if (data.mode === 'view') {
-        diffRenderOutput(widget, toolId);
-    }
-
-    diffUpdateStats(widget, toolId);
-}
-
-function diffSyncScroll(textarea, source) {
-    const widget = textarea.closest('.diff-widget');
-    const textareas = widget.querySelectorAll('.diff-edit-pane textarea');
-
-    const other = source === 'original' ? textareas[1] : textareas[0];
-    if (other && other !== textarea) {
-        other.scrollTop = textarea.scrollTop;
-        other.scrollLeft = textarea.scrollLeft;
-    }
-}
-
-// LCS-based diff algorithm
-function computeDiff(original, modified, hideWhitespace) {
-    let origLines = original.split('\n');
-    let modLines = modified.split('\n');
-
-    if (hideWhitespace) {
-        // For comparison, normalize whitespace but keep original for display
-        const normalize = line => line.replace(/\s+/g, ' ').trim();
-        const origNorm = origLines.map(normalize);
-        const modNorm = modLines.map(normalize);
-
-        const lcs = buildLCSMatrix(origNorm, modNorm);
-        return backtrackDiff(lcs, origNorm, modNorm, origLines, modLines);
-    }
-
-    const lcs = buildLCSMatrix(origLines, modLines);
-    return backtrackDiff(lcs, origLines, modLines, origLines, modLines);
-}
-
-function buildLCSMatrix(a, b) {
-    const m = a.length;
-    const n = b.length;
-    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
-
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            if (a[i - 1] === b[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            } else {
-                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
-    }
-
-    return dp;
-}
-
-function backtrackDiff(dp, aNorm, bNorm, aOrig, bOrig) {
-    const result = [];
-    let i = aNorm.length;
-    let j = bNorm.length;
-
-    const stack = [];
-
-    while (i > 0 || j > 0) {
-        if (i > 0 && j > 0 && aNorm[i - 1] === bNorm[j - 1]) {
-            stack.push({ type: 'unchanged', origLine: i, modLine: j, origContent: aOrig[i - 1], modContent: bOrig[j - 1] });
-            i--;
-            j--;
-        } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
-            stack.push({ type: 'addition', modLine: j, content: bOrig[j - 1] });
-            j--;
-        } else {
-            stack.push({ type: 'deletion', origLine: i, content: aOrig[i - 1] });
-            i--;
-        }
-    }
-
-    // Reverse to get correct order
-    while (stack.length) {
-        result.push(stack.pop());
-    }
-
-    return result;
-}
-
-function diffRenderOutput(widget, toolId) {
-    const data = diffGetData(toolId);
-    const output = widget.querySelector('.diff-output');
-
-    if (!data.original && !data.modified) {
-        output.innerHTML = '<div class="diff-empty-message">Enter text in both panes to see the diff</div>';
-        return;
-    }
-
-    const diff = computeDiff(data.original, data.modified, data.hideWhitespace);
-
-    if (data.viewType === 'split') {
-        output.innerHTML = renderSplitView(diff);
-    } else {
-        output.innerHTML = renderUnifiedView(diff);
-    }
-}
-
-function renderSplitView(diff) {
-    let leftLines = '';
-    let rightLines = '';
-
-    diff.forEach(item => {
-        if (item.type === 'unchanged') {
-            leftLines += renderDiffLine(item.origLine, item.origContent, 'unchanged');
-            rightLines += renderDiffLine(item.modLine, item.modContent, 'unchanged');
-        } else if (item.type === 'deletion') {
-            leftLines += renderDiffLine(item.origLine, item.content, 'deletion');
-            rightLines += renderDiffLine('', '', 'empty');
-        } else if (item.type === 'addition') {
-            leftLines += renderDiffLine('', '', 'empty');
-            rightLines += renderDiffLine(item.modLine, item.content, 'addition');
-        }
-    });
-
-    return `
-        <div class="diff-split-view">
-            <div class="diff-split-pane">
-                <div class="diff-split-header">Original</div>
-                ${leftLines}
-            </div>
-            <div class="diff-split-pane">
-                <div class="diff-split-header">Modified</div>
-                ${rightLines}
-            </div>
-        </div>
-    `;
-}
-
-function renderUnifiedView(diff) {
-    let lines = '';
-
-    diff.forEach(item => {
-        if (item.type === 'unchanged') {
-            lines += renderUnifiedLine(item.origLine, item.modLine, item.origContent, 'unchanged', ' ');
-        } else if (item.type === 'deletion') {
-            lines += renderUnifiedLine(item.origLine, '', item.content, 'deletion', '-');
-        } else if (item.type === 'addition') {
-            lines += renderUnifiedLine('', item.modLine, item.content, 'addition', '+');
-        }
-    });
-
-    return `<div class="diff-unified-view">${lines}</div>`;
-}
-
-function renderDiffLine(lineNum, content, type) {
-    const escapedContent = escapeHtml(content || '');
-    const displayContent = escapedContent || '&nbsp;';
-    return `
-        <div class="diff-line ${type}">
-            <div class="diff-gutter">${lineNum || ''}</div>
-            <div class="diff-content">${displayContent}</div>
-        </div>
-    `;
-}
-
-function renderUnifiedLine(origLine, modLine, content, type, prefix) {
-    const escapedContent = escapeHtml(content || '');
-    const lineInfo = origLine && modLine ? `${origLine}/${modLine}` : (origLine || modLine || '');
-    return `
-        <div class="diff-line ${type}">
-            <div class="diff-gutter">${lineInfo}</div>
-            <div class="diff-prefix">${prefix}</div>
-            <div class="diff-content">${escapedContent || '&nbsp;'}</div>
-        </div>
-    `;
-}
-
-function diffUpdateStats(widget, toolId) {
-    const data = diffGetData(toolId);
-    const statsEl = widget.querySelector('.diff-stats');
-
-    if (!data.original && !data.modified) {
-        statsEl.innerHTML = '';
-        return;
-    }
-
-    const diff = computeDiff(data.original, data.modified, data.hideWhitespace);
-
-    let additions = 0;
-    let deletions = 0;
-
-    diff.forEach(item => {
-        if (item.type === 'addition') additions++;
-        if (item.type === 'deletion') deletions++;
-    });
-
-    statsEl.innerHTML = `
-        <span class="diff-stats-additions">+${additions} addition${additions !== 1 ? 's' : ''}</span>
-        <span class="diff-stats-deletions">-${deletions} deletion${deletions !== 1 ? 's' : ''}</span>
-    `;
-}
-
-// ==================== Sequence Diagram Functions ====================
-
-function seqGetToolId(element) {
-    const tool = element.closest('.tool');
-    return tool ? tool.dataset.tool: null;
-}
-
-function seqGetData(toolId) {
-    const customizations = loadToolCustomizations();
-    const custom = customizations[toolId] || {};
-    return custom.seqData || {
-        text: '',
-        mode: 'split'
-    };
-}
-
-function seqSaveData(toolId, data) {
-    const customizations = loadToolCustomizations();
-    if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].seqData = data;
-    saveToolCustomizations(customizations);
-}
-
-function seqInit() {
-    document.querySelectorAll('.seq-widget').forEach(widget => {
-        const toolId = seqGetToolId(widget);
-        if (!toolId) return;
-
-        const data = seqGetData(toolId);
-
-        // Populate all textareas
-        widget.querySelectorAll('textarea').forEach(ta => {
-            ta.value = data.text;
-        });
-
-        // Set mode buttons
-        const modeButtons = widget.querySelectorAll('.seq-mode-btn');
-        modeButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.toLowerCase() === data.mode);
-        });
-
-        // Show correct container
-        seqUpdateContainers(widget, data.mode, toolId);
-    });
-}
-
-function seqUpdateContainers(widget, mode, toolId) {
-    const editContainer = widget.querySelector('.seq-edit-container');
-    const splitContainer = widget.querySelector('.seq-split-container');
-    const viewContainer = widget.querySelector('.seq-view-container');
-
-    // Hide all first
-    editContainer.classList.remove('active');
-    splitContainer.classList.remove('active');
-    viewContainer.classList.remove('active');
-
-    if (mode === 'edit') {
-        editContainer.classList.add('active');
-    } else if (mode === 'split') {
-        splitContainer.classList.add('active');
-        seqRenderDiagram(widget, toolId, '.seq-split-container .seq-diagram');
-    } else if (mode === 'view') {
-        viewContainer.classList.add('active');
-        seqRenderDiagram(widget, toolId, '.seq-view-container .seq-diagram');
-    }
-}
-
-function seqOnInput(textarea) {
-    const widget = textarea.closest('.seq-widget');
-    const toolId = seqGetToolId(textarea);
-    if (!toolId) return;
-
-    const data = seqGetData(toolId);
-    data.text = textarea.value;
-    seqSaveData(toolId, data);
-
-    // Sync all textareas in the widget
-    widget.querySelectorAll('textarea').forEach(ta => {
-        if (ta !== textarea) ta.value = textarea.value;
-    });
-
-    // Live render if in split mode
-    if (data.mode === 'split') {
-        seqRenderDiagram(widget, toolId, '.seq-split-container .seq-diagram');
-    }
-}
-
-function seqSetMode(btn, mode) {
-    const widget = btn.closest('.seq-widget');
-    const toolId = seqGetToolId(widget);
-    if (!toolId) return;
-
-    const data = seqGetData(toolId);
-    data.mode = mode;
-    seqSaveData(toolId, data);
-
-    // Update button states
-    widget.querySelectorAll('.seq-mode-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent.toLowerCase() === mode);
-    });
-
-    // Sync textarea content before switching
-    const currentText = data.text;
-    widget.querySelectorAll('textarea').forEach(ta => {
-        ta.value = currentText;
-    });
-
-    // Update containers
-    seqUpdateContainers(widget, mode, toolId);
-}
-
-function seqShowHelp(btn) {
-    // Create modal if it doesn't exist
-    let modal = document.querySelector('.seq-help-modal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.className = 'seq-help-modal';
-        modal.innerHTML = `
-            <div class="seq-help-content">
-                <span class="seq-help-close" onclick="this.closest('.seq-help-modal').classList.remove('open')">&times;</span>
-                <h3>Sequence Diagram Syntax</h3>
-                <p><strong>Messages:</strong></p>
-                <pre>Participant1 -> Participant2: Message text</pre>
-                <p><code>-></code> Solid arrow (request/call)</p>
-                <p><code>--></code> Dashed arrow (response/return)</p>
-                <p><strong>Self-messages:</strong></p>
-                <pre>Alice -> Alice: Think about it</pre>
-                <p><strong>Notes:</strong></p>
-                <pre>Note left of Actor: Text
-Note right of Actor: Text
-Note over Actor: Text
-Note over Actor1, Actor2: Text</pre>
-                <p><strong>Colors:</strong></p>
-                <p>Add <code>[color]</code> at end of line:</p>
-                <pre>A -> B: Request [red]
-A -> B: Request [line:red, text:blue]
-Note over A: Info [#90EE90]
-Note over A: Info [bg:pink, text:black]</pre>
-                <p>Message options: <code>line</code>, <code>text</code>, <code>number</code></p>
-                <p>Note options: <code>bg</code>, <code>text</code>, <code>border</code></p>
-                <p><strong>Example:</strong></p>
-                <pre>Client -> Server: HTTP Request [green]
-Note right of Server: Validate [#ffe0b0]
-Server -> Database: Query [blue]
-Database --> Server: Results [purple]
-Server --> Client: HTTP Response [green]</pre>
-                <p>Participants are automatically detected. Each arrow is numbered sequentially.</p>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        // Close on backdrop click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.remove('open');
-        });
-    }
-    modal.classList.add('open');
-}
-
-function seqParseColors(text) {
-    // Parse color options from end of text: [color] or [bg:color, line:color, text:color]
-    const colorMatch = text.match(/\s*\[([^\]]+)\]\s*$/);
-    if (!colorMatch) {
-        return { text: text.trim(), colors: {} };
-    }
-
-    const cleanText = text.substring(0, text.lastIndexOf('[')).trim();
-    const colorStr = colorMatch[1].trim();
-    const colors = {};
-
-    // Check if it's a simple color or key:value pairs
-    if (colorStr.includes(':')) {
-        // Parse key:value pairs like "bg:yellow, line:red, text:black"
-        colorStr.split(',').forEach(part => {
-            const [key, value] = part.split(':').map(s => s.trim());
-            if (key && value) {
-                colors[key] = value;
-            }
-        });
-    } else {
-        // Simple color - use as primary (line for messages, bg for notes)
-        colors.primary = colorStr;
-    }
-
-    return { text: cleanText, colors };
-}
-
-function seqParseText(text) {
-    const lines = text.split('\n').filter(line => line.trim());
-    const participants = [];
-    const items = []; // Can be messages or notes
-    const participantSet = new Set();
-    let messageCount = 0;
-
-    lines.forEach((line, index) => {
-        // Match note syntax: Note left/right/over Actor: Text
-        // or: Note over Actor1, Actor2: Text
-        const noteMatch = line.match(/^\s*note\s+(left\s+of|right\s+of|over)\s+([^:]+?)\s*:\s*(.*)$/i);
-        if (noteMatch) {
-            const position = noteMatch[1].toLowerCase().replace(/\s+/g, '');
-            const actorsStr = noteMatch[2].trim();
-            const rawNoteText = noteMatch[3].trim();
-
-            // Parse colors from note text
-            const { text: noteText, colors } = seqParseColors(rawNoteText);
-
-            // Parse actors (can be comma-separated for "over")
-            const actors = actorsStr.split(',').map(a => a.trim()).filter(a => a);
-
-            // Add actors to participants if not already present
-            actors.forEach(actor => {
-                if (!participantSet.has(actor)) {
-                    participantSet.add(actor);
-                    participants.push(actor);
-                }
-            });
-
-            items.push({
-                type: 'note',
-                position: position, // 'leftof', 'rightof', or 'over'
-                actors: actors,
-                text: noteText,
-                colors: {
-                    bg: colors.bg || colors.primary || null,
-                    text: colors.text || null,
-                    border: colors.border || colors.line || null
-                }
-            });
-            return;
-        }
-
-        // Match: Participant1 -> Participant2: Message
-        // or: Participant1 --> Participant2: Message
-        const match = line.match(/^\s*([^-]+?)\s*(-->|->)\s*([^:]+?)\s*:\s*(.*)$/);
-        if (match) {
-            const from = match[1].trim();
-            const arrowType = match[2];
-            const to = match[3].trim();
-            const rawMessage = match[4].trim();
-
-            // Parse colors from message
-            const { text: message, colors } = seqParseColors(rawMessage);
-
-            // Add participants in order of appearance
-            if (!participantSet.has(from)) {
-                participantSet.add(from);
-                participants.push(from);
-            }
-            if (!participantSet.has(to)) {
-                participantSet.add(to);
-                participants.push(to);
-            }
-
-            messageCount++;
-            items.push({
-                type: 'message',
-                from,
-                to,
-                message,
-                dashed: arrowType === '-->',
-                number: messageCount,
-                colors: {
-                    line: colors.line || colors.primary || null,
-                    text: colors.text || null,
-                    number: colors.number || colors.bg || null
-                }
-            });
-        }
-    });
-
-    return { participants, items };
-}
-
-function seqRenderDiagram(widget, toolId, containerSelector) {
-    const data = seqGetData(toolId);
-    const container = widget.querySelector(containerSelector || '.seq-diagram');
-
-    if (!container) return;
-
-    if (!data.text.trim()) {
-        container.innerHTML = '<div class="seq-error-message">Enter sequence diagram notation to see the diagram</div>';
-        return;
-    }
-
-    const { participants, items } = seqParseText(data.text);
-
-    if (participants.length === 0) {
-        container.innerHTML = '<div class="seq-error-message">No valid entries found. Use syntax: Actor -> Actor: Message</div>';
-        return;
-    }
-
-    // Calculate dimensions
-    const boxWidth = 100;
-    const boxHeight = 36;
-    const boxPadding = 40;
-    const itemSpacing = 50;
-    const topMargin = 20;
-    const bottomMargin = 50;
-    const numberRadius = 10;
-    const noteWidth = 120;
-    const noteHeight = 30;
-    const notePadding = 8;
-
-    const totalWidth = participants.length * (boxWidth + boxPadding) - boxPadding + 40;
-    const totalHeight = topMargin + boxHeight + (items.length * itemSpacing) + boxHeight + bottomMargin;
-
-    // Build SVG
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">`;
-
-    // Calculate participant positions
-    const participantX = {};
-    participants.forEach((p, i) => {
-        participantX[p] = 20 + i * (boxWidth + boxPadding) + boxWidth / 2;
-    });
-
-    // Draw lifelines (behind everything)
-    participants.forEach(p => {
-        const x = participantX[p];
-        const y1 = topMargin + boxHeight;
-        const y2 = totalHeight - bottomMargin - boxHeight;
-        svg += `<line class="seq-lifeline" x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" />`;
-    });
-
-    // Draw top participant boxes
-    participants.forEach(p => {
-        const x = participantX[p] - boxWidth / 2;
-        const y = topMargin;
-        svg += `<rect class="seq-participant-box" x="${x}" y="${y}" width="${boxWidth}" height="${boxHeight}" rx="4" />`;
-        svg += `<text class="seq-participant-text" x="${participantX[p]}" y="${y + boxHeight / 2}">${escapeHtml(p)}</text>`;
-    });
-
-    // Draw bottom participant boxes
-    participants.forEach(p => {
-        const x = participantX[p] - boxWidth / 2;
-        const y = totalHeight - bottomMargin - boxHeight;
-        svg += `<rect class="seq-participant-box" x="${x}" y="${y}" width="${boxWidth}" height="${boxHeight}" rx="4" />`;
-        svg += `<text class="seq-participant-text" x="${participantX[p]}" y="${y + boxHeight / 2}">${escapeHtml(p)}</text>`;
-    });
-
-    // Draw items (messages and notes)
-    items.forEach((item, i) => {
-        const y = topMargin + boxHeight + (i + 1) * itemSpacing - itemSpacing / 2;
-
-        if (item.type === 'note') {
-            // Render note with optional colors
-            const actor = item.actors[0];
-            const actorX = participantX[actor] || 0;
-            let noteX, textAnchor;
-
-            // Build style strings for colors
-            const noteColors = item.colors || {};
-            let boxStyle = '';
-            let textStyle = '';
-            if (noteColors.bg) boxStyle += `fill:${noteColors.bg};`;
-            if (noteColors.border) boxStyle += `stroke:${noteColors.border};`;
-            if (noteColors.text) textStyle += `fill:${noteColors.text};`;
-
-            if (item.position === 'leftof') {
-                noteX = actorX - boxWidth / 2 - noteWidth - 10;
-                textAnchor = 'start';
-            } else if (item.position === 'rightof') {
-                noteX = actorX + boxWidth / 2 + 10;
-                textAnchor = 'start';
-            } else if (item.position === 'over') {
-                if (item.actors.length > 1) {
-                    // Note spanning multiple actors
-                    const actor2 = item.actors[1];
-                    const actor2X = participantX[actor2] || actorX;
-                    const minX = Math.min(actorX, actor2X);
-                    const maxX = Math.max(actorX, actor2X);
-                    noteX = minX - noteWidth / 2;
-                    const spanWidth = maxX - minX + noteWidth;
-                    svg += `<rect class="seq-note-box" x="${noteX}" y="${y - noteHeight / 2}" width="${spanWidth}" height="${noteHeight}" rx="2"${boxStyle ? ` style="${boxStyle}"` : ''} />`;
-                    svg += `<text class="seq-note-text" x="${(minX + maxX) / 2}" y="${y}" text-anchor="middle" dominant-baseline="middle"${textStyle ? ` style="${textStyle}"` : ''}>${escapeHtml(item.text)}</text>`;
-                    return;
-                } else {
-                    noteX = actorX - noteWidth / 2;
-                    textAnchor = 'middle';
-                }
-            }
-
-            svg += `<rect class="seq-note-box" x="${noteX}" y="${y - noteHeight / 2}" width="${noteWidth}" height="${noteHeight}" rx="2"${boxStyle ? ` style="${boxStyle}"` : ''} />`;
-            const textX = item.position === 'over' ? actorX : noteX + notePadding;
-            svg += `<text class="seq-note-text" x="${textX}" y="${y}" text-anchor="${textAnchor}" dominant-baseline="middle"${textStyle ? ` style="${textStyle}"` : ''}>${escapeHtml(item.text)}</text>`;
-
-        } else if (item.type === 'message') {
-            // Render message with optional colors
-            const fromX = participantX[item.from];
-            const toX = participantX[item.to];
-            const dashedClass = item.dashed ? ' dashed' : '';
-
-            // Build style strings for colors
-            const msgColors = item.colors || {};
-            let lineStyle = '';
-            let headStyle = '';
-            let labelStyle = '';
-            let numBgStyle = '';
-            if (msgColors.line) {
-                lineStyle = `stroke:${msgColors.line};`;
-                headStyle = `fill:${msgColors.line};`;
-            }
-            if (msgColors.text) labelStyle = `fill:${msgColors.text};`;
-            if (msgColors.number) numBgStyle = `fill:${msgColors.number};`;
-
-            if (item.from === item.to) {
-                // Self-message: loop to the right
-                const loopWidth = 30;
-                const loopHeight = 20;
-                svg += `<path class="seq-self-arrow${dashedClass}" d="M ${fromX} ${y}
-                        L ${fromX + loopWidth} ${y}
-                        L ${fromX + loopWidth} ${y + loopHeight}
-                        L ${fromX + 8} ${y + loopHeight}"${lineStyle ? ` style="${lineStyle}"` : ''} />`;
-                // Arrow head
-                svg += `<polygon class="seq-arrow-head" points="${fromX + 8},${y + loopHeight - 4} ${fromX + 8},${y + loopHeight + 4} ${fromX},${y + loopHeight}"${headStyle ? ` style="${headStyle}"` : ''} />`;
-                // Label
-                svg += `<text class="seq-arrow-label" x="${fromX + loopWidth + 5}" y="${y + loopHeight / 2}"${labelStyle ? ` style="${labelStyle}"` : ''}>${escapeHtml(item.message)}</text>`;
-                // Number
-                const numBgClass = item.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
-                svg += `<circle class="${numBgClass}" cx="${fromX + loopWidth}" cy="${y}" r="${numberRadius}"${numBgStyle ? ` style="${numBgStyle}"` : ''} />`;
-                svg += `<text class="seq-arrow-number" x="${fromX + loopWidth}" y="${y}" text-anchor="middle" dominant-baseline="middle">${item.number}</text>`;
-            } else {
-                // Regular message
-                const direction = toX > fromX ? 1 : -1;
-                const arrowLength = 8;
-
-                // Arrow line
-                svg += `<line class="seq-arrow${dashedClass}" x1="${fromX}" y1="${y}" x2="${toX - direction * arrowLength}" y2="${y}"${lineStyle ? ` style="${lineStyle}"` : ''} />`;
-
-                // Arrow head
-                const headX = toX;
-                const headY = y;
-                svg += `<polygon class="seq-arrow-head" points="${headX},${headY} ${headX - direction * arrowLength},${headY - 4} ${headX - direction * arrowLength},${headY + 4}"${headStyle ? ` style="${headStyle}"` : ''} />`;
-
-                // Label (centered above arrow)
-                const labelX = (fromX + toX) / 2;
-                svg += `<text class="seq-arrow-label" x="${labelX}" y="${y - 8}" text-anchor="middle"${labelStyle ? ` style="${labelStyle}"` : ''}>${escapeHtml(item.message)}</text>`;
-
-                // Number badge (at the start of arrow)
-                const numX = fromX + direction * 15;
-                const numBgClass = item.dashed ? 'seq-dashed-number-bg' : 'seq-arrow-number-bg';
-                svg += `<circle class="${numBgClass}" cx="${numX}" cy="${y}" r="${numberRadius}"${numBgStyle ? ` style="${numBgStyle}"` : ''} />`;
-                svg += `<text class="seq-arrow-number" x="${numX}" y="${y}" text-anchor="middle" dominant-baseline="middle">${item.number}</text>`;
-            }
-        }
-    });
-
-    svg += '</svg>';
-    container.innerHTML = svg;
-}
-
-// Markdown Parser using marked.js (GitHub Flavored Markdown)
-(function() {
-    // Custom renderer to open links in new tabs
-    const renderer = new marked.Renderer();
-    renderer.link = function(href, title, text) {
-        // Handle marked v5+ object format
-        if (typeof href === 'object') {
-            const token = href;
-            href = token.href;
-            title = token.title;
-            text = token.text;
-        }
-        const titleAttr = title ? ` title="${title}"` : '';
-        return `<a href="${href}" target="_blank" rel="noopener noreferrer"${titleAttr}>${text}</a>`;
-    };
-
-    // Configure marked with GFM options
-    marked.setOptions({
-        renderer: renderer,
-        gfm: true,           // GitHub Flavored Markdown
-        breaks: true,        // Convert \n to <br>
-        pedantic: false,
-        smartypants: false
-    });
-})();
-
-function parseMarkdown(text) {
-    if (!text) return '';
-    return marked.parse(text);
-}
-
-function escapeHtml(text) {
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-}
-
-// JWT Decoder Widget
-function jwtGetToolId(element) {
-    const widget = element.closest('.jwt-widget');
-    return widget?.closest('.tool')?.getAttribute('data-tool');
-}
-
-function jwtInit() {
-    document.querySelectorAll('.jwt-widget').forEach(widget => {
-        const textarea = widget.querySelector('textarea');
-        if (textarea && textarea.value) {
-            jwtDecode(textarea);
-        }
-    });
-}
-
-function jwtDecode(textarea) {
-    const widget = textarea.closest('.jwt-widget');
-    const results = widget.querySelector('.jwt-results');
-    const token = textarea.value.trim();
-
-    if (!token) {
-        results.innerHTML = '<div class="jwt-status info">Paste a JWT token above to decode it</div>';
-        return;
-    }
-
-    // Split token into parts
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-        results.innerHTML = '<div class="jwt-error">Invalid JWT format. A JWT should have 3 parts separated by dots (header.payload.signature)</div>';
-        return;
-    }
-
-    try {
-        // Decode header
-        const header = JSON.parse(jwtBase64Decode(parts[0]));
-        // Decode payload
-        const payload = JSON.parse(jwtBase64Decode(parts[1]));
-        // Signature is the third part (we can't verify it without the secret)
-        const signature = parts[2];
-
-        let html = '<div class="jwt-parts">';
-
-        // Header section
-        html += `
-            <div class="jwt-part">
-                <div class="jwt-part-header header">
-                    <span>HEADER</span>
-                    <button class="jwt-copy-btn" onclick="jwtCopyPart(this, 'header')">Copy</button>
-                </div>
-                <div class="jwt-part-content">${jwtSyntaxHighlight(JSON.stringify(header, null, 2))}</div>
-            </div>
-        `;
-
-        // Payload section with claim analysis
-        html += `
-            <div class="jwt-part">
-                <div class="jwt-part-header payload">
-                    <span>PAYLOAD</span>
-                    <button class="jwt-copy-btn" onclick="jwtCopyPart(this, 'payload')">Copy</button>
-                </div>
-                <div class="jwt-part-content">${jwtSyntaxHighlight(JSON.stringify(payload, null, 2))}</div>
-                ${jwtRenderClaims(payload)}
-            </div>
-        `;
-
-        // Signature section
-        html += `
-            <div class="jwt-part">
-                <div class="jwt-part-header signature">
-                    <span>SIGNATURE</span>
-                    <button class="jwt-copy-btn" onclick="jwtCopyPart(this, 'signature')">Copy</button>
-                </div>
-                <div class="jwt-part-content raw">${signature}</div>
-                <div style="padding: 8px 12px; font-size: 11px; color: var(--text-muted);">
-                    Algorithm: <strong>${header.alg || 'Unknown'}</strong>
-                    ${header.alg ? ` - Signature cannot be verified without the ${header.alg.startsWith('HS') ? 'secret key' : 'public key'}` : ''}
-                </div>
-            </div>
-        `;
-
-        html += '</div>';
-
-        // Store decoded parts for copy function
-        widget._decodedHeader = JSON.stringify(header, null, 2);
-        widget._decodedPayload = JSON.stringify(payload, null, 2);
-        widget._signature = signature;
-
-        results.innerHTML = html;
-
-    } catch (e) {
-        results.innerHTML = `<div class="jwt-error">Failed to decode JWT: ${e.message}</div>`;
-    }
-}
-
-function jwtBase64Decode(str) {
-    // Handle URL-safe base64
-    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-    // Add padding if needed
-    while (base64.length % 4) {
-        base64 += '=';
-    }
-    return decodeURIComponent(atob(base64).split('').map(c => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-}
-
-function jwtSyntaxHighlight(json) {
-    return json
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
-            let cls = 'number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    cls = 'key';
-                    return `<span style="color: #9b59b6">${match}</span>`;
-                } else {
-                    cls = 'string';
-                    return `<span style="color: #27ae60">${match}</span>`;
-                }
-            } else if (/true|false/.test(match)) {
-                return `<span style="color: #e67e22">${match}</span>`;
-            } else if (/null/.test(match)) {
-                return `<span style="color: #95a5a6">${match}</span>`;
-            }
-            return `<span style="color: #3498db">${match}</span>`;
-        });
-}
-
-function jwtRenderClaims(payload) {
-    const standardClaims = {
-        'iss': 'Issuer',
-        'sub': 'Subject',
-        'aud': 'Audience',
-        'exp': 'Expiration',
-        'nbf': 'Not Before',
-        'iat': 'Issued At',
-        'jti': 'JWT ID'
-    };
-
-    const now = Math.floor(Date.now() / 1000);
-    let claimsHtml = '<div class="jwt-claims">';
-
-    for (const [key, value] of Object.entries(payload)) {
-        let displayValue = value;
-        let valueClass = '';
-
-        // Format timestamp claims
-        if (['exp', 'nbf', 'iat'].includes(key) && typeof value === 'number') {
-            const date = new Date(value * 1000);
-            const formatted = date.toLocaleString();
-
-            if (key === 'exp') {
-                if (value < now) {
-                    displayValue = `${formatted} (EXPIRED)`;
-                    valueClass = 'expired';
-                } else {
-                    const diff = value - now;
-                    const hours = Math.floor(diff / 3600);
-                    const mins = Math.floor((diff % 3600) / 60);
-                    displayValue = `${formatted} (valid for ${hours}h ${mins}m)`;
-                    valueClass = 'valid';
-                }
-            } else if (key === 'nbf') {
-                if (value > now) {
-                    displayValue = `${formatted} (NOT YET VALID)`;
-                    valueClass = 'expired';
-                } else {
-                    displayValue = `${formatted} (active)`;
-                    valueClass = 'valid';
-                }
-            } else {
-                displayValue = formatted;
-            }
-        } else if (typeof value === 'object') {
-            displayValue = JSON.stringify(value);
-        }
-
-        const label = standardClaims[key] || key;
-        claimsHtml += `
-            <div class="jwt-claim">
-                <span class="jwt-claim-key">${label}</span>
-                <span class="jwt-claim-value ${valueClass}">${displayValue}</span>
-            </div>
-        `;
-    }
-
-    claimsHtml += '</div>';
-    return claimsHtml;
-}
-
-function jwtCopyPart(btn, part) {
-    const widget = btn.closest('.jwt-widget');
-    let text = '';
-    if (part === 'header') text = widget._decodedHeader;
-    else if (part === 'payload') text = widget._decodedPayload;
-    else if (part === 'signature') text = widget._signature;
-
-    navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = orig, 1500);
-    });
-}
-
-function jwtLoadSample() {
-    const widget = event.target.closest('.jwt-widget');
-    const textarea = widget.querySelector('textarea');
-    // Sample JWT with typical claims
-    const samplePayload = {
-        sub: '1234567890',
-        name: 'John Doe',
-        email: 'john@example.com',
-        role: 'admin',
-        iat: Math.floor(Date.now() / 1000) - 3600,
-        exp: Math.floor(Date.now() / 1000) + 3600,
-        iss: 'https://example.com'
-    };
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-    const payload = btoa(JSON.stringify(samplePayload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-    const signature = 'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-    textarea.value = `${header}.${payload}.${signature}`;
-    jwtDecode(textarea);
-}
-
-function jwtClear() {
-    const widget = event.target.closest('.jwt-widget');
-    const textarea = widget.querySelector('textarea');
-    textarea.value = '';
-    jwtDecode(textarea);
-}
-
-// Epoch Converter Widget
-let epochIntervalId = null;
-
-function epochInit() {
-    document.querySelectorAll('.epoch-widget').forEach(widget => {
-        // Update current time display
-        epochUpdateNow(widget);
-
-        // Update reference values
-        epochUpdateReference(widget);
-
-        // Start interval for live updates
-        if (!epochIntervalId) {
-            epochIntervalId = setInterval(() => {
-                document.querySelectorAll('.epoch-widget').forEach(w => epochUpdateNow(w));
-            }, 1000);
-        }
-    });
-}
-
-function epochUpdateNow(widget) {
-    const nowDisplay = widget.querySelector('.epoch-now-value');
-    if (nowDisplay) {
-        const now = Math.floor(Date.now() / 1000);
-        nowDisplay.textContent = now;
-    }
-}
-
-function epochUpdateReference(widget) {
-    const todayEl = widget.querySelector('.epoch-ref-today');
-    const yearEl = widget.querySelector('.epoch-ref-year');
-
-    if (todayEl) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        todayEl.textContent = Math.floor(today.getTime() / 1000);
-    }
-
-    if (yearEl) {
-        const year = new Date(new Date().getFullYear(), 0, 1);
-        yearEl.textContent = Math.floor(year.getTime() / 1000);
-    }
-}
-
-function epochCopyNow(btn) {
-    const widget = btn.closest('.epoch-widget');
-    const now = Math.floor(Date.now() / 1000);
-    navigator.clipboard.writeText(now.toString());
-
-    const originalText = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = originalText, 1000);
-}
-
-function epochUseNow(btn) {
-    const widget = btn.closest('.epoch-widget');
-    const input = widget.querySelector('.epoch-timestamp-input');
-    const now = Math.floor(Date.now() / 1000);
-    input.value = now;
-    epochFromTimestamp(input);
-}
-
-function epochFromTimestamp(element) {
-    const widget = element.closest('.epoch-widget');
-    const input = widget.querySelector('.epoch-timestamp-input');
-    const unitSelect = widget.querySelector('.epoch-unit-select');
-    const resultDiv = widget.querySelector('.epoch-from-ts');
-
-    const value = input.value.trim();
-    if (!value) {
-        resultDiv.innerHTML = '<span style="color: var(--text-muted);">Enter a timestamp to convert...</span>';
-        return;
-    }
-
-    const numValue = parseInt(value);
-    if (isNaN(numValue)) {
-        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid number</span>';
-        return;
-    }
-
-    // Determine if seconds or milliseconds
-    let unit = unitSelect?.value || 'auto';
-    let timestamp = numValue;
-
-    if (unit === 'auto') {
-        // If number is larger than year 3000 in seconds, assume milliseconds
-        if (numValue > 32503680000) {
-            unit = 'ms';
-        } else {
-            unit = 's';
-        }
-    }
-
-    if (unit === 'ms') {
-        timestamp = numValue;
-    } else {
-        timestamp = numValue * 1000;
-    }
-
-    const date = new Date(timestamp);
-
-    if (isNaN(date.getTime())) {
-        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid date</span>';
-        return;
-    }
-
-    const localStr = date.toLocaleString();
-    const utcStr = date.toUTCString();
-    const isoStr = date.toISOString();
-    const relativeStr = epochRelativeTime(date);
-
-    resultDiv.innerHTML = `
-        <div class="result-row">
-            <span class="result-label">Local:</span>
-            <span class="result-value copyable" onclick="epochCopyValue(this)">${localStr}</span>
-        </div>
-        <div class="result-row">
-            <span class="result-label">UTC:</span>
-            <span class="result-value copyable" onclick="epochCopyValue(this)">${utcStr}</span>
-        </div>
-        <div class="result-row">
-            <span class="result-label">ISO 8601:</span>
-            <span class="result-value copyable" onclick="epochCopyValue(this)">${isoStr}</span>
-        </div>
-        <div class="result-row">
-            <span class="result-label">Relative:</span>
-            <span class="result-value">${relativeStr}</span>
-        </div>
-        <div class="result-row" style="margin-top: 4px; font-size: 10px; color: var(--text-muted);">
-            Detected: ${unit === 'ms' ? 'milliseconds' : 'seconds'}
-        </div>
-    `;
-}
-
-function epochFromDatetime(element) {
-    const widget = element.closest('.epoch-widget');
-    const dateInput = widget.querySelector('.epoch-date-input');
-    const timeInput = widget.querySelector('.epoch-time-input');
-    const tzSelect = widget.querySelector('.epoch-tz-select');
-    const resultDiv = widget.querySelector('.epoch-from-dt');
-
-    const dateValue = dateInput.value;
-    const timeValue = timeInput.value || '00:00:00';
-
-    if (!dateValue) {
-        resultDiv.innerHTML = '<span style="color: var(--text-muted);">Select a date to convert...</span>';
-        return;
-    }
-
-    let date;
-    const tz = tzSelect?.value || 'local';
-
-    if (tz === 'utc') {
-        date = new Date(`${dateValue}T${timeValue}Z`);
-    } else {
-        date = new Date(`${dateValue}T${timeValue}`);
-    }
-
-    if (isNaN(date.getTime())) {
-        resultDiv.innerHTML = '<span style="color: var(--error-text);">Invalid date/time</span>';
-        return;
-    }
-
-    const seconds = Math.floor(date.getTime() / 1000);
-    const milliseconds = date.getTime();
-
-    resultDiv.innerHTML = `
-        <div class="result-row">
-            <span class="result-label">Seconds:</span>
-            <span class="result-value copyable" onclick="epochCopyValue(this)">${seconds}</span>
-        </div>
-        <div class="result-row">
-            <span class="result-label">Milliseconds:</span>
-            <span class="result-value copyable" onclick="epochCopyValue(this)">${milliseconds}</span>
-        </div>
-    `;
-}
-
-function epochRelativeTime(date) {
-    const now = new Date();
-    const diffMs = date.getTime() - now.getTime();
-    const diffSec = Math.abs(Math.floor(diffMs / 1000));
-    const isFuture = diffMs > 0;
-
-    const units = [
-        { name: 'year', seconds: 31536000 },
-        { name: 'month', seconds: 2592000 },
-        { name: 'week', seconds: 604800 },
-        { name: 'day', seconds: 86400 },
-        { name: 'hour', seconds: 3600 },
-        { name: 'minute', seconds: 60 },
-        { name: 'second', seconds: 1 }
-    ];
-
-    for (const unit of units) {
-        const value = Math.floor(diffSec / unit.seconds);
-        if (value >= 1) {
-            const plural = value !== 1 ? 's' : '';
-            return isFuture
-                ? `in ${value} ${unit.name}${plural}`
-                : `${value} ${unit.name}${plural} ago`;
-        }
-    }
-
-    return 'just now';
-}
-
-function epochCopyValue(element) {
-    const text = element.textContent;
-    navigator.clipboard.writeText(text);
-
-    const original = element.textContent;
-    element.textContent = 'Copied!';
-    element.style.color = 'var(--success-color)';
-    setTimeout(() => {
-        element.textContent = original;
-        element.style.color = '';
-    }, 1000);
-}
-
-// Code Formatter Widget
-function fmtGetToolId(element) {
-    const widget = element.closest('.fmt-widget');
-    return widget?.closest('.tool')?.getAttribute('data-tool');
-}
-
-function fmtGetData(toolId) {
-    const customizations = loadToolCustomizations();
-    const custom = customizations[toolId] || {};
-    return custom.fmtData || { input: '', output: '', format: 'json' };
-}
-
-function fmtSaveData(toolId, data) {
-    const customizations = loadToolCustomizations();
-    if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].fmtData = data;
-    saveToolCustomizations(customizations);
-}
-
-function fmtInit() {
-    document.querySelectorAll('.fmt-widget').forEach(widget => {
-        const toolId = fmtGetToolId(widget);
-        if (!toolId) return;
-
-        const data = fmtGetData(toolId);
-        const input = widget.querySelector('.fmt-input');
-        const output = widget.querySelector('.fmt-output');
-
-        if (input && data.input) input.value = data.input;
-        if (output && data.output) output.value = data.output;
-
-        // Restore format selection
-        if (data.format) {
-            widget.querySelectorAll('.fmt-format-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.toLowerCase() === data.format);
-            });
-        }
-
-        // Setup resizer
-        fmtSetupResizer(widget);
-    });
-}
-
-function fmtSetupResizer(widget) {
-    const resizer = widget.querySelector('.fmt-resizer');
-    const container = widget.querySelector('.fmt-container');
-    const leftPane = container.querySelector('.fmt-pane:first-child');
-    const rightPane = container.querySelector('.fmt-pane:last-child');
-
-    if (!resizer) return;
-
-    let isResizing = false;
-
-    resizer.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        document.body.style.cursor = 'col-resize';
-        document.body.style.userSelect = 'none';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const total = rect.width - 6; // resizer width
-        const leftWidth = Math.max(100, Math.min(x, total - 100));
-        const rightWidth = total - leftWidth;
-        leftPane.style.flex = `0 0 ${leftWidth}px`;
-        rightPane.style.flex = `0 0 ${rightWidth}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
-        }
-    });
-}
-
-function fmtSetFormat(btn, format) {
-    const widget = btn.closest('.fmt-widget');
-    widget.querySelectorAll('.fmt-format-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const toolId = fmtGetToolId(widget);
-    if (toolId) {
-        const data = fmtGetData(toolId);
-        data.format = format;
-        fmtSaveData(toolId, data);
-    }
-
-    fmtUpdateStatus(widget, '');
-}
-
-function fmtGetFormat(widget) {
-    const activeBtn = widget.querySelector('.fmt-format-btn.active');
-    return activeBtn ? activeBtn.textContent.toLowerCase() : 'json';
-}
-
-function fmtOnInput(textarea) {
-    const widget = textarea.closest('.fmt-widget');
-    const toolId = fmtGetToolId(widget);
-    if (toolId) {
-        const data = fmtGetData(toolId);
-        data.input = textarea.value;
-        fmtSaveData(toolId, data);
-    }
-}
-
-function fmtPrettify(btn) {
-    const widget = btn.closest('.fmt-widget');
-    const format = fmtGetFormat(widget);
-    const input = widget.querySelector('.fmt-input').value;
-    const output = widget.querySelector('.fmt-output');
-
-    if (!input.trim()) {
-        fmtUpdateStatus(widget, 'No input provided', 'error');
-        return;
-    }
-
-    try {
-        let result;
-        switch (format) {
-            case 'json':
-                result = fmtPrettifyJSON(input);
-                break;
-            case 'xml':
-                result = fmtPrettifyXML(input);
-                break;
-            case 'csv':
-                result = fmtPrettifyCSV(input);
-                break;
-            case 'sql':
-                result = fmtPrettifySQL(input);
-                break;
-            default:
-                result = input;
-        }
-        output.value = result;
-        fmtUpdateStatus(widget, `Prettified ${format.toUpperCase()} successfully`, 'success');
-
-        const toolId = fmtGetToolId(widget);
-        if (toolId) {
-            const data = fmtGetData(toolId);
-            data.output = result;
-            fmtSaveData(toolId, data);
-        }
-    } catch (e) {
-        fmtUpdateStatus(widget, `Error: ${e.message}`, 'error');
-    }
-}
-
-function fmtMinify(btn) {
-    const widget = btn.closest('.fmt-widget');
-    const format = fmtGetFormat(widget);
-    const input = widget.querySelector('.fmt-input').value;
-    const output = widget.querySelector('.fmt-output');
-
-    if (!input.trim()) {
-        fmtUpdateStatus(widget, 'No input provided', 'error');
-        return;
-    }
-
-    try {
-        let result;
-        switch (format) {
-            case 'json':
-                result = fmtMinifyJSON(input);
-                break;
-            case 'xml':
-                result = fmtMinifyXML(input);
-                break;
-            case 'csv':
-                result = fmtMinifyCSV(input);
-                break;
-            case 'sql':
-                result = fmtMinifySQL(input);
-                break;
-            default:
-                result = input;
-        }
-        output.value = result;
-        fmtUpdateStatus(widget, `Minified ${format.toUpperCase()} successfully`, 'success');
-
-        const toolId = fmtGetToolId(widget);
-        if (toolId) {
-            const data = fmtGetData(toolId);
-            data.output = result;
-            fmtSaveData(toolId, data);
-        }
-    } catch (e) {
-        fmtUpdateStatus(widget, `Error: ${e.message}`, 'error');
-    }
-}
-
-function fmtCopy(btn) {
-    const widget = btn.closest('.fmt-widget');
-    const output = widget.querySelector('.fmt-output').value;
-
-    if (!output) {
-        fmtUpdateStatus(widget, 'Nothing to copy', 'error');
-        return;
-    }
-
-    navigator.clipboard.writeText(output).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = orig, 1500);
-    });
-}
-
-function fmtSwap(btn) {
-    const widget = btn.closest('.fmt-widget');
-    const input = widget.querySelector('.fmt-input');
-    const output = widget.querySelector('.fmt-output');
-
-    const temp = input.value;
-    input.value = output.value;
-    output.value = temp;
-
-    const toolId = fmtGetToolId(widget);
-    if (toolId) {
-        const data = fmtGetData(toolId);
-        data.input = input.value;
-        data.output = output.value;
-        fmtSaveData(toolId, data);
-    }
-
-    fmtUpdateStatus(widget, 'Swapped input and output', 'success');
-}
-
-function fmtUpdateStatus(widget, message, type = '') {
-    const status = widget.querySelector('.fmt-status');
-    status.textContent = message;
-    status.className = 'fmt-status' + (type ? ` ${type}` : '');
-}
-
-// JSON formatting
-function fmtPrettifyJSON(input) {
-    const obj = JSON.parse(input);
-    return JSON.stringify(obj, null, 2);
-}
-
-function fmtMinifyJSON(input) {
-    const obj = JSON.parse(input);
-    return JSON.stringify(obj);
-}
-
-// XML formatting
-function fmtPrettifyXML(input) {
-    // Remove existing formatting
-    let xml = input.replace(/>\s+</g, '><').trim();
-
-    // Check for valid XML structure
-    if (!xml.startsWith('<')) {
-        throw new Error('Invalid XML: must start with <');
-    }
-
-    let formatted = '';
-    let indent = 0;
-    const tab = '  ';
-
-    // Split by tags
-    const parts = xml.split(/(<[^>]+>)/);
-
-    for (let part of parts) {
-        part = part.trim();
-        if (!part) continue;
-
-        if (part.startsWith('</')) {
-            // Closing tag
-            indent--;
-            formatted += tab.repeat(Math.max(0, indent)) + part + '\n';
-        } else if (part.startsWith('<?') || part.startsWith('<!')) {
-            // XML declaration or doctype
-            formatted += part + '\n';
-        } else if (part.startsWith('<') && part.endsWith('/>')) {
-            // Self-closing tag
-            formatted += tab.repeat(indent) + part + '\n';
-        } else if (part.startsWith('<')) {
-            // Opening tag
-            formatted += tab.repeat(indent) + part + '\n';
-            indent++;
-        } else {
-            // Text content
-            indent--;
-            formatted = formatted.trimEnd() + part + '\n';
-            indent++;
-        }
-    }
-
-    return formatted.trim();
-}
-
-function fmtMinifyXML(input) {
-    // Remove comments, newlines, and extra whitespace between tags
-    return input
-        .replace(/<!--[\s\S]*?-->/g, '')  // Remove comments
-        .replace(/>\s+</g, '><')          // Remove whitespace between tags
-        .replace(/\s+/g, ' ')             // Collapse whitespace
-        .trim();
-}
-
-// CSV formatting
-function fmtPrettifyCSV(input) {
-    const lines = input.trim().split(/\r?\n/);
-    if (lines.length === 0) return input;
-
-    // Parse CSV properly handling quoted fields
-    const rows = lines.map(line => fmtParseCSVLine(line));
-
-    // Find max width for each column
-    const colWidths = [];
-    for (const row of rows) {
-        for (let i = 0; i < row.length; i++) {
-            const len = row[i].length;
-            if (!colWidths[i] || len > colWidths[i]) {
-                colWidths[i] = len;
-            }
-        }
-    }
-
-    // Format with padding
-    return rows.map(row =>
-        row.map((cell, i) => cell.padEnd(colWidths[i] || 0)).join(' | ')
-    ).join('\n');
-}
-
-function fmtParseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-
-        if (char === '"') {
-            if (inQuotes && line[i + 1] === '"') {
-                current += '"';
-                i++;
-            } else {
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-        } else {
-            current += char;
-        }
-    }
-    result.push(current.trim());
-
-    return result;
-}
-
-function fmtMinifyCSV(input) {
-    const lines = input.trim().split(/\r?\n/);
-    return lines.map(line => {
-        // Parse and re-join to remove padding
-        const cells = fmtParseCSVLine(line);
-        return cells.map(cell => {
-            cell = cell.trim();
-            // Re-quote if needed
-            if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
-                return '"' + cell.replace(/"/g, '""') + '"';
-            }
-            return cell;
-        }).join(',');
-    }).join('\n');
-}
-
-// SQL formatting
-function fmtPrettifySQL(input) {
-    // Keywords to add newlines before
-    const majorKeywords = [
-        'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER BY', 'GROUP BY',
-        'HAVING', 'LIMIT', 'OFFSET', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN',
-        'INNER JOIN', 'OUTER JOIN', 'FULL JOIN', 'CROSS JOIN',
-        'ON', 'SET', 'VALUES', 'INSERT INTO', 'UPDATE', 'DELETE FROM',
-        'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE', 'CREATE INDEX',
-        'UNION', 'UNION ALL', 'EXCEPT', 'INTERSECT', 'CASE', 'WHEN',
-        'THEN', 'ELSE', 'END', 'AS'
-    ];
-
-    // Normalize whitespace
-    let sql = input.replace(/\s+/g, ' ').trim();
-
-    // Sort keywords by length (longest first) to avoid partial replacements
-    const sortedKeywords = majorKeywords.sort((a, b) => b.length - a.length);
-
-    // Add newlines before major keywords (case-insensitive)
-    for (const keyword of sortedKeywords) {
-        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
-        sql = sql.replace(regex, '\n$1');
-    }
-
-    // Indent subqueries
-    let result = '';
-    let indent = 0;
-    const lines = sql.split('\n');
-
-    for (let line of lines) {
-        line = line.trim();
-        if (!line) continue;
-
-        // Check for opening/closing parens to adjust indent
-        const openCount = (line.match(/\(/g) || []).length;
-        const closeCount = (line.match(/\)/g) || []).length;
-
-        // Decrease indent for lines starting with )
-        if (line.startsWith(')')) indent = Math.max(0, indent - 1);
-
-        result += '  '.repeat(indent) + line.toUpperCase().replace(/\b(SELECT|FROM|WHERE|AND|OR|ORDER BY|GROUP BY|HAVING|JOIN|LEFT|RIGHT|INNER|OUTER|FULL|CROSS|ON|SET|VALUES|INSERT|INTO|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|UNION|ALL|EXCEPT|INTERSECT|CASE|WHEN|THEN|ELSE|END|AS|LIMIT|OFFSET|NULL|NOT|IN|IS|LIKE|BETWEEN)\b/gi,
-            match => match.toUpperCase()) + '\n';
-
-        // Increase indent for lines ending with (
-        if (line.endsWith('(')) indent++;
-
-        // Adjust for balanced parens
-        indent += openCount - closeCount - (line.startsWith(')') ? 0 : 0);
-        indent = Math.max(0, indent);
-    }
-
-    return result.trim();
-}
-
-function fmtMinifySQL(input) {
-    return input
-        .replace(/--[^\n]*/g, '')          // Remove single-line comments
-        .replace(/\/\*[\s\S]*?\*\//g, '')  // Remove multi-line comments
-        .replace(/\s+/g, ' ')              // Collapse whitespace
-        .replace(/\s*([(),])\s*/g, '$1')   // Remove space around punctuation
-        .replace(/\s*([=<>!]+)\s*/g, ' $1 ')  // Normalize operators
-        .trim();
-}
-
-// Cron Expression Functions
-function cronGetToolId(element) {
-    const tool = element.closest('.tool');
-    return tool ? tool.getAttribute('data-tool') : null;
-}
-
-function cronGetData(toolId) {
-    const customizations = loadToolCustomizations();
-    return (customizations[toolId] && customizations[toolId].cronData) || { expression: '0 9 * * MON-FRI' };
-}
-
-function cronSaveData(toolId, data) {
-    const customizations = loadToolCustomizations();
-    if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].cronData = data;
-    saveToolCustomizations(customizations);
-}
-
-function cronInit() {
-    document.querySelectorAll('.cron-widget').forEach(widget => {
-        const toolId = cronGetToolId(widget);
-        if (!toolId) return;
-
-        const data = cronGetData(toolId);
-        const input = widget.querySelector('.cron-input');
-        if (input && data.expression) {
-            input.value = data.expression;
-        }
-        cronParse(input);
-    });
-}
-
-function cronSetPreset(btn, expression) {
-    const widget = btn.closest('.cron-widget');
-    const input = widget.querySelector('.cron-input');
-    input.value = expression;
-    cronParse(input);
-}
-
-function cronParse(input) {
-    const widget = input.closest('.cron-widget');
-    const expression = input.value.trim();
-    const explanationEl = widget.querySelector('.cron-explanation-text');
-    const fieldsEl = widget.querySelector('.cron-fields');
-    const scheduleList = widget.querySelector('.cron-schedule-list');
-    const scheduleCount = widget.querySelector('.cron-schedule-count');
-
-    // Save the expression
-    const toolId = cronGetToolId(widget);
-    if (toolId) {
-        cronSaveData(toolId, { expression });
-    }
-
-    // Parse the expression
-    const result = cronParseExpression(expression);
-
-    if (result.error) {
-        input.classList.remove('valid');
-        input.classList.add('invalid');
-        explanationEl.innerHTML = `<span class="cron-error">${result.error}</span>`;
-        fieldsEl.innerHTML = '';
-        scheduleList.innerHTML = '';
-        scheduleCount.textContent = '';
-        return;
-    }
-
-    input.classList.remove('invalid');
-    input.classList.add('valid');
-
-    // Render explanation
-    explanationEl.innerHTML = result.explanation;
-
-    // Render field breakdown
-    fieldsEl.innerHTML = result.fields.map(f => `
-        <div class="cron-field">
-            <div class="cron-field-value">${escapeHtml(f.value)}</div>
-            <div class="cron-field-name">${f.name}</div>
-            <div class="cron-field-desc">${f.desc}</div>
-        </div>
-    `).join('');
-
-    // Render next runs
-    const nextRuns = cronGetNextRuns(result.parsed, 10);
-    scheduleCount.textContent = `Next ${nextRuns.length} runs`;
-    scheduleList.innerHTML = nextRuns.map((run, i) => `
-        <div class="cron-schedule-item">
-            <span class="cron-schedule-date">${cronFormatDate(run)}</span>
-            <span class="cron-schedule-relative">${cronRelativeTime(run)}</span>
-        </div>
-    `).join('');
-}
-
-function cronParseExpression(expr) {
-    const parts = expr.split(/\s+/);
-    if (parts.length !== 5) {
-        return { error: `Invalid cron expression: expected 5 fields, got ${parts.length}` };
-    }
-
-    const fieldDefs = [
-        { name: 'Minute', min: 0, max: 59 },
-        { name: 'Hour', min: 0, max: 23 },
-        { name: 'Day', min: 1, max: 31 },
-        { name: 'Month', min: 1, max: 12 },
-        { name: 'Weekday', min: 0, max: 7 }
-    ];
-
-    const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    const parsed = [];
-    const fields = [];
-
-    for (let i = 0; i < 5; i++) {
-        const part = parts[i];
-        const def = fieldDefs[i];
-        const result = cronParseField(part, def.min, def.max, i);
-
-        if (result.error) {
-            return { error: `${def.name}: ${result.error}` };
-        }
-
-        parsed.push(result.values);
-        fields.push({
-            value: part,
-            name: def.name,
-            desc: cronDescribeField(result.values, i, monthNames, dayNames)
-        });
-    }
-
-    // Build explanation
-    const explanation = cronBuildExplanation(parts, parsed, monthNames, dayNames);
-
-    return { parsed, fields, explanation };
-}
-
-function cronParseField(field, min, max, fieldIndex) {
-    // Handle named values for months and weekdays
-    const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
-    const dayMap = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
-
-    let normalized = field.toLowerCase();
-    if (fieldIndex === 3) { // Month
-        for (const [name, val] of Object.entries(monthMap)) {
-            normalized = normalized.replace(new RegExp(name, 'gi'), val);
-        }
-    } else if (fieldIndex === 4) { // Weekday
-        for (const [name, val] of Object.entries(dayMap)) {
-            normalized = normalized.replace(new RegExp(name, 'gi'), val);
-        }
-    }
-
-    const values = new Set();
-
-    // Split by comma for lists
-    const parts = normalized.split(',');
-    for (const part of parts) {
-        // Handle step values (*/2 or 1-10/2)
-        const stepMatch = part.match(/^(.+)\/(\d+)$/);
-        let range = stepMatch ? stepMatch[1] : part;
-        const step = stepMatch ? parseInt(stepMatch[2]) : 1;
-
-        if (step < 1) {
-            return { error: 'Step must be at least 1' };
-        }
-
-        let start, end;
-
-        if (range === '*') {
-            start = min;
-            end = max;
-        } else if (range.includes('-')) {
-            const [s, e] = range.split('-').map(Number);
-            if (isNaN(s) || isNaN(e)) {
-                return { error: 'Invalid range' };
-            }
-            start = s;
-            end = e;
-        } else {
-            const val = parseInt(range);
-            if (isNaN(val)) {
-                return { error: `Invalid value: ${range}` };
-            }
-            start = val;
-            end = val;
-        }
-
-        // Normalize weekday 7 to 0 (both mean Sunday)
-        if (fieldIndex === 4) {
-            if (start === 7) start = 0;
-            if (end === 7) end = 0;
-        }
-
-        // Validate range
-        const actualMin = fieldIndex === 4 ? 0 : min;
-        const actualMax = fieldIndex === 4 ? 6 : max;
-        if (start < actualMin || start > actualMax || end < actualMin || end > actualMax) {
-            return { error: `Value out of range (${actualMin}-${actualMax})` };
-        }
-
-        // Handle wrap-around for weekdays
-        if (start > end && fieldIndex === 4) {
-            for (let v = start; v <= 6; v += step) values.add(v);
-            for (let v = 0; v <= end; v += step) values.add(v);
-        } else if (start > end) {
-            return { error: 'Start of range must be less than end' };
-        } else {
-            for (let v = start; v <= end; v += step) {
-                values.add(v);
-            }
-        }
-    }
-
-    return { values: Array.from(values).sort((a, b) => a - b) };
-}
-
-function cronDescribeField(values, fieldIndex, monthNames, dayNames) {
-    const fieldDefs = [
-        { min: 0, max: 59, name: 'minute' },
-        { min: 0, max: 23, name: 'hour' },
-        { min: 1, max: 31, name: 'day' },
-        { min: 1, max: 12, name: 'month' },
-        { min: 0, max: 6, name: 'weekday' }
-    ];
-
-    const def = fieldDefs[fieldIndex];
-
-    // Check if it's all values (wildcard)
-    const allValues = [];
-    for (let i = def.min; i <= def.max; i++) allValues.push(i);
-    if (values.length === allValues.length && values.every((v, i) => v === allValues[i])) {
-        return 'every ' + def.name;
-    }
-
-    // Format the values
-    if (fieldIndex === 3) { // Month
-        return values.map(v => monthNames[v]).join(', ');
-    } else if (fieldIndex === 4) { // Weekday
-        return values.map(v => dayNames[v]).join(', ');
-    } else if (values.length === 1) {
-        return 'at ' + values[0];
-    } else if (values.length <= 3) {
-        return values.join(', ');
-    } else {
-        return `${values.length} values`;
-    }
-}
-
-function cronBuildExplanation(parts, parsed, monthNames, dayNames) {
-    const [minutes, hours, days, months, weekdays] = parsed;
-
-    let result = 'Runs <strong>';
-
-    // Time description
-    const isEveryMinute = minutes.length === 60;
-    const isEveryHour = hours.length === 24;
-
-    if (isEveryMinute && isEveryHour) {
-        result += 'every minute';
-    } else if (isEveryMinute) {
-        result += 'every minute';
-        if (hours.length === 1) {
-            result += ` during hour ${hours[0]}`;
-        } else {
-            result += ` during hours ${hours.join(', ')}`;
-        }
-    } else if (isEveryHour) {
-        if (minutes.length === 1) {
-            result += `at minute ${minutes[0]} of every hour`;
-        } else {
-            result += `at minutes ${minutes.join(', ')} of every hour`;
-        }
-    } else {
-        // Specific times
-        if (hours.length === 1 && minutes.length === 1) {
-            result += `at ${String(hours[0]).padStart(2, '0')}:${String(minutes[0]).padStart(2, '0')}`;
-        } else if (hours.length <= 3 && minutes.length === 1) {
-            const times = hours.map(h => `${String(h).padStart(2, '0')}:${String(minutes[0]).padStart(2, '0')}`);
-            result += `at ${times.join(', ')}`;
-        } else {
-            result += `at minute ${minutes.join(', ')} past hour ${hours.join(', ')}`;
-        }
-    }
-
-    result += '</strong>';
-
-    // Day/month description
-    const isEveryDay = days.length === 31;
-    const isEveryMonth = months.length === 12;
-    const isEveryWeekday = weekdays.length === 7;
-
-    if (!isEveryDay || !isEveryWeekday) {
-        if (!isEveryDay && !isEveryWeekday) {
-            result += ` on day ${days.join(', ')} and ${weekdays.map(w => dayNames[w]).join(', ')}`;
-        } else if (!isEveryDay) {
-            result += ` on day ${days.join(', ')} of the month`;
-        } else if (!isEveryWeekday) {
-            if (weekdays.length === 5 && !weekdays.includes(0) && !weekdays.includes(6)) {
-                result += ' on weekdays';
-            } else if (weekdays.length === 2 && weekdays.includes(0) && weekdays.includes(6)) {
-                result += ' on weekends';
-            } else {
-                result += ` on ${weekdays.map(w => dayNames[w]).join(', ')}`;
-            }
-        }
-    }
-
-    if (!isEveryMonth) {
-        result += ` in ${months.map(m => monthNames[m]).join(', ')}`;
-    }
-
-    return result;
-}
-
-function cronGetNextRuns(parsed, count) {
-    const [minutes, hours, days, months, weekdays] = parsed;
-    const runs = [];
-    const now = new Date();
-    let current = new Date(now);
-
-    // Start from next minute
-    current.setSeconds(0);
-    current.setMilliseconds(0);
-    current.setMinutes(current.getMinutes() + 1);
-
-    const maxIterations = 100000; // Prevent infinite loops
-    let iterations = 0;
-
-    while (runs.length < count && iterations < maxIterations) {
-        iterations++;
-
-        // Check if current time matches the cron pattern
-        const minute = current.getMinutes();
-        const hour = current.getHours();
-        const day = current.getDate();
-        const month = current.getMonth() + 1;
-        const weekday = current.getDay();
-
-        if (months.includes(month) &&
-            (days.includes(day) || weekdays.includes(weekday)) &&
-            hours.includes(hour) &&
-            minutes.includes(minute)) {
-            runs.push(new Date(current));
-        }
-
-        // Move to next minute
-        current.setMinutes(current.getMinutes() + 1);
-    }
-
-    return runs;
-}
-
-function cronFormatDate(date) {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    const day = days[date.getDay()];
-    const month = months[date.getMonth()];
-    const dateNum = date.getDate();
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${day}, ${month} ${dateNum}, ${year} ${hours}:${minutes}`;
-}
-
-function cronRelativeTime(date) {
-    const now = new Date();
-    const diffMs = date - now;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 60) {
-        return `in ${diffMins} min${diffMins !== 1 ? 's' : ''}`;
-    } else if (diffHours < 24) {
-        const mins = diffMins % 60;
-        return `in ${diffHours}h ${mins}m`;
-    } else if (diffDays < 7) {
-        return `in ${diffDays} day${diffDays !== 1 ? 's' : ''}`;
-    } else {
-        const weeks = Math.floor(diffDays / 7);
-        return `in ${weeks} week${weeks !== 1 ? 's' : ''}`;
-    }
-}
-
-// Regex Tester Functions
-function regexGetToolId(element) {
-    const tool = element.closest('.tool');
-    return tool ? tool.getAttribute('data-tool') : null;
-}
-
-function regexGetData(toolId) {
-    const customizations = loadToolCustomizations();
-    return (customizations[toolId] && customizations[toolId].regexData) || {
-        pattern: '',
-        testString: '',
-        flags: { g: true, i: false, m: false, s: false }
-    };
-}
-
-function regexSaveData(toolId, data) {
-    const customizations = loadToolCustomizations();
-    if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].regexData = data;
-    saveToolCustomizations(customizations);
-}
-
-function regexInit() {
-    document.querySelectorAll('.regex-widget').forEach(widget => {
-        const toolId = regexGetToolId(widget);
-        if (!toolId) return;
-
-        const data = regexGetData(toolId);
-        const patternInput = widget.querySelector('.regex-pattern');
-        const testInput = widget.querySelector('.regex-test-string');
-
-        if (patternInput && data.pattern) patternInput.value = data.pattern;
-        if (testInput && data.testString) testInput.value = data.testString;
-
-        if (data.flags) {
-            widget.querySelectorAll('.regex-flag').forEach(checkbox => {
-                const flag = checkbox.getAttribute('data-flag');
-                if (flag && data.flags[flag] !== undefined) {
-                    checkbox.checked = data.flags[flag];
-                }
-            });
-        }
-
-        regexSetupResizer(widget);
-        regexExecute(widget);
-    });
-}
-
-function regexSetupResizer(widget) {
-    const resizer = widget.querySelector('.regex-resizer');
-    const container = widget.querySelector('.regex-container');
-    const leftPane = container.querySelector('.regex-pane:first-child');
-    const rightPane = container.querySelector('.regex-pane:last-child');
-
-    if (!resizer) return;
-
-    let isResizing = false;
-
-    resizer.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        document.body.style.cursor = 'col-resize';
-        document.body.style.userSelect = 'none';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const total = rect.width - 6;
-        const leftWidth = Math.max(100, Math.min(x, total - 100));
-        const rightWidth = total - leftWidth;
-        leftPane.style.flex = `0 0 ${leftWidth}px`;
-        rightPane.style.flex = `0 0 ${rightWidth}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
-        }
-    });
-}
-
-function regexOnInput(element) {
-    const widget = element.closest('.regex-widget');
-    const toolId = regexGetToolId(widget);
-
-    if (toolId) {
-        const data = regexGetData(toolId);
-        data.pattern = widget.querySelector('.regex-pattern').value;
-        data.testString = widget.querySelector('.regex-test-string').value;
-        data.flags = {};
-        widget.querySelectorAll('.regex-flag').forEach(checkbox => {
-            const flag = checkbox.getAttribute('data-flag');
-            if (flag) data.flags[flag] = checkbox.checked;
-        });
-        regexSaveData(toolId, data);
-    }
-
-    regexExecute(widget);
-}
-
-function regexGetFlags(widget) {
-    let flags = '';
-    widget.querySelectorAll('.regex-flag:checked').forEach(checkbox => {
-        flags += checkbox.getAttribute('data-flag') || '';
-    });
-    return flags;
-}
-
-function regexExecute(widget) {
-    const pattern = widget.querySelector('.regex-pattern').value;
-    const testString = widget.querySelector('.regex-test-string').value;
-    const resultsDiv = widget.querySelector('.regex-results');
-    const statusDiv = widget.querySelector('.regex-status');
-    const flags = regexGetFlags(widget);
-
-    if (!pattern) {
-        resultsDiv.innerHTML = '<span class="no-match">Enter a regex pattern to see matches</span>';
-        statusDiv.textContent = '';
-        statusDiv.className = 'regex-status';
-        return;
-    }
-
-    try {
-        const regex = new RegExp(pattern, flags);
-        const matches = [];
-        let match;
-
-        if (flags.includes('g')) {
-            while ((match = regex.exec(testString)) !== null) {
-                matches.push({
-                    value: match[0],
-                    index: match.index,
-                    groups: match.slice(1)
-                });
-                if (match.index === regex.lastIndex) regex.lastIndex++;
-            }
-        } else {
-            match = regex.exec(testString);
-            if (match) {
-                matches.push({
-                    value: match[0],
-                    index: match.index,
-                    groups: match.slice(1)
-                });
-            }
-        }
-
-        if (matches.length === 0) {
-            resultsDiv.innerHTML = '<span class="no-match">No matches found</span>';
-            statusDiv.textContent = 'No matches';
-            statusDiv.className = 'regex-status';
-            return;
-        }
-
-        let highlighted = '';
-        let lastIndex = 0;
-        for (const m of matches) {
-            highlighted += regexEscapeHtml(testString.slice(lastIndex, m.index));
-            highlighted += `<span class="match-highlight">${regexEscapeHtml(m.value)}</span>`;
-            lastIndex = m.index + m.value.length;
-        }
-        highlighted += regexEscapeHtml(testString.slice(lastIndex));
-
-        let details = '<div class="match-info"><strong>Match Details:</strong>';
-        matches.forEach((m, i) => {
-            details += `<div class="match-item">`;
-            details += `<div class="match-index">Match ${i + 1} at index ${m.index}</div>`;
-            details += `<div class="match-value">${regexEscapeHtml(m.value)}</div>`;
-            if (m.groups.length > 0) {
-                details += '<div class="match-groups">';
-                m.groups.forEach((g, gi) => {
-                    details += `<div class="group-item">Group ${gi + 1}: ${g !== undefined ? regexEscapeHtml(g) : '<em>undefined</em>'}</div>`;
-                });
-                details += '</div>';
-            }
-            details += '</div>';
-        });
-        details += '</div>';
-
-        resultsDiv.innerHTML = `<div style="white-space:pre-wrap;word-break:break-all;margin-bottom:10px;">${highlighted}</div>${details}`;
-        statusDiv.textContent = `${matches.length} match${matches.length !== 1 ? 'es' : ''} found`;
-        statusDiv.className = 'regex-status success';
-
-    } catch (e) {
-        resultsDiv.innerHTML = `<span class="no-match">Invalid regex: ${regexEscapeHtml(e.message)}</span>`;
-        statusDiv.textContent = 'Invalid pattern';
-        statusDiv.className = 'regex-status error';
-    }
-}
-
-function regexEscapeHtml(str) {
-    if (!str) return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
-
-function regexCopy(btn) {
-    const widget = btn.closest('.regex-widget');
-    const pattern = widget.querySelector('.regex-pattern').value;
-    const flags = regexGetFlags(widget);
-
-    if (!pattern) return;
-
-    const regexString = `/${pattern}/${flags}`;
-    navigator.clipboard.writeText(regexString).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = orig, 1500);
-    });
-}
-
-function regexClear(btn) {
-    const widget = btn.closest('.regex-widget');
-    widget.querySelector('.regex-pattern').value = '';
-    widget.querySelector('.regex-test-string').value = '';
-    regexOnInput(widget.querySelector('.regex-pattern'));
-}
 
 // Content Editor State
 let currentEditingTool = null;
@@ -11074,6 +7403,9 @@ function setupFeatureSelect() {
     const modal = document.getElementById('featureSelectModal');
     const closeBtn = modal.querySelector('.feature-select-close');
     const list = document.getElementById('featureSelectList');
+    const tabs = modal.querySelectorAll('.feature-tab');
+    const searchInput = document.getElementById('featureSearchInput');
+    const toolboxFilter = document.getElementById('featureToolboxFilter');
 
     // Close modal
     closeBtn.onclick = () => modal.classList.remove('open');
@@ -11081,10 +7413,41 @@ function setupFeatureSelect() {
         if (e.target === modal) modal.classList.remove('open');
     };
 
+    // Tab switching
+    tabs.forEach(tab => {
+        tab.onclick = () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Switch tab content
+            document.querySelectorAll('.feature-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const tabName = tab.dataset.tab;
+            if (tabName === 'tools') {
+                document.getElementById('featureToolsTab').classList.add('active');
+            } else if (tabName === 'toolboxes') {
+                document.getElementById('featureToolboxesTab').classList.add('active');
+                populateToolboxesList();
+            } else if (tabName === 'templates') {
+                document.getElementById('featureTemplatesTab').classList.add('active');
+                populateBoardTemplatesList();
+            }
+        };
+    });
+
+    // Populate toolbox filter dropdown
+    populateToolboxFilter();
+
     // Populate list
     populateFeatureList();
 
-    // Handle feature selection
+    // Search and filter handlers
+    searchInput.oninput = () => populateFeatureList();
+    toolboxFilter.onchange = () => populateFeatureList();
+
+    // Handle tool selection
     list.addEventListener('click', (e) => {
         const item = e.target.closest('.feature-select-item');
         if (!item) return;
@@ -11093,19 +7456,699 @@ function setupFeatureSelect() {
         modal.classList.remove('open');
         createNoteWithTemplate(templateId);
     });
+
+    // Handle toolbox "Add All" button clicks
+    document.getElementById('toolboxesList').addEventListener('click', (e) => {
+        const btn = e.target.closest('.toolbox-add-all-btn');
+        if (!btn) return;
+
+        const toolboxId = btn.getAttribute('data-toolbox');
+        addAllToolsFromToolbox(toolboxId);
+        modal.classList.remove('open');
+    });
+
+    // Handle board template "Use Template" button clicks
+    document.getElementById('boardTemplatesList').addEventListener('click', (e) => {
+        const btn = e.target.closest('.board-template-use-btn');
+        if (!btn) return;
+
+        const boardId = btn.getAttribute('data-board');
+        instantiateBoardTemplate(boardId);
+        modal.classList.remove('open');
+    });
+}
+
+function populateToolboxFilter() {
+    const filter = document.getElementById('featureToolboxFilter');
+    const toolboxes = PluginRegistry.getAllToolboxes();
+
+    filter.innerHTML = '<option value="all">All Toolboxes</option>' +
+        toolboxes.map(tb => `<option value="${tb.id}">${tb.icon} ${tb.name}</option>`).join('');
 }
 
 function populateFeatureList() {
     const list = document.getElementById('featureSelectList');
-    list.innerHTML = Object.values(NOTE_TEMPLATES).map(template => `
-        <div class="feature-select-item" data-template="${template.id}">
-            <div class="feature-select-icon">${template.icon}</div>
+    const searchQuery = document.getElementById('featureSearchInput').value.toLowerCase();
+    const toolboxFilter = document.getElementById('featureToolboxFilter').value;
+
+    // Get all tools from registry
+    let tools = PluginRegistry.getAllTools();
+
+    // Apply search filter
+    if (searchQuery) {
+        tools = tools.filter(tool => {
+            const nameMatch = tool.name.toLowerCase().includes(searchQuery);
+            const descMatch = tool.description.toLowerCase().includes(searchQuery);
+            const tagMatch = tool.tags.some(tag => tag.toLowerCase().includes(searchQuery));
+            return nameMatch || descMatch || tagMatch;
+        });
+    }
+
+    // Apply toolbox filter
+    if (toolboxFilter !== 'all') {
+        tools = tools.filter(tool => tool.toolbox === toolboxFilter);
+    }
+
+    if (tools.length === 0) {
+        list.innerHTML = '<div class="feature-no-results">No tools found matching your search.</div>';
+        return;
+    }
+
+    // Group by toolbox if no filter applied
+    if (toolboxFilter === 'all' && !searchQuery) {
+        const grouped = {};
+        tools.forEach(tool => {
+            const tbId = tool.toolbox || 'uncategorized';
+            if (!grouped[tbId]) grouped[tbId] = [];
+            grouped[tbId].push(tool);
+        });
+
+        let html = '';
+        for (const [toolboxId, toolboxTools] of Object.entries(grouped)) {
+            const toolbox = PluginRegistry.getToolbox(toolboxId);
+            const tbName = toolbox ? toolbox.name : 'Other';
+            const tbIcon = toolbox ? toolbox.icon : '📦';
+
+            html += `
+                <div class="toolbox-group">
+                    <div class="toolbox-group-header">
+                        <span class="toolbox-group-icon">${tbIcon}</span>
+                        <span class="toolbox-group-name">${tbName}</span>
+                        <span class="toolbox-group-count">${toolboxTools.length} tools</span>
+                    </div>
+                    <div class="feature-select-list">
+                        ${toolboxTools.map(tool => createToolItemHtml(tool)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        list.innerHTML = html;
+    } else {
+        // Flat list for filtered results
+        list.innerHTML = tools.map(tool => createToolItemHtml(tool)).join('');
+    }
+}
+
+function createToolItemHtml(tool) {
+    return `
+        <div class="feature-select-item" data-template="${tool.id}">
+            <div class="feature-select-icon">${tool.icon}</div>
             <div class="feature-select-info">
-                <div class="feature-select-name">${template.name}</div>
-                <div class="feature-select-description">${template.description}</div>
+                <div class="feature-select-name">${tool.name}</div>
+                <div class="feature-select-description">${tool.description}</div>
             </div>
         </div>
-    `).join('');
+    `;
+}
+
+function populateToolboxesList() {
+    const list = document.getElementById('toolboxesList');
+    const toolboxes = PluginRegistry.getAllToolboxes();
+
+    if (toolboxes.length === 0) {
+        list.innerHTML = '<div class="feature-no-results">No toolboxes available.</div>';
+        return;
+    }
+
+    list.innerHTML = toolboxes.map(toolbox => {
+        const tools = PluginRegistry.getToolsByToolbox(toolbox.id);
+        const toolPreviews = tools.slice(0, 5).map(t => `<span class="toolbox-tool-preview">${t.icon} ${t.name}</span>`).join('');
+        const moreCount = tools.length > 5 ? `<span class="toolbox-tool-preview">+${tools.length - 5} more</span>` : '';
+
+        return `
+            <div class="toolbox-card">
+                <div class="toolbox-card-icon">${toolbox.icon}</div>
+                <div class="toolbox-card-info">
+                    <div class="toolbox-card-name">${toolbox.name}</div>
+                    <div class="toolbox-card-description">${toolbox.description}</div>
+                    <div class="toolbox-card-tools">${toolPreviews}${moreCount}</div>
+                    <button class="toolbox-add-all-btn" data-toolbox="${toolbox.id}">Add All ${tools.length} Tools</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function populateBoardTemplatesList() {
+    const list = document.getElementById('boardTemplatesList');
+    const boardTemplates = PluginRegistry.getAllBoards();
+
+    if (boardTemplates.length === 0) {
+        list.innerHTML = '<div class="feature-no-results">No board templates available. Add external plugins to get templates.</div>';
+        return;
+    }
+
+    list.innerHTML = boardTemplates.map(board => {
+        const toolPreviews = board.tools.slice(0, 4).map(t => {
+            const tool = PluginRegistry.getTool(t.toolId);
+            return tool ? `<span class="board-template-tool-preview">${tool.icon} ${tool.name}</span>` : '';
+        }).join('');
+        const moreCount = board.tools.length > 4 ? `<span class="board-template-tool-preview">+${board.tools.length - 4} more</span>` : '';
+
+        return `
+            <div class="board-template-card">
+                <div class="board-template-icon">${board.icon}</div>
+                <div class="board-template-info">
+                    <div class="board-template-name">${board.name}</div>
+                    <div class="board-template-description">${board.description}</div>
+                    <div class="board-template-tools">${toolPreviews}${moreCount}</div>
+                    <button class="board-template-use-btn" data-board="${board.id}">Use This Template</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function addAllToolsFromToolbox(toolboxId) {
+    const tools = PluginRegistry.getToolsByToolbox(toolboxId);
+    tools.forEach(tool => {
+        createNoteWithTemplate(tool.id);
+    });
+}
+
+// Board Template System
+function instantiateBoardTemplate(boardId) {
+    const board = PluginRegistry.getBoard(boardId);
+    if (!board) {
+        console.error('Board template not found:', boardId);
+        return;
+    }
+
+    // Create a new board with the template settings
+    const newBoardId = 'board-' + Date.now();
+    const boardName = board.settings.title || board.name;
+
+    // Add board to list
+    boards.push({
+        id: newBoardId,
+        name: boardName
+    });
+    saveBoards(boards);
+
+    // Switch to new board
+    currentBoardId = newBoardId;
+    setCurrentBoardId(newBoardId);
+
+    // Initialize empty state for the new board
+    variables = {};
+    positions = {};
+    toolCustomizations = {};
+    customTools = [];
+    hiddenTools = [];
+    toolboardSettings = {
+        title: boardName,
+        color: board.settings.color || null,
+        fontFamily: board.settings.fontFamily || '',
+        fontSize: board.settings.fontSize || ''
+    };
+
+    // Create tools from template
+    board.tools.forEach(toolConfig => {
+        const template = PluginRegistry.getTool(toolConfig.toolId);
+        if (!template) {
+            console.warn('Tool not found for template:', toolConfig.toolId);
+            return;
+        }
+
+        const toolId = toolConfig.instanceId || ('custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5));
+
+        // Add to custom tools
+        customTools.push(toolId);
+
+        // Set position from template
+        if (toolConfig.position) {
+            positions[toolId] = {
+                x: toolConfig.position.x || 20,
+                y: toolConfig.position.y || 20,
+                z: toolConfig.position.z || 100,
+                width: toolConfig.position.width || template.defaultWidth || undefined,
+                height: toolConfig.position.height || template.defaultHeight || undefined
+            };
+        }
+
+        // Set customizations
+        const isHtml = template.content && template.content.trim().startsWith('<');
+        toolCustomizations[toolId] = {
+            title: template.title,
+            templateId: toolConfig.toolId,
+            customContent: isHtml ? '' : template.content,
+            color: toolConfig.color || null,
+            fontFamily: toolConfig.fontFamily || '',
+            fontSize: toolConfig.fontSize || ''
+        };
+    });
+
+    // Update maxZ
+    maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 100);
+
+    // Save all the data
+    saveVariables(variables);
+    savePositions(positions);
+    saveToolCustomizations(toolCustomizations);
+    saveCustomTools(customTools);
+    saveHiddenTools(hiddenTools);
+    saveToolboardSettings(toolboardSettings);
+
+    // Refresh UI
+    populateBoardSelector();
+    applyToolboardSettings();
+    renderToolboard();
+}
+
+// Plugin Settings UI
+function setupPluginSettings() {
+    // Plugin settings will be accessible via the toolboard settings panel
+    // Add a "Manage Plugins" button
+    const settingsPanel = document.getElementById('toolboardSettings');
+    if (!settingsPanel) return;
+
+    // Check if button already exists
+    if (document.getElementById('managePluginsBtn')) return;
+
+    const pluginBtn = document.createElement('button');
+    pluginBtn.id = 'managePluginsBtn';
+    pluginBtn.textContent = 'Manage Plugins';
+    pluginBtn.className = 'plugin-manage-btn';
+    pluginBtn.style.cssText = 'margin-top: 15px; padding: 8px 12px; background: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;';
+    pluginBtn.onclick = openPluginSettingsModal;
+    settingsPanel.appendChild(pluginBtn);
+}
+
+function openPluginSettingsModal() {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('pluginSettingsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'pluginSettingsModal';
+        modal.className = 'plugin-settings-modal';
+        modal.innerHTML = `
+            <div class="plugin-settings-content">
+                <span class="plugin-settings-close">&times;</span>
+                <h2>Plugin Settings</h2>
+
+                <div class="plugin-section">
+                    <h3>Official Plugins</h3>
+                    <div class="official-plugins-list">
+                        <div class="official-plugin-item">
+                            <span class="official-plugin-icon">🛠️</span>
+                            <div class="official-plugin-info">
+                                <span class="official-plugin-name">Developer Tools</span>
+                                <span class="official-plugin-desc">JWT, Regex, Code Formatter, Cron, Epoch, Diff, Sequence Diagram</span>
+                            </div>
+                            <button class="official-plugin-add-btn" data-url="plugins/toolboxes/developer-tools.js">Add</button>
+                        </div>
+                        <div class="official-plugin-item">
+                            <span class="official-plugin-icon">💰</span>
+                            <div class="official-plugin-info">
+                                <span class="official-plugin-name">Finance Tools</span>
+                                <span class="official-plugin-desc">Investment, Tax, Loan calculators</span>
+                            </div>
+                            <button class="official-plugin-add-btn" data-url="plugins/toolboxes/finance-tools.js">Add</button>
+                        </div>
+                        <div class="official-plugin-item">
+                            <span class="official-plugin-icon">👨‍💻</span>
+                            <div class="official-plugin-info">
+                                <span class="official-plugin-name">Developer Dashboard</span>
+                                <span class="official-plugin-desc">Pre-configured dev workspace board</span>
+                            </div>
+                            <button class="official-plugin-add-btn" data-url="plugins/boards/developer-dashboard.js">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="plugin-section">
+                    <h3>Add External Plugin</h3>
+                    <div class="plugin-add-row">
+                        <input type="text" id="pluginUrlInput" class="plugin-url-input" placeholder="Enter plugin URL...">
+                        <button id="addPluginBtn" class="plugin-add-btn">Add</button>
+                    </div>
+                    <p class="plugin-hint">Plugins can add new tools, toolboxes, and board templates.</p>
+                </div>
+
+                <div class="plugin-section">
+                    <h3>Loaded Plugins</h3>
+                    <div id="loadedPluginsList" class="loaded-plugins-list"></div>
+                </div>
+
+                <div class="plugin-section">
+                    <h3>External Plugin URLs</h3>
+                    <div id="pluginUrlsList" class="plugin-urls-list"></div>
+                </div>
+
+                <div class="plugin-actions">
+                    <button id="reloadPluginsBtn" class="plugin-reload-btn">Reload All Plugins</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .plugin-settings-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--overlay-bg);
+                z-index: 10020;
+                justify-content: center;
+                align-items: center;
+            }
+            .plugin-settings-modal.open {
+                display: flex;
+            }
+            .plugin-settings-content {
+                background: var(--bg-secondary);
+                border-radius: 8px;
+                padding: 20px;
+                width: 90%;
+                max-width: 550px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            .plugin-settings-content h2 {
+                margin-bottom: 20px;
+                color: var(--text-heading);
+            }
+            .plugin-settings-close {
+                float: right;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--text-muted);
+            }
+            .plugin-settings-close:hover {
+                color: var(--text-heading);
+            }
+            .plugin-section {
+                margin-bottom: 25px;
+            }
+            .plugin-section h3 {
+                font-size: 14px;
+                color: var(--text-heading);
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid var(--border-light);
+            }
+            .plugin-add-row {
+                display: flex;
+                gap: 10px;
+            }
+            .plugin-url-input {
+                flex: 1;
+                padding: 8px 12px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+                font-size: 13px;
+                background: var(--input-bg);
+                color: var(--text-primary);
+            }
+            .plugin-add-btn {
+                padding: 8px 16px;
+                background: #27ae60;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .plugin-add-btn:hover {
+                background: #219a52;
+            }
+            .plugin-hint {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-top: 8px;
+            }
+            .loaded-plugins-list, .plugin-urls-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .plugin-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px;
+                background: var(--bg-tertiary);
+                border-radius: 4px;
+                font-size: 12px;
+            }
+            .plugin-item-info {
+                flex: 1;
+                overflow: hidden;
+            }
+            .plugin-item-name {
+                font-weight: 500;
+                color: var(--text-primary);
+            }
+            .plugin-item-url {
+                font-size: 11px;
+                color: var(--text-muted);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .plugin-item-type {
+                font-size: 10px;
+                padding: 2px 6px;
+                background: var(--bg-secondary);
+                border-radius: 3px;
+                margin-left: 8px;
+            }
+            .plugin-remove-btn {
+                padding: 4px 8px;
+                background: #e74c3c;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 11px;
+            }
+            .plugin-remove-btn:hover {
+                background: #c0392b;
+            }
+            .plugin-actions {
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 1px solid var(--border-color);
+            }
+            .plugin-reload-btn {
+                padding: 10px 20px;
+                background: #3498db;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 100%;
+            }
+            .plugin-reload-btn:hover {
+                background: #2980b9;
+            }
+            .plugin-empty {
+                color: var(--text-muted);
+                font-style: italic;
+                padding: 10px;
+            }
+            .official-plugins-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .official-plugin-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 12px;
+                background: var(--bg-tertiary);
+                border-radius: 6px;
+                border: 1px solid var(--border-light);
+            }
+            .official-plugin-icon {
+                font-size: 20px;
+                flex-shrink: 0;
+            }
+            .official-plugin-info {
+                flex: 1;
+                min-width: 0;
+            }
+            .official-plugin-name {
+                display: block;
+                font-weight: 500;
+                color: var(--text-primary);
+                font-size: 13px;
+            }
+            .official-plugin-desc {
+                display: block;
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-top: 2px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .official-plugin-add-btn {
+                padding: 6px 14px;
+                background: #27ae60;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                flex-shrink: 0;
+            }
+            .official-plugin-add-btn:hover {
+                background: #219a52;
+            }
+            .official-plugin-add-btn.loaded {
+                background: #7f8c8d;
+                cursor: default;
+            }
+            .official-plugin-add-btn.loaded:hover {
+                background: #7f8c8d;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Set up event handlers
+        modal.querySelector('.plugin-settings-close').onclick = () => modal.classList.remove('open');
+        modal.onclick = (e) => {
+            if (e.target === modal) modal.classList.remove('open');
+        };
+
+        document.getElementById('addPluginBtn').onclick = async () => {
+            const input = document.getElementById('pluginUrlInput');
+            const url = input.value.trim();
+            if (!url) return;
+
+            if (PluginLoader.addPluginUrl(url)) {
+                try {
+                    await PluginLoader.loadFromUrl(url);
+                    input.value = '';
+                    refreshPluginLists();
+                    populateToolboxFilter();
+                    populateFeatureList();
+                } catch (e) {
+                    alert('Failed to load plugin: ' + e.error);
+                }
+            } else {
+                alert('Plugin URL already added.');
+            }
+        };
+
+        document.getElementById('reloadPluginsBtn').onclick = async () => {
+            // Clear loaded state and reload
+            PluginLoader.loadedUrls.clear();
+            await PluginLoader.loadAllExternal();
+            refreshPluginLists();
+            populateToolboxFilter();
+            populateFeatureList();
+            alert('Plugins reloaded.');
+        };
+
+        // Set up official plugin button handlers
+        modal.querySelectorAll('.official-plugin-add-btn').forEach(btn => {
+            btn.onclick = async () => {
+                if (btn.classList.contains('loaded')) return;
+                const url = btn.dataset.url;
+                if (PluginLoader.addPluginUrl(url)) {
+                    try {
+                        await PluginLoader.loadFromUrl(url);
+                        refreshPluginLists();
+                        populateToolboxFilter();
+                        populateFeatureList();
+                    } catch (e) {
+                        alert('Failed to load plugin: ' + e.message);
+                    }
+                }
+                updateOfficialPluginButtons();
+            };
+        });
+    }
+
+    updateOfficialPluginButtons();
+    refreshPluginLists();
+    modal.classList.add('open');
+}
+
+function updateOfficialPluginButtons() {
+    const loadedUrls = PluginLoader.getLoadedUrls();
+    document.querySelectorAll('.official-plugin-add-btn').forEach(btn => {
+        const url = btn.dataset.url;
+        if (loadedUrls.includes(url)) {
+            btn.textContent = 'Loaded';
+            btn.classList.add('loaded');
+        } else {
+            btn.textContent = 'Add';
+            btn.classList.remove('loaded');
+        }
+    });
+}
+
+function refreshPluginLists() {
+    // Loaded plugins summary
+    const loadedList = document.getElementById('loadedPluginsList');
+    const tools = PluginRegistry.getAllTools();
+    const toolboxes = PluginRegistry.getAllToolboxes();
+    const boardTemplates = PluginRegistry.getAllBoards();
+
+    const embeddedTools = tools.filter(t => t.source === 'embedded').length;
+    const externalTools = tools.filter(t => t.source === 'external').length;
+    const embeddedToolboxes = toolboxes.filter(t => t.source === 'embedded').length;
+    const externalToolboxes = toolboxes.filter(t => t.source === 'external').length;
+    const embeddedBoards = boardTemplates.filter(t => t.source === 'embedded').length;
+    const externalBoards = boardTemplates.filter(t => t.source === 'external').length;
+
+    loadedList.innerHTML = `
+        <div class="plugin-item">
+            <div class="plugin-item-info">
+                <div class="plugin-item-name">Tools</div>
+            </div>
+            <span class="plugin-item-type">${embeddedTools} embedded</span>
+            <span class="plugin-item-type">${externalTools} external</span>
+        </div>
+        <div class="plugin-item">
+            <div class="plugin-item-info">
+                <div class="plugin-item-name">Toolboxes</div>
+            </div>
+            <span class="plugin-item-type">${embeddedToolboxes} embedded</span>
+            <span class="plugin-item-type">${externalToolboxes} external</span>
+        </div>
+        <div class="plugin-item">
+            <div class="plugin-item-info">
+                <div class="plugin-item-name">Board Templates</div>
+            </div>
+            <span class="plugin-item-type">${embeddedBoards} embedded</span>
+            <span class="plugin-item-type">${externalBoards} external</span>
+        </div>
+    `;
+
+    // Plugin URLs
+    const urlsList = document.getElementById('pluginUrlsList');
+    const urls = PluginLoader.getPluginUrls();
+
+    if (urls.length === 0) {
+        urlsList.innerHTML = '<div class="plugin-empty">No external plugins added.</div>';
+    } else {
+        urlsList.innerHTML = urls.map(url => `
+            <div class="plugin-item">
+                <div class="plugin-item-info">
+                    <div class="plugin-item-url" title="${url}">${url}</div>
+                </div>
+                <button class="plugin-remove-btn" data-url="${url}">Remove</button>
+            </div>
+        `).join('');
+
+        // Add remove handlers
+        urlsList.querySelectorAll('.plugin-remove-btn').forEach(btn => {
+            btn.onclick = () => {
+                const url = btn.getAttribute('data-url');
+                PluginLoader.removePluginUrl(url);
+                refreshPluginLists();
+            };
+        });
+    }
 }
 
 function openFeatureSelectModal() {
@@ -11385,6 +8428,17 @@ function exportBoardAsHTML() {
     const boardTitle = document.getElementById('toolboardTitle').textContent || 'toolboard';
     const safeTitle = boardTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
+    // Collect all tool template IDs used in the current board
+    const usedTemplateIds = new Set();
+    Object.values(toolCustomizations).forEach(custom => {
+        if (custom.templateId) {
+            usedTemplateIds.add(custom.templateId);
+        }
+    });
+
+    // Export plugins used by this board (includes external plugins if any)
+    const exportedPlugins = PluginRegistry.exportForEmbed(Array.from(usedTemplateIds));
+
     const embeddedData = {
         boards: [{ id: 'default', name: boardTitle }],
         currentBoard: 'default',
@@ -11393,31 +8447,69 @@ function exportBoardAsHTML() {
         toolCustomizations: toolCustomizations,
         customTools: customTools,
         hiddenTools: hiddenTools,
-        toolboardSettings: toolboardSettings
+        toolboardSettings: toolboardSettings,
+        // Include plugin data for self-contained export
+        plugins: {
+            tools: exportedPlugins.tools,
+            toolboxes: exportedPlugins.toolboxes
+        }
     };
 
     // Close modal before capturing HTML
     const modal = document.getElementById('importExportModal');
     modal.classList.remove('open');
 
+    // Remove any existing embedded-board-data script before capturing
+    const existingEmbed = document.getElementById('embedded-board-data');
+    if (existingEmbed) existingEmbed.remove();
+
+    // Remove plugin-injected scripts before capturing (they cause issues in exported HTML)
+    // The exported HTML uses embedded plugin data instead
+    const devScripts = document.getElementById('developer-tools-scripts');
+    const finScripts = document.getElementById('finance-tools-scripts');
+    if (devScripts) devScripts.remove();
+    if (finScripts) finScripts.remove();
+
     // Get the full HTML of the current document
     const originalHTML = document.documentElement.outerHTML;
+
+    // Re-inject the scripts so they work on the current page after export
+    if (typeof injectScriptsForExport === 'undefined') {
+        // Scripts were removed; they'll be re-injected when plugins reload if needed
+    }
 
     // Reopen modal briefly so user sees it close after download
     modal.classList.add('open');
 
-    // Create the embedded data script that will auto-import on load
-    // Note: <\/script> is escaped to prevent breaking the outer script block
-    const embedScript = '<scr' + 'ipt id="embedded-board-data" type="application/json">\n' +
-        JSON.stringify(embeddedData, null, 2) +
-        '\n<\/scr' + 'ipt>\n' +
-        '<scr' + 'ipt>\n' +
-        '// Auto-import embedded board data on load\n' +
+    // Create embedded data and import script
+    // Base64 encode JSON to avoid any HTML/JS parsing issues
+    const jsonData = JSON.stringify(embeddedData);
+    const encodedData = btoa(unescape(encodeURIComponent(jsonData)));
+
+    // Data element holds the base64-encoded board data
+    const dataElement = '\x3Cscript id="embedded-board-data" type="text/plain">' +
+        encodedData + '\x3C/script>\n';
+
+    // Import script goes before </body> so PluginRegistry exists
+    const importScript = dataElement + '\x3Cscript>\n' +
+        '// Auto-import embedded board data and plugins on load\n' +
         '(function() {\n' +
         '    var dataScript = document.getElementById("embedded-board-data");\n' +
         '    if (!dataScript) return;\n' +
         '    try {\n' +
-        '        var data = JSON.parse(dataScript.textContent);\n' +
+        '        var data = JSON.parse(decodeURIComponent(escape(atob(dataScript.textContent))));\n' +
+        '        // Register embedded plugins first (before app loads)\n' +
+        '        if (data.plugins && typeof PluginRegistry !== "undefined") {\n' +
+        '            (data.plugins.toolboxes || []).forEach(function(tb) {\n' +
+        '                tb.source = "embedded";\n' +
+        '                PluginRegistry.registerToolbox(tb);\n' +
+        '            });\n' +
+        '            (data.plugins.tools || []).forEach(function(t) {\n' +
+        '                t.source = "embedded";\n' +
+        '                PluginRegistry.registerTool(t);\n' +
+        '            });\n' +
+        '        }\n' +
+        '        // Store board data in localStorage\n' +
         '        localStorage.setItem("financeBoards", JSON.stringify(data.boards));\n' +
         '        localStorage.setItem("financeCurrentBoard", "default");\n' +
         '        localStorage.setItem("finance_default_variables", JSON.stringify(data.variables));\n' +
@@ -11426,13 +8518,26 @@ function exportBoardAsHTML() {
         '        localStorage.setItem("finance_default_customTools", JSON.stringify(data.customTools));\n' +
         '        localStorage.setItem("finance_default_hiddenTools", JSON.stringify(data.hiddenTools));\n' +
         '        localStorage.setItem("finance_default_toolboardSettings", JSON.stringify(data.toolboardSettings));\n' +
+        '        // Clear plugin URLs so exported HTML does not try to load external files\n' +
+        '        localStorage.removeItem("toolboard_pluginUrls");\n' +
         '        dataScript.remove();\n' +
         '    } catch (e) { console.error("Failed to import embedded board data:", e); }\n' +
         '})();\n' +
-        '<\/scr' + 'ipt>\n';
+        '\x3C/script>\n';
 
-    // Insert the embed script just before </head>
-    const htmlContent = '<!DOCTYPE html>\n' + originalHTML.replace('</head>', embedScript + '</head>');
+    // Insert flag script at start of <head> (if not already there) and import script before </body>
+    let htmlContent = '<!DOCTYPE html>\n' + originalHTML;
+
+    // Only add flag if not already present
+    if (!htmlContent.includes('TOOLBOARD_EMBEDDED')) {
+        htmlContent = htmlContent.replace(/<head>/i, '<head>\n\x3Cscript>window.TOOLBOARD_EMBEDDED=true;\x3C/script>');
+    }
+
+    // Find the LAST </body> tag (not ones inside JS template strings)
+    const lastBodyIdx = htmlContent.lastIndexOf('</body>');
+    if (lastBodyIdx !== -1) {
+        htmlContent = htmlContent.slice(0, lastBodyIdx) + importScript + htmlContent.slice(lastBodyIdx);
+    }
 
     // Download
     const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -11855,20 +8960,32 @@ function exportToolAsFullHtml(toolId, title) {
     // Close any open modals
     document.querySelectorAll('.modal.open, .tool-settings.open').forEach(m => m.classList.remove('open'));
 
+    // Remove plugin-injected scripts before capturing (they cause issues in exported HTML)
+    const devScripts = document.getElementById('developer-tools-scripts');
+    const finScripts = document.getElementById('finance-tools-scripts');
+    if (devScripts) devScripts.remove();
+    if (finScripts) finScripts.remove();
+
     // Get the full HTML of the current document
     const originalHTML = document.documentElement.outerHTML;
 
-    // Create the embedded data script that will auto-import on load
-    const embedScript = '<scr' + 'ipt id="embedded-tool-data" type="application/json">\n' +
-        JSON.stringify(embeddedData, null, 2) +
-        '\n<\/scr' + 'ipt>\n' +
-        '<scr' + 'ipt>\n' +
+    // Create embedded data and import script
+    // Base64 encode JSON to avoid any HTML/JS parsing issues
+    const jsonData = JSON.stringify(embeddedData);
+    const encodedData = btoa(unescape(encodeURIComponent(jsonData)));
+
+    // Data element holds the base64-encoded tool data
+    const dataElement = '\x3Cscript id="embedded-tool-data" type="text/plain">' +
+        encodedData + '\x3C/script>\n';
+
+    // Import script goes before </body> so PluginRegistry exists
+    const importScript = dataElement + '\x3Cscript>\n' +
         '// Auto-import embedded tool data on load\n' +
         '(function() {\n' +
         '    var dataScript = document.getElementById("embedded-tool-data");\n' +
         '    if (!dataScript) return;\n' +
         '    try {\n' +
-        '        var data = JSON.parse(dataScript.textContent);\n' +
+        '        var data = JSON.parse(decodeURIComponent(escape(atob(dataScript.textContent))));\n' +
         '        localStorage.setItem("financeBoards", JSON.stringify(data.boards));\n' +
         '        localStorage.setItem("financeCurrentBoard", "default");\n' +
         '        localStorage.setItem("finance_default_variables", JSON.stringify(data.variables));\n' +
@@ -11877,13 +8994,26 @@ function exportToolAsFullHtml(toolId, title) {
         '        localStorage.setItem("finance_default_customTools", JSON.stringify(data.customTools));\n' +
         '        localStorage.setItem("finance_default_hiddenTools", JSON.stringify(data.hiddenTools));\n' +
         '        localStorage.setItem("finance_default_toolboardSettings", JSON.stringify(data.toolboardSettings));\n' +
+        '        // Clear plugin URLs so exported HTML does not try to load external files\n' +
+        '        localStorage.removeItem("toolboard_pluginUrls");\n' +
         '        dataScript.remove();\n' +
         '    } catch (e) { console.error("Failed to import embedded tool data:", e); }\n' +
         '})();\n' +
-        '<\/scr' + 'ipt>\n';
+        '\x3C/script>\n';
 
-    // Insert the embed script just before </head>
-    const htmlContent = '<!DOCTYPE html>\n' + originalHTML.replace('</head>', embedScript + '</head>');
+    // Insert flag script at start of <head> (if not already there) and import script before </body>
+    let htmlContent = '<!DOCTYPE html>\n' + originalHTML;
+
+    // Only add flag if not already present
+    if (!htmlContent.includes('TOOLBOARD_EMBEDDED')) {
+        htmlContent = htmlContent.replace(/<head>/i, '<head>\n\x3Cscript>window.TOOLBOARD_EMBEDDED=true;\x3C/script>');
+    }
+
+    // Find the LAST </body> tag (not ones inside JS template strings)
+    const lastBodyIdx = htmlContent.lastIndexOf('</body>');
+    if (lastBodyIdx !== -1) {
+        htmlContent = htmlContent.slice(0, lastBodyIdx) + importScript + htmlContent.slice(lastBodyIdx);
+    }
 
     // Download
     const blob = new Blob([htmlContent], { type: 'text/html' });
