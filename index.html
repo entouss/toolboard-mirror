@@ -131,44 +131,39 @@ header h1 {
     font-size: 1.5rem;
 }
 
-.board-selector-title #boardSelector {
+.board-selector-trigger {
     background: transparent;
+    border: none;
     color: white;
     font-size: 1.1rem;
     font-weight: 700;
-    padding: 2px 20px 2px 4px;
-    min-width: auto;
+    padding: 4px 8px;
     border-radius: 4px;
+    cursor: pointer;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: background 0.15s;
 }
 
-.board-selector-title #boardSelector:hover {
+.board-selector-trigger:hover {
     background: rgba(255,255,255,0.15);
 }
 
-.board-selector-title::after {
-    font-size: 8px;
-    right: 6px;
-    opacity: 0.6;
+.board-selector-trigger::after {
+    content: ' \25BE';
+    font-size: 10px;
+    opacity: 0.7;
 }
 
-#deleteBoardBtn,
 #deleteAllBtn {
     font-size: 16px;
     line-height: 1;
 }
 
-#deleteBoardBtn:hover,
 #deleteAllBtn:hover {
     background: rgba(231, 76, 60, 0.7);
-}
-
-#deleteBoardBtn:disabled {
-    opacity: 0.3;
-    cursor: default;
-}
-
-#deleteBoardBtn:disabled:hover {
-    background: rgba(255,255,255,0.2);
 }
 
 .header-section {
@@ -490,37 +485,237 @@ header h1 {
 }
 
 
-.board-selector-wrapper {
+/* Board Manager Popup */
+.board-manager-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    z-index: 10010;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-manager-overlay.open {
+    display: flex;
+}
+
+.board-manager-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-heavy) 0 8px 30px;
+    overflow: hidden;
+}
+
+.board-manager-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.board-manager-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.board-manager-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.board-manager-close:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.board-manager-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.board-manager-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    gap: 8px;
+    transition: background 0.1s;
     position: relative;
 }
 
-#boardSelector {
-    padding: 8px 12px;
+.board-manager-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.board-manager-item.active {
+    border-left: 3px solid var(--accent, #3498db);
+    padding-left: 17px;
+}
+
+.board-manager-item-name {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.board-manager-item.active .board-manager-item-name {
+    font-weight: 600;
+}
+
+.board-manager-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.board-manager-item:hover .board-manager-actions {
+    opacity: 1;
+}
+
+.board-manager-actions button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+}
+
+.board-manager-actions button:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.board-manager-actions button.board-manager-delete-btn:hover {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+.board-manager-rename-input {
+    flex: 1;
+    padding: 4px 8px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    font-family: inherit;
+}
+
+.board-manager-confirm-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 8px;
+    background: rgba(231, 76, 60, 0.08);
+    border-left: 3px solid #e74c3c;
+    padding-left: 17px;
+}
+
+.board-manager-confirm-row span {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.board-manager-confirm-row button {
+    padding: 4px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.15s;
+}
+
+.board-manager-confirm-delete {
+    background: #e74c3c;
+    color: white;
+}
+
+.board-manager-confirm-delete:hover {
+    background: #c0392b;
+}
+
+.board-manager-confirm-cancel {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.board-manager-confirm-cancel:hover {
+    background: var(--border-color);
+}
+
+.board-manager-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.board-manager-new-btn {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
     font-size: 0.9rem;
-    background: #9b59b6;
-    color: white;
-    min-width: 150px;
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 30px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
-#boardSelector:hover {
-    background: #8e44ad;
+.board-manager-new-btn:hover {
+    border-color: #3498db;
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
 }
 
-.board-selector-wrapper::after {
-    content: '▼';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 10px;
-    pointer-events: none;
+.board-manager-new-input-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 8px;
+}
+
+.board-manager-new-input-row input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    font-family: inherit;
+}
+
+@media (hover: none) {
+    .board-manager-actions {
+        opacity: 1;
+    }
 }
 
 #editVariablesBtn {
@@ -1596,10 +1791,10 @@ tr:hover {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 8px;
+    padding: 3px 8px;
     background: var(--bg-tertiary);
     border-radius: 4px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     transition: background 0.15s, opacity 0.15s, box-shadow 0.15s;
 }
 
@@ -1756,23 +1951,6 @@ tr:hover {
     background: var(--bg-tertiary);
 }
 
-.checklist-add-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 4px 8px;
-    margin-left: 24px;
-    opacity: 0;
-    transition: opacity 0.15s;
-}
-
-.checklist-item-wrapper:hover .checklist-add-sub {
-    opacity: 1;
-}
-
-.checklist-add-sub:hover {
-    color: #3498db;
-}
 
 .checklist-input:focus {
     outline: none;
@@ -3151,8 +3329,9 @@ tr:hover {
         height: 24px !important;
     }
 
-    .board-selector-title #boardSelector {
+    .board-selector-trigger {
         font-size: 1rem;
+        max-width: 150px;
     }
 
     .toolboard-version {
@@ -3161,13 +3340,6 @@ tr:hover {
 
     .storage-indicator {
         display: none;
-    }
-
-    #boardSelector {
-        min-width: 100px;
-        max-width: 120px;
-        padding: 8px 10px;
-        font-size: 0.8rem;
     }
 
     main#toolboard {
@@ -3348,7 +3520,7 @@ tr:hover {
         gap: 6px;
     }
 
-    .board-selector-title #boardSelector {
+    .board-selector-trigger {
         font-size: 0.85rem;
         max-width: 110px;
     }
@@ -3365,6 +3537,15 @@ tr:hover {
     .header-section-notes,
     .header-section-page {
         padding-left: 4px;
+    }
+
+    .board-manager-content {
+        max-width: 95%;
+        max-height: 90vh;
+    }
+
+    .board-manager-actions {
+        opacity: 1;
     }
 
 }
@@ -3499,11 +3680,8 @@ tr:hover {
         <div class="header-section header-section-board">
             <a href="https://toolboard.me" title="Visit Toolboard.me"><img alt="Toolboard Logo" style="width: 24px; height: 24px;" src="data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20300%20300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22board%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%22300%22%20y2%3D%22300%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%233d4555%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e2230%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22vignette%22%20cx%3D%220.45%22%20cy%3D%220.4%22%20r%3D%220.65%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23fff%22%20stop-opacity%3D%220.03%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23000%22%20stop-opacity%3D%220.2%22%2F%3E%3C%2FradialGradient%3E%3Cpattern%20id%3D%22holes%22%20x%3D%2215%22%20y%3D%2215%22%20width%3D%2230%22%20height%3D%2230%22%20patternUnits%3D%22userSpaceOnUse%22%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2210%22%20r%3D%228%22%20fill%3D%22%2314171e%22%2F%3E%3C%2Fpattern%3E%3CclipPath%20id%3D%22hole-clip%22%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%22274%22%20height%3D%22274%22%20rx%3D%2220%22%2F%3E%3C%2FclipPath%3E%3ClinearGradient%20id%3D%22amber%22%20x1%3D%22145%22%20y1%3D%2215%22%20x2%3D%22165%22%20y2%3D%22280%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23fef3c7%22%2F%3E%3Cstop%20offset%3D%2225%25%22%20stop-color%3D%22%23fcd34d%22%2F%3E%3Cstop%20offset%3D%2260%25%22%20stop-color%3D%22%23f59e0b%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23d97706%22%2F%3E%3C%2FlinearGradient%3E%3Cfilter%20id%3D%22bloom%22%20x%3D%22-50%25%22%20y%3D%22-50%25%22%20width%3D%22200%25%22%20height%3D%22200%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2218%22%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%22glow%22%20x%3D%22-15%25%22%20y%3D%22-15%25%22%20width%3D%22130%25%22%20height%3D%22130%25%22%3E%3CfeGaussianBlur%20in%3D%22SourceGraphic%22%20stdDeviation%3D%222%22%20result%3D%22blur%22%2F%3E%3CfeMerge%3E%3CfeMergeNode%20in%3D%22blur%22%2F%3E%3CfeMergeNode%20in%3D%22SourceGraphic%22%2F%3E%3C%2FfeMerge%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20rx%3D%2226%22%20fill%3D%22url%28%23board%29%22%2F%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20rx%3D%2226%22%20fill%3D%22url%28%23vignette%29%22%2F%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%22298%22%20height%3D%22298%22%20rx%3D%2225%22%20fill%3D%22none%22%20stroke%3D%22%234c566a%22%20stroke-width%3D%221.2%22%20opacity%3D%220.35%22%2F%3E%3Cg%20clip-path%3D%22url%28%23hole-clip%29%22%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%22290%22%20height%3D%22290%22%20fill%3D%22url%28%23holes%29%22%2F%3E%3C%2Fg%3E%3Cg%20filter%3D%22url%28%23bloom%29%22%20opacity%3D%220.18%22%3E%3Crect%20x%3D%2215%22%20y%3D%2212%22%20width%3D%22260%22%20height%3D%2282%22%20rx%3D%2210%22%20fill%3D%22%23fbbf24%22%2F%3E%3Crect%20x%3D%22105%22%20y%3D%2282%22%20width%3D%2280%22%20height%3D%22195%22%20rx%3D%2210%22%20fill%3D%22%23f59e0b%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22url%28%23amber%29%22%20filter%3D%22url%28%23glow%29%22%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2285%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22205%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22235%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22265%22%20cy%3D%2225%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2285%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22205%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22235%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22265%22%20cy%3D%2255%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%2285%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22205%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22235%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22265%22%20cy%3D%2285%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22115%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22115%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22115%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22145%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22145%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22145%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22175%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22175%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22175%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22205%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22205%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22205%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22235%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22235%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22235%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22115%22%20cy%3D%22265%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22265%22%20r%3D%2210%22%2F%3E%3Ccircle%20cx%3D%22175%22%20cy%3D%22265%22%20r%3D%2210%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23fff%22%20opacity%3D%220.3%22%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22202%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22262%22%20cy%3D%2222%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22202%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22262%22%20cy%3D%2252%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22202%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22262%22%20cy%3D%2282%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22112%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22112%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22112%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22142%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22142%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22142%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22172%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22172%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22172%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22202%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22202%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22202%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22232%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22232%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22232%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22112%22%20cy%3D%22262%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22142%22%20cy%3D%22262%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22262%22%20r%3D%224%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"></a>
             <h1 id="toolboardTitle" style="display:none;">My Toolboard</h1>
-            <div class="board-selector-wrapper board-selector-title">
-                <select id="boardSelector"></select>
-            </div>
+            <button id="boardSelectorTrigger" class="board-selector-trigger" title="Manage Boards"></button>
             <button id="toolboardSettingsBtn" class="header-settings-btn" title="Edit Toolboard">&#8942;</button>
-            <button id="deleteBoardBtn" class="header-settings-btn" title="Delete Board">&times;</button>
             <span id="toolboardVersion" class="toolboard-version"></span>
         </div>
         <div class="header-section header-section-notes">
@@ -3550,6 +3728,20 @@ tr:hover {
             </select>
         </div>
     </header>
+
+    <!-- Board Manager Popup -->
+    <div id="boardManagerOverlay" class="board-manager-overlay">
+        <div class="board-manager-content">
+            <div class="board-manager-header">
+                <span class="board-manager-title">Boards</span>
+                <button class="board-manager-close" title="Close">&times;</button>
+            </div>
+            <div id="boardManagerList" class="board-manager-list"></div>
+            <div class="board-manager-footer">
+                <button id="boardManagerNewBtn" class="board-manager-new-btn">+ New Board</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Import/Export Modal -->
     <div id="importExportModal" class="import-export-modal">
@@ -4812,6 +5004,7 @@ async function init() {
     setupToolControls();
     setupContentEditor();
     setupButtons();
+    setupBoardManager();
     setupToolSearch();
     setupImportExport();
     setupFeatureSelect();
@@ -5684,8 +5877,6 @@ function checklistRenderItem(item, idx, parentIdx = null) {
         ).join('')}</ul>`;
     }
 
-    const addSubBtn = !isSubitem ? `<span class="checklist-add-sub" onclick="checklistAddSub(this, ${idx})">+ Add sub-item</span>` : '';
-
     return `
         <div class="checklist-item-wrapper" data-path="${path}">
             <li class="checklist-item ${statusClass}" data-path="${path}" draggable="true"
@@ -5704,7 +5895,6 @@ function checklistRenderItem(item, idx, parentIdx = null) {
                 </span>
             </li>
             ${childrenHtml}
-            ${addSubBtn}
         </div>
     `;
 }
@@ -8145,15 +8335,10 @@ function applyToolboardSettings() {
     header.style.background = toolboardSettings.color;
     titleInput.value = toolboardSettings.title;
 
-    // Update board selector option text to match title
-    const selector = document.getElementById('boardSelector');
-    const selectedOption = selector.querySelector(`option[value="${currentBoardId}"]`);
-    if (selectedOption) {
-        selectedOption.textContent = toolboardSettings.title;
-        // Also update boards array
-        const board = boards.find(b => b.id === currentBoardId);
-        if (board) board.name = toolboardSettings.title;
-    }
+    // Update boards array and trigger label
+    const board = boards.find(b => b.id === currentBoardId);
+    if (board) board.name = toolboardSettings.title;
+    updateBoardSelectorLabel();
 
     // Update browser tab title
     document.title = toolboardSettings.title + ' - Toolboard';
@@ -9481,8 +9666,10 @@ const OFFICIAL_PLUGINS = [
         { icon: '🆔', name: 'UUID Generator', desc: 'Generate UUIDs v4 (random) and v7 (timestamp-sorted)', url: 'plugins/tools/uuid-generator.js' },
         { icon: '🎨', name: 'Color Picker', desc: 'Color wheel with alpha, hex/rgba/hsla values', url: 'plugins/tools/color-picker.js' },
         { icon: '🔡', name: 'Case Converter', desc: 'Convert between camelCase, snake_case, kebab-case, PascalCase, and more', url: 'plugins/tools/case-converter.js' },
+        { icon: '⏩', name: 'Playback Speed Calculator', desc: 'Calculate duration and time saved at different playback speeds', url: 'plugins/tools/playback-speed-calculator.js' },
         { icon: '😎', name: 'Emoticon Picker', desc: 'Browse and copy emojis, kaomoji, and text emoticons', url: 'plugins/tools/emoticon-picker.js' },
         { icon: '🔌', name: 'Example Tool', desc: 'Sample tool plugin for reference', url: 'plugins/tools/example-tool.js' },
+        { icon: '🌐', name: 'HTTP Request Builder', desc: 'HTTP request builder for testing API endpoints', url: 'plugins/tools/http-request-builder.js' },
     ]},
     { category: 'Board Templates', items: [
         { icon: '📖', name: 'Git Cheat Sheet', desc: 'Quick-reference cards for everyday git commands', url: 'plugins/boards/git-cheat-sheet.js' },
@@ -10425,24 +10612,11 @@ function importBoards(data) {
 function setupButtons() {
     document.getElementById('addToolBtn').onclick = addNewNote;
 
-    // Delete board button
-    document.getElementById('deleteBoardBtn').onclick = deleteCurrentBoard;
-
     // Minimize/Maximize all
     document.getElementById('minimizeAllBtn').onclick = toggleMinimizeAll;
 
     // Delete all tools
     document.getElementById('deleteAllBtn').onclick = deleteAllTools;
-
-    // Board selector
-    document.getElementById('boardSelector').onchange = (e) => {
-        const value = e.target.value;
-        if (value === '__new__') {
-            createNewBoard();
-        } else {
-            switchToBoard(value);
-        }
-    };
 }
 
 // Add a new custom note - now shows feature selection modal
@@ -10865,53 +11039,236 @@ async function exportToolAsPng(toolId) {
 }
 
 // Board management functions
+
+function updateBoardSelectorLabel() {
+    const trigger = document.getElementById('boardSelectorTrigger');
+    if (!trigger) return;
+    const board = boards.find(b => b.id === currentBoardId);
+    trigger.textContent = board ? board.name : 'Board';
+}
+
 function populateBoardSelector() {
-    const selector = document.getElementById('boardSelector');
-    selector.innerHTML = '';
-
-    boards.forEach(board => {
-        const option = document.createElement('option');
-        option.value = board.id;
-        option.textContent = board.name;
-        if (board.id === currentBoardId) {
-            option.selected = true;
-        }
-        selector.appendChild(option);
-    });
-
-    // Add "New Board" option
-    const newOption = document.createElement('option');
-    newOption.value = '__new__';
-    newOption.textContent = '+ New Board...';
-    selector.appendChild(newOption);
-
-    // Update delete button state
-    updateDeleteBoardButton();
+    updateBoardSelectorLabel();
 }
 
 function updateDeleteBoardButton() {
-    const deleteBtn = document.getElementById('deleteBoardBtn');
-    // Disable delete if only one board exists
-    deleteBtn.disabled = boards.length <= 1;
+    // No-op: delete state is handled per-row in the board manager popup
+}
+
+function openBoardManager() {
+    const overlay = document.getElementById('boardManagerOverlay');
+    renderBoardList();
+    overlay.classList.add('open');
+}
+
+function closeBoardManager() {
+    document.getElementById('boardManagerOverlay').classList.remove('open');
+}
+
+function renderBoardList() {
+    const list = document.getElementById('boardManagerList');
+    list.innerHTML = '';
+
+    boards.forEach(board => {
+        const row = document.createElement('div');
+        row.className = 'board-manager-item' + (board.id === currentBoardId ? ' active' : '');
+        row.dataset.boardId = board.id;
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'board-manager-item-name';
+        nameSpan.textContent = board.name;
+
+        const actions = document.createElement('div');
+        actions.className = 'board-manager-actions';
+
+        const renameBtn = document.createElement('button');
+        renameBtn.title = 'Rename';
+        renameBtn.textContent = '\u270E';
+        renameBtn.onclick = (e) => { e.stopPropagation(); startInlineRename(row, board); };
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'board-manager-delete-btn';
+        deleteBtn.title = 'Delete';
+        deleteBtn.textContent = '\u00D7';
+        deleteBtn.disabled = boards.length <= 1;
+        if (boards.length <= 1) deleteBtn.style.opacity = '0.3';
+        deleteBtn.onclick = (e) => { e.stopPropagation(); showDeleteConfirmation(row, board); };
+
+        actions.appendChild(renameBtn);
+        actions.appendChild(deleteBtn);
+
+        row.appendChild(nameSpan);
+        row.appendChild(actions);
+
+        // Click row to switch board
+        row.onclick = () => {
+            if (board.id !== currentBoardId) {
+                switchToBoard(board.id);
+            }
+            closeBoardManager();
+        };
+
+        // Double-click name to rename
+        nameSpan.ondblclick = (e) => { e.stopPropagation(); startInlineRename(row, board); };
+
+        list.appendChild(row);
+    });
+}
+
+function startInlineRename(row, board) {
+    const nameSpan = row.querySelector('.board-manager-item-name');
+    const actions = row.querySelector('.board-manager-actions');
+    if (!nameSpan) return;
+
+    // Hide name and actions, show input
+    nameSpan.style.display = 'none';
+    if (actions) actions.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.className = 'board-manager-rename-input';
+    input.type = 'text';
+    input.value = board.name;
+    row.insertBefore(input, actions);
+    input.focus();
+    input.select();
+
+    const commit = () => {
+        const newName = input.value.trim();
+        if (newName && newName !== board.name) {
+            board.name = newName;
+            saveBoards(boards);
+            // If this is the current board, update settings too
+            if (board.id === currentBoardId) {
+                toolboardSettings.title = newName;
+                localStorage.setItem(boardKey('toolboardSettings'), JSON.stringify(toolboardSettings));
+                document.getElementById('toolboardTitle').textContent = newName;
+                document.getElementById('toolboardTitleInput').value = newName;
+                document.title = newName + ' - Toolboard';
+                updateBoardSelectorLabel();
+            }
+        }
+        cleanup();
+    };
+
+    const cancel = () => { cleanup(); };
+
+    const cleanup = () => {
+        if (input.parentNode) input.remove();
+        nameSpan.style.display = '';
+        nameSpan.textContent = board.name;
+        if (actions) actions.style.display = '';
+    };
+
+    input.onkeydown = (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); commit(); }
+        if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+    };
+    input.onblur = commit;
+}
+
+function showDeleteConfirmation(row, board) {
+    if (boards.length <= 1) return;
+
+    const parent = row.parentNode;
+    const confirmRow = document.createElement('div');
+    confirmRow.className = 'board-manager-confirm-row';
+
+    const msg = document.createElement('span');
+    msg.textContent = `Delete "${board.name}"?`;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'board-manager-confirm-delete';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = () => {
+        deleteBoard(board.id);
+        renderBoardList();
+    };
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'board-manager-confirm-cancel';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.onclick = () => {
+        parent.replaceChild(row, confirmRow);
+    };
+
+    confirmRow.appendChild(msg);
+    confirmRow.appendChild(deleteBtn);
+    confirmRow.appendChild(cancelBtn);
+
+    parent.replaceChild(confirmRow, row);
+}
+
+function deleteBoard(boardId) {
+    if (boards.length <= 1) return;
+
+    const prefix = `finance_${boardId}_`;
+    // Remove board-specific data from localStorage
+    localStorage.removeItem(prefix + 'variables');
+    localStorage.removeItem(prefix + 'positions');
+    localStorage.removeItem(prefix + 'toolCustomizations');
+    localStorage.removeItem(prefix + 'customTools');
+    localStorage.removeItem(prefix + 'hiddenTools');
+    localStorage.removeItem(prefix + 'toolboardSettings');
+
+    // Remove from boards array
+    boards = boards.filter(b => b.id !== boardId);
+    saveBoards(boards);
+
+    // If we deleted the current board, switch to the first available
+    if (boardId === currentBoardId) {
+        switchToBoard(boards[0].id);
+    } else {
+        updateBoardSelectorLabel();
+    }
+}
+
+function createNewBoardInline() {
+    const list = document.getElementById('boardManagerList');
+
+    // Remove any existing new-board input row
+    const existing = list.querySelector('.board-manager-new-input-row');
+    if (existing) existing.remove();
+
+    const inputRow = document.createElement('div');
+    inputRow.className = 'board-manager-new-input-row';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Board name...';
+    inputRow.appendChild(input);
+    list.appendChild(inputRow);
+
+    input.focus();
+    list.scrollTop = list.scrollHeight;
+
+    const commit = () => {
+        const name = input.value.trim();
+        if (name) {
+            const newBoardId = 'board-' + Date.now();
+            boards.push({ id: newBoardId, name: name });
+            saveBoards(boards);
+            localStorage.setItem(`finance_${newBoardId}_toolboardSettings`, JSON.stringify({ title: name, color: '#2c3e50' }));
+            switchToBoard(newBoardId);
+            closeBoardManager();
+        } else {
+            inputRow.remove();
+        }
+    };
+
+    input.onkeydown = (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); commit(); }
+        if (e.key === 'Escape') { e.preventDefault(); inputRow.remove(); }
+    };
+    input.onblur = () => {
+        // Small delay to allow click events to fire first
+        setTimeout(() => { if (inputRow.parentNode) commit(); }, 100);
+    };
 }
 
 function createNewBoard() {
-    const name = prompt('Enter name for new board:', 'New Board');
-    if (!name) {
-        // Reset selector to current board
-        document.getElementById('boardSelector').value = currentBoardId;
-        return;
-    }
-
-    const newBoardId = 'board-' + Date.now();
-    boards.push({ id: newBoardId, name: name });
-    saveBoards(boards);
-
-    // Initialize toolboard settings with the provided name
-    localStorage.setItem(`finance_${newBoardId}_toolboardSettings`, JSON.stringify({ title: name, color: '#2c3e50' }));
-
-    // Switch to the new board
-    switchToBoard(newBoardId);
+    // Legacy fallback — delegates to inline creation
+    openBoardManager();
+    setTimeout(createNewBoardInline, 50);
 }
 
 function switchToBoard(boardId) {
@@ -10930,36 +11287,13 @@ function switchToBoard(boardId) {
     maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 1);
 
     // Update UI
-    populateBoardSelector();
+    updateBoardSelectorLabel();
     applyToolboardSettings();
     renderToolboard();
 }
 
 function deleteCurrentBoard() {
-    if (boards.length <= 1) {
-        alert('Cannot delete the last board.');
-        return;
-    }
-
-    const currentBoard = boards.find(b => b.id === currentBoardId);
-    if (!confirm(`Delete board "${currentBoard.name}"? This cannot be undone.`)) {
-        return;
-    }
-
-    // Remove board-specific data from localStorage
-    localStorage.removeItem(boardKey('variables'));
-    localStorage.removeItem(boardKey('positions'));
-    localStorage.removeItem(boardKey('toolCustomizations'));
-    localStorage.removeItem(boardKey('customTools'));
-    localStorage.removeItem(boardKey('hiddenTools'));
-    localStorage.removeItem(boardKey('toolboardSettings'));
-
-    // Remove from boards array
-    boards = boards.filter(b => b.id !== currentBoardId);
-    saveBoards(boards);
-
-    // Switch to first available board
-    switchToBoard(boards[0].id);
+    deleteBoard(currentBoardId);
 }
 
 function renameBoardInSelector() {
@@ -10967,8 +11301,31 @@ function renameBoardInSelector() {
     if (currentBoard && toolboardSettings.title !== currentBoard.name) {
         currentBoard.name = toolboardSettings.title;
         saveBoards(boards);
-        populateBoardSelector();
+        updateBoardSelectorLabel();
     }
+}
+
+function setupBoardManager() {
+    const trigger = document.getElementById('boardSelectorTrigger');
+    const overlay = document.getElementById('boardManagerOverlay');
+    const closeBtn = overlay.querySelector('.board-manager-close');
+    const newBtn = document.getElementById('boardManagerNewBtn');
+
+    trigger.onclick = openBoardManager;
+    closeBtn.onclick = closeBoardManager;
+    newBtn.onclick = createNewBoardInline;
+
+    // Close on backdrop click
+    overlay.onclick = (e) => {
+        if (e.target === overlay) closeBoardManager();
+    };
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) {
+            closeBoardManager();
+        }
+    });
 }
 
 // Initialize on load
