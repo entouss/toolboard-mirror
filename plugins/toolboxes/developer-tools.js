@@ -241,6 +241,28 @@ body.dark-mode .seq-dashed-number-bg { fill: #8e44ad; }
 .regex-status.error { color: #e74c3c; }
 .regex-status.success { color: #27ae60; }
 
+/* Base64 Encoder/Decoder Widget Styles */
+.tool-content:has(.b64-widget) { display: flex; flex-direction: column; padding: 0; }
+.b64-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; gap: 8px; }
+.b64-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+.b64-mode-toggle { display: flex; gap: 4px; }
+.b64-mode-btn { padding: 6px 12px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 4px; }
+.b64-mode-btn:first-child { border-radius: 4px 0 0 4px; }
+.b64-mode-btn:last-child { border-radius: 0 4px 4px 0; }
+.b64-mode-btn.active { background: #3498db; color: white; border-color: #3498db; }
+.b64-actions { display: flex; gap: 4px; }
+.b64-action-btn { padding: 5px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 4px; }
+.b64-action-btn:hover { background: var(--table-hover); }
+.b64-panes { display: flex; flex-direction: column; flex: 1; gap: 8px; min-height: 0; }
+.b64-pane { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.b64-pane label { font-size: 11px; color: var(--text-secondary); font-weight: 500; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+.b64-pane label .b64-byte-count { font-weight: 400; color: var(--text-muted); }
+.b64-pane textarea { flex: 1; resize: none; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 12px; background: var(--input-bg); color: var(--text-primary); min-height: 60px; }
+.b64-pane textarea:focus { outline: none; border-color: #3498db; }
+.b64-status { font-size: 11px; color: var(--text-muted); min-height: 16px; flex-shrink: 0; }
+.b64-status.error { color: #e74c3c; }
+.b64-status.success { color: #27ae60; }
+
 /* Epoch Converter Widget Styles */
 .tool-content:has(.epoch-widget) { display: flex; flex-direction: column; padding: 0; }
 .epoch-widget { padding: 12px; font-size: 12px; display: flex; flex-direction: column; gap: 14px; width: 100%; box-sizing: border-box; }
@@ -267,6 +289,54 @@ body.dark-mode .seq-dashed-number-bg { fill: #8e44ad; }
 .epoch-ref-item { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
 .epoch-ref-item span { color: var(--text-secondary); }
 .epoch-ref-item code { font-family: monospace; color: var(--text-primary); background: var(--bg-secondary); padding: 2px 6px; border-radius: 3px; }
+
+/* Lorem Ipsum Generator Widget Styles */
+.tool-content:has(.lorem-widget) { display: flex; flex-direction: column; padding: 0; }
+.lorem-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; gap: 8px; }
+.lorem-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
+.lorem-toolbar label { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+.lorem-toolbar select, .lorem-toolbar input[type="number"] { padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); }
+.lorem-toolbar input[type="number"] { width: 60px; font-family: monospace; }
+.lorem-options { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
+.lorem-option { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); }
+.lorem-option input[type="checkbox"] { margin: 0; }
+.lorem-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.lorem-action-btn { padding: 5px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 4px; }
+.lorem-action-btn:hover { background: var(--table-hover); }
+.lorem-action-btn.primary { background: #3498db; color: white; border-color: #3498db; }
+.lorem-action-btn.primary:hover { background: #2980b9; }
+.lorem-output { flex: 1; resize: none; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; line-height: 1.6; background: var(--input-bg); color: var(--text-primary); min-height: 80px; }
+.lorem-output:focus { outline: none; border-color: #3498db; }
+.lorem-stats { font-size: 11px; color: var(--text-muted); flex-shrink: 0; display: flex; gap: 12px; }
+
+/* ASCII / HTML Codes Widget Styles */
+.tool-content:has(.ascii-widget) { display: flex; flex-direction: column; padding: 0; }
+.ascii-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; gap: 8px; }
+.ascii-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; flex-shrink: 0; }
+.ascii-search { flex: 1; min-width: 120px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); font-family: monospace; }
+.ascii-search:focus { outline: none; border-color: #3498db; }
+.ascii-range-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.ascii-range-btn { padding: 4px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 10px; border-radius: 4px; white-space: nowrap; }
+.ascii-range-btn.active { background: #3498db; color: white; border-color: #3498db; }
+.ascii-range-btn:hover:not(.active) { background: var(--table-hover); }
+.ascii-table-wrap { flex: 1; overflow: auto; min-height: 0; border: 1px solid var(--border-color); border-radius: 4px; }
+.ascii-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.ascii-table th { position: sticky; top: 0; background: var(--bg-tool-header); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 0.5px; z-index: 1; }
+.ascii-table td { padding: 4px 8px; border-bottom: 1px solid var(--border-light); color: var(--text-primary); font-family: monospace; white-space: nowrap; }
+.ascii-table tr:hover td { background: var(--table-hover); }
+.ascii-table .ascii-char-cell { font-size: 14px; text-align: center; min-width: 32px; }
+.ascii-table .ascii-desc-cell { color: var(--text-secondary); font-family: system-ui, -apple-system, sans-serif; }
+.ascii-table .ascii-html-cell { color: #e67e22; }
+.ascii-table tr.ascii-control td { opacity: 0.7; }
+.ascii-table tr.ascii-highlight td { background: rgba(52,152,219,0.12); }
+.ascii-copy-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 6px 16px; border-radius: 4px; font-size: 12px; z-index: 9999; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+.ascii-copy-toast.show { opacity: 1; }
+.ascii-lookup { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; }
+.ascii-lookup label { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+.ascii-lookup-input { width: 100px; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); font-family: monospace; }
+.ascii-lookup-input:focus { outline: none; border-color: #3498db; }
+.ascii-lookup-result { font-family: monospace; font-size: 11px; color: var(--text-primary); padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; border: 1px solid var(--border-color); min-width: 60px; }
+.ascii-count { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 `;
     document.head.appendChild(style);
 })();
@@ -279,7 +349,7 @@ PluginRegistry.registerToolbox({
     icon: '🛠️',
     color: '#3498db',
     version: '1.0.0',
-    tools: ['jwt-decoder', 'code-formatter', 'regex-tester', 'cron-expression', 'epoch-converter', 'diff-viewer', 'sequence-diagram'],
+    tools: ['jwt-decoder', 'code-formatter', 'regex-tester', 'cron-expression', 'epoch-converter', 'base64-encoder', 'lorem-ipsum', 'ascii-codes', 'diff-viewer', 'sequence-diagram'],
     source: 'external'
 });
 
@@ -497,6 +567,45 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
+// Base64 Encoder/Decoder
+PluginRegistry.registerTool({
+    id: 'base64-encoder',
+    name: 'Base64 Encoder/Decoder',
+    description: 'Encode and decode Base64 strings',
+    icon: '🔣',
+    version: '1.0.0',
+    toolbox: 'developer-tools',
+    tags: ['base64', 'encode', 'decode', 'binary'],
+    title: 'Base64 Encoder/Decoder',
+    content: `<div class="b64-widget">
+<div class="b64-toolbar">
+<div class="b64-mode-toggle">
+<button class="b64-mode-btn active" onclick="b64SetMode(this, 'encode')">Encode</button>
+<button class="b64-mode-btn" onclick="b64SetMode(this, 'decode')">Decode</button>
+</div>
+<div class="b64-actions">
+<button class="b64-action-btn" onclick="b64Swap(this)">⇅ Swap</button>
+<button class="b64-action-btn" onclick="b64Copy(this)">Copy Output</button>
+<button class="b64-action-btn" onclick="b64Clear(this)">Clear</button>
+</div>
+</div>
+<div class="b64-panes">
+<div class="b64-pane">
+<label><span class="b64-input-label">Text Input</span><span class="b64-byte-count b64-input-count"></span></label>
+<textarea class="b64-input" placeholder="Enter text to encode..." oninput="b64OnInput(this)"></textarea>
+</div>
+<div class="b64-pane">
+<label><span class="b64-output-label">Base64 Output</span><span class="b64-byte-count b64-output-count"></span></label>
+<textarea class="b64-output" placeholder="Encoded result will appear here..." readonly></textarea>
+</div>
+</div>
+<div class="b64-status"></div>
+</div>`,
+    contentType: 'html',
+    onInit: 'b64Init',
+    source: 'external'
+});
+
 // Diff Viewer
 PluginRegistry.registerTool({
     id: 'diff-viewer',
@@ -540,6 +649,96 @@ Hide Whitespace
 </div>`,
     contentType: 'html',
     onInit: 'diffInit',
+    source: 'external'
+});
+
+// Lorem Ipsum Generator
+PluginRegistry.registerTool({
+    id: 'lorem-ipsum',
+    name: 'Lorem Ipsum Generator',
+    description: 'Generate placeholder text in various formats',
+    icon: '📄',
+    version: '1.0.0',
+    toolbox: 'developer-tools',
+    tags: ['lorem', 'ipsum', 'placeholder', 'text', 'dummy'],
+    title: 'Lorem Ipsum Generator',
+    content: `<div class="lorem-widget">
+<div class="lorem-toolbar">
+<label>Generate</label>
+<input type="number" class="lorem-count-input" value="3" min="1" max="100">
+<select class="lorem-type-select" onchange="loremGenerate(this)">
+<option value="paragraphs">Paragraphs</option>
+<option value="sentences">Sentences</option>
+<option value="words">Words</option>
+<option value="list">List Items</option>
+</select>
+<button class="lorem-action-btn primary" onclick="loremGenerate(this)">Generate</button>
+</div>
+<div class="lorem-options">
+<label class="lorem-option"><input type="checkbox" class="lorem-start-lorem" checked onchange="loremGenerate(this)"> Start with "Lorem ipsum..."</label>
+<label class="lorem-option"><input type="checkbox" class="lorem-html-tags" onchange="loremGenerate(this)"> HTML tags</label>
+</div>
+<div class="lorem-actions">
+<button class="lorem-action-btn" onclick="loremCopy(this)">Copy</button>
+<button class="lorem-action-btn" onclick="loremClear(this)">Clear</button>
+</div>
+<textarea class="lorem-output" readonly></textarea>
+<div class="lorem-stats"></div>
+</div>`,
+    contentType: 'html',
+    onInit: 'loremInit',
+    source: 'external'
+});
+
+// ASCII & HTML Codes
+PluginRegistry.registerTool({
+    id: 'ascii-codes',
+    name: 'ASCII & HTML Codes',
+    description: 'Browse ASCII, Latin, Greek, Cyrillic, symbols, arrows, math operators and more with HTML entities',
+    icon: '🔤',
+    version: '1.0.0',
+    toolbox: 'developer-tools',
+    tags: ['ascii', 'html', 'entity', 'character', 'code', 'unicode', 'hex'],
+    title: 'ASCII & HTML Codes',
+    content: `<div class="ascii-widget">
+<div class="ascii-toolbar">
+<input type="text" class="ascii-search" placeholder="Search char, code, name, or entity..." oninput="asciiFilter(this)">
+</div>
+<div class="ascii-range-btns">
+<button class="ascii-range-btn active" onclick="asciiSetRange(this, 'all')">ASCII (0-127)</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'control')">Control</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'printable')">Printable</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'digits')">Digits</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'symbols')">Symbols</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'latin1')">Latin-1</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'latinext')">Latin Ext</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'greek')">Greek</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'cyrillic')">Cyrillic</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'punctuation')">Punctuation</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'currency')">Currency</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'arrows')">Arrows</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'math')">Math</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'box')">Box Drawing</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'shapes')">Shapes</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'misc')">Misc Symbols</button>
+<button class="ascii-range-btn" onclick="asciiSetRange(this, 'dingbats')">Dingbats</button>
+</div>
+<div class="ascii-lookup">
+<label>Lookup:</label>
+<input type="text" class="ascii-lookup-input" placeholder="Char or code" oninput="asciiLookup(this)" maxlength="10">
+<span class="ascii-lookup-result"></span>
+</div>
+<div class="ascii-table-wrap">
+<table class="ascii-table">
+<thead><tr><th>Dec</th><th>Hex</th><th>Unicode</th><th>Char</th><th>HTML</th><th>Description</th></tr></thead>
+<tbody class="ascii-table-body"></tbody>
+</table>
+</div>
+<div class="ascii-count"></div>
+<div class="ascii-copy-toast">Copied!</div>
+</div>`,
+    contentType: 'html',
+    onInit: 'asciiInit',
     source: 'external'
 });
 
@@ -592,7 +791,7 @@ Charlie --> Bob: Reply" oninput="seqOnInput(this)"></textarea>
     source: 'external'
 });
 
-console.log('Developer Tools plugin loaded: 7 tools registered');
+console.log('Developer Tools plugin loaded: 10 tools registered');
 
 // ==================== Diff Viewer Functions ====================
 function diffGetToolId(element) {
@@ -1383,6 +1582,530 @@ function regexEscapeHtml(str) { return str ? str.replace(/&/g, '&amp;').replace(
 function regexCopy(btn) { const widget = btn.closest('.regex-widget'), pattern = widget.querySelector('.regex-pattern').value, flags = regexGetFlags(widget); if (!pattern) return; navigator.clipboard.writeText(`/${pattern}/${flags}`).then(() => { const orig = btn.textContent; btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = orig, 1500); }); }
 function regexClear(btn) { const widget = btn.closest('.regex-widget'); widget.querySelector('.regex-pattern').value = ''; widget.querySelector('.regex-test-string').value = ''; regexOnInput(widget.querySelector('.regex-pattern')); }
 
+// ==================== Base64 Encoder/Decoder Functions ====================
+function b64GetToolId(element) {
+    const tool = element.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function b64GetData(toolId) {
+    const customizations = loadToolCustomizations();
+    const custom = customizations[toolId] || {};
+    return custom.b64Data || { input: '', mode: 'encode' };
+}
+
+function b64SaveData(toolId, data) {
+    const customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].b64Data = data;
+    saveToolCustomizations(customizations);
+}
+
+function b64Init() {
+    document.querySelectorAll('.b64-widget').forEach(widget => {
+        const toolId = b64GetToolId(widget);
+        if (!toolId) return;
+        const data = b64GetData(toolId);
+        widget.querySelectorAll('.b64-mode-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase() === data.mode);
+        });
+        const inputArea = widget.querySelector('.b64-input');
+        inputArea.value = data.input;
+        b64UpdateLabels(widget, data.mode);
+        b64Process(widget, toolId);
+    });
+}
+
+function b64SetMode(btn, mode) {
+    const widget = btn.closest('.b64-widget');
+    const toolId = b64GetToolId(widget);
+    if (!toolId) return;
+    const data = b64GetData(toolId);
+    data.mode = mode;
+    data.input = '';
+    b64SaveData(toolId, data);
+    widget.querySelectorAll('.b64-mode-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === mode));
+    widget.querySelector('.b64-input').value = '';
+    widget.querySelector('.b64-output').value = '';
+    widget.querySelector('.b64-status').textContent = '';
+    widget.querySelector('.b64-status').className = 'b64-status';
+    widget.querySelector('.b64-input-count').textContent = '';
+    widget.querySelector('.b64-output-count').textContent = '';
+    b64UpdateLabels(widget, mode);
+}
+
+function b64UpdateLabels(widget, mode) {
+    const inputLabel = widget.querySelector('.b64-input-label');
+    const outputLabel = widget.querySelector('.b64-output-label');
+    const inputArea = widget.querySelector('.b64-input');
+    const outputArea = widget.querySelector('.b64-output');
+    if (mode === 'encode') {
+        inputLabel.textContent = 'Text Input';
+        outputLabel.textContent = 'Base64 Output';
+        inputArea.placeholder = 'Enter text to encode...';
+        outputArea.placeholder = 'Encoded result will appear here...';
+    } else {
+        inputLabel.textContent = 'Base64 Input';
+        outputLabel.textContent = 'Decoded Output';
+        inputArea.placeholder = 'Enter Base64 string to decode...';
+        outputArea.placeholder = 'Decoded result will appear here...';
+    }
+}
+
+function b64OnInput(textarea) {
+    const widget = textarea.closest('.b64-widget');
+    const toolId = b64GetToolId(widget);
+    if (!toolId) return;
+    const data = b64GetData(toolId);
+    data.input = textarea.value;
+    b64SaveData(toolId, data);
+    b64Process(widget, toolId);
+}
+
+function b64Process(widget, toolId) {
+    const data = b64GetData(toolId);
+    const output = widget.querySelector('.b64-output');
+    const status = widget.querySelector('.b64-status');
+    const inputCount = widget.querySelector('.b64-input-count');
+    const outputCount = widget.querySelector('.b64-output-count');
+    if (!data.input) {
+        output.value = '';
+        status.textContent = '';
+        status.className = 'b64-status';
+        inputCount.textContent = '';
+        outputCount.textContent = '';
+        return;
+    }
+    try {
+        let result;
+        if (data.mode === 'encode') {
+            result = btoa(unescape(encodeURIComponent(data.input)));
+            inputCount.textContent = new Blob([data.input]).size + ' bytes';
+            outputCount.textContent = result.length + ' chars';
+            status.textContent = 'Encoded successfully';
+            status.className = 'b64-status success';
+        } else {
+            const cleaned = data.input.replace(/\s/g, '');
+            result = decodeURIComponent(escape(atob(cleaned)));
+            inputCount.textContent = cleaned.length + ' chars';
+            outputCount.textContent = new Blob([result]).size + ' bytes';
+            status.textContent = 'Decoded successfully';
+            status.className = 'b64-status success';
+        }
+        output.value = result;
+    } catch (e) {
+        output.value = '';
+        outputCount.textContent = '';
+        status.textContent = data.mode === 'encode' ? 'Encoding error: ' + e.message : 'Invalid Base64 string';
+        status.className = 'b64-status error';
+    }
+}
+
+function b64Swap(btn) {
+    const widget = btn.closest('.b64-widget');
+    const toolId = b64GetToolId(widget);
+    if (!toolId) return;
+    const data = b64GetData(toolId);
+    const outputVal = widget.querySelector('.b64-output').value;
+    if (!outputVal) return;
+    data.mode = data.mode === 'encode' ? 'decode' : 'encode';
+    data.input = outputVal;
+    b64SaveData(toolId, data);
+    widget.querySelectorAll('.b64-mode-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === data.mode));
+    widget.querySelector('.b64-input').value = data.input;
+    b64UpdateLabels(widget, data.mode);
+    b64Process(widget, toolId);
+}
+
+function b64Copy(btn) {
+    const widget = btn.closest('.b64-widget');
+    const output = widget.querySelector('.b64-output').value;
+    if (!output) return;
+    navigator.clipboard.writeText(output).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 1500);
+    });
+}
+
+function b64Clear(btn) {
+    const widget = btn.closest('.b64-widget');
+    const toolId = b64GetToolId(widget);
+    if (!toolId) return;
+    const data = b64GetData(toolId);
+    data.input = '';
+    b64SaveData(toolId, data);
+    widget.querySelector('.b64-input').value = '';
+    widget.querySelector('.b64-output').value = '';
+    widget.querySelector('.b64-status').textContent = '';
+    widget.querySelector('.b64-status').className = 'b64-status';
+    widget.querySelector('.b64-input-count').textContent = '';
+    widget.querySelector('.b64-output-count').textContent = '';
+}
+
+// ==================== Lorem Ipsum Generator Functions ====================
+var LOREM_WORDS = [
+    'lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do',
+    'eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim',
+    'ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi',
+    'aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit',
+    'voluptate','velit','esse','cillum','fugiat','nulla','pariatur','excepteur','sint',
+    'occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt',
+    'mollit','anim','id','est','laborum','ac','accumsan','aliquet','ante','aptent',
+    'arcu','at','auctor','augue','bibendum','blandit','class','convallis','cras',
+    'cubilia','curabitur','cursus','dapibus','diam','dictum','dignissim','donec',
+    'egestas','eleifend','elementum','euismod','facilisi','fames','faucibus',
+    'fermentum','feugiat','fringilla','fusce','gravida','habitant','habitasse','hac',
+    'hendrerit','himenaeos','iaculis','imperdiet','integer','interdum','justo','lacinia',
+    'lacus','laoreet','lectus','leo','ligula','litora','lobortis','luctus','maecenas',
+    'massa','mattis','mauris','metus','mi','morbi','nam','nec','neque','nibh','nisl',
+    'nunc','odio','orci','ornare','pellentesque','pharetra','phasellus','placerat',
+    'platea','porta','porttitor','posuere','praesent','pretium','primis','proin',
+    'pulvinar','purus','quam','quisque','rhoncus','ridiculus','risus','rutrum',
+    'sagittis','sapien','scelerisque','semper','senectus','sociosqu','sodales',
+    'sollicitudin','suscipit','suspendisse','taciti','tellus','tincidunt','torquent',
+    'tortor','tristique','turpis','ultrices','ultricies','urna','varius','vehicula',
+    'vel','vestibulum','vitae','vivamus','viverra','volutpat','vulputate'
+];
+
+var LOREM_FIRST_SENTENCE = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+
+function loremGetToolId(element) {
+    const tool = element.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function loremPickWord() {
+    return LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)];
+}
+
+function loremSentence(minWords, maxWords) {
+    const len = minWords + Math.floor(Math.random() * (maxWords - minWords + 1));
+    const words = [];
+    for (let i = 0; i < len; i++) words.push(loremPickWord());
+    words[0] = words[0][0].toUpperCase() + words[0].slice(1);
+    // Insert a comma or two in longer sentences
+    if (len > 8) {
+        const pos = 3 + Math.floor(Math.random() * (len - 6));
+        words[pos] = words[pos] + ',';
+    }
+    return words.join(' ') + '.';
+}
+
+function loremParagraph(minSentences, maxSentences) {
+    const count = minSentences + Math.floor(Math.random() * (maxSentences - minSentences + 1));
+    const sentences = [];
+    for (let i = 0; i < count; i++) sentences.push(loremSentence(6, 16));
+    return sentences.join(' ');
+}
+
+function loremInit() {
+    document.querySelectorAll('.lorem-widget').forEach(widget => {
+        loremGenerate(widget.querySelector('.lorem-type-select'));
+    });
+}
+
+function loremGenerate(element) {
+    const widget = element.closest('.lorem-widget');
+    if (!widget) return;
+    const count = parseInt(widget.querySelector('.lorem-count-input').value) || 3;
+    const type = widget.querySelector('.lorem-type-select').value;
+    const startWithLorem = widget.querySelector('.lorem-start-lorem').checked;
+    const htmlTags = widget.querySelector('.lorem-html-tags').checked;
+    const output = widget.querySelector('.lorem-output');
+    const stats = widget.querySelector('.lorem-stats');
+
+    let text = '';
+    const clamped = Math.max(1, Math.min(100, count));
+
+    if (type === 'paragraphs') {
+        const paras = [];
+        for (let i = 0; i < clamped; i++) {
+            let p = loremParagraph(4, 7);
+            if (i === 0 && startWithLorem) p = LOREM_FIRST_SENTENCE + ' ' + p;
+            paras.push(htmlTags ? '<p>' + p + '</p>' : p);
+        }
+        text = paras.join(htmlTags ? '\n' : '\n\n');
+    } else if (type === 'sentences') {
+        const sentences = [];
+        for (let i = 0; i < clamped; i++) {
+            let s = loremSentence(6, 16);
+            if (i === 0 && startWithLorem) s = LOREM_FIRST_SENTENCE;
+            sentences.push(s);
+        }
+        text = sentences.join(' ');
+    } else if (type === 'words') {
+        const words = [];
+        if (startWithLorem) {
+            const starter = LOREM_FIRST_SENTENCE.replace('.', '').split(' ');
+            for (let i = 0; i < Math.min(clamped, starter.length); i++) words.push(starter[i]);
+        }
+        while (words.length < clamped) words.push(loremPickWord());
+        text = words.slice(0, clamped).join(' ');
+    } else if (type === 'list') {
+        const items = [];
+        for (let i = 0; i < clamped; i++) {
+            let s = loremSentence(4, 10);
+            if (i === 0 && startWithLorem) s = LOREM_FIRST_SENTENCE;
+            items.push(htmlTags ? '<li>' + s + '</li>' : '• ' + s);
+        }
+        text = htmlTags ? '<ul>\n' + items.join('\n') + '\n</ul>' : items.join('\n');
+    }
+
+    if (output) output.value = text;
+    if (stats) {
+        const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+        const charCount = text.length;
+        stats.textContent = wordCount + ' words · ' + charCount + ' characters';
+    }
+}
+
+function loremCopy(btn) {
+    const widget = btn.closest('.lorem-widget');
+    const text = widget.querySelector('.lorem-output').value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 1500);
+    });
+}
+
+function loremClear(btn) {
+    const widget = btn.closest('.lorem-widget');
+    widget.querySelector('.lorem-output').value = '';
+    widget.querySelector('.lorem-stats').textContent = '';
+}
+
+// ==================== ASCII & HTML Codes Functions ====================
+var ASCII_CONTROL_NAMES = [
+    'NUL','SOH','STX','ETX','EOT','ENQ','ACK','BEL','BS','HT','LF','VT','FF','CR','SO','SI',
+    'DLE','DC1','DC2','DC3','DC4','NAK','SYN','ETB','CAN','EM','SUB','ESC','FS','GS','RS','US'
+];
+
+var ASCII_CONTROL_DESC = [
+    'Null','Start of Heading','Start of Text','End of Text','End of Transmission','Enquiry',
+    'Acknowledge','Bell','Backspace','Horizontal Tab','Line Feed','Vertical Tab','Form Feed',
+    'Carriage Return','Shift Out','Shift In','Data Link Escape','Device Control 1','Device Control 2',
+    'Device Control 3','Device Control 4','Negative Acknowledge','Synchronous Idle',
+    'End of Transmission Block','Cancel','End of Medium','Substitute','Escape',
+    'File Separator','Group Separator','Record Separator','Unit Separator'
+];
+
+var ASCII_HTML_ENTITIES = {
+    32:'&nbsp;',34:'&quot;',38:'&amp;',39:'&apos;',60:'&lt;',62:'&gt;',
+    160:'&nbsp;',161:'&iexcl;',162:'&cent;',163:'&pound;',164:'&curren;',165:'&yen;',
+    166:'&brvbar;',167:'&sect;',168:'&uml;',169:'&copy;',170:'&ordf;',171:'&laquo;',
+    172:'&not;',173:'&shy;',174:'&reg;',175:'&macr;',176:'&deg;',177:'&plusmn;',
+    178:'&sup2;',179:'&sup3;',180:'&acute;',181:'&micro;',182:'&para;',183:'&middot;',
+    184:'&cedil;',185:'&sup1;',186:'&ordm;',187:'&raquo;',188:'&frac14;',189:'&frac12;',
+    190:'&frac34;',191:'&iquest;',192:'&Agrave;',193:'&Aacute;',194:'&Acirc;',195:'&Atilde;',
+    196:'&Auml;',197:'&Aring;',198:'&AElig;',199:'&Ccedil;',200:'&Egrave;',201:'&Eacute;',
+    202:'&Ecirc;',203:'&Euml;',204:'&Igrave;',205:'&Iacute;',206:'&Icirc;',207:'&Iuml;',
+    208:'&ETH;',209:'&Ntilde;',210:'&Ograve;',211:'&Oacute;',212:'&Ocirc;',213:'&Otilde;',
+    214:'&Ouml;',215:'&times;',216:'&Oslash;',217:'&Ugrave;',218:'&Uacute;',219:'&Ucirc;',
+    220:'&Uuml;',221:'&Yacute;',222:'&THORN;',223:'&szlig;',224:'&agrave;',225:'&aacute;',
+    226:'&acirc;',227:'&atilde;',228:'&auml;',229:'&aring;',230:'&aelig;',231:'&ccedil;',
+    232:'&egrave;',233:'&eacute;',234:'&ecirc;',235:'&euml;',236:'&igrave;',237:'&iacute;',
+    238:'&icirc;',239:'&iuml;',240:'&eth;',241:'&ntilde;',242:'&ograve;',243:'&oacute;',
+    244:'&ocirc;',245:'&otilde;',246:'&ouml;',247:'&divide;',248:'&oslash;',249:'&ugrave;',
+    250:'&uacute;',251:'&ucirc;',252:'&uuml;',253:'&yacute;',254:'&thorn;',255:'&yuml;',
+    338:'&OElig;',339:'&oelig;',352:'&Scaron;',353:'&scaron;',376:'&Yuml;',
+    402:'&fnof;',
+    710:'&circ;',732:'&tilde;',
+    913:'&Alpha;',914:'&Beta;',915:'&Gamma;',916:'&Delta;',917:'&Epsilon;',918:'&Zeta;',
+    919:'&Eta;',920:'&Theta;',921:'&Iota;',922:'&Kappa;',923:'&Lambda;',924:'&Mu;',
+    925:'&Nu;',926:'&Xi;',927:'&Omicron;',928:'&Pi;',929:'&Rho;',931:'&Sigma;',
+    932:'&Tau;',933:'&Upsilon;',934:'&Phi;',935:'&Chi;',936:'&Psi;',937:'&Omega;',
+    945:'&alpha;',946:'&beta;',947:'&gamma;',948:'&delta;',949:'&epsilon;',950:'&zeta;',
+    951:'&eta;',952:'&theta;',953:'&iota;',954:'&kappa;',955:'&lambda;',956:'&mu;',
+    957:'&nu;',958:'&xi;',959:'&omicron;',960:'&pi;',961:'&rho;',962:'&sigmaf;',
+    963:'&sigma;',964:'&tau;',965:'&upsilon;',966:'&phi;',967:'&chi;',968:'&psi;',969:'&omega;',
+    977:'&thetasym;',978:'&upsih;',982:'&piv;',
+    8194:'&ensp;',8195:'&emsp;',8201:'&thinsp;',
+    8204:'&zwnj;',8205:'&zwj;',8206:'&lrm;',8207:'&rlm;',
+    8211:'&ndash;',8212:'&mdash;',8216:'&lsquo;',8217:'&rsquo;',8218:'&sbquo;',
+    8220:'&ldquo;',8221:'&rdquo;',8222:'&bdquo;',8224:'&dagger;',8225:'&Dagger;',
+    8226:'&bull;',8230:'&hellip;',8240:'&permil;',8242:'&prime;',8243:'&Prime;',
+    8249:'&lsaquo;',8250:'&rsaquo;',8254:'&oline;',8260:'&frasl;',
+    8364:'&euro;',8465:'&image;',8472:'&weierp;',8476:'&real;',8482:'&trade;',
+    8501:'&alefsym;',
+    8592:'&larr;',8593:'&uarr;',8594:'&rarr;',8595:'&darr;',8596:'&harr;',
+    8629:'&crarr;',8656:'&lArr;',8657:'&uArr;',8658:'&rArr;',8659:'&dArr;',8660:'&hArr;',
+    8704:'&forall;',8706:'&part;',8707:'&exist;',8709:'&empty;',8711:'&nabla;',
+    8712:'&isin;',8713:'&notin;',8715:'&ni;',8719:'&prod;',8721:'&sum;',
+    8722:'&minus;',8727:'&lowast;',8730:'&radic;',8733:'&prop;',8734:'&infin;',
+    8736:'&ang;',8743:'&and;',8744:'&or;',8745:'&cap;',8746:'&cup;',8747:'&int;',
+    8756:'&there4;',8764:'&sim;',8773:'&cong;',8776:'&asymp;',8800:'&ne;',
+    8801:'&equiv;',8804:'&le;',8805:'&ge;',8834:'&sub;',8835:'&sup;',8836:'&nsub;',
+    8838:'&sube;',8839:'&supe;',8853:'&oplus;',8855:'&otimes;',8869:'&perp;',8901:'&sdot;',
+    8968:'&lceil;',8969:'&rceil;',8970:'&lfloor;',8971:'&rfloor;',
+    9674:'&loz;',9824:'&spades;',9827:'&clubs;',9829:'&hearts;',9830:'&diams;'
+};
+
+var ASCII_RANGES = {
+    all:         [0, 127],
+    control:     [0, 31],
+    printable:   [32, 126],
+    digits:      [48, 57],
+    symbols:     null, // custom filter
+    latin1:      [128, 255],
+    latinext:    [256, 591],
+    greek:       [880, 1023],
+    cyrillic:    [1024, 1279],
+    punctuation: [8192, 8303],
+    currency:    [8352, 8399],
+    arrows:      [8592, 8703],
+    math:        [8704, 8959],
+    box:         [9472, 9599],
+    shapes:      [9632, 9727],
+    misc:        [9728, 9983],
+    dingbats:    [9984, 10175]
+};
+
+function asciiGetCharData(code) {
+    let char, desc, htmlEntity;
+    if (code < 32) {
+        char = ASCII_CONTROL_NAMES[code];
+        desc = ASCII_CONTROL_DESC[code];
+    } else if (code === 32) {
+        char = '␣';
+        desc = 'Space';
+    } else if (code === 127) {
+        char = 'DEL';
+        desc = 'Delete';
+    } else if (code > 127 && code < 160) {
+        char = '·';
+        desc = 'Control character';
+    } else {
+        char = String.fromCodePoint(code);
+        desc = '';
+    }
+    htmlEntity = ASCII_HTML_ENTITIES[code] || '&#' + code + ';';
+    return { code, char, desc, htmlEntity };
+}
+
+function asciiBuildRows(start, end) {
+    const rows = [];
+    for (let i = start; i <= end; i++) rows.push(asciiGetCharData(i));
+    return rows;
+}
+
+function asciiGetToolId(element) {
+    const tool = element.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function asciiInit() {
+    document.querySelectorAll('.ascii-widget').forEach(widget => {
+        widget._asciiRange = 'all';
+        asciiRender(widget);
+    });
+}
+
+function asciiGetRows(range) {
+    if (range === 'symbols') {
+        const rows = [];
+        for (let i = 33; i <= 47; i++) rows.push(asciiGetCharData(i));
+        for (let i = 58; i <= 64; i++) rows.push(asciiGetCharData(i));
+        for (let i = 91; i <= 96; i++) rows.push(asciiGetCharData(i));
+        for (let i = 123; i <= 126; i++) rows.push(asciiGetCharData(i));
+        return rows;
+    }
+    const bounds = ASCII_RANGES[range] || ASCII_RANGES.all;
+    return asciiBuildRows(bounds[0], bounds[1]);
+}
+
+function asciiSearchRows(rows, query) {
+    if (!query) return rows;
+    const q = query.toLowerCase();
+    return rows.filter(r => {
+        return r.code.toString() === q ||
+            r.code.toString(16) === q ||
+            r.char.toLowerCase().includes(q) ||
+            r.desc.toLowerCase().includes(q) ||
+            r.htmlEntity.toLowerCase().includes(q) ||
+            ('0x' + r.code.toString(16)) === q ||
+            ('u+' + r.code.toString(16).padStart(4,'0')) === q;
+    });
+}
+
+function asciiRender(widget) {
+    const range = widget._asciiRange || 'all';
+    const query = (widget.querySelector('.ascii-search') || {}).value || '';
+    const allRows = asciiGetRows(range);
+    const filtered = asciiSearchRows(allRows, query);
+    const tbody = widget.querySelector('.ascii-table-body');
+    const count = widget.querySelector('.ascii-count');
+    const hexPad = range === 'all' || range === 'control' || range === 'printable' || range === 'digits' || range === 'symbols' || range === 'latin1' ? 2 : 4;
+
+    let html = '';
+    filtered.forEach(r => {
+        const isControl = r.code < 32 || r.code === 127 || (r.code > 127 && r.code < 160);
+        const isPrintable = !isControl && r.code >= 32;
+        const entityEsc = r.htmlEntity.replace(/&/g, '&amp;');
+        html += '<tr class="' + (isControl ? 'ascii-control' : '') + '" onclick="asciiCopyRow(this,' + r.code + ')" style="cursor:pointer;" title="Click to copy">' +
+            '<td>' + r.code + '</td>' +
+            '<td>0x' + r.code.toString(16).toUpperCase().padStart(hexPad, '0') + '</td>' +
+            '<td>U+' + r.code.toString(16).toUpperCase().padStart(4, '0') + '</td>' +
+            '<td class="ascii-char-cell">' + (isPrintable ? '&#' + r.code + ';' : r.char) + '</td>' +
+            '<td class="ascii-html-cell">' + entityEsc + '</td>' +
+            '<td class="ascii-desc-cell">' + r.desc + '</td>' +
+            '</tr>';
+    });
+    if (tbody) tbody.innerHTML = html;
+    if (count) count.textContent = filtered.length + ' characters';
+}
+
+function asciiFilter(input) {
+    const widget = input.closest('.ascii-widget');
+    asciiRender(widget);
+}
+
+function asciiSetRange(btn, range) {
+    const widget = btn.closest('.ascii-widget');
+    widget._asciiRange = range;
+    widget.querySelectorAll('.ascii-range-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    asciiRender(widget);
+}
+
+function asciiCopyRow(tr, code) {
+    const isPrintable = code >= 32 && !(code > 127 && code < 160) && code !== 127;
+    const text = isPrintable ? String.fromCodePoint(code) : asciiGetCharData(code).htmlEntity;
+    navigator.clipboard.writeText(text).then(() => {
+        const widget = tr.closest('.ascii-widget');
+        const toast = widget.querySelector('.ascii-copy-toast');
+        toast.textContent = isPrintable ? 'Copied "' + String.fromCodePoint(code) + '"' : 'Copied ' + asciiGetCharData(code).htmlEntity;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1200);
+    });
+}
+
+function asciiLookup(input) {
+    const widget = input.closest('.ascii-widget');
+    const result = widget.querySelector('.ascii-lookup-result');
+    const val = input.value.trim();
+    if (!val) { result.textContent = ''; return; }
+
+    let code = -1;
+    if (/^0x[0-9a-f]+$/i.test(val)) code = parseInt(val, 16);
+    else if (/^u\+[0-9a-f]+$/i.test(val)) code = parseInt(val.slice(2), 16);
+    else if (/^0[0-7]+$/.test(val)) code = parseInt(val, 8);
+    else if (/^\d+$/.test(val)) code = parseInt(val, 10);
+    else if ([...val].length === 1) code = val.codePointAt(0);
+
+    if (code >= 0 && code <= 0x10FFFF) {
+        const d = asciiGetCharData(code);
+        const hex = code.toString(16).toUpperCase().padStart(4,'0');
+        const isPrintable = code >= 32 && !(code > 127 && code < 160) && code !== 127;
+        const display = isPrintable ? '"' + String.fromCodePoint(code) + '"' : d.char;
+        result.textContent = display + ' \u2192 Dec:' + code + ' Hex:0x' + hex + ' U+' + hex + ' ' + d.htmlEntity;
+    } else {
+        result.textContent = 'Not found';
+    }
+}
+
 // Inject JavaScript functions into DOM for HTML export
 // The injected script only defines things if they don't already exist (for exported HTML)
 (function injectScriptsForExport() {
@@ -1407,13 +2130,25 @@ function regexClear(btn) { const widget = btn.closest('.regex-widget'); widget.q
         cronParseExpression, cronParseField, cronDescribeField, cronBuildExplanation,
         cronGetNextRuns, cronFormatDate, cronRelativeTime,
         regexGetToolId, regexGetData, regexSaveData, regexInit, regexSetupResizer, regexOnInput,
-        regexGetFlags, regexExecute, regexEscapeHtml, regexCopy, regexClear
+        regexGetFlags, regexExecute, regexEscapeHtml, regexCopy, regexClear,
+        b64GetToolId, b64GetData, b64SaveData, b64Init, b64SetMode, b64UpdateLabels,
+        b64OnInput, b64Process, b64Swap, b64Copy, b64Clear,
+        loremGetToolId, loremPickWord, loremSentence, loremParagraph,
+        loremInit, loremGenerate, loremCopy, loremClear,
+        asciiGetCharData, asciiBuildRows, asciiGetToolId, asciiInit,
+        asciiGetRows, asciiSearchRows, asciiRender, asciiFilter, asciiSetRange, asciiCopyRow, asciiLookup
     ];
 
     // Wrap in IIFE that checks if already defined (plugin loaded) vs needs defining (exported HTML)
     const code = '(function() {\n' +
         'if (typeof diffGetToolId !== "undefined") return;\n' +
         'var epochIntervalId = null;\n' +
+        'window.LOREM_WORDS = ' + JSON.stringify(LOREM_WORDS) + ';\n' +
+        'window.LOREM_FIRST_SENTENCE = ' + JSON.stringify(LOREM_FIRST_SENTENCE) + ';\n' +
+        'window.ASCII_CONTROL_NAMES = ' + JSON.stringify(ASCII_CONTROL_NAMES) + ';\n' +
+        'window.ASCII_CONTROL_DESC = ' + JSON.stringify(ASCII_CONTROL_DESC) + ';\n' +
+        'window.ASCII_HTML_ENTITIES = ' + JSON.stringify(ASCII_HTML_ENTITIES) + ';\n' +
+        'window.ASCII_RANGES = ' + JSON.stringify(ASCII_RANGES) + ';\n' +
         functionsToExport.map(fn => 'window.' + fn.name + ' = ' + fn.toString()).join(';\n') + ';\n' +
         '})();';
     const encoded = btoa(unescape(encodeURIComponent(code)));

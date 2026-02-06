@@ -1,0 +1,87 @@
+<svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Board: deep blue-slate, lit from top-left -->
+    <linearGradient id="board" x1="0" y1="0" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3d4555"/>
+      <stop offset="100%" stop-color="#1e2230"/>
+    </linearGradient>
+    <!-- Inner vignette for recessed depth -->
+    <radialGradient id="vignette" cx="0.45" cy="0.4" r="0.65">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.2"/>
+    </radialGradient>
+    <!-- Peg hole grid -->
+    <pattern id="holes" x="15" y="15" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="8" fill="#14171e"/>
+    </pattern>
+    <!-- Clip to kill half-circles at right/bottom edges -->
+    <clipPath id="hole-clip">
+      <rect x="8" y="8" width="274" height="274" rx="20"/>
+    </clipPath>
+    <!-- Rich amber gradient flowing top-to-bottom across T -->
+    <linearGradient id="amber" x1="145" y1="15" x2="165" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="25%" stop-color="#fcd34d"/>
+      <stop offset="60%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <!-- Warm bloom behind T shape -->
+    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <!-- Per-peg soft glow -->
+    <filter id="glow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Board body -->
+  <rect width="300" height="300" rx="26" fill="url(#board)"/>
+  <!-- Vignette overlay -->
+  <rect width="300" height="300" rx="26" fill="url(#vignette)"/>
+  <!-- Edge highlight -->
+  <rect x="1" y="1" width="298" height="298" rx="25" fill="none" stroke="#4c566a" stroke-width="1.2" opacity="0.35"/>
+
+  <!-- Peg holes (clipped to prevent edge artifacts) -->
+  <g clip-path="url(#hole-clip)">
+    <rect x="5" y="5" width="290" height="290" fill="url(#holes)"/>
+  </g>
+
+  <!-- Warm ambient bloom behind the T -->
+  <g filter="url(#bloom)" opacity="0.18">
+    <rect x="15" y="12" width="260" height="82" rx="10" fill="#fbbf24"/>
+    <rect x="105" y="82" width="80" height="195" rx="10" fill="#f59e0b"/>
+  </g>
+
+  <!-- T-shaped illuminated pegs -->
+  <g fill="url(#amber)" filter="url(#glow)">
+    <!-- Top crossbar: 9 cols x 3 rows -->
+    <circle cx="25" cy="25" r="10"/><circle cx="55" cy="25" r="10"/><circle cx="85" cy="25" r="10"/><circle cx="115" cy="25" r="10"/><circle cx="145" cy="25" r="10"/><circle cx="175" cy="25" r="10"/><circle cx="205" cy="25" r="10"/><circle cx="235" cy="25" r="10"/><circle cx="265" cy="25" r="10"/>
+    <circle cx="25" cy="55" r="10"/><circle cx="55" cy="55" r="10"/><circle cx="85" cy="55" r="10"/><circle cx="115" cy="55" r="10"/><circle cx="145" cy="55" r="10"/><circle cx="175" cy="55" r="10"/><circle cx="205" cy="55" r="10"/><circle cx="235" cy="55" r="10"/><circle cx="265" cy="55" r="10"/>
+    <circle cx="25" cy="85" r="10"/><circle cx="55" cy="85" r="10"/><circle cx="85" cy="85" r="10"/><circle cx="115" cy="85" r="10"/><circle cx="145" cy="85" r="10"/><circle cx="175" cy="85" r="10"/><circle cx="205" cy="85" r="10"/><circle cx="235" cy="85" r="10"/><circle cx="265" cy="85" r="10"/>
+    <!-- Stem: 3 cols x 6 rows -->
+    <circle cx="115" cy="115" r="10"/><circle cx="145" cy="115" r="10"/><circle cx="175" cy="115" r="10"/>
+    <circle cx="115" cy="145" r="10"/><circle cx="145" cy="145" r="10"/><circle cx="175" cy="145" r="10"/>
+    <circle cx="115" cy="175" r="10"/><circle cx="145" cy="175" r="10"/><circle cx="175" cy="175" r="10"/>
+    <circle cx="115" cy="205" r="10"/><circle cx="145" cy="205" r="10"/><circle cx="175" cy="205" r="10"/>
+    <circle cx="115" cy="235" r="10"/><circle cx="145" cy="235" r="10"/><circle cx="175" cy="235" r="10"/>
+    <circle cx="115" cy="265" r="10"/><circle cx="145" cy="265" r="10"/><circle cx="175" cy="265" r="10"/>
+  </g>
+
+  <!-- 3D dome highlights on each peg -->
+  <g fill="#fff" opacity="0.3">
+    <circle cx="22" cy="22" r="4"/><circle cx="52" cy="22" r="4"/><circle cx="82" cy="22" r="4"/><circle cx="112" cy="22" r="4"/><circle cx="142" cy="22" r="4"/><circle cx="172" cy="22" r="4"/><circle cx="202" cy="22" r="4"/><circle cx="232" cy="22" r="4"/><circle cx="262" cy="22" r="4"/>
+    <circle cx="22" cy="52" r="4"/><circle cx="52" cy="52" r="4"/><circle cx="82" cy="52" r="4"/><circle cx="112" cy="52" r="4"/><circle cx="142" cy="52" r="4"/><circle cx="172" cy="52" r="4"/><circle cx="202" cy="52" r="4"/><circle cx="232" cy="52" r="4"/><circle cx="262" cy="52" r="4"/>
+    <circle cx="22" cy="82" r="4"/><circle cx="52" cy="82" r="4"/><circle cx="82" cy="82" r="4"/><circle cx="112" cy="82" r="4"/><circle cx="142" cy="82" r="4"/><circle cx="172" cy="82" r="4"/><circle cx="202" cy="82" r="4"/><circle cx="232" cy="82" r="4"/><circle cx="262" cy="82" r="4"/>
+    <circle cx="112" cy="112" r="4"/><circle cx="142" cy="112" r="4"/><circle cx="172" cy="112" r="4"/>
+    <circle cx="112" cy="142" r="4"/><circle cx="142" cy="142" r="4"/><circle cx="172" cy="142" r="4"/>
+    <circle cx="112" cy="172" r="4"/><circle cx="142" cy="172" r="4"/><circle cx="172" cy="172" r="4"/>
+    <circle cx="112" cy="202" r="4"/><circle cx="142" cy="202" r="4"/><circle cx="172" cy="202" r="4"/>
+    <circle cx="112" cy="232" r="4"/><circle cx="142" cy="232" r="4"/><circle cx="172" cy="232" r="4"/>
+    <circle cx="112" cy="262" r="4"/><circle cx="142" cy="262" r="4"/><circle cx="172" cy="262" r="4"/>
+  </g>
+</svg>
