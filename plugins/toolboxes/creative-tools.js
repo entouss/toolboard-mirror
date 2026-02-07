@@ -67,6 +67,26 @@
 .emote-category-label { grid-column: 1 / -1; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 2px 2px; }
 .emote-status { font-size: 10px; color: var(--text-muted); text-align: center; flex-shrink: 0; min-height: 16px; }
 .emote-status.success { color: var(--success-text, #27ae60); }
+
+/* Drawing Canvas Widget Styles */
+.tool-content:has(.draw-widget) { display: flex; flex-direction: column; }
+.draw-widget { padding: 0; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; }
+.draw-toolbar { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; flex-wrap: wrap; }
+.draw-swatch { width: 22px; height: 22px; border-radius: 4px; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; box-sizing: border-box; }
+.draw-swatch:hover { border-color: var(--text-muted); }
+.draw-swatch.active { border-color: #3498db; box-shadow: 0 0 0 1px #3498db; }
+.draw-toolbar input[type="color"] { width: 22px; height: 22px; border: 1px solid var(--border-color); border-radius: 4px; padding: 0; cursor: pointer; background: none; flex-shrink: 0; }
+.draw-toolbar input[type="range"] { width: 60px; flex-shrink: 0; }
+.draw-toolbar .draw-size-label { font-size: 10px; color: var(--text-secondary); min-width: 20px; text-align: center; }
+.draw-toolbar button { padding: 3px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; flex-shrink: 0; }
+.draw-toolbar button:hover { background: var(--table-hover); }
+.draw-toolbar button.active { background: #3498db; color: white; border-color: #3498db; }
+.draw-canvas-wrap { flex: 1; position: relative; min-height: 0; overflow: hidden; background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%), linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e0e0e0 75%), linear-gradient(-45deg, transparent 75%, #e0e0e0 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0; }
+.draw-canvas { position: absolute; top: 0; left: 0; cursor: crosshair; touch-action: none; }
+.draw-actions { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-top: 1px solid var(--border-color); flex-shrink: 0; }
+.draw-actions button { padding: 4px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; }
+.draw-actions button:hover { background: var(--table-hover); }
+.draw-actions .draw-status { flex: 1; text-align: right; font-size: 10px; color: var(--text-muted); }
 `;
     document.head.appendChild(style);
 })();
@@ -655,6 +675,276 @@ function emoteCopy(widget, cell, text) {
 }
 
 // =============================================
+// DRAWING CANVAS
+// =============================================
+
+const _drawState = new WeakMap();
+
+function drawGetState(widget) {
+    if (!_drawState.has(widget)) {
+        _drawState.set(widget, {
+            color: '#000000',
+            size: 4,
+            eraser: false,
+            isDrawing: false,
+            lastX: 0,
+            lastY: 0,
+            undoStack: [],
+            maxUndo: 30
+        });
+    }
+    return _drawState.get(widget);
+}
+
+function drawInit() {
+    document.querySelectorAll('.draw-widget').forEach(widget => {
+        if (widget.dataset.inited) return;
+        widget.dataset.inited = '1';
+        const st = drawGetState(widget);
+        const canvas = widget.querySelector('.draw-canvas');
+        const wrap = widget.querySelector('.draw-canvas-wrap');
+        const ctx = canvas.getContext('2d');
+
+        // Size canvas to wrapper
+        const rect = wrap.getBoundingClientRect();
+        canvas.width = Math.max(rect.width, 1);
+        canvas.height = Math.max(rect.height, 1);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Set initial active swatch
+        const firstSwatch = widget.querySelector('.draw-swatch');
+        if (firstSwatch) firstSwatch.classList.add('active');
+
+        // Mouse events
+        canvas.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            drawBeginStroke(widget, e);
+            const onMove = function(ev) { ev.preventDefault(); drawMoveStroke(widget, ev); };
+            const onUp = function() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                drawEndStroke(widget);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+
+        // Touch events
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            drawBeginStroke(widget, touch);
+        }, { passive: false });
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            drawMoveStroke(widget, touch);
+        }, { passive: false });
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            drawEndStroke(widget);
+        }, { passive: false });
+
+        // ResizeObserver
+        let resizeTimer = null;
+        const observer = new ResizeObserver(function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() { drawResizeCanvas(widget); }, 50);
+        });
+        observer.observe(wrap);
+
+        // Update status
+        const status = widget.querySelector('.draw-status');
+        if (status) status.textContent = 'Ready';
+    });
+}
+
+function drawBeginStroke(widget, e) {
+    const canvas = widget.querySelector('.draw-canvas');
+    const ctx = canvas.getContext('2d');
+    const st = drawGetState(widget);
+    const rect = canvas.getBoundingClientRect();
+
+    // Save undo snapshot
+    st.undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (st.undoStack.length > st.maxUndo) st.undoStack.shift();
+
+    st.isDrawing = true;
+    st.lastX = e.clientX - rect.left;
+    st.lastY = e.clientY - rect.top;
+
+    // Configure context
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = st.size;
+    if (st.eraser) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = st.color;
+    }
+
+    // Draw initial dot
+    ctx.beginPath();
+    ctx.arc(st.lastX, st.lastY, st.size / 2, 0, Math.PI * 2);
+    ctx.fillStyle = st.eraser ? 'rgba(0,0,0,1)' : st.color;
+    ctx.fill();
+    ctx.globalCompositeOperation = st.eraser ? 'destination-out' : 'source-over';
+}
+
+function drawMoveStroke(widget, e) {
+    const st = drawGetState(widget);
+    if (!st.isDrawing) return;
+    const canvas = widget.querySelector('.draw-canvas');
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.moveTo(st.lastX, st.lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    st.lastX = x;
+    st.lastY = y;
+}
+
+function drawEndStroke(widget) {
+    const st = drawGetState(widget);
+    st.isDrawing = false;
+    const canvas = widget.querySelector('.draw-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.globalCompositeOperation = 'source-over';
+
+    const status = widget.querySelector('.draw-status');
+    if (status) status.textContent = st.undoStack.length + ' undo' + (st.undoStack.length !== 1 ? 's' : '') + ' available';
+}
+
+function drawSetColor(widget, color) {
+    const st = drawGetState(widget);
+    st.color = color;
+    st.eraser = false;
+
+    // Update swatch UI
+    widget.querySelectorAll('.draw-swatch').forEach(function(sw) {
+        sw.classList.toggle('active', sw.dataset.color === color);
+    });
+    const eraserBtn = widget.querySelector('.draw-eraser-btn');
+    if (eraserBtn) eraserBtn.classList.remove('active');
+
+    // Update color input
+    const colorInput = widget.querySelector('.draw-color-input');
+    if (colorInput) colorInput.value = color;
+
+    // Reset cursor
+    const canvas = widget.querySelector('.draw-canvas');
+    if (canvas) canvas.style.cursor = 'crosshair';
+}
+
+function drawSetSize(widget, size) {
+    const st = drawGetState(widget);
+    st.size = size;
+}
+
+function drawToggleEraser(widget) {
+    const st = drawGetState(widget);
+    st.eraser = !st.eraser;
+
+    const eraserBtn = widget.querySelector('.draw-eraser-btn');
+    if (eraserBtn) eraserBtn.classList.toggle('active', st.eraser);
+
+    // Deactivate swatches when eraser is on
+    if (st.eraser) {
+        widget.querySelectorAll('.draw-swatch').forEach(function(sw) { sw.classList.remove('active'); });
+    } else {
+        widget.querySelectorAll('.draw-swatch').forEach(function(sw) {
+            sw.classList.toggle('active', sw.dataset.color === st.color);
+        });
+    }
+
+    const canvas = widget.querySelector('.draw-canvas');
+    if (canvas) canvas.style.cursor = st.eraser ? 'cell' : 'crosshair';
+}
+
+function drawClear(widget) {
+    const canvas = widget.querySelector('.draw-canvas');
+    const ctx = canvas.getContext('2d');
+    const st = drawGetState(widget);
+
+    // Save undo snapshot before clearing
+    st.undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (st.undoStack.length > st.maxUndo) st.undoStack.shift();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const status = widget.querySelector('.draw-status');
+    if (status) status.textContent = 'Cleared';
+}
+
+function drawUndo(widget) {
+    const st = drawGetState(widget);
+    if (st.undoStack.length === 0) return;
+    const canvas = widget.querySelector('.draw-canvas');
+    const ctx = canvas.getContext('2d');
+    const imageData = st.undoStack.pop();
+    ctx.putImageData(imageData, 0, 0);
+
+    const status = widget.querySelector('.draw-status');
+    if (status) status.textContent = st.undoStack.length > 0 ? st.undoStack.length + ' undo' + (st.undoStack.length !== 1 ? 's' : '') + ' available' : 'Nothing to undo';
+}
+
+function drawDownload(widget) {
+    const canvas = widget.querySelector('.draw-canvas');
+    const link = document.createElement('a');
+    link.download = 'drawing.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    const status = widget.querySelector('.draw-status');
+    if (status) status.textContent = 'Downloaded PNG';
+}
+
+function drawResizeCanvas(widget) {
+    const canvas = widget.querySelector('.draw-canvas');
+    const wrap = widget.querySelector('.draw-canvas-wrap');
+    const ctx = canvas.getContext('2d');
+    const rect = wrap.getBoundingClientRect();
+    const newW = Math.max(Math.floor(rect.width), 1);
+    const newH = Math.max(Math.floor(rect.height), 1);
+
+    if (newW === canvas.width && newH === canvas.height) return;
+
+    // Save current image data
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    canvas.width = newW;
+    canvas.height = newH;
+
+    // Fill white background then restore old content
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, newW, newH);
+    ctx.putImageData(imageData, 0, 0);
+}
+
+function drawColorInput(input) {
+    const widget = input.closest('.draw-widget');
+    drawSetColor(widget, input.value);
+}
+
+function drawSizeInput(input) {
+    const widget = input.closest('.draw-widget');
+    const st = drawGetState(widget);
+    st.size = parseInt(input.value, 10) || 4;
+    const label = widget.querySelector('.draw-size-label');
+    if (label) label.textContent = st.size + 'px';
+}
+
+// =============================================
 // SCRIPT INJECTION FOR HTML EXPORT
 // =============================================
 
@@ -663,11 +953,13 @@ function emoteCopy(widget, cell, text) {
 
     var cpkFunctions = [cpkHsvToRgb, cpkRgbToHsv, cpkRgbToHsl, cpkHslToRgb, cpkGetState, cpkDrawWheel, cpkDrawSV, cpkUpdateCursors, cpkUpdateAlpha, cpkUpdateValues, cpkFullUpdate, cpkWheelEvent, cpkSVEvent, cpkAlphaEvent, cpkMakeDraggable, cpkHexTyped, cpkRgbaTyped, cpkHslaTyped, cpkAlphaTyped, cpkCopyVal, cpkSaveColor, cpkInit];
     var emoteFunctions = [emoteInit, emoteSelectTab, emoteRender, emoteSearch, emoteCopy];
-    var allFunctions = cpkFunctions.concat(emoteFunctions);
+    var drawFunctions = [drawGetState, drawInit, drawBeginStroke, drawMoveStroke, drawEndStroke, drawSetColor, drawSetSize, drawToggleEraser, drawClear, drawUndo, drawDownload, drawResizeCanvas, drawColorInput, drawSizeInput];
+    var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions);
 
     var code = '(function() {\n' +
         'if (typeof cpkInit !== "undefined") return;\n' +
         'window._cpkState = new WeakMap();\n' +
+        'window._drawState = new WeakMap();\n' +
         'window.EMOTE_DATA = ' + JSON.stringify(EMOTE_DATA) + ';\n' +
         allFunctions.map(function(fn) { return 'window.' + fn.name + ' = ' + fn.toString(); }).join(';\n') + ';\n' +
         '})();';
@@ -690,7 +982,7 @@ PluginRegistry.registerToolbox({
     icon: '\uD83C\uDFA8',
     color: '#e74c3c',
     version: '1.0.0',
-    tools: ['color-picker', 'emoticon-picker'],
+    tools: ['color-picker', 'emoticon-picker', 'drawing-canvas'],
     source: 'external'
 });
 
@@ -771,4 +1063,46 @@ PluginRegistry.registerTool({
     defaultHeight: 420
 });
 
-console.log('Creative Tools plugin loaded (2 tools)');
+// Drawing Canvas
+PluginRegistry.registerTool({
+    id: 'drawing-canvas',
+    name: 'Drawing Canvas',
+    description: 'Freehand drawing canvas with colors, brush sizes, eraser, undo, and PNG download',
+    icon: '\u270F\uFE0F',
+    version: '1.0.0',
+    toolbox: 'creative-tools',
+    tags: ['draw', 'drawing', 'paint', 'canvas', 'sketch', 'brush', 'pen', 'art', 'freehand'],
+    title: 'Drawing Canvas',
+    content: '<div class="draw-widget">' +
+        '<div class="draw-toolbar">' +
+            '<div class="draw-swatch" data-color="#000000" style="background:#000000" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#000000\')" title="Black"></div>' +
+            '<div class="draw-swatch" data-color="#e74c3c" style="background:#e74c3c" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#e74c3c\')" title="Red"></div>' +
+            '<div class="draw-swatch" data-color="#e67e22" style="background:#e67e22" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#e67e22\')" title="Orange"></div>' +
+            '<div class="draw-swatch" data-color="#f1c40f" style="background:#f1c40f" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#f1c40f\')" title="Yellow"></div>' +
+            '<div class="draw-swatch" data-color="#27ae60" style="background:#27ae60" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#27ae60\')" title="Green"></div>' +
+            '<div class="draw-swatch" data-color="#3498db" style="background:#3498db" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#3498db\')" title="Blue"></div>' +
+            '<div class="draw-swatch" data-color="#9b59b6" style="background:#9b59b6" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#9b59b6\')" title="Purple"></div>' +
+            '<div class="draw-swatch" data-color="#ffffff" style="background:#ffffff;border-color:var(--border-color)" onclick="drawSetColor(this.closest(\'.draw-widget\'),\'#ffffff\')" title="White"></div>' +
+            '<input type="color" class="draw-color-input" value="#000000" oninput="drawColorInput(this)" title="Custom color">' +
+            '<input type="range" min="1" max="40" value="4" oninput="drawSizeInput(this)" title="Brush size">' +
+            '<span class="draw-size-label">4px</span>' +
+            '<button class="draw-eraser-btn" onclick="drawToggleEraser(this.closest(\'.draw-widget\'))" title="Toggle eraser">Eraser</button>' +
+        '</div>' +
+        '<div class="draw-canvas-wrap">' +
+            '<canvas class="draw-canvas"></canvas>' +
+        '</div>' +
+        '<div class="draw-actions">' +
+            '<button onclick="drawClear(this.closest(\'.draw-widget\'))">Clear</button>' +
+            '<button onclick="drawUndo(this.closest(\'.draw-widget\'))">Undo</button>' +
+            '<button onclick="drawDownload(this.closest(\'.draw-widget\'))">Download PNG</button>' +
+            '<span class="draw-status"></span>' +
+        '</div>' +
+    '</div>',
+    contentType: 'html',
+    onInit: 'drawInit',
+    source: 'external',
+    defaultWidth: 480,
+    defaultHeight: 420
+});
+
+console.log('Creative Tools plugin loaded (3 tools)');
