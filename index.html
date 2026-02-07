@@ -2298,6 +2298,323 @@ tr:hover {
     font-weight: 600;
 }
 
+/* Dice Roller Widget */
+.dice-widget {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+}
+
+.dice-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dice-count-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.dice-count-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dice-count-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    line-height: 1;
+}
+
+.dice-count-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.dice-count-value {
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.dice-tray {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    min-height: 64px;
+    padding: 8px;
+}
+
+.dice-die {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+}
+
+.dice-die.rolling {
+    animation: dice-spin 0.4s ease-out;
+}
+
+@keyframes dice-spin {
+    0%   { transform: rotateZ(0deg) scale(0.7); opacity: 0.5; }
+    40%  { transform: rotateZ(180deg) scale(1.1); opacity: 0.8; }
+    70%  { transform: rotateZ(300deg) scale(1.05); }
+    100% { transform: rotateZ(360deg) scale(1); opacity: 1; }
+}
+
+/* Pip-based die faces */
+.dice-die .pip {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    position: absolute;
+}
+
+/* Pip positions on a 3x3 grid inside the die */
+.dice-die .pip-tl { top: 10px; left: 10px; }
+.dice-die .pip-tc { top: 10px; left: 50%; transform: translateX(-50%); }
+.dice-die .pip-tr { top: 10px; right: 10px; }
+.dice-die .pip-ml { top: 50%; left: 10px; transform: translateY(-50%); }
+.dice-die .pip-mc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.dice-die .pip-mr { top: 50%; right: 10px; transform: translateY(-50%); }
+.dice-die .pip-bl { bottom: 10px; left: 10px; }
+.dice-die .pip-bc { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.dice-die .pip-br { bottom: 10px; right: 10px; }
+
+.dice-total-row {
+    min-height: 24px;
+}
+
+.dice-total {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.dice-roll-btn {
+    padding: 10px 36px;
+    border: none;
+    border-radius: 6px;
+    background: #27ae60;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.5px;
+}
+
+.dice-roll-btn:hover {
+    background: #219a52;
+}
+
+.dice-roll-btn:active {
+    transform: scale(0.96);
+}
+
+.dice-history {
+    width: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dice-history-entry {
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.dice-history-entry .dice-hist-values {
+    opacity: 0.7;
+}
+
+.dice-history-entry .dice-hist-total {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* IP Address Info Widget */
+.ipinfo-widget {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.ipinfo-input-row {
+    display: flex;
+}
+
+.ipinfo-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.ipinfo-input:focus {
+    border-color: #3498db;
+}
+
+.ipinfo-input::placeholder {
+    color: var(--text-muted);
+}
+
+.ipinfo-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ipinfo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+}
+
+.ipinfo-row-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 12px;
+    min-width: 110px;
+}
+
+.ipinfo-row-value {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    color: var(--text-primary);
+    text-align: right;
+    word-break: break-all;
+}
+
+.ipinfo-row-value.ipinfo-binary {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.ipinfo-row-value .ipinfo-net-bits {
+    color: #3498db;
+}
+
+.ipinfo-row-value .ipinfo-host-bits {
+    color: #e67e22;
+}
+
+.ipinfo-error {
+    color: #e74c3c;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: rgba(231, 76, 60, 0.08);
+    border-radius: 6px;
+}
+
+.ipinfo-quick-ref {
+    margin-top: 4px;
+}
+
+.ipinfo-ref-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.15s;
+}
+
+.ipinfo-ref-toggle:hover {
+    color: var(--text-primary);
+}
+
+.ipinfo-ref-table {
+    margin-top: 8px;
+}
+
+.ipinfo-ref-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+}
+
+.ipinfo-ref-table th {
+    text-align: left;
+    padding: 4px 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.ipinfo-ref-table td {
+    padding: 3px 8px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ipinfo-ref-table tr:hover td {
+    background: var(--bg-tertiary);
+}
+
+.ipinfo-class-label {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+}
+
+.ipinfo-class-a { background: #3498db; }
+.ipinfo-class-b { background: #9b59b6; }
+.ipinfo-class-c { background: #27ae60; }
+
 /* Calendar Widget Styles */
 .tool-content:has(.calendar-widget) {
     display: flex;
@@ -4441,6 +4758,46 @@ Charlie --> Bob: Reply" oninput="seqOnInput(this)"></textarea>
 <div class="sw-laps"></div>
 </div>`,
         onInit: 'stopwatchInit'
+    },
+    'dice-roller': {
+        id: 'dice-roller',
+        name: 'Dice Roller',
+        description: 'Roll 1-6 dice with animation for board games',
+        icon: '🎲',
+        title: 'Dice Roller',
+        content: `<div class="dice-widget">
+<div class="dice-controls">
+<label class="dice-count-label">Dice</label>
+<div class="dice-count-row">
+<button class="dice-count-btn" onclick="diceChangeCount(this,-1)">&#8722;</button>
+<span class="dice-count-value">1</span>
+<button class="dice-count-btn" onclick="diceChangeCount(this,1)">+</button>
+</div>
+</div>
+<div class="dice-tray"></div>
+<div class="dice-total-row"><span class="dice-total"></span></div>
+<button class="dice-roll-btn" onclick="diceRoll(this)">Roll</button>
+<div class="dice-history"></div>
+</div>`,
+        onInit: 'diceRollerInit'
+    },
+    'ip-address-info': {
+        id: 'ip-address-info',
+        name: 'IP Address Info',
+        description: 'Subnet calculator, CIDR notation helper',
+        icon: '🌐',
+        title: 'IP Address Info',
+        content: `<div class="ipinfo-widget">
+<div class="ipinfo-input-row">
+<input type="text" class="ipinfo-input" placeholder="e.g. 192.168.1.0/24" spellcheck="false" oninput="ipinfoCalc(this)">
+</div>
+<div class="ipinfo-results"></div>
+<div class="ipinfo-quick-ref">
+<button class="ipinfo-ref-toggle" onclick="ipinfoToggleRef(this)">CIDR Quick Reference &#9662;</button>
+<div class="ipinfo-ref-table" style="display:none"></div>
+</div>
+</div>`,
+        onInit: 'ipinfoInit'
     }
 };
 
@@ -4718,7 +5075,7 @@ PluginRegistry.registerToolbox({
     description: 'General productivity tools',
     icon: '📋',
     color: '#9b59b6',
-    tools: ['simple-calculator', 'checklist', 'random-picker', 'calendar', 'stopwatch']
+    tools: ['simple-calculator', 'checklist', 'random-picker', 'calendar', 'stopwatch', 'dice-roller', 'ip-address-info']
 });
 
 PluginRegistry.registerToolbox({
@@ -4737,7 +5094,7 @@ PluginRegistry.registerToolbox({
 // ============================================================
 (function registerCoreTools() {
     // Tools to register (productivity + core only)
-    const coreToolIds = ['blank', 'simple-calculator', 'checklist', 'random-picker', 'calendar', 'stopwatch'];
+    const coreToolIds = ['blank', 'simple-calculator', 'checklist', 'random-picker', 'calendar', 'stopwatch', 'dice-roller', 'ip-address-info'];
 
     // Toolbox mappings
     const toolboxMap = {
@@ -4746,7 +5103,9 @@ PluginRegistry.registerToolbox({
         'checklist': 'productivity',
         'random-picker': 'productivity',
         'calendar': 'productivity',
-        'stopwatch': 'productivity'
+        'stopwatch': 'productivity',
+        'dice-roller': 'productivity',
+        'ip-address-info': 'productivity'
     };
 
     // Tag mappings
@@ -4756,7 +5115,9 @@ PluginRegistry.registerToolbox({
         'checklist': ['todo', 'tasks', 'list'],
         'random-picker': ['random', 'picker', 'spin', 'wheel', 'choose', 'chores', 'games'],
         'calendar': ['date', 'events', 'schedule', 'ics'],
-        'stopwatch': ['timer', 'time', 'lap', 'clock']
+        'stopwatch': ['timer', 'time', 'lap', 'clock'],
+        'dice-roller': ['dice', 'roll', 'board game', 'random', 'd6', 'game'],
+        'ip-address-info': ['ip', 'subnet', 'cidr', 'network', 'mask', 'address', 'ipv4', 'calculator']
     };
 
     for (const id of coreToolIds) {
@@ -6633,6 +6994,304 @@ function stopwatchInit() {
     });
 }
 
+// ============================================================
+// Dice Roller Widget
+// ============================================================
+
+const dicePipLayouts = {
+    1: ['mc'],
+    2: ['tl', 'br'],
+    3: ['tl', 'mc', 'br'],
+    4: ['tl', 'tr', 'bl', 'br'],
+    5: ['tl', 'tr', 'mc', 'bl', 'br'],
+    6: ['tl', 'tr', 'ml', 'mr', 'bl', 'br']
+};
+
+function diceGetWidget(el) {
+    return el.closest('.dice-widget');
+}
+
+function diceGetToolId(el) {
+    const tool = el.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function diceRenderFace(value) {
+    const pips = (dicePipLayouts[value] || []).map(p => `<span class="pip pip-${p}"></span>`).join('');
+    return pips;
+}
+
+function diceChangeCount(btn, delta) {
+    const widget = diceGetWidget(btn);
+    const valueEl = widget.querySelector('.dice-count-value');
+    let count = parseInt(valueEl.textContent) || 1;
+    count = Math.max(1, Math.min(6, count + delta));
+    valueEl.textContent = count;
+
+    // Update tray preview with empty dice
+    const tray = widget.querySelector('.dice-tray');
+    tray.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const die = document.createElement('div');
+        die.className = 'dice-die';
+        tray.appendChild(die);
+    }
+    widget.querySelector('.dice-total').textContent = '';
+}
+
+function diceRoll(btn) {
+    const widget = diceGetWidget(btn);
+    const count = parseInt(widget.querySelector('.dice-count-value').textContent) || 1;
+    const tray = widget.querySelector('.dice-tray');
+    const totalEl = widget.querySelector('.dice-total');
+
+    // Clear tray and build dice with staggered animation
+    tray.innerHTML = '';
+    const results = [];
+    const animDuration = 400;
+
+    for (let i = 0; i < count; i++) {
+        const value = Math.floor(Math.random() * 6) + 1;
+        results.push(value);
+
+        const die = document.createElement('div');
+        die.className = 'dice-die rolling';
+        die.style.animationDelay = (i * 80) + 'ms';
+        tray.appendChild(die);
+
+        // After animation, show pips
+        setTimeout(() => {
+            die.classList.remove('rolling');
+            die.innerHTML = diceRenderFace(value);
+        }, animDuration + i * 80);
+    }
+
+    // Show total after all animations
+    totalEl.textContent = '';
+    setTimeout(() => {
+        const total = results.reduce((a, b) => a + b, 0);
+        if (count > 1) {
+            totalEl.textContent = 'Total: ' + total;
+        }
+        // Add to history
+        diceAddHistory(widget, results, total);
+    }, animDuration + count * 80);
+}
+
+function diceAddHistory(widget, results, total) {
+    const history = widget.querySelector('.dice-history');
+    const entry = document.createElement('div');
+    entry.className = 'dice-history-entry';
+    const valuesStr = results.join(', ');
+    entry.innerHTML = `<span class="dice-hist-values">${results.length}d6: [${valuesStr}]</span><span class="dice-hist-total">= ${total}</span>`;
+    history.insertBefore(entry, history.firstChild);
+
+    // Keep max 20 entries
+    while (history.children.length > 20) {
+        history.removeChild(history.lastChild);
+    }
+}
+
+function diceRollerInit() {
+    document.querySelectorAll('.dice-widget').forEach(widget => {
+        const count = parseInt(widget.querySelector('.dice-count-value').textContent) || 1;
+        const tray = widget.querySelector('.dice-tray');
+        tray.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const die = document.createElement('div');
+            die.className = 'dice-die';
+            tray.appendChild(die);
+        }
+    });
+}
+
+// ============================================================
+// IP Address Info Widget
+// ============================================================
+
+function ipinfoGetWidget(el) {
+    return el.closest('.ipinfo-widget');
+}
+
+function ipinfoParse(input) {
+    input = input.trim();
+    let ip, prefix;
+
+    // Parse CIDR notation: 192.168.1.0/24
+    if (input.includes('/')) {
+        const parts = input.split('/');
+        ip = parts[0];
+        prefix = parseInt(parts[1], 10);
+        if (isNaN(prefix) || prefix < 0 || prefix > 32) return null;
+    } else {
+        // Try IP + subnet mask: "192.168.1.0 255.255.255.0"
+        const spaced = input.split(/\s+/);
+        if (spaced.length === 2 && spaced[1].includes('.')) {
+            ip = spaced[0];
+            const maskNum = ipinfoToNum(spaced[1]);
+            if (maskNum === null) return null;
+            prefix = ipinfoMaskToPrefix(maskNum);
+            if (prefix === null) return null;
+        } else {
+            ip = input;
+            prefix = 32;
+        }
+    }
+
+    const ipNum = ipinfoToNum(ip);
+    if (ipNum === null) return null;
+
+    const mask = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
+    const wildcard = (~mask) >>> 0;
+    const network = (ipNum & mask) >>> 0;
+    const broadcast = (network | wildcard) >>> 0;
+    const firstHost = prefix >= 31 ? network : (network + 1) >>> 0;
+    const lastHost = prefix >= 31 ? broadcast : (broadcast - 1) >>> 0;
+    const totalHosts = prefix >= 31 ? (prefix === 32 ? 1 : 2) : Math.pow(2, 32 - prefix) - 2;
+
+    // IP class
+    const firstOctet = (ipNum >>> 24) & 0xFF;
+    let ipClass = '';
+    if (firstOctet < 128) ipClass = 'A';
+    else if (firstOctet < 192) ipClass = 'B';
+    else if (firstOctet < 224) ipClass = 'C';
+    else if (firstOctet < 240) ipClass = 'D';
+    else ipClass = 'E';
+
+    // Private range check
+    let isPrivate = false;
+    if ((ipNum >>> 24) === 10) isPrivate = true;
+    else if ((ipNum >>> 20) === (172 << 4 | 1)) isPrivate = true; // 172.16-31.x.x
+    else if ((ipNum >>> 16) === (192 << 8 | 168)) isPrivate = true;
+    else if ((ipNum >>> 24) === 127) isPrivate = true;
+
+    return { ipNum, prefix, mask, wildcard, network, broadcast, firstHost, lastHost, totalHosts, ipClass, isPrivate };
+}
+
+function ipinfoToNum(ipStr) {
+    const parts = ipStr.split('.');
+    if (parts.length !== 4) return null;
+    let num = 0;
+    for (let i = 0; i < 4; i++) {
+        const octet = parseInt(parts[i], 10);
+        if (isNaN(octet) || octet < 0 || octet > 255) return null;
+        num = (num * 256 + octet) >>> 0;
+    }
+    return num;
+}
+
+function ipinfoFromNum(num) {
+    return [(num >>> 24) & 0xFF, (num >>> 16) & 0xFF, (num >>> 8) & 0xFF, num & 0xFF].join('.');
+}
+
+function ipinfoMaskToPrefix(maskNum) {
+    // Validate it's a contiguous mask
+    let bits = 0;
+    let foundZero = false;
+    for (let i = 31; i >= 0; i--) {
+        const bit = (maskNum >>> i) & 1;
+        if (bit === 1) {
+            if (foundZero) return null; // non-contiguous
+            bits++;
+        } else {
+            foundZero = true;
+        }
+    }
+    return bits;
+}
+
+function ipinfoToBinary(num, prefix) {
+    let str = '';
+    for (let i = 31; i >= 0; i--) {
+        const bit = (num >>> i) & 1;
+        const inNetwork = (31 - i) < prefix;
+        str += inNetwork
+            ? `<span class="ipinfo-net-bits">${bit}</span>`
+            : `<span class="ipinfo-host-bits">${bit}</span>`;
+        if (i > 0 && i % 8 === 0) str += '.';
+    }
+    return str;
+}
+
+function ipinfoFormatHosts(n) {
+    return n.toLocaleString();
+}
+
+function ipinfoCalc(inputEl) {
+    const widget = ipinfoGetWidget(inputEl);
+    const results = widget.querySelector('.ipinfo-results');
+    const val = inputEl.value.trim();
+
+    if (!val) {
+        results.innerHTML = '';
+        return;
+    }
+
+    const info = ipinfoParse(val);
+    if (!info) {
+        results.innerHTML = '<div class="ipinfo-error">Invalid IP address or CIDR notation</div>';
+        return;
+    }
+
+    const classColors = { A: 'ipinfo-class-a', B: 'ipinfo-class-b', C: 'ipinfo-class-c' };
+    const classHtml = classColors[info.ipClass]
+        ? `<span class="ipinfo-class-label ${classColors[info.ipClass]}">Class ${info.ipClass}</span>`
+        : `Class ${info.ipClass}`;
+    const privateTag = info.isPrivate ? ' (Private)' : '';
+
+    const rows = [
+        ['Network', ipinfoFromNum(info.network) + '/' + info.prefix],
+        ['Subnet Mask', ipinfoFromNum(info.mask)],
+        ['Wildcard', ipinfoFromNum(info.wildcard)],
+        ['Broadcast', ipinfoFromNum(info.broadcast)],
+        ['Host Range', ipinfoFromNum(info.firstHost) + ' &ndash; ' + ipinfoFromNum(info.lastHost)],
+        ['Usable Hosts', ipinfoFormatHosts(info.totalHosts)],
+        ['Class', classHtml + privateTag],
+        ['Binary', '<span class="ipinfo-binary">' + ipinfoToBinary(info.ipNum, info.prefix) + '</span>'],
+    ];
+
+    results.innerHTML = rows.map(([label, value]) =>
+        `<div class="ipinfo-row"><span class="ipinfo-row-label">${label}</span><span class="ipinfo-row-value">${value}</span></div>`
+    ).join('');
+}
+
+function ipinfoToggleRef(btn) {
+    const table = btn.nextElementSibling;
+    const visible = table.style.display !== 'none';
+    table.style.display = visible ? 'none' : '';
+    btn.innerHTML = visible ? 'CIDR Quick Reference &#9662;' : 'CIDR Quick Reference &#9652;';
+}
+
+function ipinfoInit() {
+    document.querySelectorAll('.ipinfo-widget').forEach(widget => {
+        const refTable = widget.querySelector('.ipinfo-ref-table');
+        if (refTable && !refTable.querySelector('table')) {
+            const rows = [
+                ['/32', '255.255.255.255', 1],
+                ['/31', '255.255.255.254', 2],
+                ['/30', '255.255.255.252', 4],
+                ['/29', '255.255.255.248', 8],
+                ['/28', '255.255.255.240', 16],
+                ['/27', '255.255.255.224', 32],
+                ['/26', '255.255.255.192', 64],
+                ['/25', '255.255.255.128', 128],
+                ['/24', '255.255.255.0', 256],
+                ['/23', '255.255.254.0', 512],
+                ['/22', '255.255.252.0', '1,024'],
+                ['/21', '255.255.248.0', '2,048'],
+                ['/20', '255.255.240.0', '4,096'],
+                ['/16', '255.255.0.0', '65,536'],
+                ['/12', '255.240.0.0', '1,048,576'],
+                ['/8', '255.0.0.0', '16,777,216'],
+            ];
+            refTable.innerHTML = '<table><tr><th>CIDR</th><th>Mask</th><th>Addresses</th></tr>' +
+                rows.map(([cidr, mask, addrs]) =>
+                    `<tr><td>${cidr}</td><td>${mask}</td><td>${typeof addrs === 'number' ? addrs.toLocaleString() : addrs}</td></tr>`
+                ).join('') + '</table>';
+        }
+    });
+}
+
 const CALENDAR_COLORS = [
     '#3498db', '#e74c3c', '#27ae60', '#9b59b6',
     '#f39c12', '#1abc9c', '#e67e22', '#34495e'
@@ -8331,6 +8990,12 @@ function setupContentEditor() {
 
         const toolId = tool.getAttribute('data-tool');
         if (toolId) {
+            // Only open editor for note tools, not plugin tools with HTML templates
+            const custom = toolCustomizations[toolId] || {};
+            if (custom.templateId) {
+                const tmpl = NOTE_TEMPLATES[custom.templateId] || PluginRegistry.getTool(custom.templateId);
+                if (tmpl && tmpl.content && tmpl.content.trim().startsWith('<')) return;
+            }
             e.preventDefault();
             openContentEditor(toolId);
         }
@@ -9761,21 +10426,12 @@ const OFFICIAL_PLUGINS = [
     { category: 'Toolboxes', items: [
         { icon: '🛠️', name: 'Developer Tools', desc: 'JWT, Regex, Code Formatter, Cron, Epoch, Diff, Sequence Diagram', url: 'plugins/toolboxes/developer-tools.js' },
         { icon: '💰', name: 'Finance Tools', desc: 'Investment, Tax, Loan calculators', url: 'plugins/toolboxes/finance-tools.js' },
-        { icon: '📋', name: 'Productivity Tools', desc: 'Pomodoro Timer and core productivity tools', url: 'plugins/toolboxes/productivity-tools.js' },
-        { icon: '📦', name: 'Example Toolbox', desc: 'Sample toolbox plugin for reference', url: 'plugins/toolboxes/example-toolbox.js' },
-    ]},
-    { category: 'Tools', items: [
-        { icon: '📱', name: 'QR Code Generator', desc: 'Generate QR codes from text, URLs, WiFi, and more', url: 'plugins/tools/qr-code-generator.js' },
-        { icon: '🆔', name: 'UUID Generator', desc: 'Generate UUIDs v4 (random) and v7 (timestamp-sorted)', url: 'plugins/tools/uuid-generator.js' },
-        { icon: '🎨', name: 'Color Picker', desc: 'Color wheel with alpha, hex/rgba/hsla values', url: 'plugins/tools/color-picker.js' },
-        { icon: '🔡', name: 'Case Converter', desc: 'Convert between camelCase, snake_case, kebab-case, PascalCase, and more', url: 'plugins/tools/case-converter.js' },
-        { icon: '⏩', name: 'Playback Speed Calculator', desc: 'Calculate duration and time saved at different playback speeds', url: 'plugins/tools/playback-speed-calculator.js' },
-        { icon: '😎', name: 'Emoticon Picker', desc: 'Browse and copy emojis, kaomoji, and text emoticons', url: 'plugins/tools/emoticon-picker.js' },
-        { icon: '🔌', name: 'Example Tool', desc: 'Sample tool plugin for reference', url: 'plugins/tools/example-tool.js' },
-        { icon: '🌐', name: 'HTTP Request Builder', desc: 'HTTP request builder for testing API endpoints', url: 'plugins/tools/http-request-builder.js' },
+        { icon: '📋', name: 'Productivity Tools', desc: 'Pomodoro Timer, Dice Roller, and core productivity tools', url: 'plugins/toolboxes/productivity-tools.js' },
+        { icon: '🎨', name: 'Creative Tools', desc: 'Color Picker and Emoticon Picker', url: 'plugins/toolboxes/creative-tools.js' },
     ]},
     { category: 'Board Templates', items: [
         { icon: '📖', name: 'Git Cheat Sheet', desc: 'Quick-reference cards for everyday git commands', url: 'plugins/boards/git-cheat-sheet.js' },
+        { icon: '🔍', name: 'Regex Patterns Library', desc: 'Common regex patterns organized by category', url: 'plugins/boards/regex-patterns.js' },
     ]},
 ];
 
@@ -10203,6 +10859,8 @@ function refreshPluginLists() {
 
 function openFeatureSelectModal() {
     const modal = document.getElementById('featureSelectModal');
+    populateToolboxFilter();
+    populateFeatureList();
     modal.classList.add('open');
 }
 
