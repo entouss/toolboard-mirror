@@ -8663,8 +8663,66 @@ function ftreeComputeLayout(data) {
     const connectors = [];
 
     // Parent-child connectors (elbow pattern)
-    // Group children by parent pair so children from different partnerships get separate connectors
-    for (const [pairKey, children] of Object.entries(pairChildren)) {
+    // Compute horizontal extents for each pair's connectors, then use interval
+    // graph coloring to assign Y-offsets that prevent overlapping horizontal bars
+    const pairEntries = Object.entries(pairChildren);
+    const pairMidYOffset = {};
+    const pairExtents = [];
+    for (const [pairKey, children] of pairEntries) {
+        const parents = pairParents[pairKey];
+        const validParents = parents.filter(pid => persons[pid] && nodes[pid]);
+        if (validParents.length === 0) continue;
+        const validChildren = children.filter(cid => nodes[cid]);
+        if (validChildren.length === 0) continue;
+        let anchorX;
+        if (validParents.length >= 2) {
+            anchorX = (nodes[validParents[0]].x + FTREE_NODE_W / 2 + nodes[validParents[1]].x + FTREE_NODE_W / 2) / 2;
+        } else {
+            const ppid = validParents[0];
+            const sp = (spouseOf[ppid] || []).filter(s => gen[s] === gen[ppid] && nodes[s]);
+            if (sp.length > 0) {
+                anchorX = (nodes[ppid].x + FTREE_NODE_W / 2 + nodes[sp[0]].x + FTREE_NODE_W / 2) / 2;
+            } else {
+                anchorX = nodes[ppid].x + FTREE_NODE_W / 2;
+            }
+        }
+        let left = anchorX, right = anchorX;
+        for (const cid of validChildren) {
+            const cx = nodes[cid].x + FTREE_NODE_W / 2;
+            if (cx < left) left = cx;
+            if (cx > right) right = cx;
+        }
+        pairExtents.push({ pk: pairKey, left, right, gen: gen[validParents[0]] });
+    }
+    // Group by generation, then interval-color to find overlapping bars
+    const extentsByGen = {};
+    for (const ext of pairExtents) {
+        if (!extentsByGen[ext.gen]) extentsByGen[ext.gen] = [];
+        extentsByGen[ext.gen].push(ext);
+    }
+    const CONN_Y_STEP = 12;
+    const pairColorIndex = {}; // global color index per pair for line coloring
+    let globalColorIdx = 0;
+    for (const bars of Object.values(extentsByGen)) {
+        bars.sort((a, b) => a.left - b.left);
+        // Greedy interval coloring: assign lowest color not used by overlapping bars
+        for (let i = 0; i < bars.length; i++) {
+            const usedColors = new Set();
+            for (let j = 0; j < i; j++) {
+                if (bars[j].right > bars[i].left) usedColors.add(bars[j].color);
+            }
+            let c = 0;
+            while (usedColors.has(c)) c++;
+            bars[i].color = c;
+        }
+        const maxColor = Math.max(...bars.map(b => b.color));
+        for (const bar of bars) {
+            pairMidYOffset[bar.pk] = (bar.color - maxColor / 2) * CONN_Y_STEP;
+            pairColorIndex[bar.pk] = globalColorIdx++;
+        }
+    }
+
+    for (const [pairKey, children] of pairEntries) {
         const parents = pairParents[pairKey];
         const validParents = parents.filter(pid => persons[pid] && nodes[pid]);
         if (validParents.length === 0) continue;
@@ -8688,10 +8746,13 @@ function ftreeComputeLayout(data) {
         const validChildren = children.filter(cid => nodes[cid]);
         if (validChildren.length === 0) continue;
 
-        const midY = anchorY + FTREE_V_GAP / 2;
+        // Alternate midY offset for adjacent pairs to prevent bar overlap
+        const midYOff = pairMidYOffset[pairKey] || 0;
+        const midY = anchorY + FTREE_V_GAP / 2 + midYOff;
+        const ci = pairColorIndex[pairKey] != null ? pairColorIndex[pairKey] : -1;
 
         // Vertical from anchor down to mid
-        connectors.push({ type: 'v', x: anchorX, y: anchorY, h: midY - anchorY });
+        connectors.push({ type: 'v', x: anchorX, y: anchorY, h: midY - anchorY, ci });
 
         if (validChildren.length === 1) {
             const childNode = nodes[validChildren[0]];
@@ -8699,21 +8760,21 @@ function ftreeComputeLayout(data) {
             const childTop = childNode.y;
             if (Math.abs(anchorX - childCx) <= 1) {
                 // Directly below anchor — straight vertical
-                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY });
+                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
             } else if (Math.abs(anchorX - childCx) <= FTREE_NODE_W) {
                 // Close to anchor — single-level L-shape
-                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY });
+                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
                 const hx = Math.min(anchorX, childCx);
-                connectors.push({ type: 'h', x: hx, y: midY, w: Math.abs(anchorX - childCx) });
+                connectors.push({ type: 'h', x: hx, y: midY, w: Math.abs(anchorX - childCx), ci });
             } else {
                 // Far from anchor — two-level routing to prevent overlap
-                const bridgeY = anchorY + FTREE_V_GAP * 0.35;
-                const barY = anchorY + FTREE_V_GAP * 0.65;
-                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY };
+                const bridgeY = anchorY + FTREE_V_GAP * 0.35 + midYOff;
+                const barY = anchorY + FTREE_V_GAP * 0.65 + midYOff;
+                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY, ci };
                 const bLeft = Math.min(anchorX, childCx);
                 const bRight = Math.max(anchorX, childCx);
-                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft });
-                connectors.push({ type: 'v', x: childCx, y: bridgeY, h: childTop - bridgeY });
+                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft, ci });
+                connectors.push({ type: 'v', x: childCx, y: bridgeY, h: childTop - bridgeY, ci });
             }
         } else {
             let minCx = Infinity, maxCx = -Infinity;
@@ -8727,41 +8788,41 @@ function ftreeComputeLayout(data) {
 
             if (anchorInsideSpan) {
                 // Anchor is within children span — single level, bar spans children only
-                connectors.push({ type: 'h', x: minCx, y: midY, w: maxCx - minCx });
+                connectors.push({ type: 'h', x: minCx, y: midY, w: maxCx - minCx, ci });
                 for (const cid of validChildren) {
                     const childNode = nodes[cid];
                     const childCx = childNode.x + FTREE_NODE_W / 2;
                     const childTop = childNode.y;
-                    connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY });
+                    connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
                 }
             } else {
                 // Anchor is outside children span — use two Y-levels to avoid
                 // the children bar extending past the children (prevents overlap
                 // with other families' bars at cross-family couple junctions)
-                const bridgeY = anchorY + FTREE_V_GAP * 0.35;
-                const barY = anchorY + FTREE_V_GAP * 0.65;
+                const bridgeY = anchorY + FTREE_V_GAP * 0.35 + midYOff;
+                const barY = anchorY + FTREE_V_GAP * 0.65 + midYOff;
 
                 // Vertical from anchor down to bridge level (replace the one pushed earlier)
-                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY };
+                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY, ci };
 
                 // Horizontal bridge from anchor to nearest edge of children span
                 const bridgeTarget = anchorX < minCx ? minCx : maxCx;
                 const bLeft = Math.min(anchorX, bridgeTarget);
                 const bRight = Math.max(anchorX, bridgeTarget);
-                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft });
+                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft, ci });
 
                 // Vertical from bridge down to children bar level
-                connectors.push({ type: 'v', x: bridgeTarget, y: bridgeY, h: barY - bridgeY });
+                connectors.push({ type: 'v', x: bridgeTarget, y: bridgeY, h: barY - bridgeY, ci });
 
                 // Horizontal children bar spanning only the children
-                connectors.push({ type: 'h', x: minCx, y: barY, w: maxCx - minCx });
+                connectors.push({ type: 'h', x: minCx, y: barY, w: maxCx - minCx, ci });
 
                 // Vertical drops from children bar to each child
                 for (const cid of validChildren) {
                     const childNode = nodes[cid];
                     const childCx = childNode.x + FTREE_NODE_W / 2;
                     const childTop = childNode.y;
-                    connectors.push({ type: 'v', x: childCx, y: barY, h: childTop - barY });
+                    connectors.push({ type: 'v', x: childCx, y: barY, h: childTop - barY, ci });
                 }
             }
         }
@@ -8854,12 +8915,19 @@ function ftreeRender(widget, toolId) {
 
     // Render connectors as SVG for precise, gap-free lines
     const connColor = getComputedStyle(widget).getPropertyValue('--border-color').trim() || '#ccc';
+    // Muted palette for parent-child connector groups
+    const connPalette = [
+        '#8da0cb', '#a6d854', '#e5c494', '#b3b3b3', '#fc8d62',
+        '#66c2a5', '#e78ac3', '#ffd92f', '#8dd3c7', '#bebada',
+        '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#d9d9d9'
+    ];
     let svgParts = `<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;">`;
     for (const c of layout.connectors) {
+        const sc = (c.ci != null && c.ci >= 0) ? connPalette[c.ci % connPalette.length] : connColor;
         if (c.type === 'v') {
-            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x}" y2="${c.y + c.h}" stroke="${connColor}" stroke-width="2"/>`;
+            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x}" y2="${c.y + c.h}" stroke="${sc}" stroke-width="2"/>`;
         } else if (c.type === 'h') {
-            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x + c.w}" y2="${c.y}" stroke="${connColor}" stroke-width="2"/>`;
+            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x + c.w}" y2="${c.y}" stroke="${sc}" stroke-width="2"/>`;
         } else if (c.type === 'spouse') {
             svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x + c.w}" y2="${c.y}" stroke="${connColor}" stroke-width="2" stroke-dasharray="4,3"/>`;
         }
