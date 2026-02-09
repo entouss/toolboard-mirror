@@ -14,9 +14,9 @@ External dependencies (loaded via CDN): `html2canvas` (screenshots), `marked.js`
 
 ## Architecture
 
-### Core (`index.html`, ~12k lines)
+### Core (`index.html`)
 
-Contains the entire application: CSS variables/theming, header/board UI, tool window manager (drag/resize/z-index), storage layer, board switching, plugin loader, import/export, and built-in tools (blank notes, calculator, calendar, checklist, etc.).
+Contains the application framework only: CSS variables/theming, header/board UI, tool window manager (drag/resize/z-index), storage layer, board switching, plugin loader, import/export, and the `blank` note template. **Do NOT add tool-specific code (CSS, functions, or NOTE_TEMPLATES entries) to index.html.** All tool implementations belong in their respective plugin files under `plugins/toolboxes/`.
 
 ### Plugin System
 
@@ -48,16 +48,25 @@ Tool-specific data is stored as a named property inside `toolCustomizations[tool
 
 Global helpers: `loadToolCustomizations()` / `saveToolCustomizations(customizations)` — these read/write the full customizations object.
 
-### Adding a New Tool to an Existing Toolbox
+### Adding a New Tool
 
-Using `developer-tools.js` as the canonical example:
+**All new tools must go in a plugin file** (`plugins/toolboxes/*.js`), never in `index.html`. Use `developer-tools.js` as the canonical example:
 
 1. Add CSS rules to the style IIFE (before the closing backtick)
 2. Add the tool ID to the toolbox's `tools` array
 3. Add `PluginRegistry.registerTool({...})` with `content` (HTML string), `onInit`, `defaultWidth`/`defaultHeight`, `tags`
 4. Add all functions after existing functions, before the export IIFE
 5. Add all function names to the `functionsToExport` array in the export IIFE
-6. Update the tool count in `console.log` statements
+6. Add any constants/state to the export IIFE's state serialization section
+7. Update the tool count in `console.log` statements
+
+### Existing Toolbox Plugins
+
+- `plugins/toolboxes/core-tools.js` — Checklist, Simple Calculator
+- `plugins/toolboxes/productivity-tools.js` — Pomodoro Timer, Analog Clock, Unit Converter, Playback Speed Calc, Calendar, Random Picker, Dice Roller, Stopwatch, YouTube Embed
+- `plugins/toolboxes/developer-tools.js` — Diff Viewer, Sequence Diagram, JWT Decoder, Code Formatter, Cron Expression, Regex Tester, Epoch Converter, IP Address Info, and others
+- `plugins/toolboxes/finance-tools.js` — Investment Calculator, Tax Calculator, Loan Calculator
+- `plugins/toolboxes/creative-tools.js` — Family Tree and others
 
 ### Key Patterns
 

@@ -89,62 +89,99 @@
 .draw-actions .draw-status { flex: 1; text-align: right; font-size: 10px; color: var(--text-muted); }
 
 /* Family Tree Widget Styles */
-.tool-content:has(.ft-widget) { display: flex; flex-direction: column; }
-.ft-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; }
-.ft-toolbar { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-shrink: 0; flex-wrap: wrap; }
-.ft-btn { padding: 5px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 4px; }
-.ft-btn:hover { background: var(--table-hover); }
-.ft-btn.primary { background: #27ae60; color: white; border-color: #27ae60; }
-.ft-btn.primary:hover { background: #219a52; }
-.ft-btn.danger { background: #e74c3c; color: white; border-color: #e74c3c; }
-.ft-btn.danger:hover { background: #c0392b; }
-.ft-btn.active { background: #3498db; color: white; border-color: #3498db; }
-.ft-diagram { flex: 1; min-height: 120px; overflow: auto; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-tertiary); position: relative; }
-.ft-diagram svg { display: block; }
-.ft-node-rect { fill: var(--bg-primary); stroke: var(--border-color); stroke-width: 2; cursor: pointer; rx: 6; ry: 6; }
-.ft-node-rect.male { stroke: #3498db; }
-.ft-node-rect.female { stroke: #e91e8f; }
-.ft-node-rect.other { stroke: #9b59b6; }
-.ft-node-rect.selected { stroke-width: 3; }
-.ft-node-rect.selected.male { fill: rgba(52, 152, 219, 0.1); }
-.ft-node-rect.selected.female { fill: rgba(233, 30, 143, 0.1); }
-.ft-node-rect.selected.other { fill: rgba(155, 89, 182, 0.1); }
-.ft-node-name { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 600; fill: var(--text-primary); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
-.ft-node-years { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 9px; fill: var(--text-secondary); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
-.ft-conn-line { stroke: var(--text-secondary); stroke-width: 1.5; fill: none; }
-.ft-partner-line { stroke: var(--text-secondary); stroke-width: 1.5; stroke-dasharray: 5, 3; fill: none; }
-.ft-edit-panel { padding: 8px; border-top: 1px solid var(--border-color); flex-shrink: 0; }
-.ft-edit-title { font-weight: 600; font-size: 11px; margin-bottom: 6px; color: var(--text-heading); }
-.ft-edit-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
-.ft-edit-row label { font-size: 10px; color: var(--text-secondary); min-width: 40px; }
-.ft-edit-row input, .ft-edit-row select { padding: 3px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; background: var(--input-bg); color: var(--text-primary); }
-.ft-edit-row input { flex: 1; min-width: 60px; }
-.ft-edit-row select { min-width: 50px; }
-.ft-edit-actions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-.ft-text-editor { flex: 1; min-height: 100px; resize: none; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 12px; background: var(--input-bg); color: var(--text-primary); line-height: 1.5; display: none; }
-.ft-text-editor:focus { outline: none; border-color: #3498db; }
-.ft-status { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light); font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
-.ft-empty { padding: 30px; text-align: center; color: var(--text-muted); font-style: italic; }
-.ft-form-editor { flex: 1; overflow-y: auto; min-height: 0; display: none; padding: 4px 0; }
-.ft-form-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; background: var(--bg-primary); }
-.ft-form-card.root { border-left: 3px solid #27ae60; }
-.ft-form-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-heading); }
-.ft-form-header .ft-form-icon { font-size: 14px; }
-.ft-form-badge { font-size: 9px; font-weight: 700; background: #27ae60; color: white; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.5px; }
-.ft-form-fields { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
-.ft-form-fields input, .ft-form-fields select { padding: 3px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; background: var(--input-bg); color: var(--text-primary); }
-.ft-form-fields input:focus, .ft-form-fields select:focus { outline: none; border-color: #3498db; }
-.ft-form-fields input[data-field="name"] { flex: 1; min-width: 80px; }
-.ft-form-fields input[data-field="birthYear"], .ft-form-fields input[data-field="deathYear"] { width: 52px; }
-.ft-form-fields select { min-width: 50px; }
-.ft-form-rels { font-size: 10px; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.5; }
-.ft-form-rels span { color: var(--text-primary); font-weight: 500; }
-.ft-form-actions { display: flex; gap: 4px; flex-wrap: wrap; }
-.ft-form-actions button { padding: 2px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 10px; border-radius: 3px; }
-.ft-form-actions button:hover { background: var(--table-hover); }
-.ft-form-actions button:disabled { opacity: 0.4; cursor: default; }
-.ft-form-actions button.danger { color: #e74c3c; border-color: #e74c3c; }
-.ft-form-actions button.danger:hover { background: rgba(231, 76, 60, 0.1); }
+.tool-content:has(.ftree-widget) { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.ftree-widget { display: flex; flex-direction: column; flex: 1; min-height: 0; position: relative; }
+.ftree-toolbar { display: flex; align-items: center; gap: 4px; padding: 4px 8px; border-bottom: 1px solid var(--border-color); background: var(--bg-tertiary); flex-shrink: 0; z-index: 2; }
+.ftree-btn { padding: 2px 8px; font-size: 11px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 3px; cursor: pointer; }
+.ftree-btn:hover { background: var(--bg-primary); }
+.ftree-zoom-label { font-size: 10px; color: var(--text-muted); min-width: 36px; text-align: center; }
+.ftree-toolbar-spacer { flex: 1; }
+.ftree-viewport { flex: 1; overflow: hidden; cursor: grab; position: relative; background-image: radial-gradient(circle, var(--border-color) 0.8px, transparent 0.8px); background-size: 20px 20px; }
+.ftree-viewport.panning { cursor: grabbing; }
+.ftree-canvas { position: absolute; transform-origin: 0 0; top: 0; left: 0; }
+.ftree-connectors { position: absolute; top: 0; left: 0; }
+.ftree-nodes { position: absolute; top: 0; left: 0; }
+.ftree-node { position: absolute; background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: 6px; min-width: 140px; max-width: 200px; text-align: center; padding: 6px 8px; cursor: pointer; user-select: none; transition: border-color 0.15s; box-sizing: border-box; }
+.ftree-node:hover { border-color: var(--accent-color, #3498db); }
+.ftree-node-male { border-left: 4px solid #3498db; }
+.ftree-node-female { border-left: 4px solid #e84393; }
+.ftree-node-root { border-color: #c0392b; border-width: 3px; }
+.ftree-node-name { font-weight: bold; font-size: 12px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ftree-node-dates { font-size: 10px; color: var(--text-muted); }
+.ftree-node-note { font-size: 10px; font-style: italic; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ftree-node-toggle { position: absolute; left: 50%; transform: translateX(-50%); padding: 0 5px; height: 14px; line-height: 14px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 7px; font-size: 8px; text-align: center; cursor: pointer; color: var(--text-muted); white-space: nowrap; opacity: 0; transition: opacity 0.15s; }
+.ftree-node:hover .ftree-node-toggle { opacity: 1; }
+.ftree-node-toggle:hover { border-color: #3498db; color: var(--text-primary); }
+.ftree-node-toggle-parents { top: -9px; }
+.ftree-node-toggle-children { bottom: -9px; }
+.ftree-node-toggle.collapsed { opacity: 1; background: #3498db; color: white; border-color: #3498db; }
+.ftree-node-toggle.collapsed:hover { background: #2980b9; border-color: #2980b9; }
+.ftree-conn-v { position: absolute; width: 2px; background: var(--border-color); }
+.ftree-conn-h { position: absolute; height: 2px; background: var(--border-color); }
+.ftree-conn-spouse { position: absolute; height: 2px; border-top: 2px dashed var(--border-color); background: transparent; }
+.ftree-status { padding: 2px 8px; font-size: 10px; color: var(--text-muted); background: var(--bg-tertiary); border-top: 1px solid var(--border-color); flex-shrink: 0; }
+.ftree-popup { position: absolute; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 160px; }
+.ftree-popup-name { font-weight: bold; font-size: 12px; color: var(--text-primary); margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
+.ftree-popup-detail { font-size: 10px; color: var(--text-secondary); margin-bottom: 6px; }
+.ftree-popup-actions { display: flex; flex-direction: column; gap: 3px; }
+.ftree-popup-btn { padding: 3px 8px; font-size: 11px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 3px; cursor: pointer; text-align: left; }
+.ftree-popup-btn:hover { background: var(--bg-tertiary); }
+.ftree-popup-btn.danger { color: #e74c3c; }
+.ftree-popup-btn.danger:hover { background: #e74c3c; color: white; }
+.ftree-popup-fields { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); }
+.ftree-popup-fields input, .ftree-popup-fields select { padding: 3px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; background: var(--input-bg); color: var(--text-primary); }
+.ftree-popup-fields input:focus, .ftree-popup-fields select:focus { outline: none; border-color: #3498db; }
+.ftree-popup-row { display: flex; gap: 4px; align-items: center; }
+.ftree-popup-row input[data-field="name"] { flex: 1; font-weight: bold; font-size: 12px; }
+.ftree-popup-row input[data-field="birth"], .ftree-popup-row input[data-field="death"] { width: 56px; }
+.ftree-popup-row input[data-field="note"] { flex: 1; }
+.ftree-popup-row input[type="color"] { width: 24px; height: 22px; padding: 0; border: 1px solid var(--border-color); border-radius: 3px; cursor: pointer; }
+.ftree-popup-row label { font-size: 10px; color: var(--text-secondary); }
+.ftree-editor-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10010; align-items: center; justify-content: center; }
+.ftree-editor-overlay.open { display: flex; }
+.ftree-editor-content { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; max-width: 700px; width: 90%; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.ftree-editor-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
+.ftree-editor-header h3 { margin: 0; font-size: 14px; color: var(--text-primary); }
+.ftree-editor-body { padding: 12px 16px; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.ftree-editor-textarea { flex: 1; min-height: 300px; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); border-radius: 4px; resize: none; }
+.ftree-editor-footer { display: flex; gap: 6px; padding: 12px 16px; border-top: 1px solid var(--border-color); justify-content: space-between; }
+.ftree-editor-footer-left { display: flex; gap: 6px; }
+.ftree-editor-footer-right { display: flex; gap: 6px; }
+.ftree-add-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10010; align-items: center; justify-content: center; }
+.ftree-add-overlay.open { display: flex; }
+.ftree-add-content { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; max-width: 380px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3); padding: 16px; }
+.ftree-add-content h3 { margin: 0 0 12px; font-size: 14px; color: var(--text-heading); }
+.ftree-add-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.ftree-add-row label { font-size: 11px; color: var(--text-secondary); min-width: 48px; flex-shrink: 0; }
+.ftree-add-row input, .ftree-add-row select { flex: 1; padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); }
+.ftree-add-row input:focus, .ftree-add-row select:focus { outline: none; border-color: #3498db; }
+.ftree-add-buttons { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+.ftree-add-buttons button { padding: 6px 16px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; cursor: pointer; }
+.ftree-add-buttons .ftree-add-save { background: #3498db; color: white; border-color: #3498db; font-weight: 600; }
+.ftree-add-buttons .ftree-add-save:hover { background: #2980b9; }
+.ftree-add-buttons .ftree-add-cancel { background: var(--bg-tertiary); color: var(--text-primary); }
+.ftree-add-buttons .ftree-add-cancel:hover { background: var(--table-hover); }
+.ftree-form-editor { flex: 1; overflow-y: auto; min-height: 0; display: none; padding: 4px 8px; }
+.ftree-form-card { border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; background: var(--bg-primary); }
+.ftree-form-card.root { border-left: 3px solid #e74c3c; }
+.ftree-form-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-heading); }
+.ftree-form-header .ftree-form-icon { font-size: 14px; }
+.ftree-form-badge { font-size: 9px; font-weight: 700; background: #e74c3c; color: white; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.5px; }
+.ftree-form-fields { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
+.ftree-form-fields input, .ftree-form-fields select { padding: 3px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; background: var(--input-bg); color: var(--text-primary); }
+.ftree-form-fields input:focus, .ftree-form-fields select:focus { outline: none; border-color: #3498db; }
+.ftree-form-fields input[data-field="name"] { flex: 1; min-width: 80px; }
+.ftree-form-fields input[data-field="birth"], .ftree-form-fields input[data-field="death"] { width: 56px; }
+.ftree-form-fields input[data-field="note"] { flex: 1; min-width: 60px; }
+.ftree-form-rels { font-size: 10px; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.5; }
+.ftree-form-rels span { color: var(--text-primary); font-weight: 500; }
+.ftree-form-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.ftree-form-actions button { padding: 2px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 10px; border-radius: 3px; }
+.ftree-form-actions button:hover { background: var(--table-hover); }
+.ftree-form-actions button:disabled { opacity: 0.4; cursor: default; }
+.ftree-form-actions button.danger { color: #e74c3c; border-color: #e74c3c; }
+.ftree-form-actions button.danger:hover { background: rgba(231, 76, 60, 0.1); }
+.ftree-form-empty { padding: 30px; text-align: center; color: var(--text-muted); font-style: italic; }
 `;
     document.head.appendChild(style);
 })();
@@ -1002,1193 +1039,1838 @@ function drawSizeInput(input) {
     if (label) label.textContent = st.size + 'px';
 }
 
-// =============================================
-// FAMILY TREE
-// =============================================
+// ============================================================
+// Family Tree Constants
+// ============================================================
 
-function ftGetToolId(element) {
-    const tool = element.closest('.tool');
-    return tool ? tool.dataset.tool : null;
+const FTREE_NODE_W = 160;
+const FTREE_NODE_H = 60;
+const FTREE_H_GAP = 40;
+const FTREE_V_GAP = 80;
+const FTREE_SPOUSE_GAP = 15;
+
+// ============================================================
+// Family Tree Functions
+// ============================================================
+
+function ftreeGetToolId(el) {
+    const tool = el.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
 }
 
-function ftGetData(toolId) {
+function ftreeGetData(toolId) {
     const customizations = loadToolCustomizations();
-    const custom = customizations[toolId] || {};
-    return custom.ftData || { members: [], relationships: [], selectedId: null, rootId: null, mode: 'visual', viewFilter: null, viewFilterId: null };
+    return (customizations[toolId] && customizations[toolId].familyTreeData) || null;
 }
 
-function ftSaveData(toolId, data) {
+function ftreeSaveData(toolId, data) {
     const customizations = loadToolCustomizations();
     if (!customizations[toolId]) customizations[toolId] = {};
-    customizations[toolId].ftData = data;
+    customizations[toolId].familyTreeData = data;
     saveToolCustomizations(customizations);
 }
 
-function ftGenId() {
-    return 'ft_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+function ftreeDefaultData() {
+    return {
+        title: "Family Tree",
+        rootPersonId: 'p1',
+        persons: { p1: { id: 'p1', name: '', gender: null, birth: null, death: null, note: null, color: null } },
+        relationships: [],
+        collapsedChildren: [],
+        collapsedParents: [],
+        viewState: { panX: 0, panY: 0, zoom: 1 }
+    };
 }
 
-function ftInit() {
-    document.querySelectorAll('.ft-widget').forEach(function(widget) {
-        var toolId = ftGetToolId(widget);
+function ftreeGetVisiblePersons(data) {
+    if (!data || !data.persons) return new Set();
+    const allIds = Object.keys(data.persons);
+    if (allIds.length === 0) return new Set();
+
+    const collChildren = new Set(data.collapsedChildren || []);
+    const collParents = new Set(data.collapsedParents || []);
+    if (collChildren.size === 0 && collParents.size === 0) return new Set(allIds);
+
+    // Build adjacency
+    const childrenOf = {};
+    const parentsOf = {};
+    const spouseOf = {};
+    for (const r of (data.relationships || [])) {
+        if (r.type === 'parent-child') {
+            if (!childrenOf[r.parent]) childrenOf[r.parent] = [];
+            if (!childrenOf[r.parent].includes(r.child)) childrenOf[r.parent].push(r.child);
+            if (!parentsOf[r.child]) parentsOf[r.child] = [];
+            if (!parentsOf[r.child].includes(r.parent)) parentsOf[r.child].push(r.parent);
+        } else if (r.type === 'spouse') {
+            if (!spouseOf[r.person1]) spouseOf[r.person1] = [];
+            if (!spouseOf[r.person1].includes(r.person2)) spouseOf[r.person1].push(r.person2);
+            if (!spouseOf[r.person2]) spouseOf[r.person2] = [];
+            if (!spouseOf[r.person2].includes(r.person1)) spouseOf[r.person2].push(r.person1);
+        }
+    }
+
+    // Prune approach: start with all visible, then hide subtrees
+    const hidden = new Set();
+
+    // Hide descendants of collapsed-children nodes (recursive DFS downward)
+    for (const pid of collChildren) {
+        if (!data.persons[pid]) continue;
+        const stack = [...(childrenOf[pid] || [])];
+        while (stack.length > 0) {
+            const cid = stack.pop();
+            if (hidden.has(cid) || !data.persons[cid]) continue;
+            hidden.add(cid);
+            for (const gc of (childrenOf[cid] || [])) stack.push(gc);
+        }
+    }
+
+    // Hide ancestors of collapsed-parents nodes (recursive DFS upward)
+    for (const pid of collParents) {
+        if (!data.persons[pid]) continue;
+        const stack = [...(parentsOf[pid] || [])];
+        while (stack.length > 0) {
+            const aid = stack.pop();
+            if (hidden.has(aid) || !data.persons[aid]) continue;
+            hidden.add(aid);
+            for (const gp of (parentsOf[aid] || [])) stack.push(gp);
+        }
+    }
+
+    // After initial hiding, only keep persons reachable from the root
+    // through visible-only connections. This removes orphaned spouses,
+    // siblings whose shared parents were hidden, etc.
+    const remaining = new Set(allIds.filter(id => !hidden.has(id)));
+    if (remaining.size === 0) return remaining;
+
+    // Find a root for reachability: use data.rootPersonId if visible, else first visible
+    const root = remaining.has(data.rootPersonId) ? data.rootPersonId : remaining.values().next().value;
+    const reachable = new Set();
+    const queue = [root];
+    while (queue.length > 0) {
+        const pid = queue.shift();
+        if (reachable.has(pid) || !remaining.has(pid)) continue;
+        reachable.add(pid);
+        for (const cid of (childrenOf[pid] || [])) if (remaining.has(cid)) queue.push(cid);
+        for (const ppid of (parentsOf[pid] || [])) if (remaining.has(ppid)) queue.push(ppid);
+        for (const sid of (spouseOf[pid] || [])) if (remaining.has(sid)) queue.push(sid);
+    }
+
+    return reachable;
+}
+
+function ftreeFilterVisibleData(data, visible) {
+    const filtered = JSON.parse(JSON.stringify(data));
+    for (const pid of Object.keys(filtered.persons)) {
+        if (!visible.has(pid)) delete filtered.persons[pid];
+    }
+    filtered.relationships = filtered.relationships.filter(r => {
+        if (r.type === 'parent-child') return visible.has(r.parent) && visible.has(r.child);
+        if (r.type === 'spouse') return visible.has(r.person1) && visible.has(r.person2);
+        return true;
+    });
+    // If root was hidden, pick a visible person as effective root
+    if (filtered.rootPersonId && !visible.has(filtered.rootPersonId)) {
+        const visibleIds = Object.keys(filtered.persons);
+        filtered.rootPersonId = visibleIds.length > 0 ? visibleIds[0] : null;
+    }
+    return filtered;
+}
+
+function ftreeInit() {
+    document.querySelectorAll('.ftree-widget').forEach(widget => {
+        const toolId = ftreeGetToolId(widget);
         if (!toolId) return;
-        var data = ftGetData(toolId);
-        ftRender(widget, toolId, data);
+        let data = ftreeGetData(toolId);
+        const isNew = !data || !data.persons || Object.keys(data.persons).length === 0;
+        if (isNew) {
+            data = ftreeDefaultData();
+            ftreeSaveData(toolId, data);
+        }
+        if (data.viewState) {
+            widget._ftPanX = data.viewState.panX || 0;
+            widget._ftPanY = data.viewState.panY || 0;
+            widget._ftZoom = data.viewState.zoom || 1;
+        } else {
+            widget._ftPanX = 0;
+            widget._ftPanY = 0;
+            widget._ftZoom = 1;
+        }
+        ftreeRender(widget, toolId);
+        ftreeSetupPanZoom(widget, toolId);
+        if (isNew) {
+            ftreeFitView(widget, toolId);
+        } else {
+            ftreeApplyTransform(widget);
+            ftreeUpdateZoomLabel(widget);
+        }
     });
 }
 
-function ftRender(widget, toolId, data) {
-    ftRenderDiagram(widget, toolId, data);
-    ftRenderEditPanel(widget, toolId, data);
-    ftUpdateStatus(widget, data);
-
-    var diagram = widget.querySelector('.ft-diagram');
-    var textEditor = widget.querySelector('.ft-text-editor');
-    var formEditor = widget.querySelector('.ft-form-editor');
-    if (data.mode === 'text') {
-        diagram.style.display = 'none';
-        textEditor.style.display = '';
-        formEditor.style.display = 'none';
-        textEditor.value = ftToText(data);
-    } else if (data.mode === 'form') {
-        diagram.style.display = 'none';
-        textEditor.style.display = 'none';
-        formEditor.style.display = '';
-        widget.querySelector('.ft-edit-panel').style.display = 'none';
-        ftRenderForm(widget, toolId, data);
-    } else {
-        diagram.style.display = '';
-        textEditor.style.display = 'none';
-        formEditor.style.display = 'none';
+function ftreeComputeLayout(data) {
+    if (!data || !data.persons || Object.keys(data.persons).length === 0) {
+        return { nodes: {}, connectors: [] };
     }
-}
 
-function ftUpdateStatus(widget, data) {
-    var statusText = widget.querySelector('.ft-status-text');
-    if (!statusText) return;
-    var mc = data.members.length;
-    var rc = data.relationships.length;
-    var text = mc + ' member' + (mc !== 1 ? 's' : '') + ' · ' + rc + ' relationship' + (rc !== 1 ? 's' : '');
-    if (data.viewFilter && data.viewFilterId) {
-        var filterName = '';
-        for (var i = 0; i < data.members.length; i++) {
-            if (data.members[i].id === data.viewFilterId) { filterName = data.members[i].name; break; }
-        }
-        text += ' · ' + (data.viewFilter === 'descendants' ? '↓' : '↑') + ' ' + (filterName || 'Unknown');
-    }
-    statusText.textContent = text;
-}
+    const persons = data.persons;
+    const rels = data.relationships || [];
+    const rootId = data.rootPersonId;
 
-function ftRenderEditPanel(widget, toolId, data) {
-    var panel = widget.querySelector('.ft-edit-panel');
-    if (!data.selectedId) {
-        panel.style.display = 'none';
-        panel.innerHTML = '';
-        return;
-    }
-    var member = null;
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === data.selectedId) { member = data.members[i]; break; }
-    }
-    if (!member) {
-        panel.style.display = 'none';
-        panel.innerHTML = '';
-        return;
-    }
-    panel.style.display = '';
-    var genderOpts = '<option value="m"' + (member.gender === 'm' ? ' selected' : '') + '>Male</option>' +
-        '<option value="f"' + (member.gender === 'f' ? ' selected' : '') + '>Female</option>' +
-        '<option value="o"' + (member.gender === 'o' ? ' selected' : '') + '>Other</option>';
-    var isRoot = data.rootId === member.id;
-    panel.innerHTML =
-        '<div class="ft-edit-title">Edit: ' + (member.name || 'Unnamed') + '</div>' +
-        '<div class="ft-edit-row">' +
-            '<label>Name</label><input type="text" value="' + (member.name || '').replace(/"/g, '&quot;') + '" oninput="ftEditField(this,\'name\')">' +
-            '<label>Birth</label><input type="text" value="' + (member.birthYear || '') + '" placeholder="Year" style="max-width:60px" oninput="ftEditField(this,\'birthYear\')">' +
-        '</div>' +
-        '<div class="ft-edit-row">' +
-            '<label>Death</label><input type="text" value="' + (member.deathYear || '') + '" placeholder="Year" style="max-width:60px" oninput="ftEditField(this,\'deathYear\')">' +
-            '<label>Gender</label><select onchange="ftEditGender(this)">' + genderOpts + '</select>' +
-        '</div>' +
-        '<div class="ft-edit-actions">' +
-            '<button class="ft-btn" onclick="ftAddChild(this)">Add Child</button>' +
-            '<button class="ft-btn" onclick="ftAddPartner(this)">Add Partner</button>' +
-            (isRoot ? '<button class="ft-btn active" disabled>Root</button>' : '<button class="ft-btn" onclick="ftSetRoot(this)">Set Root</button>') +
-            '<button class="ft-btn' + (data.viewFilter === 'descendants' && data.viewFilterId === member.id ? ' active' : '') + '" onclick="ftSetViewFilter(this,\'descendants\')">↓ Descendants</button>' +
-            '<button class="ft-btn' + (data.viewFilter === 'ancestors' && data.viewFilterId === member.id ? ' active' : '') + '" onclick="ftSetViewFilter(this,\'ancestors\')">↑ Ancestors</button>' +
-            '<button class="ft-btn danger" onclick="ftDeletePerson(this)">✕ Delete</button>' +
-        '</div>';
-}
+    // Build adjacency
+    const childrenOf = {}; // parentId -> [childId]
+    const parentsOf = {};  // childId -> [parentId]
+    const spouseOf = {};   // personId -> [spouseId]
 
-function ftRenderDiagram(widget, toolId, data) {
-    var diagram = widget.querySelector('.ft-diagram');
-    if (data.members.length === 0) {
-        diagram.innerHTML = '<div class="ft-empty">Add a person or load a sample to get started</div>';
-        return;
-    }
-    var viewData = ftFilterData(data);
-    var layout = ftLayoutTree(viewData);
-    var nodes = layout.nodes;
-    var connections = layout.connections;
-    var svgW = layout.width;
-    var svgH = layout.height;
-
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + svgW + '" height="' + svgH + '">';
-
-    // Draw connections first (behind nodes)
-    for (var ci = 0; ci < connections.length; ci++) {
-        var conn = connections[ci];
-        if (conn.type === 'partner') {
-            svg += '<line x1="' + conn.x1 + '" y1="' + conn.y1 + '" x2="' + conn.x2 + '" y2="' + conn.y2 + '" class="ft-partner-line"/>';
-        } else {
-            svg += '<path d="' + conn.path + '" class="ft-conn-line"/>';
+    for (const r of rels) {
+        if (r.type === 'parent-child') {
+            if (!childrenOf[r.parent]) childrenOf[r.parent] = [];
+            if (!childrenOf[r.parent].includes(r.child)) childrenOf[r.parent].push(r.child);
+            if (!parentsOf[r.child]) parentsOf[r.child] = [];
+            if (!parentsOf[r.child].includes(r.parent)) parentsOf[r.child].push(r.parent);
+        } else if (r.type === 'spouse') {
+            if (!spouseOf[r.person1]) spouseOf[r.person1] = [];
+            if (!spouseOf[r.person1].includes(r.person2)) spouseOf[r.person1].push(r.person2);
+            if (!spouseOf[r.person2]) spouseOf[r.person2] = [];
+            if (!spouseOf[r.person2].includes(r.person1)) spouseOf[r.person2].push(r.person1);
         }
     }
 
-    // Draw nodes
-    for (var ni = 0; ni < nodes.length; ni++) {
-        var node = nodes[ni];
-        var cls = 'ft-node-rect ' + node.gender;
-        if (node.id === data.selectedId) cls += ' selected';
-        svg += '<rect class="' + cls + '" x="' + node.x + '" y="' + node.y + '" width="' + node.w + '" height="' + node.h + '" onclick="ftSelectNode(this,\'' + node.id + '\')"/>';
-        svg += '<text class="ft-node-name" x="' + (node.x + node.w / 2) + '" y="' + (node.y + 18) + '" onclick="ftSelectNode(this,\'' + node.id + '\')">' + ftEscSvg(node.name || 'Unnamed') + '</text>';
-        var years = node.birthYear || '';
-        if (node.deathYear) years += '-' + node.deathYear;
-        if (years) {
-            svg += '<text class="ft-node-years" x="' + (node.x + node.w / 2) + '" y="' + (node.y + 34) + '" onclick="ftSelectNode(this,\'' + node.id + '\')">' + ftEscSvg(years) + '</text>';
-        }
-    }
-
-    svg += '</svg>';
-    diagram.innerHTML = svg;
-}
-
-function ftEscSvg(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function ftLayoutTree(data) {
-    var nodeW = 120, nodeH = 48, hGap = 30, vGap = 70, padding = 20;
-
-    // Find generations via BFS from root
-    var generations = ftFindGenerations(data);
-    if (generations.length === 0) {
-        // No root or disconnected — just lay out in a single row
-        var xs = padding;
-        var allNodes = [];
-        for (var mi = 0; mi < data.members.length; mi++) {
-            var m = data.members[mi];
-            allNodes.push({ id: m.id, name: m.name, birthYear: m.birthYear, deathYear: m.deathYear, gender: m.gender, x: xs, y: padding, w: nodeW, h: nodeH });
-            xs += nodeW + hGap;
-        }
-        return { nodes: allNodes, connections: [], width: xs + padding, height: nodeH + padding * 2 };
-    }
-
-    // Build a map of member by id
-    var memberMap = {};
-    for (var mi2 = 0; mi2 < data.members.length; mi2++) {
-        memberMap[data.members[mi2].id] = data.members[mi2];
-    }
-
-    // Build position map
-    var posMap = {}; // id -> {x, y}
-    var placedIds = {};
-    var maxX = 0;
-
-    for (var g = 0; g < generations.length; g++) {
-        var genIds = generations[g];
-        var y = padding + g * (nodeH + vGap);
-        // Group into units: partner pairs or singles
-        var units = [];
-        var usedInUnit = {};
-        for (var gi = 0; gi < genIds.length; gi++) {
-            var mid = genIds[gi];
-            if (usedInUnit[mid]) continue;
-            var partnerId = ftGetPartner(data, mid);
-            if (partnerId && !usedInUnit[partnerId]) {
-                // Check partner is in same generation
-                var partnerInGen = false;
-                for (var gj = 0; gj < genIds.length; gj++) {
-                    if (genIds[gj] === partnerId) { partnerInGen = true; break; }
+    // Infer implied parent-child from spouse: if a child has exactly 1 explicit parent
+    // and that parent has a spouse, treat the spouse as a second parent so children
+    // are centered under the couple and ordered correctly in the layout
+    for (const childId of Object.keys(parentsOf)) {
+        if (parentsOf[childId].length === 1) {
+            const parent = parentsOf[childId][0];
+            const spouses = (spouseOf[parent] || []).filter(s => persons[s]);
+            for (const sid of spouses) {
+                if (!parentsOf[childId].includes(sid)) {
+                    parentsOf[childId].push(sid);
+                    if (!childrenOf[sid]) childrenOf[sid] = [];
+                    if (!childrenOf[sid].includes(childId)) childrenOf[sid].push(childId);
                 }
-                if (partnerInGen) {
-                    units.push([mid, partnerId]);
-                    usedInUnit[mid] = true;
-                    usedInUnit[partnerId] = true;
+            }
+        }
+    }
+
+    // Group children by their parent pair (for connector drawing and centering)
+    // Each child maps to a sorted pair key like "p1-p2" or just "p1" for single parents
+    const childPairKey = {}; // childId -> pairKey
+    const pairChildren = {}; // pairKey -> [childId]
+    const pairParents = {};  // pairKey -> [parentId, ...]
+    for (const childId of Object.keys(parentsOf)) {
+        const parents = parentsOf[childId].slice().sort();
+        const key = parents.join('-');
+        childPairKey[childId] = key;
+        if (!pairChildren[key]) { pairChildren[key] = []; pairParents[key] = parents; }
+        if (!pairChildren[key].includes(childId)) pairChildren[key].push(childId);
+    }
+    // Assign generations via BFS from root
+    const gen = {};
+    const visited = new Set();
+    if (rootId && persons[rootId]) {
+        gen[rootId] = 0;
+        visited.add(rootId);
+        const queue = [rootId];
+        while (queue.length > 0) {
+            const pid = queue.shift();
+            const g = gen[pid];
+            // Spouses same generation
+            if (spouseOf[pid]) {
+                for (const sid of spouseOf[pid]) {
+                    if (!visited.has(sid) && persons[sid]) {
+                        gen[sid] = g;
+                        visited.add(sid);
+                        queue.push(sid);
+                    }
+                }
+            }
+            // Children one generation below
+            if (childrenOf[pid]) {
+                for (const cid of childrenOf[pid]) {
+                    if (!visited.has(cid) && persons[cid]) {
+                        gen[cid] = g + 1;
+                        visited.add(cid);
+                        queue.push(cid);
+                    }
+                }
+            }
+            // Parents one generation above
+            if (parentsOf[pid]) {
+                for (const ppid of parentsOf[pid]) {
+                    if (!visited.has(ppid) && persons[ppid]) {
+                        gen[ppid] = g - 1;
+                        visited.add(ppid);
+                        queue.push(ppid);
+                    }
+                }
+            }
+        }
+    }
+
+    // Assign unvisited persons
+    let maxGen = 0;
+    for (const g of Object.values(gen)) { if (g > maxGen) maxGen = g; }
+    for (const pid of Object.keys(persons)) {
+        if (!visited.has(pid)) {
+            gen[pid] = maxGen + 1;
+            visited.add(pid);
+        }
+    }
+
+    // Normalize generations so min is 0
+    let minGen = Infinity;
+    for (const g of Object.values(gen)) { if (g < minGen) minGen = g; }
+    if (minGen !== 0 && minGen !== Infinity) {
+        for (const pid of Object.keys(gen)) { gen[pid] -= minGen; }
+    }
+
+    // Infer implicit spouse relationships from co-parenting for layout
+    // If two people are parents of the same child and in the same generation, treat as layout spouses
+    for (const [key, parents] of Object.entries(pairParents)) {
+        if (parents.length >= 2) {
+            for (let i = 0; i < parents.length - 1; i++) {
+                for (let j = i + 1; j < parents.length; j++) {
+                    const p1 = parents[i], p2 = parents[j];
+                    if (gen[p1] !== undefined && gen[p2] !== undefined && gen[p1] === gen[p2]) {
+                        if (!spouseOf[p1]) spouseOf[p1] = [];
+                        if (!spouseOf[p1].includes(p2)) spouseOf[p1].push(p2);
+                        if (!spouseOf[p2]) spouseOf[p2] = [];
+                        if (!spouseOf[p2].includes(p1)) spouseOf[p2].push(p1);
+                    }
+                }
+            }
+        }
+    }
+
+    // Group by generation
+    const genGroups = {};
+    for (const [pid, g] of Object.entries(gen)) {
+        if (!genGroups[g]) genGroups[g] = [];
+        genGroups[g].push(pid);
+    }
+
+    // Order within each generation: spouse pairs together, children ordered
+    // Build a tree-order for each generation based on parent positions
+    const xPos = {};
+
+    // Sort generations
+    const sortedGens = Object.keys(genGroups).map(Number).sort((a, b) => a - b);
+
+    // First pass: assign initial x positions
+    // For each generation, order nodes: keep spouse pairs together
+    for (const g of sortedGens) {
+        const group = genGroups[g];
+        // Try to order by parent's x position
+        if (g === 0 || Object.keys(xPos).length === 0) {
+            // Root generation: order by ID
+            const ordered = [];
+            const added = new Set();
+            for (const pid of group) {
+                if (added.has(pid)) continue;
+                ordered.push(pid);
+                added.add(pid);
+                if (spouseOf[pid]) {
+                    for (const sid of spouseOf[pid]) {
+                        if (gen[sid] === g && !added.has(sid)) {
+                            ordered.push(sid);
+                            added.add(sid);
+                        }
+                    }
+                }
+            }
+            for (let i = 0; i < ordered.length; i++) {
+                xPos[ordered[i]] = i * (FTREE_NODE_W + FTREE_H_GAP);
+            }
+        } else {
+            // Order children by parent pair (siblings stay together), then by parent x
+            const withParentX = [];
+            for (const pid of group) {
+                const parents = parentsOf[pid] || [];
+                let px = 0;
+                let count = 0;
+                const counted = new Set();
+                for (const ppid of parents) {
+                    if (xPos[ppid] !== undefined && !counted.has(ppid)) {
+                        px += xPos[ppid]; count++; counted.add(ppid);
+                    }
+                }
+                const pairKey = childPairKey[pid] || '';
+                withParentX.push({ pid, parentX: count > 0 ? px / count : Infinity, pairKey });
+            }
+            // Compute average parentX per pair for group ordering
+            const pairAvgX = {};
+            for (const item of withParentX) {
+                if (!pairAvgX[item.pairKey]) pairAvgX[item.pairKey] = { sum: 0, count: 0 };
+                pairAvgX[item.pairKey].sum += item.parentX;
+                pairAvgX[item.pairKey].count++;
+            }
+            for (const k of Object.keys(pairAvgX)) {
+                pairAvgX[k] = pairAvgX[k].count > 0 ? pairAvgX[k].sum / pairAvgX[k].count : Infinity;
+            }
+            // Check if a person has a cross-family spouse (spouse in a different pair group)
+            function hasCrossFamilySpouse(pid) {
+                const myPK = childPairKey[pid] || '';
+                if (!myPK) return false;
+                const spouses = (spouseOf[pid] || []).filter(s => gen[s] === g);
+                for (const sid of spouses) {
+                    const sPK = childPairKey[sid] || '';
+                    if (sPK && sPK !== myPK) return true;
+                }
+                return false;
+            }
+            // Sort: by pair average X first (keeps siblings together),
+            // then cross-family members to boundary of their group, then by individual parentX
+            withParentX.sort((a, b) => {
+                const pa = pairAvgX[a.pairKey] != null ? pairAvgX[a.pairKey] : Infinity;
+                const pb = pairAvgX[b.pairKey] != null ? pairAvgX[b.pairKey] : Infinity;
+                if (pa !== pb) return pa - pb;
+                if (a.pairKey !== b.pairKey) return a.pairKey < b.pairKey ? -1 : 1;
+                // Within same pair group: cross-family members go to the end
+                // so they're adjacent to their spouse's family group
+                const aCross = hasCrossFamilySpouse(a.pid) ? 1 : 0;
+                const bCross = hasCrossFamilySpouse(b.pid) ? 1 : 0;
+                if (aCross !== bCross) return aCross - bCross;
+                if (!isFinite(a.parentX) && !isFinite(b.parentX)) return 0;
+                return a.parentX - b.parentX;
+            });
+
+            // Identify people who should be deferred to spouse placement:
+            // If someone has a spouse in this generation who has children (i.e. the spouse
+            // is the "anchor" in this family), defer the non-anchor partner
+            const deferToSpouse = new Set();
+            for (const item of withParentX) {
+                if (spouseOf[item.pid]) {
+                    for (const sid of spouseOf[item.pid]) {
+                        if (gen[sid] === gen[item.pid] && !deferToSpouse.has(item.pid)) {
+                            const myParents = (parentsOf[item.pid] || []).length;
+                            const theirParents = (parentsOf[sid] || []).length;
+                            if (myParents === 0 && theirParents > 0) {
+                                // I have no parents in the tree — I'm married-in, defer to spouse
+                                deferToSpouse.add(item.pid);
+                            } else if (myParents === 0 && theirParents === 0) {
+                                // Neither has parents — use child count, then ID as tiebreaker
+                                const myChildren = (childrenOf[item.pid] || []).length;
+                                const theirChildren = (childrenOf[sid] || []).length;
+                                if (myChildren < theirChildren) {
+                                    deferToSpouse.add(item.pid);
+                                } else if (myChildren === theirChildren && item.pid > sid) {
+                                    deferToSpouse.add(item.pid);
+                                }
+                            }
+                            // If both have parents, neither is deferred — each stays in their sibling group
+                        }
+                    }
+                }
+            }
+
+            // Place nodes, keeping all spouse pairs together
+            let curX = 0;
+            const added = new Set();
+            for (const item of withParentX) {
+                if (added.has(item.pid)) continue;
+                if (deferToSpouse.has(item.pid)) continue;
+                xPos[item.pid] = curX;
+                added.add(item.pid);
+                // Place spouse next to partner (whether deferred or cross-family)
+                let spousePlaced = false;
+                if (spouseOf[item.pid]) {
+                    for (const sid of spouseOf[item.pid]) {
+                        if (gen[sid] === gen[item.pid] && !added.has(sid)) {
+                            // Use wider gap for cross-family couples to prevent connector overlap
+                            const myPK = childPairKey[item.pid] || '';
+                            const sPK = childPairKey[sid] || '';
+                            const coupleGap = (myPK && sPK && myPK !== sPK) ? FTREE_H_GAP : FTREE_SPOUSE_GAP;
+                            xPos[sid] = curX + FTREE_NODE_W + coupleGap;
+                            added.add(sid);
+                            curX = xPos[sid] + FTREE_NODE_W + FTREE_H_GAP;
+                            spousePlaced = true;
+                        }
+                    }
+                }
+                if (!spousePlaced) {
+                    curX += FTREE_NODE_W + FTREE_H_GAP;
+                }
+            }
+            // Place any remaining deferred nodes that weren't placed by spouse logic
+            for (const item of withParentX) {
+                if (added.has(item.pid)) continue;
+                xPos[item.pid] = curX;
+                added.add(item.pid);
+                curX += FTREE_NODE_W + FTREE_H_GAP;
+            }
+        }
+    }
+
+    // Second pass: center parents above their children
+    for (let pass = 0; pass < 5; pass++) {
+        for (const g of sortedGens) {
+            const group = genGroups[g];
+            // Center each parent pair above their children
+            const pairsDone = new Set();
+            for (const pid of group) {
+                const children = childrenOf[pid] || [];
+                // Find pairs that include this parent and collect their children
+                for (const cid of children) {
+                    const pk = childPairKey[cid];
+                    if (!pk || pairsDone.has(pk)) continue;
+                    pairsDone.add(pk);
+                    const pairKids = (pairChildren[pk] || []).filter(c => xPos[c] !== undefined);
+                    if (pairKids.length === 0) continue;
+                    let minChildX = Infinity, maxChildX = -Infinity;
+                    for (const c of pairKids) {
+                        if (xPos[c] < minChildX) minChildX = xPos[c];
+                        if (xPos[c] > maxChildX) maxChildX = xPos[c];
+                    }
+                    if (minChildX === Infinity) continue;
+                    const centerX = (minChildX + maxChildX) / 2;
+                    const pp = pairParents[pk];
+                    // Center the parent pair (or single parent) above children
+                    if (pp.length >= 2 && persons[pp[0]] && persons[pp[1]] && gen[pp[0]] === gen[pp[1]]) {
+                        const pairWidth = FTREE_NODE_W * 2 + FTREE_SPOUSE_GAP;
+                        const startX = centerX - pairWidth / 2 + FTREE_NODE_W / 2;
+                        xPos[pp[0]] = startX;
+                        xPos[pp[1]] = startX + FTREE_NODE_W + FTREE_SPOUSE_GAP;
+                    } else {
+                        const spouses = (spouseOf[pid] || []).filter(s => gen[s] === g);
+                        if (spouses.length > 0) {
+                            const spouseId = spouses[0];
+                            const pairWidth = FTREE_NODE_W * 2 + FTREE_SPOUSE_GAP;
+                            const startX = centerX - pairWidth / 2 + FTREE_NODE_W / 2;
+                            // Preserve original left-right order of the pair
+                            const leftId = xPos[pid] <= xPos[spouseId] ? pid : spouseId;
+                            const rightId = leftId === pid ? spouseId : pid;
+                            xPos[leftId] = startX;
+                            xPos[rightId] = startX + FTREE_NODE_W + FTREE_SPOUSE_GAP;
+                        } else {
+                            xPos[pid] = centerX;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Position children under their parents: move each child unit to be
+        // centered beneath its parent pair. The overlap fixer (next step) will
+        // spread units apart while preserving order.
+        for (const g of sortedGens) {
+            if (g === sortedGens[0]) continue; // Skip root generation
+            const group = genGroups[g];
+
+            // Build units sorted by current x
+            const cuInUnit = new Set();
+            const cuUnits = [];
+            const cuSorted = group.slice().sort((a, b) => (xPos[a] || 0) - (xPos[b] || 0));
+            for (const pid of cuSorted) {
+                if (cuInUnit.has(pid)) continue;
+                cuInUnit.add(pid);
+                const cuSpouses = (spouseOf[pid] || []).filter(s => gen[s] === g && !cuInUnit.has(s));
+                if (cuSpouses.length > 0) {
+                    const sid = cuSpouses[0];
+                    cuInUnit.add(sid);
+                    cuUnits.push({ members: [pid, sid] });
                 } else {
-                    units.push([mid]);
-                    usedInUnit[mid] = true;
+                    cuUnits.push({ members: [pid] });
+                }
+            }
+
+            // Position each unit centered under its parents
+            for (const unit of cuUnits) {
+                // Find parent center for this unit using ALL members' parents
+                // (handles cross-family couples by averaging both families' positions)
+                let parentCenterX = null;
+                let px = 0, cnt = 0;
+                const counted = new Set();
+                for (const m of unit.members) {
+                    const mParents = parentsOf[m] || [];
+                    for (const ppid of mParents) {
+                        if (xPos[ppid] !== undefined && !counted.has(ppid)) {
+                            px += xPos[ppid] + FTREE_NODE_W / 2; cnt++; counted.add(ppid);
+                        }
+                    }
+                }
+                if (cnt > 0) {
+                    parentCenterX = px / cnt;
+                }
+
+                if (parentCenterX !== null) {
+                    const unitWidth = unit.members.length === 2
+                        ? FTREE_NODE_W * 2 + FTREE_SPOUSE_GAP
+                        : FTREE_NODE_W;
+                    const newX = parentCenterX - unitWidth / 2;
+                    xPos[unit.members[0]] = newX;
+                    if (unit.members.length === 2) {
+                        xPos[unit.members[1]] = newX + FTREE_NODE_W + FTREE_SPOUSE_GAP;
+                    }
+                }
+            }
+        }
+
+        // Fix overlaps within each generation (spouse pairs move as atomic units)
+        // Sort by parent pair position first to keep siblings grouped together,
+        // preventing connector lines from different families from crossing
+        for (const g of sortedGens) {
+            const group = genGroups[g];
+            // Build units: spouse pairs or single nodes
+            const inUnit = new Set();
+            const units = [];
+            const sorted = group.slice().sort((a, b) => (xPos[a] || 0) - (xPos[b] || 0));
+            for (const pid of sorted) {
+                if (inUnit.has(pid)) continue;
+                inUnit.add(pid);
+                const sameGenSpouses = (spouseOf[pid] || []).filter(s => gen[s] === g && !inUnit.has(s));
+                if (sameGenSpouses.length > 0) {
+                    const sid = sameGenSpouses[0];
+                    inUnit.add(sid);
+                    // pid has smaller xPos (from sorted order), so pid is left
+                    xPos[sid] = xPos[pid] + FTREE_NODE_W + FTREE_SPOUSE_GAP;
+                    units.push({ members: [pid, sid], x: xPos[pid] });
+                } else {
+                    units.push({ members: [pid], x: xPos[pid] });
+                }
+            }
+            // Sort units: group siblings (same parent pair) together, ordered by
+            // the parent pair's center x, then by individual x within the group
+            const pairCenterCache = {};
+            for (const unit of units) {
+                const pk = childPairKey[unit.members[0]] || '';
+                if (pk && pairCenterCache[pk] === undefined) {
+                    const pp = pairParents[pk] || [];
+                    let cx = 0, cn = 0;
+                    for (const ppid of pp) {
+                        if (xPos[ppid] !== undefined) { cx += xPos[ppid]; cn++; }
+                    }
+                    pairCenterCache[pk] = cn > 0 ? cx / cn : unit.x;
+                }
+            }
+            units.sort((a, b) => {
+                const aPk = childPairKey[a.members[0]] || '';
+                const bPk = childPairKey[b.members[0]] || '';
+                const aPc = aPk ? (pairCenterCache[aPk] ?? a.x) : a.x;
+                const bPc = bPk ? (pairCenterCache[bPk] ?? b.x) : b.x;
+                if (aPc !== bPc) return aPc - bPc;
+                if (aPk !== bPk) return aPk < bPk ? -1 : 1;
+                return a.x - b.x;
+            });
+            // Fix overlaps between units (each unit moves as a whole)
+            // Use extra gap between different family groups to prevent connector overlap
+            for (let i = 1; i < units.length; i++) {
+                const prev = units[i - 1];
+                const cur = units[i];
+                const prevWidth = prev.members.length === 2
+                    ? FTREE_NODE_W * 2 + FTREE_SPOUSE_GAP
+                    : FTREE_NODE_W;
+                // Check if units are from different families (as children OR as parents)
+                const prevPK = childPairKey[prev.members[0]] || '';
+                const curPK = childPairKey[cur.members[0]] || '';
+                const diffAsChildren = prevPK && curPK && prevPK !== curPK;
+                // Also check if they parent different child groups
+                let prevChildPK = '', curChildPK = '';
+                for (const m of prev.members) {
+                    const kids = childrenOf[m] || [];
+                    if (kids.length > 0) { prevChildPK = childPairKey[kids[0]] || ''; break; }
+                }
+                for (const m of cur.members) {
+                    const kids = childrenOf[m] || [];
+                    if (kids.length > 0) { curChildPK = childPairKey[kids[0]] || ''; break; }
+                }
+                const diffAsParents = prevChildPK && curChildPK && prevChildPK !== curChildPK;
+                const gap = (diffAsChildren || diffAsParents) ? FTREE_H_GAP * 3 : FTREE_H_GAP;
+                const minX = prev.x + prevWidth + gap;
+                if (cur.x < minX) {
+                    const shift = minX - cur.x;
+                    cur.x += shift;
+                    for (const m of cur.members) {
+                        xPos[m] += shift;
+                    }
+                }
+            }
+        }
+    }
+
+    // Normalize x positions so minimum is 50
+    let minX = Infinity;
+    for (const x of Object.values(xPos)) { if (x < minX) minX = x; }
+    const offsetX = 50 - (minX || 0);
+    for (const pid of Object.keys(xPos)) { xPos[pid] += offsetX; }
+
+    // Compute y positions from generation
+    const yPos = {};
+    for (const [pid, g] of Object.entries(gen)) {
+        yPos[pid] = 50 + g * (FTREE_NODE_H + FTREE_V_GAP);
+    }
+
+    // Build node positions
+    const nodes = {};
+    for (const pid of Object.keys(persons)) {
+        nodes[pid] = {
+            x: xPos[pid] || 0,
+            y: yPos[pid] || 0,
+            w: FTREE_NODE_W,
+            h: FTREE_NODE_H
+        };
+    }
+
+    // Build connectors
+    const connectors = [];
+
+    // Parent-child connectors (elbow pattern)
+    // Compute horizontal extents for each pair's connectors, then use interval
+    // graph coloring to assign Y-offsets that prevent overlapping horizontal bars
+    const pairEntries = Object.entries(pairChildren);
+    const pairMidYOffset = {};
+    const pairExtents = [];
+    for (const [pairKey, children] of pairEntries) {
+        const parents = pairParents[pairKey];
+        const validParents = parents.filter(pid => persons[pid] && nodes[pid]);
+        if (validParents.length === 0) continue;
+        const validChildren = children.filter(cid => nodes[cid]);
+        if (validChildren.length === 0) continue;
+        let anchorX;
+        if (validParents.length >= 2) {
+            anchorX = (nodes[validParents[0]].x + FTREE_NODE_W / 2 + nodes[validParents[1]].x + FTREE_NODE_W / 2) / 2;
+        } else {
+            const ppid = validParents[0];
+            const sp = (spouseOf[ppid] || []).filter(s => gen[s] === gen[ppid] && nodes[s]);
+            if (sp.length > 0) {
+                anchorX = (nodes[ppid].x + FTREE_NODE_W / 2 + nodes[sp[0]].x + FTREE_NODE_W / 2) / 2;
+            } else {
+                anchorX = nodes[ppid].x + FTREE_NODE_W / 2;
+            }
+        }
+        let left = anchorX, right = anchorX;
+        for (const cid of validChildren) {
+            const cx = nodes[cid].x + FTREE_NODE_W / 2;
+            if (cx < left) left = cx;
+            if (cx > right) right = cx;
+        }
+        pairExtents.push({ pk: pairKey, left, right, gen: gen[validParents[0]] });
+    }
+    // Group by generation, then interval-color to find overlapping bars
+    const extentsByGen = {};
+    for (const ext of pairExtents) {
+        if (!extentsByGen[ext.gen]) extentsByGen[ext.gen] = [];
+        extentsByGen[ext.gen].push(ext);
+    }
+    const CONN_Y_STEP = 12;
+    const pairColorIndex = {}; // global color index per pair for line coloring
+    let globalColorIdx = 0;
+    for (const bars of Object.values(extentsByGen)) {
+        bars.sort((a, b) => a.left - b.left);
+        // Greedy interval coloring: assign lowest color not used by overlapping bars
+        for (let i = 0; i < bars.length; i++) {
+            const usedColors = new Set();
+            for (let j = 0; j < i; j++) {
+                if (bars[j].right > bars[i].left) usedColors.add(bars[j].color);
+            }
+            let c = 0;
+            while (usedColors.has(c)) c++;
+            bars[i].color = c;
+        }
+        const maxColor = Math.max(...bars.map(b => b.color));
+        for (const bar of bars) {
+            pairMidYOffset[bar.pk] = (bar.color - maxColor / 2) * CONN_Y_STEP;
+            pairColorIndex[bar.pk] = globalColorIdx++;
+        }
+    }
+
+    for (const [pairKey, children] of pairEntries) {
+        const parents = pairParents[pairKey];
+        const validParents = parents.filter(pid => persons[pid] && nodes[pid]);
+        if (validParents.length === 0) continue;
+
+        // Anchor point: midpoint of parent pair, or single parent center
+        let anchorX;
+        if (validParents.length >= 2) {
+            anchorX = (nodes[validParents[0]].x + FTREE_NODE_W / 2 + nodes[validParents[1]].x + FTREE_NODE_W / 2) / 2;
+        } else {
+            // Single parent — check if they have a spouse to use midpoint
+            const ppid = validParents[0];
+            const spouses = (spouseOf[ppid] || []).filter(s => gen[s] === gen[ppid] && nodes[s]);
+            if (spouses.length > 0) {
+                anchorX = (nodes[ppid].x + FTREE_NODE_W / 2 + nodes[spouses[0]].x + FTREE_NODE_W / 2) / 2;
+            } else {
+                anchorX = nodes[ppid].x + FTREE_NODE_W / 2;
+            }
+        }
+        const anchorY = nodes[validParents[0]].y + FTREE_NODE_H;
+
+        const validChildren = children.filter(cid => nodes[cid]);
+        if (validChildren.length === 0) continue;
+
+        // Alternate midY offset for adjacent pairs to prevent bar overlap
+        const midYOff = pairMidYOffset[pairKey] || 0;
+        const midY = anchorY + FTREE_V_GAP / 2 + midYOff;
+        const ci = pairColorIndex[pairKey] != null ? pairColorIndex[pairKey] : -1;
+
+        // Vertical from anchor down to mid
+        connectors.push({ type: 'v', x: anchorX, y: anchorY, h: midY - anchorY, ci });
+
+        if (validChildren.length === 1) {
+            const childNode = nodes[validChildren[0]];
+            const childCx = childNode.x + FTREE_NODE_W / 2;
+            const childTop = childNode.y;
+            if (Math.abs(anchorX - childCx) <= 1) {
+                // Directly below anchor — straight vertical
+                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
+            } else if (Math.abs(anchorX - childCx) <= FTREE_NODE_W) {
+                // Close to anchor — single-level L-shape
+                connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
+                const hx = Math.min(anchorX, childCx);
+                connectors.push({ type: 'h', x: hx, y: midY, w: Math.abs(anchorX - childCx), ci });
+            } else {
+                // Far from anchor — two-level routing to prevent overlap
+                const bridgeY = anchorY + FTREE_V_GAP * 0.35 + midYOff;
+                const barY = anchorY + FTREE_V_GAP * 0.65 + midYOff;
+                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY, ci };
+                const bLeft = Math.min(anchorX, childCx);
+                const bRight = Math.max(anchorX, childCx);
+                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft, ci });
+                connectors.push({ type: 'v', x: childCx, y: bridgeY, h: childTop - bridgeY, ci });
+            }
+        } else {
+            let minCx = Infinity, maxCx = -Infinity;
+            for (const cid of validChildren) {
+                const cx = nodes[cid].x + FTREE_NODE_W / 2;
+                if (cx < minCx) minCx = cx;
+                if (cx > maxCx) maxCx = cx;
+            }
+
+            const anchorInsideSpan = anchorX >= minCx - 1 && anchorX <= maxCx + 1;
+
+            if (anchorInsideSpan) {
+                // Anchor is within children span — single level, bar spans children only
+                connectors.push({ type: 'h', x: minCx, y: midY, w: maxCx - minCx, ci });
+                for (const cid of validChildren) {
+                    const childNode = nodes[cid];
+                    const childCx = childNode.x + FTREE_NODE_W / 2;
+                    const childTop = childNode.y;
+                    connectors.push({ type: 'v', x: childCx, y: midY, h: childTop - midY, ci });
                 }
             } else {
-                units.push([mid]);
-                usedInUnit[mid] = true;
-            }
-        }
+                // Anchor is outside children span — use two Y-levels to avoid
+                // the children bar extending past the children (prevents overlap
+                // with other families' bars at cross-family couple junctions)
+                const bridgeY = anchorY + FTREE_V_GAP * 0.35 + midYOff;
+                const barY = anchorY + FTREE_V_GAP * 0.65 + midYOff;
 
-        // Place units left-to-right
-        var x = padding;
-        for (var u = 0; u < units.length; u++) {
-            var unit = units[u];
-            for (var ui = 0; ui < unit.length; ui++) {
-                posMap[unit[ui]] = { x: x, y: y };
-                placedIds[unit[ui]] = true;
-                x += nodeW + (ui < unit.length - 1 ? 15 : 0); // partners closer together
-            }
-            x += hGap;
-        }
-        if (x > maxX) maxX = x;
-    }
+                // Vertical from anchor down to bridge level (replace the one pushed earlier)
+                connectors[connectors.length - 1] = { type: 'v', x: anchorX, y: anchorY, h: bridgeY - anchorY, ci };
 
-    // Second pass: center children under parents
-    for (var g2 = 1; g2 < generations.length; g2++) {
-        var genIds2 = generations[g2];
-        // Group children by their parent unit
-        var parentGroups = {};
-        for (var ci = 0; ci < genIds2.length; ci++) {
-            var childId = genIds2[ci];
-            var parentIds = ftGetParents(data, childId);
-            var parentKey = parentIds.sort().join(',');
-            if (!parentGroups[parentKey]) parentGroups[parentKey] = { parentIds: parentIds, children: [] };
-            parentGroups[parentKey].children.push(childId);
-        }
+                // Horizontal bridge from anchor to nearest edge of children span
+                const bridgeTarget = anchorX < minCx ? minCx : maxCx;
+                const bLeft = Math.min(anchorX, bridgeTarget);
+                const bRight = Math.max(anchorX, bridgeTarget);
+                connectors.push({ type: 'h', x: bLeft, y: bridgeY, w: bRight - bLeft, ci });
 
-        for (var pk in parentGroups) {
-            var grp = parentGroups[pk];
-            if (grp.parentIds.length === 0) continue;
-            // Find center of parents
-            var pMinX = Infinity, pMaxX = -Infinity;
-            for (var pi = 0; pi < grp.parentIds.length; pi++) {
-                var pp = posMap[grp.parentIds[pi]];
-                if (pp) {
-                    if (pp.x < pMinX) pMinX = pp.x;
-                    if (pp.x + nodeW > pMaxX) pMaxX = pp.x + nodeW;
+                // Vertical from bridge down to children bar level
+                connectors.push({ type: 'v', x: bridgeTarget, y: bridgeY, h: barY - bridgeY, ci });
+
+                // Horizontal children bar spanning only the children
+                connectors.push({ type: 'h', x: minCx, y: barY, w: maxCx - minCx, ci });
+
+                // Vertical drops from children bar to each child
+                for (const cid of validChildren) {
+                    const childNode = nodes[cid];
+                    const childCx = childNode.x + FTREE_NODE_W / 2;
+                    const childTop = childNode.y;
+                    connectors.push({ type: 'v', x: childCx, y: barY, h: childTop - barY, ci });
                 }
             }
-            var parentCenter = (pMinX + pMaxX) / 2;
-
-            // Get partner pairs among children for width calculation
-            var childUnits = [];
-            var usedChild = {};
-            for (var cc = 0; cc < grp.children.length; cc++) {
-                var cid = grp.children[cc];
-                if (usedChild[cid]) continue;
-                var cp = ftGetPartner(data, cid);
-                if (cp && !usedChild[cp]) {
-                    var cpInGroup = false;
-                    for (var cc2 = 0; cc2 < grp.children.length; cc2++) {
-                        if (grp.children[cc2] === cp) { cpInGroup = true; break; }
-                    }
-                    if (cpInGroup) {
-                        childUnits.push([cid, cp]);
-                        usedChild[cid] = true;
-                        usedChild[cp] = true;
-                    } else {
-                        childUnits.push([cid]);
-                        usedChild[cid] = true;
-                    }
-                } else {
-                    childUnits.push([cid]);
-                    usedChild[cid] = true;
-                }
-            }
-
-            var totalW = 0;
-            for (var cu = 0; cu < childUnits.length; cu++) {
-                totalW += childUnits[cu].length * nodeW + (childUnits[cu].length - 1) * 15;
-                if (cu < childUnits.length - 1) totalW += hGap;
-            }
-
-            var startX = parentCenter - totalW / 2;
-            if (startX < padding) startX = padding;
-
-            var cx = startX;
-            for (var cu2 = 0; cu2 < childUnits.length; cu2++) {
-                var cunit = childUnits[cu2];
-                for (var cui = 0; cui < cunit.length; cui++) {
-                    posMap[cunit[cui]] = { x: cx, y: posMap[cunit[cui]].y };
-                    cx += nodeW + (cui < cunit.length - 1 ? 15 : 0);
-                }
-                cx += hGap;
-            }
-            if (cx > maxX) maxX = cx;
         }
     }
 
-    // Place any unplaced members
-    var unplacedX = maxX + hGap;
-    for (var mi3 = 0; mi3 < data.members.length; mi3++) {
-        if (!posMap[data.members[mi3].id]) {
-            posMap[data.members[mi3].id] = { x: unplacedX, y: padding };
-            unplacedX += nodeW + hGap;
-        }
-    }
-    if (unplacedX > maxX) maxX = unplacedX;
-
-    // Build node objects
-    var allNodes2 = [];
-    for (var mi4 = 0; mi4 < data.members.length; mi4++) {
-        var mem = data.members[mi4];
-        var pos = posMap[mem.id];
-        allNodes2.push({ id: mem.id, name: mem.name, birthYear: mem.birthYear, deathYear: mem.deathYear, gender: mem.gender, x: pos.x, y: pos.y, w: nodeW, h: nodeH });
-    }
-
-    // Build connections
-    var allConns = [];
-    for (var ri = 0; ri < data.relationships.length; ri++) {
-        var rel = data.relationships[ri];
-        var fromPos = posMap[rel.from];
-        var toPos = posMap[rel.to];
-        if (!fromPos || !toPos) continue;
-
-        if (rel.type === 'partner') {
-            // Dashed horizontal line between partners at mid-height
-            var lx1 = fromPos.x + nodeW;
-            var lx2 = toPos.x;
-            if (lx2 < lx1) { var tmp = lx1; lx1 = lx2 + nodeW; lx2 = tmp - nodeW; }
-            var ly = fromPos.y + nodeH / 2;
-            allConns.push({ type: 'partner', x1: lx1, y1: ly, x2: lx2, y2: ly });
-        } else if (rel.type === 'parent') {
-            // Solid line: from parent bottom center to child top center
-            var px = fromPos.x + nodeW / 2;
-            var py = fromPos.y + nodeH;
-            var chx = toPos.x + nodeW / 2;
-            var chy = toPos.y;
-            var midY = py + (chy - py) / 2;
-            var path = 'M' + px + ' ' + py + ' L' + px + ' ' + midY + ' L' + chx + ' ' + midY + ' L' + chx + ' ' + chy;
-            allConns.push({ type: 'parent', path: path });
-        }
+    // Spouse connectors
+    const spousePairsDone = new Set();
+    for (const r of rels) {
+        if (r.type !== 'spouse') continue;
+        const key = [r.person1, r.person2].sort().join('-');
+        if (spousePairsDone.has(key)) continue;
+        spousePairsDone.add(key);
+        if (!nodes[r.person1] || !nodes[r.person2]) continue;
+        const n1 = nodes[r.person1];
+        const n2 = nodes[r.person2];
+        const leftNode = n1.x < n2.x ? n1 : n2;
+        const rightNode = n1.x < n2.x ? n2 : n1;
+        const y = leftNode.y + FTREE_NODE_H / 2;
+        connectors.push({
+            type: 'spouse',
+            x: leftNode.x + FTREE_NODE_W,
+            y: y,
+            w: rightNode.x - (leftNode.x + FTREE_NODE_W)
+        });
     }
 
-    var finalW = maxX + padding;
-    var finalH = padding + generations.length * (nodeH + vGap) - vGap + nodeH + padding;
-    // Ensure min height accounts for all nodes
-    for (var ni2 = 0; ni2 < allNodes2.length; ni2++) {
-        var nb = allNodes2[ni2].y + allNodes2[ni2].h + padding;
-        if (nb > finalH) finalH = nb;
-    }
-
-    return { nodes: allNodes2, connections: allConns, width: Math.max(finalW, 200), height: Math.max(finalH, 100) };
+    return { nodes, connectors };
 }
 
-function ftFindGenerations(data) {
-    if (!data.rootId || data.members.length === 0) return [];
-    // Check root exists
-    var rootExists = false;
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === data.rootId) { rootExists = true; break; }
-    }
-    if (!rootExists) return [];
+function ftreeRender(widget, toolId) {
+    const data = ftreeGetData(toolId);
+    if (!data) return;
 
-    var genMap = {}; // id -> generation number
-    var queue = [data.rootId];
-    genMap[data.rootId] = 0;
+    const visible = ftreeGetVisiblePersons(data);
+    const layoutData = ftreeFilterVisibleData(data, visible);
+    const layout = ftreeComputeLayout(layoutData);
+    const nodesContainer = widget.querySelector('.ftree-nodes');
+    const connContainer = widget.querySelector('.ftree-connectors');
+    const status = widget.querySelector('.ftree-status');
 
-    // Also place root's partner at gen 0
-    var rootPartner = ftGetPartner(data, data.rootId);
-    if (rootPartner) {
-        genMap[rootPartner] = 0;
-        queue.push(rootPartner);
-    }
-
-    while (queue.length > 0) {
-        var current = queue.shift();
-        var currentGen = genMap[current];
-
-        // Find children of current (and current's partner)
-        var partnerOfCurrent = ftGetPartner(data, current);
-        var parentIds = [current];
-        if (partnerOfCurrent) parentIds.push(partnerOfCurrent);
-        var children = ftGetChildren(data, parentIds);
-
-        for (var c = 0; c < children.length; c++) {
-            var childId = children[c];
-            if (genMap[childId] !== undefined) continue;
-            genMap[childId] = currentGen + 1;
-            queue.push(childId);
-            // Also place child's partner at same gen
-            var childPartner = ftGetPartner(data, childId);
-            if (childPartner && genMap[childPartner] === undefined) {
-                genMap[childPartner] = currentGen + 1;
-                queue.push(childPartner);
-            }
+    // Build adjacency from ORIGINAL data for toggle indicators
+    const childrenOf = {};
+    const parentsOf = {};
+    for (const r of (data.relationships || [])) {
+        if (r.type === 'parent-child') {
+            if (!childrenOf[r.parent]) childrenOf[r.parent] = [];
+            if (!childrenOf[r.parent].includes(r.child)) childrenOf[r.parent].push(r.child);
+            if (!parentsOf[r.child]) parentsOf[r.child] = [];
+            if (!parentsOf[r.child].includes(r.parent)) parentsOf[r.child].push(r.parent);
         }
     }
+    const collChildren = new Set(data.collapsedChildren || []);
+    const collParents = new Set(data.collapsedParents || []);
 
-    // Build generation arrays
-    var maxGen = 0;
-    for (var id in genMap) {
-        if (genMap[id] > maxGen) maxGen = genMap[id];
-    }
-    var gens = [];
-    for (var g = 0; g <= maxGen; g++) {
-        var genArr = [];
-        for (var id2 in genMap) {
-            if (genMap[id2] === g) genArr.push(id2);
+    // Render nodes
+    let nodesHtml = '';
+    const allPersonIds = Object.keys(data.persons || {});
+    for (const pid of allPersonIds) {
+        if (!visible.has(pid)) continue;
+        const p = data.persons[pid];
+        const pos = layout.nodes[pid];
+        if (!pos) continue;
+        const genderClass = p.gender === 'm' ? ' ftree-node-male' : p.gender === 'f' ? ' ftree-node-female' : '';
+        const rootClass = pid === data.rootPersonId ? ' ftree-node-root' : '';
+        const colorStyle = p.color ? ` border-top: 3px solid ${p.color};` : '';
+        const dates = (p.birth || p.death) ? `<div class="ftree-node-dates">${p.birth || '?'} - ${p.death || '?'}</div>` : '';
+        const note = p.note ? `<div class="ftree-node-note">${p.note}</div>` : '';
+
+        // Toggle indicators for parents/children
+        let toggles = '';
+        const hasParents = (parentsOf[pid] || []).length > 0;
+        const hasChildren = (childrenOf[pid] || []).length > 0;
+        if (hasParents) {
+            const isCollapsed = collParents.has(pid);
+            const hiddenCount = isCollapsed ? (parentsOf[pid] || []).filter(id => !visible.has(id)).length : 0;
+            const label = isCollapsed && hiddenCount > 0 ? `▲ ${hiddenCount}` : '▲';
+            toggles += `<div class="ftree-node-toggle ftree-node-toggle-parents${isCollapsed ? ' collapsed' : ''}" onclick="event.stopPropagation(); ftreeNodeToggleParents(this)">${label}</div>`;
         }
-        gens.push(genArr);
+        if (hasChildren) {
+            const isCollapsed = collChildren.has(pid);
+            const hiddenCount = isCollapsed ? (childrenOf[pid] || []).filter(id => !visible.has(id)).length : 0;
+            const label = isCollapsed && hiddenCount > 0 ? `▼ ${hiddenCount}` : '▼';
+            toggles += `<div class="ftree-node-toggle ftree-node-toggle-children${isCollapsed ? ' collapsed' : ''}" onclick="event.stopPropagation(); ftreeNodeToggleChildren(this)">${label}</div>`;
+        }
+
+        nodesHtml += `<div class="ftree-node${genderClass}${rootClass}" data-person-id="${pid}" style="left:${pos.x}px;top:${pos.y}px;width:${FTREE_NODE_W}px;${colorStyle}" onclick="ftreeNodeClick(event, this)">
+<div class="ftree-node-name">${p.name}</div>${dates}${note}${toggles}</div>`;
     }
-    return gens;
+    nodesContainer.innerHTML = nodesHtml;
+
+    // Render connectors as SVG for precise, gap-free lines
+    const connColor = getComputedStyle(widget).getPropertyValue('--border-color').trim() || '#ccc';
+    // Muted palette for parent-child connector groups
+    const connPalette = [
+        '#8da0cb', '#a6d854', '#e5c494', '#b3b3b3', '#fc8d62',
+        '#66c2a5', '#e78ac3', '#ffd92f', '#8dd3c7', '#bebada',
+        '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#d9d9d9'
+    ];
+    let svgParts = `<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:1px;height:1px;overflow:visible;pointer-events:none;">`;
+    for (const c of layout.connectors) {
+        const sc = (c.ci != null && c.ci >= 0) ? connPalette[c.ci % connPalette.length] : connColor;
+        if (c.type === 'v') {
+            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x}" y2="${c.y + c.h}" stroke="${sc}" stroke-width="2"/>`;
+        } else if (c.type === 'h') {
+            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x + c.w}" y2="${c.y}" stroke="${sc}" stroke-width="2"/>`;
+        } else if (c.type === 'spouse') {
+            svgParts += `<line x1="${c.x}" y1="${c.y}" x2="${c.x + c.w}" y2="${c.y}" stroke="${connColor}" stroke-width="2" stroke-dasharray="4,3"/>`;
+        }
+    }
+    svgParts += `</svg>`;
+    connContainer.innerHTML = svgParts;
+
+    // Status
+    if (status) {
+        const visibleCount = visible.size;
+        const totalCount = allPersonIds.length;
+        if (visibleCount < totalCount) {
+            status.textContent = `${visibleCount} of ${totalCount} persons shown`;
+        } else {
+            status.textContent = `${totalCount} person${totalCount !== 1 ? 's' : ''}`;
+        }
+    }
 }
 
-function ftGetPartner(data, memberId) {
-    for (var i = 0; i < data.relationships.length; i++) {
-        var rel = data.relationships[i];
-        if (rel.type === 'partner') {
-            if (rel.from === memberId) return rel.to;
-            if (rel.to === memberId) return rel.from;
+function ftreeSetupPanZoom(widget, toolId) {
+    const viewport = widget.querySelector('.ftree-viewport');
+    if (!viewport || viewport._ftreeSetup) return;
+    viewport._ftreeSetup = true;
+
+    let isPanning = false;
+    let startX, startY, startPanX, startPanY;
+
+    viewport.addEventListener('mousedown', e => {
+        if (e.target.closest('.ftree-node') || e.target.closest('.ftree-popup')) return;
+        isPanning = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startPanX = widget._ftPanX;
+        startPanY = widget._ftPanY;
+        viewport.classList.add('panning');
+        e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', e => {
+        if (!isPanning) return;
+        widget._ftPanX = startPanX + (e.clientX - startX);
+        widget._ftPanY = startPanY + (e.clientY - startY);
+        ftreeApplyTransform(widget);
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isPanning) {
+            isPanning = false;
+            viewport.classList.remove('panning');
+            ftreeSaveViewState(widget, toolId);
+        }
+    });
+
+    viewport.addEventListener('wheel', e => {
+        e.preventDefault();
+        const rect = viewport.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        const oldZoom = widget._ftZoom;
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        let newZoom = oldZoom + delta;
+        newZoom = Math.max(0.1, Math.min(5, newZoom));
+
+        // Zoom toward cursor
+        widget._ftPanX = mx - (mx - widget._ftPanX) * (newZoom / oldZoom);
+        widget._ftPanY = my - (my - widget._ftPanY) * (newZoom / oldZoom);
+        widget._ftZoom = newZoom;
+
+        ftreeApplyTransform(widget);
+        ftreeUpdateZoomLabel(widget);
+        ftreeSaveViewState(widget, toolId);
+    }, { passive: false });
+
+    // Touch support
+    let lastTouchDist = 0;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+
+    viewport.addEventListener('touchstart', e => {
+        if (e.target.closest('.ftree-node') || e.target.closest('.ftree-popup')) return;
+        if (e.touches.length === 1) {
+            isPanning = true;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            startPanX = widget._ftPanX;
+            startPanY = widget._ftPanY;
+        } else if (e.touches.length === 2) {
+            isPanning = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+            lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        }
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', e => {
+        if (e.touches.length === 1 && isPanning) {
+            widget._ftPanX = startPanX + (e.touches[0].clientX - startX);
+            widget._ftPanY = startPanY + (e.touches[0].clientY - startY);
+            ftreeApplyTransform(widget);
+            e.preventDefault();
+        } else if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (lastTouchDist > 0) {
+                const scale = dist / lastTouchDist;
+                const rect = viewport.getBoundingClientRect();
+                const mx = lastTouchX - rect.left;
+                const my = lastTouchY - rect.top;
+                const oldZoom = widget._ftZoom;
+                let newZoom = oldZoom * scale;
+                newZoom = Math.max(0.1, Math.min(5, newZoom));
+                widget._ftPanX = mx - (mx - widget._ftPanX) * (newZoom / oldZoom);
+                widget._ftPanY = my - (my - widget._ftPanY) * (newZoom / oldZoom);
+                widget._ftZoom = newZoom;
+                ftreeApplyTransform(widget);
+                ftreeUpdateZoomLabel(widget);
+            }
+            lastTouchDist = dist;
+            lastTouchX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            lastTouchY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    viewport.addEventListener('touchend', e => {
+        isPanning = false;
+        lastTouchDist = 0;
+        ftreeSaveViewState(widget, toolId);
+    });
+
+    // Close popup on viewport click
+    viewport.addEventListener('click', e => {
+        if (!e.target.closest('.ftree-node') && !e.target.closest('.ftree-popup')) {
+            ftreeClosePopup(widget);
+        }
+    });
+}
+
+function ftreeApplyTransform(widget) {
+    const canvas = widget.querySelector('.ftree-canvas');
+    if (canvas) {
+        canvas.style.transform = `translate(${widget._ftPanX}px, ${widget._ftPanY}px) scale(${widget._ftZoom})`;
+    }
+}
+
+function ftreeUpdateZoomLabel(widget) {
+    const label = widget.querySelector('.ftree-zoom-label');
+    if (label) {
+        label.textContent = Math.round(widget._ftZoom * 100) + '%';
+    }
+}
+
+function ftreeSaveViewState(widget, toolId) {
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    data.viewState = {
+        panX: widget._ftPanX,
+        panY: widget._ftPanY,
+        zoom: widget._ftZoom
+    };
+    ftreeSaveData(toolId, data);
+}
+
+function ftreeZoomIn(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    widget._ftZoom = Math.min(5, widget._ftZoom + 0.2);
+    ftreeApplyTransform(widget);
+    ftreeUpdateZoomLabel(widget);
+    ftreeSaveViewState(widget, toolId);
+}
+
+function ftreeZoomOut(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    widget._ftZoom = Math.max(0.1, widget._ftZoom - 0.2);
+    ftreeApplyTransform(widget);
+    ftreeUpdateZoomLabel(widget);
+    ftreeSaveViewState(widget, toolId);
+}
+
+function ftreeFitView(widget, toolId) {
+    const viewport = widget.querySelector('.ftree-viewport');
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons || Object.keys(data.persons).length === 0) {
+        widget._ftPanX = 0;
+        widget._ftPanY = 0;
+        widget._ftZoom = 1;
+        ftreeApplyTransform(widget);
+        ftreeUpdateZoomLabel(widget);
+        ftreeSaveViewState(widget, toolId);
+        return;
+    }
+
+    const layout = ftreeComputeLayout(data);
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const n of Object.values(layout.nodes)) {
+        if (n.x < minX) minX = n.x;
+        if (n.y < minY) minY = n.y;
+        if (n.x + FTREE_NODE_W > maxX) maxX = n.x + FTREE_NODE_W;
+        if (n.y + FTREE_NODE_H > maxY) maxY = n.y + FTREE_NODE_H;
+    }
+
+    const treeW = maxX - minX + 100;
+    const treeH = maxY - minY + 100;
+    const vpW = viewport.clientWidth;
+    const vpH = viewport.clientHeight;
+
+    const zoom = Math.min(vpW / treeW, vpH / treeH, 1);
+    const panX = (vpW - treeW * zoom) / 2 - (minX - 50) * zoom;
+    const panY = (vpH - treeH * zoom) / 2 - (minY - 50) * zoom;
+
+    widget._ftZoom = zoom;
+    widget._ftPanX = panX;
+    widget._ftPanY = panY;
+    ftreeApplyTransform(widget);
+    ftreeUpdateZoomLabel(widget);
+    ftreeSaveViewState(widget, toolId);
+}
+
+function ftreeResetView(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    ftreeFitView(widget, toolId);
+}
+
+function ftreeNodeClick(event, nodeEl) {
+    event.stopPropagation();
+    const widget = nodeEl.closest('.ftree-widget');
+    const personId = nodeEl.getAttribute('data-person-id');
+    const rect = nodeEl.getBoundingClientRect();
+    const vpRect = widget.querySelector('.ftree-viewport').getBoundingClientRect();
+    const x = rect.right - vpRect.left + 5;
+    const y = rect.top - vpRect.top;
+    ftreeShowNodePopup(widget, personId, x, y);
+}
+
+function ftreeShowNodePopup(widget, personId, x, y) {
+    ftreeClosePopup(widget);
+    const toolId = ftreeGetToolId(widget);
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    const p = data.persons[personId];
+    const esc = s => (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+    // Editable fields
+    const genderOpts = ['', 'm', 'f'].map(v => {
+        const label = v === '' ? '-' : v === 'm' ? 'M' : 'F';
+        return `<option value="${v}"${(p.gender || '') === v ? ' selected' : ''}>${label}</option>`;
+    }).join('');
+
+    const colorVal = p.color || '#cccccc';
+
+    let fieldsHtml = `<div class="ftree-popup-fields">
+<div class="ftree-popup-row"><input type="text" data-field="name" value="${esc(p.name)}" placeholder="Name" oninput="ftreePopupEditField(this,'${personId}','name')"></div>
+<div class="ftree-popup-row"><label>Born</label><input type="text" data-field="birth" value="${esc(p.birth)}" placeholder="Birth" oninput="ftreePopupEditField(this,'${personId}','birth')"> <label>Died</label><input type="text" data-field="death" value="${esc(p.death)}" placeholder="Death" oninput="ftreePopupEditField(this,'${personId}','death')"> <select onchange="ftreePopupEditGender(this,'${personId}')">${genderOpts}</select> <input type="color" value="${colorVal}" onchange="ftreePopupEditColor(this,'${personId}')"></div>
+<div class="ftree-popup-row"><input type="text" data-field="note" value="${esc(p.note)}" placeholder="Note" oninput="ftreePopupEditField(this,'${personId}','note')"></div>
+</div>`;
+
+    // Build toggle buttons for collapse/expand
+    const children = ftreeGetChildrenOf(data, personId);
+    const parents = ftreeGetParentsOf(data, personId);
+    const collChildren = new Set(data.collapsedChildren || []);
+    const collParents = new Set(data.collapsedParents || []);
+    let toggleBtns = '';
+    if (parents.length > 0) {
+        const label = collParents.has(personId) ? `Show Parents (${parents.length})` : `Hide Parents (${parents.length})`;
+        toggleBtns += `<button class="ftree-popup-btn" onclick="ftreeToggleParents(this.closest('.ftree-widget'), '${toolId}', '${personId}')">▲ ${label}</button>`;
+    }
+    if (children.length > 0) {
+        const label = collChildren.has(personId) ? `Show Children (${children.length})` : `Hide Children (${children.length})`;
+        toggleBtns += `<button class="ftree-popup-btn" onclick="ftreeToggleChildren(this.closest('.ftree-widget'), '${toolId}', '${personId}')">▼ ${label}</button>`;
+    }
+
+    const popup = document.createElement('div');
+    popup.className = 'ftree-popup';
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+    popup.innerHTML = `${fieldsHtml}
+<div class="ftree-popup-actions">
+${toggleBtns}<button class="ftree-popup-btn" onclick="ftreeAddParent(this.closest('.ftree-widget'), '${toolId}', '${personId}')">+ Add Parent</button>
+<button class="ftree-popup-btn" onclick="ftreeAddChild(this.closest('.ftree-widget'), '${toolId}', '${personId}')">+ Add Child</button>
+<button class="ftree-popup-btn" onclick="ftreeAddSpouse(this.closest('.ftree-widget'), '${toolId}', '${personId}')">+ Add Spouse</button>
+<button class="ftree-popup-btn danger" onclick="ftreeDeletePerson(this.closest('.ftree-widget'), '${toolId}', '${personId}')">Delete</button>
+</div>`;
+    widget.querySelector('.ftree-viewport').appendChild(popup);
+
+    // Adjust if off-screen
+    requestAnimationFrame(() => {
+        const vpRect = widget.querySelector('.ftree-viewport').getBoundingClientRect();
+        const pRect = popup.getBoundingClientRect();
+        if (pRect.right > vpRect.right) {
+            popup.style.left = (x - pRect.width - 10) + 'px';
+        }
+        if (pRect.bottom > vpRect.bottom) {
+            popup.style.top = Math.max(0, vpRect.height - pRect.height - 5) + 'px';
+        }
+    });
+}
+
+function ftreeClosePopup(widget) {
+    const existing = widget.querySelector('.ftree-popup');
+    if (existing) existing.remove();
+}
+
+function ftreePopupEditField(input, personId, field) {
+    const widget = input.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    data.persons[personId][field] = input.value || null;
+    ftreeSaveData(toolId, data);
+    // Update node text directly without full re-render
+    const node = widget.querySelector(`.ftree-node[data-person-id="${personId}"]`);
+    if (!node) return;
+    if (field === 'name') {
+        const el = node.querySelector('.ftree-node-name');
+        if (el) el.textContent = input.value || '';
+    } else if (field === 'birth' || field === 'death') {
+        const b = data.persons[personId].birth, d = data.persons[personId].death;
+        let el = node.querySelector('.ftree-node-dates');
+        if (b || d) {
+            if (!el) { el = document.createElement('div'); el.className = 'ftree-node-dates'; node.querySelector('.ftree-node-name').after(el); }
+            el.textContent = (b || '?') + ' - ' + (d || '?');
+        } else if (el) { el.remove(); }
+    } else if (field === 'note') {
+        let el = node.querySelector('.ftree-node-note');
+        if (input.value) {
+            if (!el) { el = document.createElement('div'); el.className = 'ftree-node-note'; const toggle = node.querySelector('.ftree-node-toggle'); if (toggle) node.insertBefore(el, toggle); else node.appendChild(el); }
+            el.textContent = input.value;
+        } else if (el) { el.remove(); }
+    }
+}
+
+function ftreePopupEditGender(select, personId) {
+    const widget = select.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    data.persons[personId].gender = select.value || null;
+    ftreeSaveData(toolId, data);
+    ftreeRender(widget, toolId);
+}
+
+function ftreePopupEditColor(input, personId) {
+    const widget = input.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    data.persons[personId].color = input.value === '#cccccc' ? null : input.value;
+    ftreeSaveData(toolId, data);
+    ftreeRender(widget, toolId);
+}
+
+function ftreeNextPersonId(data) {
+    let max = 0;
+    for (const pid of Object.keys(data.persons)) {
+        const n = parseInt(pid.replace('p', ''));
+        if (n > max) max = n;
+    }
+    return 'p' + (max + 1);
+}
+
+function ftreeShowAddPopup(title, callback) {
+    let overlay = document.getElementById('ftree-add-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'ftree-add-overlay';
+        overlay.className = 'ftree-add-overlay';
+        overlay.innerHTML = `<div class="ftree-add-content">
+<h3 class="ftree-add-title"></h3>
+<div class="ftree-add-row"><label>Name</label><input type="text" id="ftreeAddName" placeholder="Full name"></div>
+<div class="ftree-add-row"><label>Gender</label><select id="ftreeAddGender"><option value="">Unknown</option><option value="m">Male</option><option value="f">Female</option></select></div>
+<div class="ftree-add-row"><label>Birth</label><input type="text" id="ftreeAddBirth" placeholder="Year or date"></div>
+<div class="ftree-add-row"><label>Death</label><input type="text" id="ftreeAddDeath" placeholder="Year or date"></div>
+<div class="ftree-add-row"><label>Note</label><input type="text" id="ftreeAddNote" placeholder="Optional note"></div>
+<div class="ftree-add-buttons">
+<button class="ftree-add-cancel" onclick="ftreeCloseAddPopup()">Cancel</button>
+<button class="ftree-add-save" onclick="ftreeAddPopupSave()">Add</button>
+</div>
+</div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => { if (e.target === overlay) ftreeCloseAddPopup(); });
+        overlay.querySelector('#ftreeAddName').addEventListener('keydown', e => { if (e.key === 'Enter') ftreeAddPopupSave(); });
+    }
+    overlay.querySelector('.ftree-add-title').textContent = title;
+    overlay.querySelector('#ftreeAddName').value = '';
+    overlay.querySelector('#ftreeAddGender').value = '';
+    overlay.querySelector('#ftreeAddBirth').value = '';
+    overlay.querySelector('#ftreeAddDeath').value = '';
+    overlay.querySelector('#ftreeAddNote').value = '';
+    overlay._ftreeCallback = callback;
+    overlay.classList.add('open');
+    setTimeout(() => overlay.querySelector('#ftreeAddName').focus(), 50);
+}
+
+function ftreeCloseAddPopup() {
+    const overlay = document.getElementById('ftree-add-overlay');
+    if (overlay) { overlay.classList.remove('open'); overlay._ftreeCallback = null; }
+}
+
+function ftreeAddPopupSave() {
+    const overlay = document.getElementById('ftree-add-overlay');
+    if (!overlay || !overlay._ftreeCallback) return;
+    const name = overlay.querySelector('#ftreeAddName').value.trim();
+    if (!name) { overlay.querySelector('#ftreeAddName').focus(); return; }
+    const person = {
+        name: name,
+        gender: overlay.querySelector('#ftreeAddGender').value || null,
+        birth: overlay.querySelector('#ftreeAddBirth').value.trim() || null,
+        death: overlay.querySelector('#ftreeAddDeath').value.trim() || null,
+        note: overlay.querySelector('#ftreeAddNote').value.trim() || null,
+        color: null
+    };
+    const cb = overlay._ftreeCallback;
+    ftreeCloseAddPopup();
+    cb(person);
+}
+
+function ftreeAddParent(widget, toolId, childId) {
+    ftreeShowAddPopup('Add Parent', function(person) {
+        const data = ftreeGetData(toolId);
+        if (!data) return;
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        data.relationships.push({ type: 'parent-child', parent: newId, child: childId });
+        const existingParents = (data.relationships || []).filter(r => r.type === 'parent-child' && r.child === childId && r.parent !== newId);
+        if (existingParents.length === 1) {
+            const otherParentId = existingParents[0].parent;
+            const alreadySpouses = data.relationships.some(r => r.type === 'spouse' && ((r.person1 === newId && r.person2 === otherParentId) || (r.person1 === otherParentId && r.person2 === newId)));
+            if (!alreadySpouses) {
+                data.relationships.push({ type: 'spouse', person1: otherParentId, person2: newId });
+            }
+        }
+        if (!data.rootPersonId) data.rootPersonId = newId;
+        ftreeSaveData(toolId, data);
+        ftreeClosePopup(widget);
+        ftreeRender(widget, toolId);
+        ftreeApplyTransform(widget);
+    });
+}
+
+function ftreeAddChild(widget, toolId, parentId) {
+    ftreeShowAddPopup('Add Child', function(person) {
+        const data = ftreeGetData(toolId);
+        if (!data) return;
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        data.relationships.push({ type: 'parent-child', parent: parentId, child: newId });
+        ftreeSaveData(toolId, data);
+        ftreeClosePopup(widget);
+        ftreeRender(widget, toolId);
+        ftreeApplyTransform(widget);
+    });
+}
+
+function ftreeAddSpouse(widget, toolId, personId) {
+    ftreeShowAddPopup('Add Spouse', function(person) {
+        const data = ftreeGetData(toolId);
+        if (!data) return;
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        data.relationships.push({ type: 'spouse', person1: personId, person2: newId });
+        ftreeSaveData(toolId, data);
+        ftreeClosePopup(widget);
+        ftreeRender(widget, toolId);
+        ftreeApplyTransform(widget);
+    });
+}
+
+function ftreeDeletePerson(widget, toolId, personId) {
+    if (!confirm('Delete this person and all their relationships?')) return;
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    delete data.persons[personId];
+    data.relationships = data.relationships.filter(r => {
+        if (r.type === 'parent-child') return r.parent !== personId && r.child !== personId;
+        if (r.type === 'spouse') return r.person1 !== personId && r.person2 !== personId;
+        return true;
+    });
+    if (data.rootPersonId === personId) {
+        const remaining = Object.keys(data.persons);
+        data.rootPersonId = remaining.length > 0 ? remaining[0] : null;
+    }
+    ftreeSaveData(toolId, data);
+    ftreeClosePopup(widget);
+    ftreeRender(widget, toolId);
+    ftreeApplyTransform(widget);
+}
+
+function ftreeToggleChildren(widget, toolId, personId) {
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    if (!data.collapsedChildren) data.collapsedChildren = [];
+    const idx = data.collapsedChildren.indexOf(personId);
+    if (idx >= 0) data.collapsedChildren.splice(idx, 1);
+    else data.collapsedChildren.push(personId);
+    ftreeSaveData(toolId, data);
+    ftreeClosePopup(widget);
+    ftreeRender(widget, toolId);
+    ftreeApplyTransform(widget);
+}
+
+function ftreeToggleParents(widget, toolId, personId) {
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    if (!data.collapsedParents) data.collapsedParents = [];
+    const idx = data.collapsedParents.indexOf(personId);
+    if (idx >= 0) data.collapsedParents.splice(idx, 1);
+    else data.collapsedParents.push(personId);
+    ftreeSaveData(toolId, data);
+    ftreeClosePopup(widget);
+    ftreeRender(widget, toolId);
+    ftreeApplyTransform(widget);
+}
+
+function ftreeNodeToggleChildren(toggleEl) {
+    const widget = toggleEl.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    const personId = toggleEl.closest('.ftree-node').getAttribute('data-person-id');
+    ftreeToggleChildren(widget, toolId, personId);
+}
+
+function ftreeNodeToggleParents(toggleEl) {
+    const widget = toggleEl.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    const personId = toggleEl.closest('.ftree-node').getAttribute('data-person-id');
+    ftreeToggleParents(widget, toolId, personId);
+}
+
+function ftreeOpenEditor(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    const data = ftreeGetData(toolId);
+
+    // Remove viewState from editor display
+    const editorData = JSON.parse(JSON.stringify(data || ftreeDefaultData()));
+    delete editorData.viewState;
+
+    let overlay = document.getElementById('ftree-editor-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'ftree-editor-overlay';
+        overlay.className = 'ftree-editor-overlay';
+        overlay.innerHTML = `<div class="ftree-editor-content">
+<div class="ftree-editor-header">
+<h3>Family Tree Data</h3>
+<button class="ftree-btn" onclick="ftreeCloseEditor()">Close</button>
+</div>
+<div class="ftree-editor-body">
+<textarea class="ftree-editor-textarea" spellcheck="false"></textarea>
+</div>
+<div class="ftree-editor-footer">
+<div class="ftree-editor-footer-left">
+<button class="ftree-btn" onclick="ftreeEditorClear()">Clear</button>
+</div>
+<div class="ftree-editor-footer-right">
+<button class="ftree-btn" onclick="ftreeEditorSave()" style="font-weight:bold">Save</button>
+</div>
+</div>
+</div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) ftreeCloseEditor();
+        });
+    }
+
+    overlay._ftreeToolId = toolId;
+    overlay._ftreeWidget = widget;
+    overlay.querySelector('.ftree-editor-textarea').value = JSON.stringify(editorData, null, 2);
+    overlay.classList.add('open');
+}
+
+function ftreeCloseEditor() {
+    const overlay = document.getElementById('ftree-editor-overlay');
+    if (overlay) overlay.classList.remove('open');
+}
+
+function ftreeEditorSave() {
+    const overlay = document.getElementById('ftree-editor-overlay');
+    if (!overlay) return;
+    const textarea = overlay.querySelector('.ftree-editor-textarea');
+    const toolId = overlay._ftreeToolId;
+    const widget = overlay._ftreeWidget;
+
+    let parsed;
+    try {
+        parsed = JSON.parse(textarea.value);
+    } catch (e) {
+        alert('Invalid JSON: ' + e.message);
+        return;
+    }
+
+    // Restore viewState from current widget
+    parsed.viewState = {
+        panX: widget._ftPanX || 0,
+        panY: widget._ftPanY || 0,
+        zoom: widget._ftZoom || 1
+    };
+
+    ftreeSaveData(toolId, parsed);
+    ftreeRender(widget, toolId);
+    ftreeApplyTransform(widget);
+    ftreeCloseEditor();
+}
+
+function ftreeEditorClear() {
+    const overlay = document.getElementById('ftree-editor-overlay');
+    if (!overlay) return;
+    const empty = ftreeDefaultData();
+    delete empty.viewState;
+    overlay.querySelector('.ftree-editor-textarea').value = JSON.stringify(empty, null, 2);
+}
+
+// ── Family Tree Form Editor ──
+
+function ftreeToggleForm(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+
+    const viewport = widget.querySelector('.ftree-viewport');
+    const formEditor = widget.querySelector('.ftree-form-editor');
+
+    if (formEditor.style.display === 'block') {
+        // Switch back to visual
+        btn.classList.remove('active');
+        viewport.style.display = '';
+        formEditor.style.display = 'none';
+        ftreeRender(widget, toolId);
+        ftreeApplyTransform(widget);
+    } else {
+        // Switch to form mode
+        btn.classList.add('active');
+        viewport.style.display = 'none';
+        formEditor.style.display = 'block';
+        ftreeRenderForm(widget, toolId);
+    }
+}
+
+function ftreeGetSpouse(data, personId) {
+    for (const r of data.relationships) {
+        if (r.type === 'spouse') {
+            if (r.person1 === personId) return r.person2;
+            if (r.person2 === personId) return r.person1;
         }
     }
     return null;
 }
 
-function ftGetChildren(data, parentIds) {
-    var children = [];
-    for (var i = 0; i < data.relationships.length; i++) {
-        var rel = data.relationships[i];
-        if (rel.type === 'parent') {
-            for (var p = 0; p < parentIds.length; p++) {
-                if (rel.from === parentIds[p]) {
-                    // Check not already added
-                    var found = false;
-                    for (var j = 0; j < children.length; j++) {
-                        if (children[j] === rel.to) { found = true; break; }
-                    }
-                    if (!found) children.push(rel.to);
-                }
-            }
+function ftreeGetChildrenOf(data, parentId) {
+    const children = [];
+    for (const r of data.relationships) {
+        if (r.type === 'parent-child' && r.parent === parentId && children.indexOf(r.child) === -1) {
+            children.push(r.child);
         }
     }
     return children;
 }
 
-function ftGetParents(data, childId) {
-    var parents = [];
-    for (var i = 0; i < data.relationships.length; i++) {
-        var rel = data.relationships[i];
-        if (rel.type === 'parent' && rel.to === childId) {
-            parents.push(rel.from);
+function ftreeGetParentsOf(data, childId) {
+    const parents = [];
+    for (const r of data.relationships) {
+        if (r.type === 'parent-child' && r.child === childId && parents.indexOf(r.parent) === -1) {
+            parents.push(r.parent);
         }
     }
     return parents;
 }
 
-function ftSelectNode(el, memberId) {
-    var widget = el.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    var wasSelected = data.selectedId === memberId;
-    data.selectedId = wasSelected ? null : memberId;
-    // Clear filter when deselecting or selecting a different person
-    if (wasSelected || (data.viewFilterId && data.viewFilterId !== memberId)) {
-        data.viewFilter = null;
-        data.viewFilterId = null;
-    }
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
+function ftreeRenderForm(widget, toolId) {
+    const formEditor = widget.querySelector('.ftree-form-editor');
+    const data = ftreeGetData(toolId);
+    const addBtn = '<div style="margin-bottom:6px"><button class="ftree-btn" onclick="ftreeFormAddPerson(this)" style="width:100%">+ Add Person</button></div>';
 
-function ftAddPerson(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    var newId = ftGenId();
-    data.members.push({ id: newId, name: 'New Person', birthYear: '', deathYear: '', gender: 'o' });
-    if (!data.rootId) data.rootId = newId;
-    data.selectedId = newId;
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftAddChild(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    var newId = ftGenId();
-    data.members.push({ id: newId, name: 'Child', birthYear: '', deathYear: '', gender: 'o' });
-    data.relationships.push({ type: 'parent', from: data.selectedId, to: newId });
-    // Also add partner as parent if exists
-    var partner = ftGetPartner(data, data.selectedId);
-    if (partner) {
-        data.relationships.push({ type: 'parent', from: partner, to: newId });
-    }
-    data.selectedId = newId;
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftAddPartner(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    // Check if already has a partner
-    if (ftGetPartner(data, data.selectedId)) return;
-    var newId = ftGenId();
-    data.members.push({ id: newId, name: 'Partner', birthYear: '', deathYear: '', gender: 'o' });
-    data.relationships.push({ type: 'partner', from: data.selectedId, to: newId });
-    data.selectedId = newId;
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftDeletePerson(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    var delId = data.selectedId;
-    // Remove member
-    data.members = data.members.filter(function(m) { return m.id !== delId; });
-    // Remove relationships involving this member
-    data.relationships = data.relationships.filter(function(r) { return r.from !== delId && r.to !== delId; });
-    if (data.rootId === delId) {
-        data.rootId = data.members.length > 0 ? data.members[0].id : null;
-    }
-    data.selectedId = null;
-    data.viewFilter = null;
-    data.viewFilterId = null;
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftSetRoot(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    data.rootId = data.selectedId;
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftEditField(input, field) {
-    var widget = input.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === data.selectedId) {
-            data.members[i][field] = input.value;
-            break;
-        }
-    }
-    ftSaveData(toolId, data);
-    // Re-render diagram but not the edit panel (to keep focus)
-    ftRenderDiagram(widget, toolId, data);
-    ftUpdateStatus(widget, data);
-    // Update edit title
-    var titleEl = widget.querySelector('.ft-edit-title');
-    if (titleEl && field === 'name') {
-        titleEl.textContent = 'Edit: ' + (input.value || 'Unnamed');
-    }
-}
-
-function ftEditGender(select) {
-    var widget = select.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === data.selectedId) {
-            data.members[i].gender = select.value;
-            break;
-        }
-    }
-    ftSaveData(toolId, data);
-    ftRenderDiagram(widget, toolId, data);
-}
-
-function ftToggleText(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-
-    var diagram = widget.querySelector('.ft-diagram');
-    var textEditor = widget.querySelector('.ft-text-editor');
-    var formEditor = widget.querySelector('.ft-form-editor');
-    var editPanel = widget.querySelector('.ft-edit-panel');
-    var formBtn = widget.querySelector('.ft-status .ft-btn:last-child');
-
-    if (data.mode === 'text') {
-        // Apply text and switch to visual
-        var newData = ftFromText(textEditor.value);
-        newData.mode = 'visual';
-        newData.selectedId = null;
-        ftSaveData(toolId, newData);
-        btn.classList.remove('active');
-        btn.textContent = '✎ Text';
-        diagram.style.display = '';
-        textEditor.style.display = 'none';
-        formEditor.style.display = 'none';
-        ftRender(widget, toolId, newData);
-    } else {
-        // Switch to text mode (from visual or form)
-        if (data.mode === 'form' && formBtn) {
-            formBtn.classList.remove('active');
-        }
-        data.mode = 'text';
-        data.selectedId = null;
-        ftSaveData(toolId, data);
-        btn.classList.add('active');
-        btn.textContent = '✓ Apply';
-        textEditor.value = ftToText(data);
-        diagram.style.display = 'none';
-        textEditor.style.display = '';
-        formEditor.style.display = 'none';
-        editPanel.style.display = 'none';
-        textEditor.focus();
-        ftUpdateStatus(widget, data);
-    }
-}
-
-function ftToText(data) {
-    if (data.members.length === 0) return '';
-
-    // Build adjacency for tree traversal
-    var memberMap = {};
-    for (var i = 0; i < data.members.length; i++) {
-        memberMap[data.members[i].id] = data.members[i];
-    }
-
-    var visited = {};
-    var lines = [];
-
-    function formatMember(m) {
-        var s = m.name || 'Unnamed';
-        s += ' (';
-        s += m.birthYear || '?';
-        if (m.deathYear) s += '-' + m.deathYear;
-        s += ', ' + (m.gender || 'o');
-        s += ')';
-        return s;
-    }
-
-    function traverse(memberId, depth) {
-        if (visited[memberId]) return;
-        visited[memberId] = true;
-        var mem = memberMap[memberId];
-        if (!mem) return;
-        var indent = '';
-        for (var d = 0; d < depth; d++) indent += '  ';
-        var line = indent + formatMember(mem);
-
-        // Check for partner
-        var partner = ftGetPartner(data, memberId);
-        if (partner && !visited[partner]) {
-            visited[partner] = true;
-            var partnerMem = memberMap[partner];
-            if (partnerMem) line += ' + ' + formatMember(partnerMem);
-        }
-        lines.push(line);
-
-        // Find children
-        var parentIds = [memberId];
-        if (partner) parentIds.push(partner);
-        var children = ftGetChildren(data, parentIds);
-        for (var c = 0; c < children.length; c++) {
-            traverse(children[c], depth + 1);
-        }
-    }
-
-    // Start from root
-    if (data.rootId && memberMap[data.rootId]) {
-        traverse(data.rootId, 0);
-    }
-    // Add any unvisited members
-    for (var j = 0; j < data.members.length; j++) {
-        if (!visited[data.members[j].id]) {
-            traverse(data.members[j].id, 0);
-        }
-    }
-
-    return lines.join('\n');
-}
-
-function ftFromText(text) {
-    var lines = text.split('\n');
-    var members = [];
-    var relationships = [];
-    var rootId = null;
-    var idCounter = 1;
-
-    // Stack to track parent at each indent level
-    // Each entry: { ids: [parentId, partnerParentId], indent: number }
-    var stack = [];
-
-    function parsePerson(str) {
-        str = str.trim();
-        var id = 'ft_' + Date.now() + '_' + (idCounter++);
-        var name = str;
-        var birthYear = '';
-        var deathYear = '';
-        var gender = 'o';
-
-        var parenMatch = str.match(/^(.+?)\s*\(([^)]*)\)\s*$/);
-        if (parenMatch) {
-            name = parenMatch[1].trim();
-            var inside = parenMatch[2].trim();
-            var parts = inside.split(',').map(function(p) { return p.trim(); });
-            if (parts.length >= 1) {
-                var yearPart = parts[0];
-                var yearMatch = yearPart.match(/^(\d+|[\?])\s*(?:-\s*(\d+))?\s*$/);
-                if (yearMatch) {
-                    birthYear = yearMatch[1] === '?' ? '' : yearMatch[1];
-                    deathYear = yearMatch[2] || '';
-                } else {
-                    birthYear = yearPart;
-                }
-            }
-            if (parts.length >= 2) {
-                var g = parts[parts.length - 1].toLowerCase();
-                if (g === 'm' || g === 'f' || g === 'o') gender = g;
-            }
-        }
-        members.push({ id: id, name: name, birthYear: birthYear, deathYear: deathYear, gender: gender });
-        return id;
-    }
-
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        if (line.trim() === '') continue;
-
-        // Calculate indent
-        var indent = 0;
-        while (indent < line.length && line[indent] === ' ') indent++;
-        indent = Math.floor(indent / 2);
-
-        // Split by ' + ' for partner
-        var personParts = line.trim().split(/\s\+\s/);
-        var personId = parsePerson(personParts[0]);
-        var partnerId = null;
-        if (personParts.length > 1) {
-            partnerId = parsePerson(personParts[1]);
-            relationships.push({ type: 'partner', from: personId, to: partnerId });
-        }
-
-        if (!rootId) rootId = personId;
-
-        // Pop stack to find parent at indent-1
-        while (stack.length > 0 && stack[stack.length - 1].indent >= indent) {
-            stack.pop();
-        }
-        if (stack.length > 0) {
-            var parentEntry = stack[stack.length - 1];
-            for (var pi = 0; pi < parentEntry.ids.length; pi++) {
-                relationships.push({ type: 'parent', from: parentEntry.ids[pi], to: personId });
-            }
-        }
-
-        // Push current onto stack
-        var currentIds = [personId];
-        if (partnerId) currentIds.push(partnerId);
-        stack.push({ ids: currentIds, indent: indent });
-    }
-
-    return { members: members, relationships: relationships, selectedId: null, rootId: rootId, mode: 'visual' };
-}
-
-function ftCopySvg(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    var text = ftToText(data);
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(text);
-    }
-    var orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(function() { btn.textContent = orig; }, 1500);
-}
-
-function ftLoadSample(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-
-    var sampleText =
-        'James Wilson (1940-2010, m) + Mary Wilson (1942, f)\n' +
-        '  Robert Wilson (1965, m) + Susan Taylor (1967, f)\n' +
-        '    Emma Wilson (1990, f)\n' +
-        '    David Wilson (1993, m)\n' +
-        '  Linda Wilson (1970, f) + Tom Harris (1968, m)\n' +
-        '    Sarah Harris (1998, f)\n' +
-        '    Jake Harris (2001, m)\n' +
-        '    Lily Harris (2004, f)';
-
-    var data = ftFromText(sampleText);
-    data.mode = 'visual';
-    ftSaveData(toolId, data);
-    // Reset mode buttons
-    var btns = widget.querySelectorAll('.ft-status .ft-btn');
-    if (btns[0]) { btns[0].classList.remove('active'); btns[0].textContent = '✎ Text'; }
-    if (btns[1]) { btns[1].classList.remove('active'); }
-    widget.querySelector('.ft-diagram').style.display = '';
-    widget.querySelector('.ft-text-editor').style.display = 'none';
-    widget.querySelector('.ft-form-editor').style.display = 'none';
-    ftRender(widget, toolId, data);
-}
-
-function ftSetViewFilter(btn, filterType) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (!data.selectedId) return;
-    // Toggle off if same filter on same person
-    if (data.viewFilter === filterType && data.viewFilterId === data.selectedId) {
-        data.viewFilter = null;
-        data.viewFilterId = null;
-    } else {
-        data.viewFilter = filterType;
-        data.viewFilterId = data.selectedId;
-    }
-    ftSaveData(toolId, data);
-    ftRender(widget, toolId, data);
-}
-
-function ftCollectDescendants(data, personId) {
-    var ids = {};
-    ids[personId] = true;
-    // Include partner
-    var partner = ftGetPartner(data, personId);
-    if (partner) ids[partner] = true;
-    var queue = [personId];
-    if (partner) queue.push(partner);
-    while (queue.length > 0) {
-        var current = queue.shift();
-        var currentPartner = ftGetPartner(data, current);
-        var parentIds = [current];
-        if (currentPartner) parentIds.push(currentPartner);
-        var children = ftGetChildren(data, parentIds);
-        for (var c = 0; c < children.length; c++) {
-            if (!ids[children[c]]) {
-                ids[children[c]] = true;
-                queue.push(children[c]);
-                // Include child's partner
-                var cp = ftGetPartner(data, children[c]);
-                if (cp && !ids[cp]) {
-                    ids[cp] = true;
-                    queue.push(cp);
-                }
-            }
-        }
-    }
-    return ids;
-}
-
-function ftCollectAncestors(data, personId) {
-    var ids = {};
-    ids[personId] = true;
-    // Include partner
-    var partner = ftGetPartner(data, personId);
-    if (partner) ids[partner] = true;
-    var queue = [personId];
-    while (queue.length > 0) {
-        var current = queue.shift();
-        var parents = ftGetParents(data, current);
-        for (var p = 0; p < parents.length; p++) {
-            if (!ids[parents[p]]) {
-                ids[parents[p]] = true;
-                queue.push(parents[p]);
-                // Include parent's partner
-                var pp = ftGetPartner(data, parents[p]);
-                if (pp && !ids[pp]) {
-                    ids[pp] = true;
-                    queue.push(pp);
-                }
-            }
-        }
-    }
-    return ids;
-}
-
-function ftFilterData(data) {
-    if (!data.viewFilter || !data.viewFilterId) return data;
-    // Check filter person still exists
-    var exists = false;
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === data.viewFilterId) { exists = true; break; }
-    }
-    if (!exists) return data;
-
-    var ids;
-    if (data.viewFilter === 'descendants') {
-        ids = ftCollectDescendants(data, data.viewFilterId);
-    } else {
-        ids = ftCollectAncestors(data, data.viewFilterId);
-    }
-
-    var filtered = {
-        members: data.members.filter(function(m) { return ids[m.id]; }),
-        relationships: data.relationships.filter(function(r) { return ids[r.from] && ids[r.to]; }),
-        selectedId: data.selectedId,
-        rootId: data.viewFilter === 'ancestors' ? data.viewFilterId : data.rootId,
-        mode: data.mode,
-        viewFilter: data.viewFilter,
-        viewFilterId: data.viewFilterId
-    };
-    // For ancestors view, find the topmost ancestor as root
-    if (data.viewFilter === 'ancestors' && filtered.members.length > 0) {
-        // Find member with no parents in the filtered set
-        var topIds = [];
-        for (var j = 0; j < filtered.members.length; j++) {
-            var mid = filtered.members[j].id;
-            var hasParent = false;
-            for (var k = 0; k < filtered.relationships.length; k++) {
-                if (filtered.relationships[k].type === 'parent' && filtered.relationships[k].to === mid) {
-                    hasParent = true;
-                    break;
-                }
-            }
-            if (!hasParent) topIds.push(mid);
-        }
-        if (topIds.length > 0) filtered.rootId = topIds[0];
-    }
-    return filtered;
-}
-
-function ftClearAll(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = { members: [], relationships: [], selectedId: null, rootId: null, mode: 'visual', viewFilter: null, viewFilterId: null };
-    ftSaveData(toolId, data);
-    // Reset mode buttons
-    var btns = widget.querySelectorAll('.ft-status .ft-btn');
-    if (btns[0]) { btns[0].classList.remove('active'); btns[0].textContent = '✎ Text'; }
-    if (btns[1]) { btns[1].classList.remove('active'); }
-    widget.querySelector('.ft-diagram').style.display = '';
-    widget.querySelector('.ft-text-editor').style.display = 'none';
-    widget.querySelector('.ft-form-editor').style.display = 'none';
-    ftRender(widget, toolId, data);
-}
-
-// =============================================
-// FAMILY TREE — FORM EDITOR
-// =============================================
-
-function ftToggleForm(btn) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-
-    var diagram = widget.querySelector('.ft-diagram');
-    var textEditor = widget.querySelector('.ft-text-editor');
-    var formEditor = widget.querySelector('.ft-form-editor');
-    var editPanel = widget.querySelector('.ft-edit-panel');
-    var textBtn = widget.querySelectorAll('.ft-status .ft-btn')[0];
-
-    if (data.mode === 'form') {
-        // Switch back to visual
-        data.mode = 'visual';
-        data.selectedId = null;
-        ftSaveData(toolId, data);
-        btn.classList.remove('active');
-        diagram.style.display = '';
-        formEditor.style.display = 'none';
-        ftRender(widget, toolId, data);
-    } else {
-        // Entering form mode — if in text mode, apply text first
-        if (data.mode === 'text') {
-            var newData = ftFromText(textEditor.value);
-            newData.mode = 'form';
-            newData.selectedId = null;
-            ftSaveData(toolId, newData);
-            data = newData;
-            if (textBtn) { textBtn.classList.remove('active'); textBtn.textContent = '✎ Text'; }
-        } else {
-            data.mode = 'form';
-            data.selectedId = null;
-            ftSaveData(toolId, data);
-        }
-        btn.classList.add('active');
-        diagram.style.display = 'none';
-        textEditor.style.display = 'none';
-        formEditor.style.display = '';
-        editPanel.style.display = 'none';
-        ftRenderForm(widget, toolId, data);
-        ftUpdateStatus(widget, data);
-    }
-}
-
-function ftRenderForm(widget, toolId, data) {
-    var formEditor = widget.querySelector('.ft-form-editor');
-    if (data.members.length === 0) {
-        formEditor.innerHTML = '<div class="ft-empty">No members yet. Add a person to get started.</div>';
+    if (!data || !data.persons || Object.keys(data.persons).length === 0) {
+        formEditor.innerHTML = addBtn;
         return;
     }
 
-    // Build member map for lookups
-    var memberMap = {};
-    for (var i = 0; i < data.members.length; i++) {
-        memberMap[data.members[i].id] = data.members[i];
-    }
+    const personIds = Object.keys(data.persons);
 
-    var html = '';
-    for (var i = 0; i < data.members.length; i++) {
-        var m = data.members[i];
-        var isRoot = data.rootId === m.id;
-        var genderIcon = m.gender === 'm' ? '\u2642' : m.gender === 'f' ? '\u2640' : '\u26A5';
+    const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    let html = addBtn;
+    for (const pid of personIds) {
+        const p = data.persons[pid];
+        const isRoot = data.rootPersonId === pid;
+        const genderIcon = p.gender === 'm' ? '\u2642' : p.gender === 'f' ? '\u2640' : '\u26A5';
 
         // Relationships
-        var partnerId = ftGetPartner(data, m.id);
-        var partnerName = partnerId && memberMap[partnerId] ? memberMap[partnerId].name || 'Unnamed' : null;
-        var parentIds = ftGetParents(data, m.id);
-        var parentNames = [];
-        for (var p = 0; p < parentIds.length; p++) {
-            if (memberMap[parentIds[p]]) parentNames.push(memberMap[parentIds[p]].name || 'Unnamed');
-        }
-        var childIds = ftGetChildren(data, [m.id]);
-        var childNames = [];
-        for (var c = 0; c < childIds.length; c++) {
-            if (memberMap[childIds[c]]) childNames.push(memberMap[childIds[c]].name || 'Unnamed');
-        }
+        const spouseId = ftreeGetSpouse(data, pid);
+        const spouseName = spouseId && data.persons[spouseId] ? data.persons[spouseId].name : null;
+        const parentIds = ftreeGetParentsOf(data, pid);
+        const parentNames = parentIds.map(id => data.persons[id] ? data.persons[id].name : '?');
+        const childIds = ftreeGetChildrenOf(data, pid);
+        const childNames = childIds.map(id => data.persons[id] ? data.persons[id].name : '?');
 
-        var esc = function(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
-
-        html += '<div class="ft-form-card' + (isRoot ? ' root' : '') + '">';
+        html += '<div class="ftree-form-card' + (isRoot ? ' root' : '') + '">';
 
         // Header
-        html += '<div class="ft-form-header"><span class="ft-form-icon">' + genderIcon + '</span>';
-        if (isRoot) html += ' <span class="ft-form-badge">ROOT</span>';
+        html += '<div class="ftree-form-header"><span class="ftree-form-icon">' + genderIcon + '</span>';
+        if (isRoot) html += ' <span class="ftree-form-badge">ROOT</span>';
         html += '</div>';
 
-        // Fields row
-        html += '<div class="ft-form-fields">';
-        html += '<input type="text" data-field="name" value="' + esc(m.name || '') + '" placeholder="Name" oninput="ftFormEditField(this,\'' + m.id + '\',\'name\')">';
-        html += '<input type="text" data-field="birthYear" value="' + esc(String(m.birthYear || '')) + '" placeholder="Born" oninput="ftFormEditField(this,\'' + m.id + '\',\'birthYear\')">';
-        html += '<input type="text" data-field="deathYear" value="' + esc(String(m.deathYear || '')) + '" placeholder="Died" oninput="ftFormEditField(this,\'' + m.id + '\',\'deathYear\')">';
-        html += '<select onchange="ftFormEditGender(this,\'' + m.id + '\')">';
-        html += '<option value="m"' + (m.gender === 'm' ? ' selected' : '') + '>Male</option>';
-        html += '<option value="f"' + (m.gender === 'f' ? ' selected' : '') + '>Female</option>';
-        html += '<option value="o"' + (m.gender === 'o' ? ' selected' : '') + '>Other</option>';
+        // Fields row 1: Name, Birth, Death, Gender
+        html += '<div class="ftree-form-fields">';
+        html += '<input type="text" data-field="name" value="' + esc(p.name) + '" placeholder="Name" oninput="ftreeFormEditField(this,\'' + pid + '\',\'name\')">';
+        html += '<input type="text" data-field="birth" value="' + esc(p.birth) + '" placeholder="Born" oninput="ftreeFormEditField(this,\'' + pid + '\',\'birth\')">';
+        html += '<input type="text" data-field="death" value="' + esc(p.death) + '" placeholder="Died" oninput="ftreeFormEditField(this,\'' + pid + '\',\'death\')">';
+        html += '<select onchange="ftreeFormEditGender(this,\'' + pid + '\')">';
+        html += '<option value=""' + (!p.gender ? ' selected' : '') + '>-</option>';
+        html += '<option value="m"' + (p.gender === 'm' ? ' selected' : '') + '>M</option>';
+        html += '<option value="f"' + (p.gender === 'f' ? ' selected' : '') + '>F</option>';
         html += '</select>';
         html += '</div>';
 
+        // Fields row 2: Note
+        html += '<div class="ftree-form-fields">';
+        html += '<input type="text" data-field="note" value="' + esc(p.note) + '" placeholder="Note" oninput="ftreeFormEditField(this,\'' + pid + '\',\'note\')">';
+        html += '</div>';
+
         // Relationships
-        var rels = [];
-        if (partnerName) rels.push('Partner: <span>' + esc(partnerName) + '</span>');
+        const rels = [];
+        if (spouseName) rels.push('Spouse: <span>' + esc(spouseName) + '</span>');
         if (parentNames.length > 0) rels.push('Parents: <span>' + parentNames.map(esc).join(' &amp; ') + '</span>');
         if (childNames.length > 0) rels.push('Children: <span>' + childNames.map(esc).join(', ') + '</span>');
         if (rels.length > 0) {
-            html += '<div class="ft-form-rels">' + rels.join(' \u00B7 ') + '</div>';
+            html += '<div class="ftree-form-rels">' + rels.join(' \u00B7 ') + '</div>';
         }
 
         // Actions
-        html += '<div class="ft-form-actions">';
-        html += '<button onclick="ftFormAddChild(this,\'' + m.id + '\')">+ Child</button>';
-        if (!partnerId) {
-            html += '<button onclick="ftFormAddPartner(this,\'' + m.id + '\')">+ Partner</button>';
+        html += '<div class="ftree-form-actions">';
+        html += '<button onclick="ftreeFormAddChild(this,\'' + pid + '\')">+ Child</button>';
+        html += '<button onclick="ftreeFormAddParent(this,\'' + pid + '\')">+ Parent</button>';
+        if (!spouseId) {
+            html += '<button onclick="ftreeFormAddSpouse(this,\'' + pid + '\')">+ Spouse</button>';
         }
         if (isRoot) {
             html += '<button disabled>Root</button>';
         } else {
-            html += '<button onclick="ftFormSetRoot(this,\'' + m.id + '\')">Set Root</button>';
+            html += '<button onclick="ftreeFormSetRoot(this,\'' + pid + '\')">Set Root</button>';
         }
-        html += '<button class="danger" onclick="ftFormDelete(this,\'' + m.id + '\')">Delete</button>';
+        html += '<button class="danger" onclick="ftreeFormDelete(this,\'' + pid + '\')">Delete</button>';
         html += '</div>';
 
         html += '</div>';
     }
     formEditor.innerHTML = html;
+
+    // Update status
+    const status = widget.querySelector('.ftree-status');
+    if (status) {
+        status.textContent = personIds.length + ' person' + (personIds.length !== 1 ? 's' : '');
+    }
 }
 
-function ftFormEditField(input, memberId, field) {
-    var widget = input.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
+function ftreeFormEditField(input, personId, field) {
+    const widget = input.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
     if (!toolId) return;
-    var data = ftGetData(toolId);
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === memberId) {
-            data.members[i][field] = input.value;
-            break;
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    data.persons[personId][field] = input.value || null;
+    ftreeSaveData(toolId, data);
+}
+
+function ftreeFormEditGender(select, personId) {
+    const widget = select.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data || !data.persons[personId]) return;
+    data.persons[personId].gender = select.value || null;
+    ftreeSaveData(toolId, data);
+    ftreeRenderForm(widget, toolId);
+}
+
+function ftreeFormAddPerson(btn) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    ftreeShowAddPopup('Add Person', function(person) {
+        let data = ftreeGetData(toolId);
+        if (!data) data = ftreeDefaultData();
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        if (!data.rootPersonId) data.rootPersonId = newId;
+        ftreeSaveData(toolId, data);
+        ftreeRenderForm(widget, toolId);
+    });
+}
+
+function ftreeFormAddChild(btn, parentId) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    ftreeShowAddPopup('Add Child', function(person) {
+        const data = ftreeGetData(toolId);
+        if (!data) return;
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        data.relationships.push({ type: 'parent-child', parent: parentId, child: newId });
+        ftreeSaveData(toolId, data);
+        ftreeRenderForm(widget, toolId);
+    });
+}
+
+function ftreeFormAddParent(btn, childId) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    ftreeShowAddPopup('Add Parent', function(person) {
+        const data = ftreeGetData(toolId);
+        if (!data) return;
+        const newId = ftreeNextPersonId(data);
+        person.id = newId;
+        data.persons[newId] = person;
+        data.relationships.push({ type: 'parent-child', parent: newId, child: childId });
+        const existingParents = data.relationships.filter(r => r.type === 'parent-child' && r.child === childId && r.parent !== newId);
+        if (existingParents.length === 1) {
+            const otherParentId = existingParents[0].parent;
+            const alreadySpouses = data.relationships.some(r => r.type === 'spouse' && ((r.person1 === newId && r.person2 === otherParentId) || (r.person1 === otherParentId && r.person2 === newId)));
+            if (!alreadySpouses) {
+                data.relationships.push({ type: 'spouse', person1: otherParentId, person2: newId });
+            }
         }
+        if (!data.rootPersonId) data.rootPersonId = newId;
+        ftreeSaveData(toolId, data);
+        ftreeRenderForm(widget, toolId);
+    });
+}
+
+function ftreeFormAddSpouse(btn, personId) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    if (ftreeGetSpouse(data, personId)) return;
+    ftreeShowAddPopup('Add Spouse', function(person) {
+        const data2 = ftreeGetData(toolId);
+        if (!data2) return;
+        const newId = ftreeNextPersonId(data2);
+        person.id = newId;
+        data2.persons[newId] = person;
+        data2.relationships.push({ type: 'spouse', person1: personId, person2: newId });
+        ftreeSaveData(toolId, data2);
+        ftreeRenderForm(widget, toolId);
+    });
+}
+
+function ftreeFormSetRoot(btn, personId) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    data.rootPersonId = personId;
+    ftreeSaveData(toolId, data);
+    ftreeRenderForm(widget, toolId);
+}
+
+function ftreeFormDelete(btn, personId) {
+    const widget = btn.closest('.ftree-widget');
+    const toolId = ftreeGetToolId(widget);
+    if (!toolId) return;
+    const data = ftreeGetData(toolId);
+    if (!data) return;
+    delete data.persons[personId];
+    data.relationships = data.relationships.filter(r => {
+        if (r.type === 'parent-child') return r.parent !== personId && r.child !== personId;
+        if (r.type === 'spouse') return r.person1 !== personId && r.person2 !== personId;
+        return true;
+    });
+    if (data.rootPersonId === personId) {
+        const remaining = Object.keys(data.persons);
+        data.rootPersonId = remaining.length > 0 ? remaining[0] : null;
     }
-    ftSaveData(toolId, data);
-    ftUpdateStatus(widget, data);
-}
-
-function ftFormEditGender(select, memberId) {
-    var widget = select.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    for (var i = 0; i < data.members.length; i++) {
-        if (data.members[i].id === memberId) {
-            data.members[i].gender = select.value;
-            break;
-        }
-    }
-    ftSaveData(toolId, data);
-    ftRenderForm(widget, toolId, data);
-}
-
-function ftFormAddChild(btn, memberId) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    var newId = ftGenId();
-    data.members.push({ id: newId, name: 'Child', birthYear: '', deathYear: '', gender: 'o' });
-    data.relationships.push({ type: 'parent', from: memberId, to: newId });
-    var partner = ftGetPartner(data, memberId);
-    if (partner) {
-        data.relationships.push({ type: 'parent', from: partner, to: newId });
-    }
-    ftSaveData(toolId, data);
-    ftRenderForm(widget, toolId, data);
-    ftUpdateStatus(widget, data);
-}
-
-function ftFormAddPartner(btn, memberId) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    if (ftGetPartner(data, memberId)) return;
-    var newId = ftGenId();
-    data.members.push({ id: newId, name: 'Partner', birthYear: '', deathYear: '', gender: 'o' });
-    data.relationships.push({ type: 'partner', from: memberId, to: newId });
-    ftSaveData(toolId, data);
-    ftRenderForm(widget, toolId, data);
-    ftUpdateStatus(widget, data);
-}
-
-function ftFormSetRoot(btn, memberId) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    data.rootId = memberId;
-    ftSaveData(toolId, data);
-    ftRenderForm(widget, toolId, data);
-}
-
-function ftFormDelete(btn, memberId) {
-    var widget = btn.closest('.ft-widget');
-    var toolId = ftGetToolId(widget);
-    if (!toolId) return;
-    var data = ftGetData(toolId);
-    data.members = data.members.filter(function(m) { return m.id !== memberId; });
-    data.relationships = data.relationships.filter(function(r) { return r.from !== memberId && r.to !== memberId; });
-    if (data.rootId === memberId) {
-        data.rootId = data.members.length > 0 ? data.members[0].id : null;
-    }
-    ftSaveData(toolId, data);
-    ftRenderForm(widget, toolId, data);
-    ftUpdateStatus(widget, data);
+    ftreeSaveData(toolId, data);
+    ftreeRenderForm(widget, toolId);
 }
 
 // =============================================
@@ -2201,14 +2883,19 @@ function ftFormDelete(btn, memberId) {
     var cpkFunctions = [cpkHsvToRgb, cpkRgbToHsv, cpkRgbToHsl, cpkHslToRgb, cpkGetState, cpkDrawWheel, cpkDrawSV, cpkUpdateCursors, cpkUpdateAlpha, cpkUpdateValues, cpkFullUpdate, cpkWheelEvent, cpkSVEvent, cpkAlphaEvent, cpkMakeDraggable, cpkHexTyped, cpkRgbaTyped, cpkHslaTyped, cpkAlphaTyped, cpkCopyVal, cpkSaveColor, cpkInit];
     var emoteFunctions = [emoteInit, emoteSelectTab, emoteRender, emoteSearch, emoteCopy];
     var drawFunctions = [drawGetState, drawInit, drawBeginStroke, drawMoveStroke, drawEndStroke, drawSetColor, drawSetSize, drawToggleEraser, drawClear, drawUndo, drawDownload, drawResizeCanvas, drawColorInput, drawSizeInput];
-    var ftFunctions = [ftGetToolId, ftGetData, ftSaveData, ftGenId, ftInit, ftRender, ftUpdateStatus, ftRenderEditPanel, ftRenderDiagram, ftEscSvg, ftLayoutTree, ftFindGenerations, ftGetPartner, ftGetChildren, ftGetParents, ftSelectNode, ftAddPerson, ftAddChild, ftAddPartner, ftDeletePerson, ftSetRoot, ftEditField, ftEditGender, ftToggleText, ftToText, ftFromText, ftCopySvg, ftLoadSample, ftSetViewFilter, ftCollectDescendants, ftCollectAncestors, ftFilterData, ftClearAll, ftToggleForm, ftRenderForm, ftFormEditField, ftFormEditGender, ftFormAddChild, ftFormAddPartner, ftFormSetRoot, ftFormDelete];
-    var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions).concat(ftFunctions);
+    var ftreeFunctions = [ftreeGetToolId, ftreeGetData, ftreeSaveData, ftreeDefaultData, ftreeGetVisiblePersons, ftreeFilterVisibleData, ftreeInit, ftreeComputeLayout, ftreeRender, ftreeSetupPanZoom, ftreeApplyTransform, ftreeUpdateZoomLabel, ftreeSaveViewState, ftreeZoomIn, ftreeZoomOut, ftreeFitView, ftreeResetView, ftreeNodeClick, ftreeShowNodePopup, ftreeClosePopup, ftreePopupEditField, ftreePopupEditGender, ftreePopupEditColor, ftreeNextPersonId, ftreeShowAddPopup, ftreeCloseAddPopup, ftreeAddPopupSave, ftreeAddParent, ftreeAddChild, ftreeAddSpouse, ftreeDeletePerson, ftreeToggleChildren, ftreeToggleParents, ftreeNodeToggleChildren, ftreeNodeToggleParents, ftreeOpenEditor, ftreeCloseEditor, ftreeEditorSave, ftreeEditorClear, ftreeToggleForm, ftreeGetSpouse, ftreeGetChildrenOf, ftreeGetParentsOf, ftreeRenderForm, ftreeFormEditField, ftreeFormEditGender, ftreeFormAddPerson, ftreeFormAddChild, ftreeFormAddParent, ftreeFormAddSpouse, ftreeFormSetRoot, ftreeFormDelete];
+    var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions).concat(ftreeFunctions);
 
     var code = '(function() {\n' +
         'if (typeof cpkInit !== "undefined") return;\n' +
         'window._cpkState = new WeakMap();\n' +
         'window._drawState = new WeakMap();\n' +
         'window.EMOTE_DATA = ' + JSON.stringify(EMOTE_DATA) + ';\n' +
+        'window.FTREE_NODE_W = ' + FTREE_NODE_W + ';\n' +
+        'window.FTREE_NODE_H = ' + FTREE_NODE_H + ';\n' +
+        'window.FTREE_H_GAP = ' + FTREE_H_GAP + ';\n' +
+        'window.FTREE_V_GAP = ' + FTREE_V_GAP + ';\n' +
+        'window.FTREE_SPOUSE_GAP = ' + FTREE_SPOUSE_GAP + ';\n' +
         allFunctions.map(function(fn) { return 'window.' + fn.name + ' = ' + fn.toString(); }).join(';\n') + ';\n' +
         '})();';
     var encoded = btoa(unescape(encodeURIComponent(code)));
@@ -2357,30 +3044,36 @@ PluginRegistry.registerTool({
 PluginRegistry.registerTool({
     id: 'family-tree',
     name: 'Family Tree',
-    description: 'Build and visualize multi-generational family trees',
-    icon: '🌳',
+    description: 'Interactive family tree with pan/zoom',
+    icon: '\uD83C\uDF33',
     version: '1.0.0',
     toolbox: 'creative-tools',
-    tags: ['family', 'tree', 'genealogy', 'diagram', 'relationship', 'graph'],
+    tags: ['family', 'tree', 'genealogy', 'ancestry', 'lineage'],
     title: 'Family Tree',
-    content: '<div class="ft-widget">' +
-        '<div class="ft-toolbar">' +
-            '<button class="ft-btn primary" onclick="ftAddPerson(this)">+ Add Person</button>' +
-            '<button class="ft-btn" onclick="ftLoadSample(this)">Sample</button>' +
-            '<button class="ft-btn" onclick="ftCopySvg(this)">Copy</button>' +
-            '<button class="ft-btn danger" onclick="ftClearAll(this)">Clear</button>' +
+    content: '<div class="ftree-widget">' +
+        '<div class="ftree-toolbar">' +
+        '<button class="ftree-btn" onclick="ftreeZoomOut(this)">\u2212</button>' +
+        '<span class="ftree-zoom-label">100%</span>' +
+        '<button class="ftree-btn" onclick="ftreeZoomIn(this)">+</button>' +
+        '<button class="ftree-btn" onclick="ftreeResetView(this)">Fit</button>' +
+        '<span class="ftree-toolbar-spacer"></span>' +
+        '<button class="ftree-btn" onclick="ftreeToggleForm(this)">\u2630 Form</button>' +
+        '<button class="ftree-btn" onclick="ftreeOpenEditor(this)">Edit</button>' +
         '</div>' +
-        '<div class="ft-diagram"><div class="ft-empty">Add a person or load a sample to get started</div></div>' +
-        '<textarea class="ft-text-editor" placeholder="Name (birthYear-deathYear, gender) + Partner (year, gender)\n  Child Name (year, gender)\n\nGender: m, f, or o"></textarea>' +
-        '<div class="ft-form-editor"></div>' +
-        '<div class="ft-edit-panel" style="display:none"></div>' +
-        '<div class="ft-status"><span class="ft-status-text"></span><span style="display:flex;gap:4px"><button class="ft-btn" onclick="ftToggleText(this)">✎ Text</button><button class="ft-btn" onclick="ftToggleForm(this)">☰ Form</button></span></div>' +
-    '</div>',
+        '<div class="ftree-viewport">' +
+        '<div class="ftree-canvas">' +
+        '<div class="ftree-connectors"></div>' +
+        '<div class="ftree-nodes"></div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="ftree-form-editor"></div>' +
+        '<div class="ftree-status">0 persons</div>' +
+        '</div>',
     contentType: 'html',
-    onInit: 'ftInit',
+    onInit: 'ftreeInit',
     source: 'external',
-    defaultWidth: 500,
-    defaultHeight: 500
+    defaultWidth: 600,
+    defaultHeight: 450
 });
 
 console.log('Creative Tools plugin loaded (4 tools)');

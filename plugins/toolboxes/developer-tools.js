@@ -729,6 +729,154 @@ body.dark-mode .seq-dashed-number-bg { fill: #8e44ad; }
 .sqle-empty { padding: 20px; text-align: center; color: var(--text-muted); font-style: italic; }
 .sqle-status { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border-light); font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 .sqle-status.error { color: #e74c3c; }
+/* IP Address Info Widget */
+.ipinfo-widget {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.ipinfo-input-row {
+    display: flex;
+}
+
+.ipinfo-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.ipinfo-input:focus {
+    border-color: #3498db;
+}
+
+.ipinfo-input::placeholder {
+    color: var(--text-muted);
+}
+
+.ipinfo-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ipinfo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+}
+
+.ipinfo-row-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 12px;
+    min-width: 110px;
+}
+
+.ipinfo-row-value {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    color: var(--text-primary);
+    text-align: right;
+    word-break: break-all;
+}
+
+.ipinfo-row-value.ipinfo-binary {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.ipinfo-row-value .ipinfo-net-bits {
+    color: #3498db;
+}
+
+.ipinfo-row-value .ipinfo-host-bits {
+    color: #e67e22;
+}
+
+.ipinfo-error {
+    color: #e74c3c;
+    font-size: 12px;
+    padding: 8px 12px;
+    background: rgba(231, 76, 60, 0.08);
+    border-radius: 6px;
+}
+
+.ipinfo-quick-ref {
+    margin-top: 4px;
+}
+
+.ipinfo-ref-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.15s;
+}
+
+.ipinfo-ref-toggle:hover {
+    color: var(--text-primary);
+}
+
+.ipinfo-ref-table {
+    margin-top: 8px;
+}
+
+.ipinfo-ref-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+}
+
+.ipinfo-ref-table th {
+    text-align: left;
+    padding: 4px 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color);
+    font-family: inherit;
+    font-size: 11px;
+}
+
+.ipinfo-ref-table td {
+    padding: 3px 8px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ipinfo-ref-table tr:hover td {
+    background: var(--bg-tertiary);
+}
+
+.ipinfo-class-label {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+}
+
+.ipinfo-class-a { background: #3498db; }
+.ipinfo-class-b { background: #9b59b6; }
+.ipinfo-class-c { background: #27ae60; }
+
 `;
     document.head.appendChild(style);
 })();
@@ -1726,7 +1874,33 @@ PluginRegistry.registerTool({
     defaultHeight: 480
 });
 
-console.log('Developer Tools plugin loaded: 22 tools registered');
+// IP Address Info
+PluginRegistry.registerTool({
+    id: 'ip-address-info',
+    name: 'IP Address Info',
+    description: 'Subnet calculator, CIDR notation helper',
+    icon: '\uD83C\uDF10',
+    version: '1.0.0',
+    toolbox: 'developer-tools',
+    tags: ['ip', 'subnet', 'cidr', 'network', 'mask', 'address', 'ipv4', 'calculator'],
+    title: 'IP Address Info',
+    content: '<div class="ipinfo-widget">' +
+        '<div class="ipinfo-input-row">' +
+            '<input type="text" class="ipinfo-input" placeholder="e.g. 192.168.1.0/24" spellcheck="false" oninput="ipinfoCalc(this)">' +
+        '</div>' +
+        '<div class="ipinfo-results"></div>' +
+        '<div class="ipinfo-quick-ref">' +
+            '<button class="ipinfo-ref-toggle" onclick="ipinfoToggleRef(this)">CIDR Quick Reference &#9662;</button>' +
+            '<div class="ipinfo-ref-table" style="display:none"></div>' +
+        '</div>' +
+    '</div>',
+    onInit: 'ipinfoInit',
+    defaultWidth: 380,
+    defaultHeight: 450,
+    source: 'external'
+});
+
+console.log('Developer Tools plugin loaded: 23 tools registered');
 
 // ==================== Diff Viewer Functions ====================
 function diffGetToolId(element) {
@@ -6125,6 +6299,191 @@ function sqleClear(btn) {
 }
 
 // Inject JavaScript functions into DOM for HTML export
+// IP Address Info Widget
+// ============================================================
+
+function ipinfoGetWidget(el) {
+    return el.closest('.ipinfo-widget');
+}
+
+function ipinfoParse(input) {
+    input = input.trim();
+    let ip, prefix;
+
+    // Parse CIDR notation: 192.168.1.0/24
+    if (input.includes('/')) {
+        const parts = input.split('/');
+        ip = parts[0];
+        prefix = parseInt(parts[1], 10);
+        if (isNaN(prefix) || prefix < 0 || prefix > 32) return null;
+    } else {
+        // Try IP + subnet mask: "192.168.1.0 255.255.255.0"
+        const spaced = input.split(/\s+/);
+        if (spaced.length === 2 && spaced[1].includes('.')) {
+            ip = spaced[0];
+            const maskNum = ipinfoToNum(spaced[1]);
+            if (maskNum === null) return null;
+            prefix = ipinfoMaskToPrefix(maskNum);
+            if (prefix === null) return null;
+        } else {
+            ip = input;
+            prefix = 32;
+        }
+    }
+
+    const ipNum = ipinfoToNum(ip);
+    if (ipNum === null) return null;
+
+    const mask = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
+    const wildcard = (~mask) >>> 0;
+    const network = (ipNum & mask) >>> 0;
+    const broadcast = (network | wildcard) >>> 0;
+    const firstHost = prefix >= 31 ? network : (network + 1) >>> 0;
+    const lastHost = prefix >= 31 ? broadcast : (broadcast - 1) >>> 0;
+    const totalHosts = prefix >= 31 ? (prefix === 32 ? 1 : 2) : Math.pow(2, 32 - prefix) - 2;
+
+    // IP class
+    const firstOctet = (ipNum >>> 24) & 0xFF;
+    let ipClass = '';
+    if (firstOctet < 128) ipClass = 'A';
+    else if (firstOctet < 192) ipClass = 'B';
+    else if (firstOctet < 224) ipClass = 'C';
+    else if (firstOctet < 240) ipClass = 'D';
+    else ipClass = 'E';
+
+    // Private range check
+    let isPrivate = false;
+    if ((ipNum >>> 24) === 10) isPrivate = true;
+    else if ((ipNum >>> 20) === (172 << 4 | 1)) isPrivate = true; // 172.16-31.x.x
+    else if ((ipNum >>> 16) === (192 << 8 | 168)) isPrivate = true;
+    else if ((ipNum >>> 24) === 127) isPrivate = true;
+
+    return { ipNum, prefix, mask, wildcard, network, broadcast, firstHost, lastHost, totalHosts, ipClass, isPrivate };
+}
+
+function ipinfoToNum(ipStr) {
+    const parts = ipStr.split('.');
+    if (parts.length !== 4) return null;
+    let num = 0;
+    for (let i = 0; i < 4; i++) {
+        const octet = parseInt(parts[i], 10);
+        if (isNaN(octet) || octet < 0 || octet > 255) return null;
+        num = (num * 256 + octet) >>> 0;
+    }
+    return num;
+}
+
+function ipinfoFromNum(num) {
+    return [(num >>> 24) & 0xFF, (num >>> 16) & 0xFF, (num >>> 8) & 0xFF, num & 0xFF].join('.');
+}
+
+function ipinfoMaskToPrefix(maskNum) {
+    // Validate it's a contiguous mask
+    let bits = 0;
+    let foundZero = false;
+    for (let i = 31; i >= 0; i--) {
+        const bit = (maskNum >>> i) & 1;
+        if (bit === 1) {
+            if (foundZero) return null; // non-contiguous
+            bits++;
+        } else {
+            foundZero = true;
+        }
+    }
+    return bits;
+}
+
+function ipinfoToBinary(num, prefix) {
+    let str = '';
+    for (let i = 31; i >= 0; i--) {
+        const bit = (num >>> i) & 1;
+        const inNetwork = (31 - i) < prefix;
+        str += inNetwork
+            ? `<span class="ipinfo-net-bits">${bit}</span>`
+            : `<span class="ipinfo-host-bits">${bit}</span>`;
+        if (i > 0 && i % 8 === 0) str += '.';
+    }
+    return str;
+}
+
+function ipinfoFormatHosts(n) {
+    return n.toLocaleString();
+}
+
+function ipinfoCalc(inputEl) {
+    const widget = ipinfoGetWidget(inputEl);
+    const results = widget.querySelector('.ipinfo-results');
+    const val = inputEl.value.trim();
+
+    if (!val) {
+        results.innerHTML = '';
+        return;
+    }
+
+    const info = ipinfoParse(val);
+    if (!info) {
+        results.innerHTML = '<div class="ipinfo-error">Invalid IP address or CIDR notation</div>';
+        return;
+    }
+
+    const classColors = { A: 'ipinfo-class-a', B: 'ipinfo-class-b', C: 'ipinfo-class-c' };
+    const classHtml = classColors[info.ipClass]
+        ? `<span class="ipinfo-class-label ${classColors[info.ipClass]}">Class ${info.ipClass}</span>`
+        : `Class ${info.ipClass}`;
+    const privateTag = info.isPrivate ? ' (Private)' : '';
+
+    const rows = [
+        ['Network', ipinfoFromNum(info.network) + '/' + info.prefix],
+        ['Subnet Mask', ipinfoFromNum(info.mask)],
+        ['Wildcard', ipinfoFromNum(info.wildcard)],
+        ['Broadcast', ipinfoFromNum(info.broadcast)],
+        ['Host Range', ipinfoFromNum(info.firstHost) + ' &ndash; ' + ipinfoFromNum(info.lastHost)],
+        ['Usable Hosts', ipinfoFormatHosts(info.totalHosts)],
+        ['Class', classHtml + privateTag],
+        ['Binary', '<span class="ipinfo-binary">' + ipinfoToBinary(info.ipNum, info.prefix) + '</span>'],
+    ];
+
+    results.innerHTML = rows.map(([label, value]) =>
+        `<div class="ipinfo-row"><span class="ipinfo-row-label">${label}</span><span class="ipinfo-row-value">${value}</span></div>`
+    ).join('');
+}
+
+function ipinfoToggleRef(btn) {
+    const table = btn.nextElementSibling;
+    const visible = table.style.display !== 'none';
+    table.style.display = visible ? 'none' : '';
+    btn.innerHTML = visible ? 'CIDR Quick Reference &#9662;' : 'CIDR Quick Reference &#9652;';
+}
+
+function ipinfoInit() {
+    document.querySelectorAll('.ipinfo-widget').forEach(widget => {
+        const refTable = widget.querySelector('.ipinfo-ref-table');
+        if (refTable && !refTable.querySelector('table')) {
+            const rows = [
+                ['/32', '255.255.255.255', 1],
+                ['/31', '255.255.255.254', 2],
+                ['/30', '255.255.255.252', 4],
+                ['/29', '255.255.255.248', 8],
+                ['/28', '255.255.255.240', 16],
+                ['/27', '255.255.255.224', 32],
+                ['/26', '255.255.255.192', 64],
+                ['/25', '255.255.255.128', 128],
+                ['/24', '255.255.255.0', 256],
+                ['/23', '255.255.254.0', 512],
+                ['/22', '255.255.252.0', '1,024'],
+                ['/21', '255.255.248.0', '2,048'],
+                ['/20', '255.255.240.0', '4,096'],
+                ['/16', '255.255.0.0', '65,536'],
+                ['/12', '255.240.0.0', '1,048,576'],
+                ['/8', '255.0.0.0', '16,777,216'],
+            ];
+            refTable.innerHTML = '<table><tr><th>CIDR</th><th>Mask</th><th>Addresses</th></tr>' +
+                rows.map(([cidr, mask, addrs]) =>
+                    `<tr><td>${cidr}</td><td>${mask}</td><td>${typeof addrs === 'number' ? addrs.toLocaleString() : addrs}</td></tr>`
+                ).join('') + '</table>';
+        }
+    });
+}
 // The injected script only defines things if they don't already exist (for exported HTML)
 (function injectScriptsForExport() {
     if (document.getElementById('developer-tools-scripts')) return;
@@ -6188,7 +6547,9 @@ function sqleClear(btn) {
         sqleParse, sqleExtractClauses, sqleFindKeyword, sqleSplitByKeywords,
         sqleParseSelect, sqleParseInsert, sqleParseUpdate, sqleParseDelete,
         sqleParseCreate, sqleParseAlter, sqleParseDropTable,
-        sqleRender, sqleEscapeHtml, sqleToggleSampleMenu, sqleSample, sqleCopy, sqleClear
+        sqleRender, sqleEscapeHtml, sqleToggleSampleMenu, sqleSample, sqleCopy, sqleClear,
+        ipinfoGetWidget, ipinfoParse, ipinfoToNum, ipinfoFromNum, ipinfoMaskToPrefix,
+        ipinfoToBinary, ipinfoFormatHosts, ipinfoCalc, ipinfoToggleRef, ipinfoInit
     ];
 
     // Wrap in IIFE that checks if already defined (plugin loaded) vs needs defining (exported HTML)
@@ -6215,4 +6576,4 @@ function sqleClear(btn) {
     (document.body || document.head).appendChild(script);
 })();
 
-console.log('Developer Tools plugin loaded: 22 tools');
+console.log('Developer Tools plugin loaded: 23 tools');
