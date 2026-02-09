@@ -225,6 +225,31 @@
 .imgv-display:hover .imgv-mode-toggle { opacity: 1; }
 .imgv-widget.render-mode .imgv-mode-toggle { opacity: 0; }
 .imgv-widget.render-mode .imgv-display:hover .imgv-mode-toggle { opacity: 0.8; }
+
+/* Image Viewer Crop Mode */
+.imgv-crop-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: crosshair; z-index: 3; display: none; }
+.imgv-widget.crop-mode .imgv-crop-overlay { display: block; }
+.imgv-crop-rect { position: absolute; border: 2px dashed #3498db; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); cursor: move; min-width: 20px; min-height: 20px; box-sizing: border-box; }
+.imgv-crop-handle { position: absolute; width: 10px; height: 10px; background: #fff; border: 1px solid #3498db; box-sizing: border-box; z-index: 1; }
+.imgv-crop-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+.imgv-crop-handle.n  { top: -5px; left: 50%; margin-left: -5px; cursor: n-resize; }
+.imgv-crop-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+.imgv-crop-handle.e  { top: 50%; margin-top: -5px; right: -5px; cursor: e-resize; }
+.imgv-crop-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+.imgv-crop-handle.s  { bottom: -5px; left: 50%; margin-left: -5px; cursor: s-resize; }
+.imgv-crop-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+.imgv-crop-handle.w  { top: 50%; margin-top: -5px; left: -5px; cursor: w-resize; }
+.imgv-crop-info { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #fff; background: rgba(0,0,0,0.6); padding: 1px 6px; border-radius: 3px; white-space: nowrap; pointer-events: none; }
+.imgv-crop-bar { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); display: none; gap: 6px; z-index: 4; }
+.imgv-widget.crop-mode .imgv-crop-bar { display: flex; }
+.imgv-crop-bar button { padding: 4px 12px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; cursor: pointer; }
+.imgv-crop-bar .imgv-crop-apply { background: #27ae60; color: white; border-color: #27ae60; }
+.imgv-crop-bar .imgv-crop-apply:hover { background: #219a52; }
+.imgv-crop-bar .imgv-crop-cancel-btn { background: var(--bg-tertiary); color: var(--text-primary); }
+.imgv-crop-bar .imgv-crop-cancel-btn:hover { background: var(--table-hover); }
+.imgv-widget.crop-mode .imgv-mode-toggle { display: none; }
+.imgv-widget.crop-mode .imgv-controls { pointer-events: none; opacity: 0.5; }
+.imgv-widget.crop-mode .imgv-input-row { pointer-events: none; opacity: 0.5; }
 `;
     document.head.appendChild(style);
 })();
@@ -2942,8 +2967,10 @@ function imgvGetState(widget) {
     widget.querySelectorAll('input[data-transform]').forEach(function(inp) {
         state[inp.getAttribute('data-transform')] = parseFloat(inp.value);
     });
-    state.flipH = widget.querySelector('.imgv-flip-btn[data-flip="H"]').classList.contains('active');
-    state.flipV = widget.querySelector('.imgv-flip-btn[data-flip="V"]').classList.contains('active');
+    var flipH = widget.querySelector('.imgv-flip-btn[data-flip="H"]');
+    var flipV = widget.querySelector('.imgv-flip-btn[data-flip="V"]');
+    state.flipH = flipH ? flipH.classList.contains('active') : false;
+    state.flipV = flipV ? flipV.classList.contains('active') : false;
     return state;
 }
 
@@ -2975,7 +3002,88 @@ function imgvApplyStyles(widget) {
     if (!img) return;
     var state = imgvGetState(widget);
     img.style.filter = imgvBuildFilterString(state);
+    var crop = widget._imgvCrop;
+    var hasCrop = crop && (crop.top > 0 || crop.right > 0 || crop.bottom > 0 || crop.left > 0);
+    if (hasCrop) {
+        imgvApplyCropLayout(widget, img, crop, state);
+    } else {
+        if (widget._imgvCropResizeObs) {
+            widget._imgvCropResizeObs.disconnect();
+            widget._imgvCropResizeObs = null;
+        }
+        img.style.position = '';
+        img.style.left = '';
+        img.style.top = '';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'contain';
+        img.style.transformOrigin = '';
+        img.style.clipPath = '';
+        img.style.transform = imgvBuildTransformString(state);
+        // Restore original image aspect ratio
+        var toolEl = widget.closest('.tool');
+        if (toolEl && img.naturalWidth && img.naturalHeight) {
+            toolEl.setAttribute('data-aspect-ratio', (img.naturalWidth / img.naturalHeight).toFixed(6));
+        }
+    }
+}
+
+function imgvApplyCropLayout(widget, img, crop, state) {
+    var natW = img.naturalWidth, natH = img.naturalHeight;
+    if (!natW || !natH) return;
+    var display = widget.querySelector('.imgv-display');
+    var dispW = display.clientWidth, dispH = display.clientHeight;
+    if (!dispW || !dispH) return;
+    // Crop region in natural pixels
+    var cropNatW = natW * (100 - crop.left - crop.right) / 100;
+    var cropNatH = natH * (100 - crop.top - crop.bottom) / 100;
+    if (cropNatW <= 0 || cropNatH <= 0) return;
+    var isRender = widget.classList.contains('render-mode');
+    var toolEl = widget.closest('.tool');
+    if (isRender) {
+        // Render mode: tool is frameless, display fills tool — set aspect ratio to crop ratio
+        if (toolEl) toolEl.setAttribute('data-aspect-ratio', (cropNatW / cropNatH).toFixed(6));
+        // Use cover-fit so crop fills display completely (clip-path trims any excess)
+        var scale = Math.max(dispW / cropNatW, dispH / cropNatH);
+    } else {
+        // Edit mode: tool has header/controls — keep original image aspect ratio
+        if (toolEl) toolEl.setAttribute('data-aspect-ratio', (natW / natH).toFixed(6));
+        // Use contain-fit so full crop region is visible
+        var scale = Math.min(dispW / cropNatW, dispH / cropNatH);
+    }
+    var imgW = natW * scale;
+    var imgH = natH * scale;
+    var cropDispW = cropNatW * scale;
+    var cropDispH = cropNatH * scale;
+    // Center the crop region in the display
+    var padX = (dispW - cropDispW) / 2;
+    var padY = (dispH - cropDispH) / 2;
+    var left = -(crop.left / 100 * natW) * scale + padX;
+    var top = -(crop.top / 100 * natH) * scale + padY;
+    img.style.position = 'absolute';
+    img.style.objectFit = 'fill';
+    img.style.width = imgW + 'px';
+    img.style.height = imgH + 'px';
+    img.style.left = left + 'px';
+    img.style.top = top + 'px';
+    // Clip to exactly the crop region within the img element
+    var clipT = (crop.top / 100 * natH) * scale;
+    var clipR = (crop.right / 100 * natW) * scale;
+    var clipB = (crop.bottom / 100 * natH) * scale;
+    var clipL = (crop.left / 100 * natW) * scale;
+    img.style.clipPath = 'inset(' + clipT + 'px ' + clipR + 'px ' + clipB + 'px ' + clipL + 'px)';
+    // Transform origin at visible crop center
+    var originX = clipL + cropDispW / 2;
+    var originY = clipT + cropDispH / 2;
+    img.style.transformOrigin = originX + 'px ' + originY + 'px';
     img.style.transform = imgvBuildTransformString(state);
+    // ResizeObserver to recalculate on display resize
+    if (!widget._imgvCropResizeObs) {
+        widget._imgvCropResizeObs = new ResizeObserver(function() {
+            if (widget._imgvCrop) imgvApplyStyles(widget);
+        });
+        widget._imgvCropResizeObs.observe(display);
+    }
 }
 
 function imgvUpdateValueDisplay(input) {
@@ -3080,6 +3188,7 @@ function imgvHandleDrop(widget, e) {
 
 function imgvReset(btn) {
     var widget = imgvGetWidget(btn);
+    if (widget.classList.contains('crop-mode')) imgvCropExit(widget);
     widget.querySelectorAll('input[data-filter]').forEach(function(inp) {
         inp.value = IMGV_DEFAULTS[inp.getAttribute('data-filter')];
         imgvUpdateValueDisplay(inp);
@@ -3098,6 +3207,7 @@ function imgvReset(btn) {
     var pickBtn = widget.querySelector('.imgv-pick-btn');
     if (pickBtn) pickBtn.classList.remove('active');
     widget.querySelector('.imgv-display').classList.remove('eyedropper');
+    widget._imgvCrop = null;
     imgvProcessTransparency(widget);
     imgvSaveState(widget);
 }
@@ -3181,6 +3291,7 @@ function imgvPickToggle(btn) {
 }
 
 function imgvDisplayClick(widget, e) {
+    if (widget.classList.contains('crop-mode')) return;
     var pickBtn = widget.querySelector('.imgv-pick-btn');
     if (!pickBtn || !pickBtn.classList.contains('active')) return;
 
@@ -3245,20 +3356,261 @@ function imgvToggleMode(btn) {
     customizations[toolId].frameless = isRender;
     customizations[toolId].imgvRenderMode = isRender;
     saveToolCustomizations(customizations);
+    // Re-apply styles so crop layout recalculates for new mode
+    if (widget._imgvCrop) imgvApplyStyles(widget);
+}
+
+// ── Crop functions ──
+
+function imgvCropStart(btn) {
+    var widget = imgvGetWidget(btn);
+    var img = widget.querySelector('.imgv-display img');
+    if (!img || !widget._imgvOrigSrc) return;
+    widget.classList.add('crop-mode');
+    // Reset image to normal uncropped layout so overlay aligns with what user sees
+    img.style.position = '';
+    img.style.left = '';
+    img.style.top = '';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    img.style.transformOrigin = '';
+    img.style.clipPath = '';
+    img.style.transform = imgvBuildTransformString(imgvGetState(widget));
+    // Compute rendered image bounds within display area
+    var display = widget.querySelector('.imgv-display');
+    var dispRect = display.getBoundingClientRect();
+    var natW = img.naturalWidth, natH = img.naturalHeight;
+    var dispW = dispRect.width, dispH = dispRect.height;
+    var scale = Math.min(dispW / natW, dispH / natH);
+    var rendW = natW * scale, rendH = natH * scale;
+    var offX = (dispW - rendW) / 2, offY = (dispH - rendH) / 2;
+    var imgBounds = { x: offX, y: offY, w: rendW, h: rendH, scale: scale, natW: natW, natH: natH };
+    widget._imgvCropBounds = imgBounds;
+    // Create overlay if needed
+    if (!widget._imgvCropOverlay) imgvCreateCropOverlay(widget);
+    widget._imgvCropOverlay.style.display = 'block';
+    widget._imgvCropBar.style.display = 'flex';
+    // If existing crop, restore that rect; otherwise 80% centered
+    var existingCrop = widget._imgvCrop;
+    if (existingCrop) {
+        var rx = offX + (existingCrop.left / 100) * rendW;
+        var ry = offY + (existingCrop.top / 100) * rendH;
+        var rw = rendW * (1 - existingCrop.left / 100 - existingCrop.right / 100);
+        var rh = rendH * (1 - existingCrop.top / 100 - existingCrop.bottom / 100);
+        widget._imgvCropRect = { x: rx, y: ry, w: Math.max(20, rw), h: Math.max(20, rh) };
+    } else {
+        var pad = 0.1;
+        var rx = offX + rendW * pad, ry = offY + rendH * pad;
+        var rw = rendW * 0.8, rh = rendH * 0.8;
+        widget._imgvCropRect = { x: rx, y: ry, w: rw, h: rh };
+    }
+    imgvCropUpdateRect(widget);
+}
+
+function imgvCreateCropOverlay(widget) {
+    var display = widget.querySelector('.imgv-display');
+    // Overlay
+    var overlay = document.createElement('div');
+    overlay.className = 'imgv-crop-overlay';
+    // Crop rect
+    var rect = document.createElement('div');
+    rect.className = 'imgv-crop-rect';
+    var handles = ['nw','n','ne','e','se','s','sw','w'];
+    handles.forEach(function(h) {
+        var handle = document.createElement('div');
+        handle.className = 'imgv-crop-handle ' + h;
+        handle.setAttribute('data-handle', h);
+        rect.appendChild(handle);
+    });
+    var info = document.createElement('div');
+    info.className = 'imgv-crop-info';
+    info.textContent = '0 \u00d7 0';
+    rect.appendChild(info);
+    overlay.appendChild(rect);
+    display.appendChild(overlay);
+    // Crop bar (apply/cancel)
+    var bar = document.createElement('div');
+    bar.className = 'imgv-crop-bar';
+    var applyBtn = document.createElement('button');
+    applyBtn.className = 'imgv-crop-apply';
+    applyBtn.textContent = 'Apply';
+    applyBtn.onclick = function() { imgvCropApply(applyBtn); };
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'imgv-crop-cancel-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.onclick = function() { imgvCropCancel(cancelBtn); };
+    bar.appendChild(applyBtn);
+    bar.appendChild(cancelBtn);
+    display.appendChild(bar);
+    widget._imgvCropOverlay = overlay;
+    widget._imgvCropRectEl = rect;
+    widget._imgvCropInfo = info;
+    widget._imgvCropBar = bar;
+    // Mouse events
+    overlay.addEventListener('mousedown', function(e) { imgvCropMouseDown(widget, e); });
+    var moveHandler = function(e) { imgvCropMouseMove(widget, e); };
+    var upHandler = function(e) { imgvCropMouseUp(widget, e); };
+    widget._imgvCropMoveHandler = moveHandler;
+    widget._imgvCropUpHandler = upHandler;
+    document.addEventListener('mousemove', moveHandler);
+    document.addEventListener('mouseup', upHandler);
+}
+
+function imgvCropMouseDown(widget, e) {
+    e.preventDefault();
+    var target = e.target;
+    var cr = widget._imgvCropRect;
+    if (!cr) return;
+    var overlay = widget._imgvCropOverlay;
+    var overlayRect = overlay.getBoundingClientRect();
+    var mx = e.clientX - overlayRect.left, my = e.clientY - overlayRect.top;
+    if (target.classList.contains('imgv-crop-handle')) {
+        widget._imgvCropDrag = { type: 'resize', handle: target.getAttribute('data-handle'), startX: mx, startY: my, startRect: { x: cr.x, y: cr.y, w: cr.w, h: cr.h } };
+    } else if (target.classList.contains('imgv-crop-rect')) {
+        widget._imgvCropDrag = { type: 'move', startX: mx, startY: my, startRect: { x: cr.x, y: cr.y, w: cr.w, h: cr.h } };
+    } else {
+        // Draw new rect
+        var b = widget._imgvCropBounds;
+        var cx = Math.max(b.x, Math.min(mx, b.x + b.w));
+        var cy = Math.max(b.y, Math.min(my, b.y + b.h));
+        widget._imgvCropRect = { x: cx, y: cy, w: 1, h: 1 };
+        widget._imgvCropDrag = { type: 'draw', startX: cx, startY: cy, startRect: null };
+        imgvCropUpdateRect(widget);
+    }
+}
+
+function imgvCropMouseMove(widget, e) {
+    var drag = widget._imgvCropDrag;
+    if (!drag) return;
+    var overlay = widget._imgvCropOverlay;
+    var overlayRect = overlay.getBoundingClientRect();
+    var mx = e.clientX - overlayRect.left, my = e.clientY - overlayRect.top;
+    var b = widget._imgvCropBounds;
+    var bx = b.x, by = b.y, bw = b.w, bh = b.h;
+    var MIN = 20;
+    if (drag.type === 'move') {
+        var dx = mx - drag.startX, dy = my - drag.startY;
+        var nx = drag.startRect.x + dx, ny = drag.startRect.y + dy;
+        nx = Math.max(bx, Math.min(nx, bx + bw - drag.startRect.w));
+        ny = Math.max(by, Math.min(ny, by + bh - drag.startRect.h));
+        widget._imgvCropRect.x = nx;
+        widget._imgvCropRect.y = ny;
+        widget._imgvCropRect.w = drag.startRect.w;
+        widget._imgvCropRect.h = drag.startRect.h;
+    } else if (drag.type === 'resize') {
+        var sr = drag.startRect;
+        var h = drag.handle;
+        var nx = sr.x, ny = sr.y, nw = sr.w, nh = sr.h;
+        var dx = mx - drag.startX, dy = my - drag.startY;
+        if (h.indexOf('w') !== -1) { nx = sr.x + dx; nw = sr.w - dx; }
+        if (h.indexOf('e') !== -1) { nw = sr.w + dx; }
+        if (h.indexOf('n') !== -1) { ny = sr.y + dy; nh = sr.h - dy; }
+        if (h.indexOf('s') !== -1) { nh = sr.h + dy; }
+        // Enforce minimum
+        if (nw < MIN) { if (h.indexOf('w') !== -1) nx = sr.x + sr.w - MIN; nw = MIN; }
+        if (nh < MIN) { if (h.indexOf('n') !== -1) ny = sr.y + sr.h - MIN; nh = MIN; }
+        // Clamp to image bounds
+        if (nx < bx) { nw -= (bx - nx); nx = bx; }
+        if (ny < by) { nh -= (by - ny); ny = by; }
+        if (nx + nw > bx + bw) nw = bx + bw - nx;
+        if (ny + nh > by + bh) nh = by + bh - ny;
+        if (nw < MIN) nw = MIN;
+        if (nh < MIN) nh = MIN;
+        widget._imgvCropRect = { x: nx, y: ny, w: nw, h: nh };
+    } else if (drag.type === 'draw') {
+        var sx = drag.startX, sy = drag.startY;
+        var cx = Math.max(bx, Math.min(mx, bx + bw));
+        var cy = Math.max(by, Math.min(my, by + bh));
+        var rx = Math.min(sx, cx), ry = Math.min(sy, cy);
+        var rw = Math.abs(cx - sx), rh = Math.abs(cy - sy);
+        if (rw < MIN) rw = MIN;
+        if (rh < MIN) rh = MIN;
+        if (rx + rw > bx + bw) rx = bx + bw - rw;
+        if (ry + rh > by + bh) ry = by + bh - rh;
+        widget._imgvCropRect = { x: rx, y: ry, w: rw, h: rh };
+    }
+    imgvCropUpdateRect(widget);
+}
+
+function imgvCropMouseUp(widget, e) {
+    widget._imgvCropDrag = null;
+}
+
+function imgvCropUpdateRect(widget) {
+    var cr = widget._imgvCropRect;
+    var el = widget._imgvCropRectEl;
+    if (!cr || !el) return;
+    el.style.left = cr.x + 'px';
+    el.style.top = cr.y + 'px';
+    el.style.width = cr.w + 'px';
+    el.style.height = cr.h + 'px';
+    // Update dimension info in natural pixels
+    var b = widget._imgvCropBounds;
+    if (b) {
+        var nw = Math.round(cr.w / b.scale);
+        var nh = Math.round(cr.h / b.scale);
+        widget._imgvCropInfo.textContent = nw + ' \u00d7 ' + nh;
+    }
+}
+
+function imgvCropApply(btn) {
+    var widget = imgvGetWidget(btn);
+    var cr = widget._imgvCropRect;
+    var b = widget._imgvCropBounds;
+    if (!cr || !b) return;
+    // Convert display-space rect to percentage insets of the natural image
+    var top = ((cr.y - b.y) / b.h) * 100;
+    var left = ((cr.x - b.x) / b.w) * 100;
+    var bottom = (1 - (cr.y - b.y + cr.h) / b.h) * 100;
+    var right = (1 - (cr.x - b.x + cr.w) / b.w) * 100;
+    // Clamp to valid range
+    top = Math.max(0, Math.min(top, 99));
+    left = Math.max(0, Math.min(left, 99));
+    bottom = Math.max(0, Math.min(bottom, 99));
+    right = Math.max(0, Math.min(right, 99));
+    widget._imgvCrop = { top: top, right: right, bottom: bottom, left: left };
+    imgvCropExit(widget);
+    imgvApplyStyles(widget);
+    imgvSaveState(widget);
+}
+
+function imgvCropCancel(btn) {
+    var widget = imgvGetWidget(btn);
+    imgvCropExit(widget);
+}
+
+function imgvCropExit(widget) {
+    widget.classList.remove('crop-mode');
+    widget._imgvCropDrag = null;
+    widget._imgvCropRect = null;
+    widget._imgvCropBounds = null;
+    if (widget._imgvCropOverlay) widget._imgvCropOverlay.style.display = 'none';
+    if (widget._imgvCropBar) widget._imgvCropBar.style.display = 'none';
 }
 
 function imgvSaveState(widget) {
     var toolId = imgvGetToolId(widget);
+    if (!toolId) return;
     var customizations = loadToolCustomizations();
     var state = imgvGetState(widget);
-    var inputUrl = widget.querySelector('.imgv-input-row input').value;
-    // Save original source, not the processed transparency version
-    var src = widget._imgvOrigSrc || '';
-    // Don't persist large data URLs (>500KB) to avoid bloating localStorage
-    if (src && src.indexOf('data:') === 0 && src.length > 500000) src = '';
+    var inputEl = widget.querySelector('.imgv-input-row input');
+    var inputUrl = inputEl ? inputEl.value : '';
+    var orig = widget._imgvOrigSrc || '';
+    // For URL-loaded images, store just the URL; for pasted/dropped, store data URL (capped at 500KB)
+    var src = '';
+    if (inputUrl && inputUrl.match(/^https?:\/\//i)) {
+        src = inputUrl;
+    } else if (orig && orig.indexOf('blob:') !== 0) {
+        src = orig;
+    }
+    // Preserve previously saved URL if current source is non-persistable
+    var existing = customizations[toolId] || {};
+    if (!src && existing.imgvUrl) src = existing.imgvUrl;
+    if (!inputUrl && existing.imgvInputUrl) inputUrl = existing.imgvInputUrl;
     var transColor = widget.querySelector('.imgv-trans-color');
     var transTol = widget.querySelector('input[data-trans="tolerance"]');
-    customizations[toolId] = Object.assign(customizations[toolId] || {}, {
+    customizations[toolId] = Object.assign(existing, {
         imgvUrl: src,
         imgvInputUrl: inputUrl,
         imgvFilters: {
@@ -3270,7 +3622,8 @@ function imgvSaveState(widget) {
             rotate: state.rotate, scale: state.scale, flipH: state.flipH, flipV: state.flipV
         },
         imgvTransColor: transColor ? transColor.value : '#00ff00',
-        imgvTransTolerance: transTol ? parseInt(transTol.value) : 0
+        imgvTransTolerance: transTol ? parseInt(transTol.value) : 0,
+        imgvCrop: widget._imgvCrop || null
     });
     saveToolCustomizations(customizations);
 }
@@ -3327,7 +3680,14 @@ function imgvInit() {
 
         // Restore image
         if (saved.imgvInputUrl) widget.querySelector('.imgv-input-row input').value = saved.imgvInputUrl;
-        if (saved.imgvUrl) imgvShowImage(widget, saved.imgvUrl);
+        var restoreUrl = saved.imgvUrl || saved.imgvInputUrl || '';
+        if (restoreUrl) imgvShowImage(widget, restoreUrl);
+
+        // Restore crop
+        if (saved.imgvCrop) {
+            widget._imgvCrop = saved.imgvCrop;
+            imgvApplyStyles(widget);
+        }
 
         // Restore render mode
         if (saved.imgvRenderMode) {
@@ -3374,7 +3734,7 @@ function imgvInit() {
     var emoteFunctions = [emoteInit, emoteSelectTab, emoteRender, emoteSearch, emoteCopy];
     var drawFunctions = [drawGetState, drawInit, drawBeginStroke, drawMoveStroke, drawEndStroke, drawSetColor, drawSetSize, drawToggleEraser, drawClear, drawUndo, drawDownload, drawResizeCanvas, drawColorInput, drawSizeInput];
     var ftreeFunctions = [ftreeGetToolId, ftreeGetData, ftreeSaveData, ftreeDefaultData, ftreeGetVisiblePersons, ftreeFilterVisibleData, ftreeInit, ftreeComputeLayout, ftreeRender, ftreeSetupPanZoom, ftreeApplyTransform, ftreeUpdateZoomLabel, ftreeSaveViewState, ftreeZoomIn, ftreeZoomOut, ftreeFitView, ftreeResetView, ftreeNodeClick, ftreeShowNodePopup, ftreeClosePopup, ftreePopupEditField, ftreePopupEditGender, ftreePopupEditColor, ftreeNextPersonId, ftreeShowAddPopup, ftreeCloseAddPopup, ftreeAddPopupSave, ftreeAddParent, ftreeAddChild, ftreeAddSpouse, ftreeDeletePerson, ftreeToggleChildren, ftreeToggleParents, ftreeNodeToggleChildren, ftreeNodeToggleParents, ftreeOpenEditor, ftreeCloseEditor, ftreeEditorSave, ftreeEditorClear, ftreeToggleForm, ftreeGetSpouse, ftreeGetChildrenOf, ftreeGetParentsOf, ftreeRenderForm, ftreeFormEditField, ftreeFormEditGender, ftreeFormAddPerson, ftreeFormAddChild, ftreeFormAddParent, ftreeFormAddSpouse, ftreeFormSetRoot, ftreeFormDelete];
-    var imgvFunctions = [imgvGetWidget, imgvGetToolId, imgvGetState, imgvBuildFilterString, imgvBuildTransformString, imgvApplyStyles, imgvUpdateValueDisplay, imgvSliderChange, imgvToggleFlip, imgvShowImage, imgvLoad, imgvHandlePaste, imgvHandleDrop, imgvReset, imgvProcessTransparency, imgvTransColorChange, imgvTransToleranceChange, imgvPickToggle, imgvDisplayClick, imgvToggleMode, imgvSaveState, imgvInit];
+    var imgvFunctions = [imgvGetWidget, imgvGetToolId, imgvGetState, imgvBuildFilterString, imgvBuildTransformString, imgvApplyStyles, imgvApplyCropLayout, imgvUpdateValueDisplay, imgvSliderChange, imgvToggleFlip, imgvShowImage, imgvLoad, imgvHandlePaste, imgvHandleDrop, imgvReset, imgvProcessTransparency, imgvTransColorChange, imgvTransToleranceChange, imgvPickToggle, imgvDisplayClick, imgvToggleMode, imgvCropStart, imgvCreateCropOverlay, imgvCropMouseDown, imgvCropMouseMove, imgvCropMouseUp, imgvCropUpdateRect, imgvCropApply, imgvCropCancel, imgvCropExit, imgvSaveState, imgvInit];
     var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions).concat(ftreeFunctions).concat(imgvFunctions);
 
     var code = '(function() {\n' +
@@ -3608,6 +3968,10 @@ PluginRegistry.registerTool({
                 '<button class="imgv-flip-btn" data-flip="H" onclick="imgvToggleFlip(this)">Flip H</button>' +
                 '<button class="imgv-flip-btn" data-flip="V" onclick="imgvToggleFlip(this)">Flip V</button>' +
                 '<button class="imgv-reset-btn" onclick="imgvReset(this)">Reset</button>' +
+            '</div>' +
+            '<div class="imgv-section-label">Crop</div>' +
+            '<div class="imgv-flip-row">' +
+                '<button class="imgv-flip-btn" onclick="imgvCropStart(this)">Crop</button>' +
             '</div>' +
         '</div>' +
     '</div>',
