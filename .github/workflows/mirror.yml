@@ -3,31 +3,39 @@ name: Mirror to Subdomain Repo
 on:
   push:
     branches:
-      - main  # Change this to 'master' if your default branch is master
+      - main  # Ensure this matches your default branch name (main or master)
 
 jobs:
-  google-mirror:
+  build-and-mirror:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set Subdomain CNAME
-        run: echo "toolboard.webpagestickynotes.com" > CNAME
-      - name: Push to Mirror
-        env:
-          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+          # We use a token to ensure we have permission to push back to GitHub
+          token: ${{ secrets.MIRROR_TOKEN }}
+
+      - name: Configure Git
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          
-          # Remove the 'entouss:' prefix; the token itself acts as the username
+
+      - name: Set Subdomain CNAME
+        # This overwrites the toolboard.me CNAME so the mirror stays on your subdomain
+        run: echo "toolboard.webpagestickynotes.com" > CNAME
+
+      - name: Commit CNAME Change Locally
+        run: |
+          git add CNAME
+          git commit -m "Update CNAME for subdomain mirror" || echo "No changes to commit"
+
+      - name: Push to Mirror Repository
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          # We use the 'oauth2' prefix with the token for the most reliable auth
           git remote add mirror "https://oauth2:${MIRROR_TOKEN}@github.com/entouss/toolboard-mirror.git"
           
-          # Ensure the CNAME is committed locally first
-          git add CNAME
-          git commit -m "Sync to subdomain" || echo "No changes"
-          
-          # Force push
+          # Force push to ensure the mirror is an exact copy of this repo
           git push --force mirror main
