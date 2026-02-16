@@ -3084,7 +3084,7 @@ function dgmMouseDown(toolId, e) {
                 if (s.selectedIds.indexOf(s.shapes[i].id) !== -1) {
                     var ms = s.shapes[i];
                     if (ms.type === 'line' || ms.type === 'arrow') {
-                        s._origShapes[ms.id] = { x1: ms.x1, y1: ms.y1, x2: ms.x2, y2: ms.y2 };
+                        s._origShapes[ms.id] = { x1: ms.x1, y1: ms.y1, x2: ms.x2, y2: ms.y2, bendPoints: ms.bendPoints ? ms.bendPoints.map(function(p) { return { x: p.x, y: p.y }; }) : [] };
                     } else {
                         s._origShapes[ms.id] = { x: ms.x, y: ms.y };
                     }
@@ -3123,6 +3123,14 @@ function dgmMouseMove(toolId, e) {
             if (sh.type === 'line' || sh.type === 'arrow') {
                 sh.x1 = orig.x1 + dx; sh.y1 = orig.y1 + dy;
                 sh.x2 = orig.x2 + dx; sh.y2 = orig.y2 + dy;
+                if (sh.bendPoints && orig.bendPoints) {
+                    for (var b = 0; b < sh.bendPoints.length; b++) {
+                        if (orig.bendPoints[b]) {
+                            sh.bendPoints[b].x = orig.bendPoints[b].x + dx;
+                            sh.bendPoints[b].y = orig.bendPoints[b].y + dy;
+                        }
+                    }
+                }
             } else {
                 sh.x = orig.x + dx; sh.y = orig.y + dy;
             }
