@@ -1142,7 +1142,6 @@ main#toolboard {
 .tool.dragging {
     opacity: 0.9;
     box-shadow: 0 8px 30px var(--shadow-heavy);
-    z-index: 1000 !important;
 }
 
 .tool-header {
@@ -9236,7 +9235,10 @@ function createNewBoardInline() {
     input.focus();
     list.scrollTop = list.scrollHeight;
 
+    let committed = false;
     const commit = () => {
+        if (committed) return;
+        committed = true;
         const name = input.value.trim();
         if (name) {
             const newBoardId = 'board-' + Date.now();

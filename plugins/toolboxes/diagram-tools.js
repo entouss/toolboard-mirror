@@ -4212,6 +4212,30 @@ function dgmInvertColor(hex) {
     return '#' + ('0' + r.toString(16)).slice(-2) + ('0' + g.toString(16)).slice(-2) + ('0' + b.toString(16)).slice(-2);
 }
 
+function dgmWrapLines(ctx, lines, maxWidth) {
+    var wrapped = [];
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (ctx.measureText(line).width <= maxWidth) {
+            wrapped.push(line);
+            continue;
+        }
+        var words = line.split(/(\s+)/);
+        var cur = '';
+        for (var j = 0; j < words.length; j++) {
+            var test = cur + words[j];
+            if (ctx.measureText(test).width > maxWidth && cur.length > 0) {
+                wrapped.push(cur);
+                cur = words[j].replace(/^\s+/, '');
+            } else {
+                cur = test;
+            }
+        }
+        if (cur) wrapped.push(cur);
+    }
+    return wrapped;
+}
+
 function dgmDrawShape(ctx, shape, state) {
     var _dgmDark = document.body.classList.contains('dark-mode');
     var _fill = shape.fill || '#ffffff';
@@ -4815,8 +4839,13 @@ function dgmDrawShape(ctx, shape, state) {
         ctx.fillStyle = _textColor;
         ctx.font = fontSize + 'px sans-serif';
         ctx.textBaseline = 'middle';
-        var lines = shape.text.split('\n');
+        var rawLines = shape.text.split('\n');
         var lineH = Math.round(fontSize * 1.25);
+        var pad = 6;
+        var wrapW = Math.abs(shape.w) - pad * 2;
+        if (shape.type === 'diamond') wrapW = Math.abs(shape.w) * 0.55;
+        else if (shape.type === 'ellipse') wrapW = Math.abs(shape.w) * 0.7;
+        var lines = wrapW > 0 ? dgmWrapLines(ctx, rawLines, wrapW) : rawLines;
         var totalTextH = lines.length * lineH;
         var _tRot = shape.textRotation || 0;
         if (shape.type === 'robot' || shape.type === 'human' || shape.type === 'clock' || shape.type === 'gear') {
@@ -5457,7 +5486,7 @@ function dgmInit() {
     var seqFunctions = [seqGetToolId, seqGetData, seqSaveData, seqInit, seqUpdateContainers, seqOnInput, seqSetMode, seqShowHelp, seqParseColors, seqParseText, seqRenderDiagram];
     var ftreeFunctions = [ftreeGetToolId, ftreeGetData, ftreeSaveData, ftreeDefaultData, ftreeGetVisiblePersons, ftreeFilterVisibleData, ftreeInit, ftreeComputeLayout, ftreeRender, ftreeSetupPanZoom, ftreeApplyTransform, ftreeUpdateZoomLabel, ftreeSaveViewState, ftreeZoomIn, ftreeZoomOut, ftreeFitView, ftreeResetView, ftreeNodeClick, ftreeShowNodePopup, ftreeClosePopup, ftreePopupEditField, ftreePopupEditGender, ftreePopupEditColor, ftreeNextPersonId, ftreeShowAddPopup, ftreeCloseAddPopup, ftreeAddPopupSave, ftreeAddParent, ftreeAddChild, ftreeAddSpouse, ftreeDeletePerson, ftreeToggleChildren, ftreeToggleParents, ftreeNodeToggleChildren, ftreeNodeToggleParents, ftreeOpenEditor, ftreeCloseEditor, ftreeEditorSave, ftreeEditorClear, ftreeToggleForm, ftreeGetSpouse, ftreeGetChildrenOf, ftreeGetParentsOf, ftreeRenderForm, ftreeFormEditField, ftreeFormEditGender, ftreeFormAddPerson, ftreeFormAddChild, ftreeFormAddParent, ftreeFormAddSpouse, ftreeFormSetRoot, ftreeFormDelete];
     var mermDiagFunctions = [mermDiagGetToolId, mermDiagGetWidget, mermDiagLoadLib, mermDiagSaveData, mermDiagLoadData, mermDiagRender, mermDiagOnInput, mermDiagInsertTemplate, mermDiagExportSvg, mermDiagExportPng, mermDiagInit];
-    var dgmFunctions = [dgmGetToolId, dgmNewState, dgmGetState, dgmSaveData, dgmPushUndo, dgmScreenToWorld, dgmWorldToScreen, dgmUnrotatePoint, dgmRotatePoint, dgmPointInRect, dgmPointInEllipse, dgmPointInDiamond, dgmPointNearLine, dgmGetCurvePoints, dgmDrawCurvePath, dgmEvalCurveAt, dgmCurveTangentAt, dgmGetCurveMidHandles, dgmHitCurveMidHandle, dgmHitBendPoint, dgmPointToSegmentDist, dgmClipLineByBox, dgmHitLineText, dgmHitTest, dgmGetHandles, dgmHitHandle, dgmHitRotHandle, dgmHitLineHandle, dgmGetPorts, dgmCalloutPtr, dgmHitCalloutHandle, dgmFindSnapPort, dgmResolveConnections, dgmMouseDown, dgmMouseMove, dgmMouseUp, dgmWheel, dgmDblClick, dgmHover, dgmHideContextMenu, dgmShowContextMenu, dgmContextAction, dgmSyncToolbar, dgmInvertColor, dgmDraw, dgmDrawGrid, dgmDrawShape, dgmDrawArrowhead, dgmDrawPorts, dgmDrawSelection, dgmDrawGhost, dgmStartTextEdit, dgmFinishTextEdit, dgmSetTool, dgmAddShape, dgmSetFill, dgmToggleTransparentFill, dgmSetStroke, dgmSetStrokeWidth, dgmSetLineDash, dgmSetTextColor, dgmSetTextSize, dgmSetTextAlign, dgmSetTextVAlign, dgmSetTextRotation, dgmDeleteSelected, dgmSendToFront, dgmSendToBack, dgmUndo, dgmFitView, dgmToggleAutoFit, dgmToggleFocus, dgmExportPNG, dgmRenderTabs, dgmSwitchTab, dgmAddTab, dgmCloseTab, dgmRenameTab, dgmInit];
+    var dgmFunctions = [dgmGetToolId, dgmNewState, dgmGetState, dgmSaveData, dgmPushUndo, dgmScreenToWorld, dgmWorldToScreen, dgmUnrotatePoint, dgmRotatePoint, dgmPointInRect, dgmPointInEllipse, dgmPointInDiamond, dgmPointNearLine, dgmGetCurvePoints, dgmDrawCurvePath, dgmEvalCurveAt, dgmCurveTangentAt, dgmGetCurveMidHandles, dgmHitCurveMidHandle, dgmHitBendPoint, dgmPointToSegmentDist, dgmClipLineByBox, dgmHitLineText, dgmHitTest, dgmGetHandles, dgmHitHandle, dgmHitRotHandle, dgmHitLineHandle, dgmGetPorts, dgmCalloutPtr, dgmHitCalloutHandle, dgmFindSnapPort, dgmResolveConnections, dgmMouseDown, dgmMouseMove, dgmMouseUp, dgmWheel, dgmDblClick, dgmHover, dgmHideContextMenu, dgmShowContextMenu, dgmContextAction, dgmSyncToolbar, dgmInvertColor, dgmDraw, dgmDrawGrid, dgmWrapLines, dgmDrawShape, dgmDrawArrowhead, dgmDrawPorts, dgmDrawSelection, dgmDrawGhost, dgmStartTextEdit, dgmFinishTextEdit, dgmSetTool, dgmAddShape, dgmSetFill, dgmToggleTransparentFill, dgmSetStroke, dgmSetStrokeWidth, dgmSetLineDash, dgmSetTextColor, dgmSetTextSize, dgmSetTextAlign, dgmSetTextVAlign, dgmSetTextRotation, dgmDeleteSelected, dgmSendToFront, dgmSendToBack, dgmUndo, dgmFitView, dgmToggleAutoFit, dgmToggleFocus, dgmExportPNG, dgmRenderTabs, dgmSwitchTab, dgmAddTab, dgmCloseTab, dgmRenameTab, dgmInit];
 
     var allFunctions = seqFunctions.concat(ftreeFunctions).concat(mermDiagFunctions).concat(dgmFunctions);
 

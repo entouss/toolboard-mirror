@@ -858,6 +858,52 @@ body.dark-mode .diff-line.deletion .diff-gutter { background: rgba(231, 76, 60, 
 .ipinfo-class-b { background: #9b59b6; }
 .ipinfo-class-c { background: #27ae60; }
 
+/* Certificate Converter Widget Styles */
+.tool-content:has(.cert-widget) { display: flex; flex-direction: column; padding: 0; }
+.cert-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; gap: 8px; }
+.cert-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+.cert-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.cert-action-btn { padding: 5px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 4px; }
+.cert-action-btn:hover { background: var(--table-hover); }
+.cert-action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.cert-input-section { flex-shrink: 0; }
+.cert-input-section label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+.cert-input-section textarea { width: 100%; min-height: 80px; max-height: 140px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 11px; background: var(--input-bg); color: var(--text-primary); resize: vertical; box-sizing: border-box; word-break: break-all; }
+.cert-input-section textarea:focus { outline: none; border-color: #3498db; }
+.cert-key-section { flex-shrink: 0; }
+.cert-key-section label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+.cert-key-section textarea { width: 100%; min-height: 60px; max-height: 120px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 11px; background: var(--input-bg); color: var(--text-primary); resize: vertical; box-sizing: border-box; word-break: break-all; }
+.cert-key-section textarea:focus { outline: none; border-color: #3498db; }
+.cert-dropzone { border: 2px dashed var(--border-color); border-radius: 6px; padding: 12px; text-align: center; color: var(--text-muted); font-size: 11px; cursor: pointer; transition: border-color 0.2s, background 0.2s; flex-shrink: 0; }
+.cert-dropzone.dragover { border-color: #3498db; background: rgba(52, 152, 219, 0.05); }
+.cert-dropzone input[type="file"] { display: none; }
+.cert-chain-tabs { display: flex; gap: 0; flex-shrink: 0; border-bottom: 1px solid var(--border-color); }
+.cert-chain-tab { padding: 5px 12px; font-size: 11px; border: 1px solid var(--border-color); border-bottom: none; background: var(--bg-tertiary); color: var(--text-secondary); cursor: pointer; margin-bottom: -1px; border-radius: 4px 4px 0 0; margin-right: -1px; }
+.cert-chain-tab.active { background: var(--bg-primary); color: var(--text-primary); font-weight: 600; border-bottom-color: var(--bg-primary); }
+.cert-info-panel { flex: 1; min-height: 0; overflow: auto; display: none; }
+.cert-info-panel.visible { display: block; }
+.cert-info-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.cert-info-table tr { border-bottom: 1px solid var(--border-light); }
+.cert-info-table td { padding: 4px 8px; vertical-align: top; }
+.cert-info-table td:first-child { color: var(--text-muted); font-weight: 600; white-space: nowrap; width: 110px; }
+.cert-info-table td:last-child { color: var(--text-primary); word-break: break-all; font-family: monospace; font-size: 10px; }
+.cert-info-header { font-size: 11px; font-weight: 600; color: var(--text-heading); padding: 6px 0 4px; border-bottom: 2px solid var(--border-color); margin-bottom: 4px; }
+.cert-validity-ok { color: #27ae60; }
+.cert-validity-expired { color: #e74c3c; }
+.cert-download-section { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid var(--border-light); }
+.cert-download-btn { padding: 6px 14px; border: 1px solid #3498db; background: #3498db; color: white; cursor: pointer; font-size: 11px; border-radius: 4px; font-weight: 500; }
+.cert-download-btn:hover { background: #2980b9; }
+.cert-download-btn:disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg-tertiary); color: var(--text-muted); border-color: var(--border-color); }
+.cert-status { font-size: 11px; color: var(--text-muted); min-height: 14px; flex-shrink: 0; }
+.cert-status.error { color: #e74c3c; }
+.cert-status.success { color: #27ae60; }
+.cert-empty { padding: 16px; text-align: center; color: var(--text-muted); font-style: italic; font-size: 12px; }
+.cert-fingerprint { font-family: monospace; font-size: 10px; letter-spacing: 0.5px; }
+.cert-jks-password { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.cert-jks-password label { font-size: 11px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+.cert-jks-password input { flex: 1; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 11px; background: var(--input-bg); color: var(--text-primary); }
+.cert-jks-password input:focus { outline: none; border-color: #3498db; }
+
 `;
     document.head.appendChild(style);
 })();
@@ -870,7 +916,63 @@ PluginRegistry.registerToolbox({
     icon: '🛠️',
     color: '#3498db',
     version: '1.0.0',
-    tools: ['ascii-codes', 'base64-encoder', 'case-converter', 'code-formatter', 'cron-expression', 'diff-viewer', 'directory-structure', 'epoch-converter', 'hash-generator', 'html-markdown-converter', 'http-request-builder', 'ip-address-info', 'jsonpath-tester', 'jwt-decoder', 'lorem-ipsum', 'number-base-converter', 'password-generator', 'qr-code-generator', 'regex-tester', 'sql-query-explainer', 'url-parser', 'uuid-generator'],
+    tools: ['ascii-codes', 'base64-encoder', 'case-converter', 'certificate-converter', 'code-formatter', 'cron-expression', 'diff-viewer', 'directory-structure', 'epoch-converter', 'hash-generator', 'html-markdown-converter', 'http-request-builder', 'ip-address-info', 'jsonpath-tester', 'jwt-decoder', 'lorem-ipsum', 'number-base-converter', 'password-generator', 'qr-code-generator', 'regex-tester', 'sql-query-explainer', 'url-parser', 'uuid-generator'],
+    source: 'external'
+});
+
+// Certificate Converter
+PluginRegistry.registerTool({
+    id: 'certificate-converter',
+    name: 'Certificate Converter',
+    description: 'Parse, inspect, and convert certificates between PEM, DER, and JKS formats',
+    icon: '🔏',
+    version: '1.0.0',
+    toolbox: 'developer-tools',
+    tags: ['certificate', 'pem', 'der', 'jks', 'x509', 'ssl'],
+    title: 'Certificate Converter',
+    defaultWidth: 480,
+    defaultHeight: 420,
+    content: '<div class="cert-widget">' +
+        '<div class="cert-toolbar">' +
+            '<div class="cert-actions">' +
+                '<button class="cert-action-btn" onclick="certParse(this)">Parse</button>' +
+                '<button class="cert-action-btn" onclick="certClear(this)">Clear</button>' +
+            '</div>' +
+        '</div>' +
+        '<div class="cert-input-section">' +
+            '<label>Paste Certificate (PEM, Base64, or JKS Base64)</label>' +
+            '<textarea class="cert-pem-input" placeholder="PEM, base64-encoded DER, or base64-encoded JKS" oninput="certParse(this)"></textarea>' +
+        '</div>' +
+        '<div class="cert-key-section">' +
+            '<label>Private Key (PEM or Base64, optional)</label>' +
+            '<textarea class="cert-key-input" placeholder="PEM or base64-encoded private key" oninput="certParse(this)"></textarea>' +
+        '</div>' +
+        '<div class="cert-dropzone" onclick="this.querySelector(\'input\').click()" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="event.preventDefault();this.classList.remove(\'dragover\');certHandleFile(certGetToolId(this),event.dataTransfer.files[0])">' +
+            'Drop DER/PEM/JKS/P12 file here or click to browse' +
+            '<input type="file" accept=".pem,.crt,.cer,.der,.jks,.p12,.pfx" onchange="certHandleFile(certGetToolId(this),this.files[0]);this.value=\'\'">' +
+        '</div>' +
+        '<div class="cert-jks-password">' +
+            '<label>JKS Password:</label>' +
+            '<input type="password" class="cert-jks-pw" placeholder="changeit" value="changeit">' +
+        '</div>' +
+        '<div class="cert-chain-tabs"></div>' +
+        '<div class="cert-info-panel">' +
+            '<div class="cert-info-content"></div>' +
+        '</div>' +
+        '<div class="cert-download-section">' +
+            '<button class="cert-download-btn" onclick="certDownloadPem(this)" disabled>Download PEM</button>' +
+            '<button class="cert-download-btn" onclick="certDownloadDer(this)" disabled>Download DER</button>' +
+            '<button class="cert-download-btn" onclick="certDownloadJks(this)" disabled>Download JKS</button>' +
+            '<button class="cert-download-btn" onclick="certDownloadPemBundle(this)" disabled>Download PEM Bundle</button>' +
+            '<button class="cert-download-btn" onclick="certCopyBase64(this,\'pem\')" disabled>Copy PEM Base64</button>' +
+            '<button class="cert-download-btn" onclick="certCopyBase64(this,\'der\')" disabled>Copy DER Base64</button>' +
+            '<button class="cert-download-btn" onclick="certCopyBase64(this,\'jks\')" disabled>Copy JKS Base64</button>' +
+            '<button class="cert-download-btn" onclick="certCopyBase64(this,\'bundle\')" disabled>Copy Bundle Base64</button>' +
+        '</div>' +
+        '<div class="cert-status"></div>' +
+    '</div>',
+    contentType: 'html',
+    onInit: 'certInit',
     source: 'external'
 });
 
@@ -1879,7 +1981,7 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Developer Tools plugin loaded: 22 tools registered');
+console.log('Developer Tools plugin loaded: 23 tools registered');
 
 // ==================== Diff Viewer Functions ====================
 function diffGetToolId(element) {
@@ -4381,7 +4483,7 @@ function nbcConvert(input, base) {
             if (!/^[01]+$/.test(clean)) throw new Error('Invalid');
             num = BigInt('0b' + clean);
         } else if (base === 'hex') {
-            const clean = val.replace(/[\s_]/g, '').replace(/^0x/i, '');
+            const clean = val.replace(/[\s_:]/g, '').replace(/^0x/i, '');
             if (!/^[0-9a-fA-F]+$/.test(clean)) throw new Error('Invalid');
             num = BigInt('0x' + clean);
         } else if (base === 'oct') {
@@ -6407,6 +6509,1293 @@ function hmcSwap(btn) {
 }
 function hmcUpdateStatus(widget, message, type) { const status = widget.querySelector('.hmc-status'); status.textContent = message; status.className = 'hmc-status' + (type ? ' ' + type : ''); }
 
+// ============================================================
+// Certificate Converter Functions
+// ============================================================
+
+const CERT_OID_MAP = {
+    '2.5.4.3': 'CN', '2.5.4.6': 'C', '2.5.4.7': 'L', '2.5.4.8': 'ST',
+    '2.5.4.10': 'O', '2.5.4.11': 'OU', '2.5.4.5': 'serialNumber',
+    '2.5.4.12': 'title', '2.5.4.42': 'givenName', '2.5.4.4': 'SN',
+    '2.5.4.46': 'dnQualifier',
+    '1.2.840.113549.1.9.1': 'emailAddress',
+    '1.2.840.113549.1.1.1': 'RSA', '1.2.840.113549.1.1.5': 'SHA-1 with RSA',
+    '1.2.840.113549.1.1.11': 'SHA-256 with RSA', '1.2.840.113549.1.1.12': 'SHA-384 with RSA',
+    '1.2.840.113549.1.1.13': 'SHA-512 with RSA',
+    '1.2.840.10045.2.1': 'EC', '1.2.840.10045.4.3.2': 'ECDSA with SHA-256',
+    '1.2.840.10045.4.3.3': 'ECDSA with SHA-384', '1.2.840.10045.4.3.4': 'ECDSA with SHA-512',
+    '1.3.6.1.5.5.7.3.1': 'serverAuth', '1.3.6.1.5.5.7.3.2': 'clientAuth',
+    '1.3.6.1.5.5.7.3.3': 'codeSigning', '1.3.6.1.5.5.7.3.4': 'emailProtection',
+    '2.5.29.14': 'subjectKeyIdentifier', '2.5.29.15': 'keyUsage',
+    '2.5.29.17': 'subjectAltName', '2.5.29.19': 'basicConstraints',
+    '2.5.29.35': 'authorityKeyIdentifier', '2.5.29.37': 'extKeyUsage',
+    '2.5.29.31': 'cRLDistributionPoints', '2.5.29.32': 'certificatePolicies',
+    '1.3.6.1.5.5.7.1.1': 'authorityInfoAccess',
+    '1.2.840.10045.3.1.7': 'prime256v1', '1.3.132.0.34': 'secp384r1', '1.3.132.0.35': 'secp521r1'
+};
+
+var certParsedCache = {};
+
+function certGetToolId(el) {
+    const tool = el.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function certInit(toolId) {
+    document.querySelectorAll('.cert-widget').forEach(function(widget) {
+        var tid = certGetToolId(widget);
+        if (!tid) return;
+        if (certParsedCache[tid] && certParsedCache[tid].certs && certParsedCache[tid].certs.length > 0) {
+            certRender(tid);
+        }
+    });
+}
+
+function certParse(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId) return;
+    var textarea = widget.querySelector('.cert-pem-input');
+    var pem = textarea.value.trim();
+    var keyTextarea = widget.querySelector('.cert-key-input');
+    var keyPemRaw = keyTextarea ? keyTextarea.value.trim() : '';
+    if (!pem && !keyPemRaw) {
+        widget.querySelector('.cert-info-panel').classList.remove('visible');
+        widget.querySelector('.cert-chain-tabs').innerHTML = '';
+        certSetStatus(widget, '');
+        certToggleDownloads(widget, false);
+        delete certParsedCache[toolId];
+        return;
+    }
+    var certs = [];
+    var certInputFmt = 'PEM';
+    if (pem) {
+        var fmt = certDetectFormat(pem);
+        if (fmt !== 'PEM') {
+            // Try as raw base64 — strip whitespace and attempt decode
+            var b64clean = pem.replace(/\s+/g, '');
+            if (/^[A-Za-z0-9+/]+=*$/.test(b64clean) && b64clean.length > 20) {
+                try {
+                    var decoded = atob(b64clean);
+                    var decodedBytes = new Uint8Array(decoded.length);
+                    for (var di = 0; di < decoded.length; di++) decodedBytes[di] = decoded.charCodeAt(di);
+                    var innerFmt = certDetectFormat(decodedBytes);
+                    if (innerFmt === 'JKS') {
+                        // Base64-encoded JKS — parse inline
+                        var pw = widget.querySelector('.cert-jks-pw').value || 'changeit';
+                        certParseJks(decodedBytes.buffer, pw).then(function(jksResult) {
+                            var jksCerts = jksResult.certs;
+                            if (jksCerts.length === 0 && !jksResult.keyDer) {
+                                certSetStatus(widget, 'JKS contains no entries', 'error');
+                                return;
+                            }
+                            var jCerts = [];
+                            var pemAll = [];
+                            for (var ji = 0; ji < jksCerts.length; ji++) {
+                                try {
+                                    var jp = certParseX509(jksCerts[ji].der);
+                                    jp.pem = certDerToPem(jksCerts[ji].der, 'CERTIFICATE');
+                                    jp.der = jksCerts[ji].der;
+                                    jp.jksAlias = jksCerts[ji].alias;
+                                    jCerts.push(jp);
+                                    pemAll.push(jp.pem);
+                                } catch(jex) {
+                                    jCerts.push({ error: jex.message, pem: '', der: jksCerts[ji].der });
+                                }
+                            }
+                            var jKeyPem = null, jKeyDer = null, jKeyInfo = null;
+                            if (jksResult.keyDer) {
+                                jKeyDer = jksResult.keyDer;
+                                jKeyPem = certDerToPem(jKeyDer, 'PRIVATE KEY');
+                                jKeyInfo = certKeyInfo(jKeyDer);
+                                if (keyTextarea) keyTextarea.value = jKeyPem;
+                            }
+                            textarea.value = pemAll.join('\n\n');
+                            certParsedCache[toolId] = { certs: jCerts, selectedIndex: 0, keyPem: jKeyPem, keyDer: jKeyDer, keyInfo: jKeyInfo };
+                            certRender(toolId);
+                            var jMsg = 'Loaded ' + jCerts.length + ' certificate(s) from JKS base64';
+                            if (jKeyDer) jMsg += ' + private key';
+                            certSetStatus(widget, jMsg, 'success');
+                        }).catch(function(jksErr) {
+                            certSetStatus(widget, 'Failed to parse JKS: ' + jksErr.message, 'error');
+                        });
+                        return;
+                    }
+                    if (innerFmt === 'PEM') {
+                        // Base64-encoded PEM text — decode and use as PEM
+                        var decodedStr = decodeURIComponent(escape(decoded));
+                        textarea.value = decodedStr;
+                        pem = decodedStr;
+                        fmt = 'PEM';
+                        certInputFmt = 'base64-encoded PEM';
+                    } else {
+                        // Assume base64 of DER certificate
+                        pem = '-----BEGIN CERTIFICATE-----\n' + b64clean + '\n-----END CERTIFICATE-----';
+                        textarea.value = pem;
+                        fmt = 'PEM';
+                        certInputFmt = 'base64-encoded DER';
+                    }
+                } catch(decErr) {
+                    certSetStatus(widget, 'Invalid base64 data', 'error');
+                    return;
+                }
+            } else {
+                certSetStatus(widget, 'Unrecognized format — paste PEM, base64, or drop a file', 'error');
+                return;
+            }
+        }
+        var pemBlocks = certSplitPemChain(pem);
+        // Separate key blocks from cert blocks; move keys to key textarea
+        var certBlocks = [];
+        var keyBlocksFromCert = [];
+        for (var b = 0; b < pemBlocks.length; b++) {
+            if (pemBlocks[b].indexOf('PRIVATE KEY') !== -1) {
+                keyBlocksFromCert.push(pemBlocks[b]);
+            } else {
+                certBlocks.push(pemBlocks[b]);
+            }
+        }
+        if (keyBlocksFromCert.length > 0 && keyTextarea) {
+            if (!keyPemRaw) {
+                keyPemRaw = keyBlocksFromCert.join('\n\n');
+                keyTextarea.value = keyPemRaw;
+            }
+            // Update cert textarea to only contain cert blocks
+            textarea.value = certBlocks.map(function(bl) { return bl; }).join('\n\n');
+        }
+        if (certBlocks.length === 0 && !keyPemRaw) {
+            certSetStatus(widget, 'No valid PEM certificate blocks found', 'error');
+            return;
+        }
+        for (var i = 0; i < certBlocks.length; i++) {
+            try {
+                var der = certPemToDer(certBlocks[i]);
+                var parsed = certParseX509(der);
+                parsed.pem = certBlocks[i];
+                parsed.der = der;
+                certs.push(parsed);
+            } catch (e) {
+                certs.push({ error: e.message, pem: certBlocks[i], der: null });
+            }
+        }
+    }
+    // Parse private key
+    var keyPem = null, keyDer = null, keyInfoObj = null;
+    var keyInputFmt = 'PEM';
+    if (keyPemRaw) {
+        var keyType = certDetectKeyType(keyPemRaw);
+        if (!keyType) {
+            // Try as raw base64 — could be base64 of PEM text or DER key bytes
+            var keyB64 = keyPemRaw.replace(/\s+/g, '');
+            if (/^[A-Za-z0-9+/]+=*$/.test(keyB64) && keyB64.length > 20) {
+                try {
+                    var keyDecoded = atob(keyB64);
+                    // Check if decoded content is PEM text
+                    if (keyDecoded.indexOf('-----BEGIN') !== -1 && keyDecoded.indexOf('PRIVATE KEY') !== -1) {
+                        keyPemRaw = decodeURIComponent(escape(keyDecoded));
+                        keyInputFmt = 'base64-encoded PEM';
+                    } else {
+                        // Assume base64 of DER key bytes — wrap as PKCS#8
+                        keyPemRaw = '-----BEGIN PRIVATE KEY-----\n' + keyB64 + '\n-----END PRIVATE KEY-----';
+                        keyInputFmt = 'base64-encoded DER';
+                    }
+                    keyTextarea.value = keyPemRaw;
+                    keyType = certDetectKeyType(keyPemRaw);
+                } catch(keyDecErr) {
+                    // Not valid base64, ignore
+                }
+            }
+        }
+        if (keyType) {
+            keyPem = keyPemRaw;
+            try {
+                if (keyType === 'PKCS8') {
+                    keyDer = certPemToDer(keyPemRaw);
+                } else if (keyType === 'PKCS1_RSA') {
+                    keyDer = certParsePkcs1ToKeyDer(keyPemRaw);
+                } else if (keyType === 'EC_SEC1') {
+                    keyDer = certParseEc1ToKeyDer(keyPemRaw);
+                }
+                keyInfoObj = certKeyInfo(keyDer);
+            } catch(e) {
+                keyInfoObj = { algo: 'Unknown', bits: null, curve: null, error: e.message };
+            }
+        }
+    }
+    certParsedCache[toolId] = { certs: certs, selectedIndex: 0, keyPem: keyPem, keyDer: keyDer, keyInfo: keyInfoObj };
+    certRender(toolId);
+    var msg = '';
+    if (certs.length > 0) {
+        msg += 'Parsed ' + certs.length + ' certificate' + (certs.length > 1 ? 's' : '') + ' from ' + certInputFmt;
+    }
+    if (keyPem) {
+        var keyDesc = 'private key';
+        if (keyInfoObj && keyInfoObj.algo && !keyInfoObj.error) {
+            keyDesc = keyInfoObj.algo + (keyInfoObj.bits ? ' ' + keyInfoObj.bits + '-bit' : '') + ' key';
+            if (keyInfoObj.curve) keyDesc += ' (' + keyInfoObj.curve + ')';
+        }
+        msg += (msg ? ' + ' : '') + keyDesc + ' from ' + keyInputFmt;
+    }
+    certSetStatus(widget, msg || 'Private key loaded', 'success');
+}
+
+function certRender(toolId) {
+    var widget = document.querySelector('.tool[data-tool="' + toolId + '"] .cert-widget');
+    if (!widget) return;
+    var cache = certParsedCache[toolId];
+    if (!cache || ((!cache.certs || cache.certs.length === 0) && !cache.keyPem)) {
+        widget.querySelector('.cert-info-panel').classList.remove('visible');
+        widget.querySelector('.cert-chain-tabs').innerHTML = '';
+        certToggleDownloads(widget, false);
+        return;
+    }
+    var tabsEl = widget.querySelector('.cert-chain-tabs');
+    if (cache.certs && cache.certs.length > 1) {
+        var tabs = '';
+        for (var i = 0; i < cache.certs.length; i++) {
+            var label = cache.certs[i].subject ? (certNameShort(cache.certs[i].subject) || 'Cert ' + (i + 1)) : 'Cert ' + (i + 1);
+            tabs += '<button class="cert-chain-tab' + (i === cache.selectedIndex ? ' active' : '') + '" onclick="certSelectChainTab(this,' + i + ')">' + certEscHtml(label) + '</button>';
+        }
+        tabsEl.innerHTML = tabs;
+    } else {
+        tabsEl.innerHTML = '';
+    }
+    var panel = widget.querySelector('.cert-info-panel');
+    var content = widget.querySelector('.cert-info-content');
+    var html = '';
+    // Show private key info if present
+    if (cache.keyInfo) {
+        html += '<div class="cert-info-header">Private Key</div>';
+        html += '<table class="cert-info-table">';
+        var keyDesc = cache.keyInfo.algo || 'Unknown';
+        if (cache.keyInfo.bits) keyDesc += ' ' + cache.keyInfo.bits + '-bit';
+        if (cache.keyInfo.curve) keyDesc += ' (' + cache.keyInfo.curve + ')';
+        html += '<tr><td>Type</td><td>' + certEscHtml(keyDesc) + '</td></tr>';
+        if (cache.keyInfo.error) html += '<tr><td>Warning</td><td class="cert-validity-expired">' + certEscHtml(cache.keyInfo.error) + '</td></tr>';
+        html += '</table>';
+    }
+    var cert = (cache.certs && cache.certs.length > 0) ? cache.certs[cache.selectedIndex] : null;
+    if (cert) {
+        if (cert.error) {
+            content.innerHTML = html + '<div class="cert-empty">Parse error: ' + certEscHtml(cert.error) + '</div>';
+            panel.classList.add('visible');
+            certToggleDownloads(widget, false);
+            return;
+        }
+        html += '<div class="cert-info-header">Subject</div>';
+        html += '<table class="cert-info-table">' + certNameRows(cert.subject) + '</table>';
+        html += '<div class="cert-info-header">Issuer</div>';
+        html += '<table class="cert-info-table">' + certNameRows(cert.issuer) + '</table>';
+        html += '<div class="cert-info-header">Validity</div>';
+        html += '<table class="cert-info-table">';
+        var now = new Date();
+        var nbClass = '', naClass = '';
+        if (cert.notBefore && now < cert.notBefore) nbClass = ' class="cert-validity-expired"';
+        if (cert.notAfter && now > cert.notAfter) naClass = ' class="cert-validity-expired"';
+        if (cert.notAfter && now <= cert.notAfter && cert.notBefore && now >= cert.notBefore) naClass = ' class="cert-validity-ok"';
+        html += '<tr><td>Not Before</td><td' + nbClass + '>' + (cert.notBefore ? certEscHtml(cert.notBefore.toUTCString()) : 'N/A') + '</td></tr>';
+        html += '<tr><td>Not After</td><td' + naClass + '>' + (cert.notAfter ? certEscHtml(cert.notAfter.toUTCString()) : 'N/A') + '</td></tr>';
+        html += '</table>';
+        html += '<div class="cert-info-header">Details</div>';
+        html += '<table class="cert-info-table">';
+        html += '<tr><td>Serial Number</td><td>' + certEscHtml(cert.serialNumber || 'N/A') + '</td></tr>';
+        html += '<tr><td>Signature Algo</td><td>' + certEscHtml(cert.signatureAlgorithm || 'N/A') + '</td></tr>';
+        if (cert.publicKeyAlgorithm) html += '<tr><td>Public Key</td><td>' + certEscHtml(cert.publicKeyAlgorithm) + '</td></tr>';
+        html += '</table>';
+        // Compute fingerprints async
+        if (cert.der) {
+            var fpId = 'cert-fp-' + toolId + '-' + cache.selectedIndex;
+            html += '<div class="cert-info-header">Fingerprints</div>';
+            html += '<table class="cert-info-table"><tr><td>SHA-256</td><td id="' + fpId + '-sha256" class="cert-fingerprint">computing...</td></tr>';
+            html += '<tr><td>SHA-1</td><td id="' + fpId + '-sha1" class="cert-fingerprint">computing...</td></tr></table>';
+            content.innerHTML = html;
+            panel.classList.add('visible');
+            certFingerprint(cert.der, 'SHA-256').then(function(fp) {
+                var el = document.getElementById(fpId + '-sha256');
+                if (el) el.textContent = fp;
+            });
+            certFingerprint(cert.der, 'SHA-1').then(function(fp) {
+                var el = document.getElementById(fpId + '-sha1');
+                if (el) el.textContent = fp;
+            });
+        } else {
+            content.innerHTML = html;
+            panel.classList.add('visible');
+        }
+    } else {
+        // Key only, no cert
+        content.innerHTML = html;
+        panel.classList.add('visible');
+    }
+    var hasCert = cert && !!cert.der;
+    certToggleDownloads(widget, hasCert || !!cache.keyPem);
+}
+
+function certSelectChainTab(btn, index) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    certParsedCache[toolId].selectedIndex = index;
+    certRender(toolId);
+}
+
+function certClear(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId) return;
+    widget.querySelector('.cert-pem-input').value = '';
+    var keyInput = widget.querySelector('.cert-key-input');
+    if (keyInput) keyInput.value = '';
+    widget.querySelector('.cert-info-panel').classList.remove('visible');
+    widget.querySelector('.cert-chain-tabs').innerHTML = '';
+    certToggleDownloads(widget, false);
+    certSetStatus(widget, '');
+    delete certParsedCache[toolId];
+}
+
+// PEM/DER helpers
+function certPemToDer(pem) {
+    var lines = pem.split('\n');
+    var b64 = '';
+    var inBlock = false;
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (line.indexOf('-----BEGIN') === 0) { inBlock = true; continue; }
+        if (line.indexOf('-----END') === 0) { inBlock = false; continue; }
+        if (inBlock) b64 += line;
+    }
+    var raw = atob(b64);
+    var arr = new Uint8Array(raw.length);
+    for (var j = 0; j < raw.length; j++) arr[j] = raw.charCodeAt(j);
+    return arr;
+}
+
+function certDerToPem(der, label) {
+    if (!label) label = 'CERTIFICATE';
+    var binary = '';
+    for (var i = 0; i < der.length; i++) binary += String.fromCharCode(der[i]);
+    var b64 = btoa(binary);
+    var lines = [];
+    for (var j = 0; j < b64.length; j += 64) lines.push(b64.substring(j, j + 64));
+    return '-----BEGIN ' + label + '-----\n' + lines.join('\n') + '\n-----END ' + label + '-----';
+}
+
+function certDetectFormat(data) {
+    if (typeof data === 'string') {
+        if (data.indexOf('-----BEGIN') !== -1) return 'PEM';
+        return 'UNKNOWN';
+    }
+    // Uint8Array / ArrayBuffer
+    var bytes = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+    if (bytes.length >= 4 && bytes[0] === 0xFE && bytes[1] === 0xED && bytes[2] === 0xFE && bytes[3] === 0xED) return 'JKS';
+    if (bytes.length >= 2 && bytes[0] === 0x30) return 'DER';
+    // Check if it's text (PEM)
+    var isText = true;
+    for (var i = 0; i < Math.min(bytes.length, 100); i++) {
+        if (bytes[i] < 9 || (bytes[i] > 13 && bytes[i] < 32 && bytes[i] !== 27)) { isText = false; break; }
+    }
+    if (isText) {
+        var str = '';
+        for (var j = 0; j < bytes.length; j++) str += String.fromCharCode(bytes[j]);
+        if (str.indexOf('-----BEGIN') !== -1) return 'PEM';
+    }
+    return 'UNKNOWN';
+}
+
+function certSplitPemChain(pem) {
+    var blocks = [];
+    var regex = /-----BEGIN\s+[A-Z0-9 ]+-----[\s\S]*?-----END\s+[A-Z0-9 ]+-----/g;
+    var match;
+    while ((match = regex.exec(pem)) !== null) {
+        blocks.push(match[0]);
+    }
+    return blocks;
+}
+
+// ASN.1/DER parsing
+function certParseAsn1(der, offset) {
+    if (offset === undefined) offset = 0;
+    if (offset >= der.length) return null;
+    var tag = der[offset];
+    var lenByte = der[offset + 1];
+    var len, headerLen;
+    if (lenByte < 0x80) {
+        len = lenByte;
+        headerLen = 2;
+    } else {
+        var numLenBytes = lenByte & 0x7F;
+        len = 0;
+        for (var i = 0; i < numLenBytes; i++) {
+            len = (len << 8) | der[offset + 2 + i];
+        }
+        headerLen = 2 + numLenBytes;
+    }
+    var valueStart = offset + headerLen;
+    var valueEnd = valueStart + len;
+    var node = { tag: tag, offset: offset, headerLen: headerLen, length: len, value: der.subarray(valueStart, valueEnd) };
+    // Parse constructed types (tag bit 5 set)
+    if (tag & 0x20) {
+        node.children = [];
+        var childOff = valueStart;
+        while (childOff < valueEnd) {
+            var child = certParseAsn1(der, childOff);
+            if (!child) break;
+            node.children.push(child);
+            childOff = child.offset + child.headerLen + child.length;
+        }
+    }
+    return node;
+}
+
+function certParseOid(bytes) {
+    var oid = [];
+    oid.push(Math.floor(bytes[0] / 40));
+    oid.push(bytes[0] % 40);
+    var val = 0;
+    for (var i = 1; i < bytes.length; i++) {
+        val = (val << 7) | (bytes[i] & 0x7F);
+        if (!(bytes[i] & 0x80)) {
+            oid.push(val);
+            val = 0;
+        }
+    }
+    return oid.join('.');
+}
+
+function certOidToName(oid) {
+    return CERT_OID_MAP[oid] || oid;
+}
+
+function certParseName(asn1Node) {
+    var parts = [];
+    if (!asn1Node || !asn1Node.children) return parts;
+    for (var i = 0; i < asn1Node.children.length; i++) {
+        var rdnSet = asn1Node.children[i];
+        if (!rdnSet.children) continue;
+        for (var j = 0; j < rdnSet.children.length; j++) {
+            var attrSeq = rdnSet.children[j];
+            if (!attrSeq.children || attrSeq.children.length < 2) continue;
+            var oidNode = attrSeq.children[0];
+            var valNode = attrSeq.children[1];
+            var oid = certParseOid(oidNode.value);
+            var name = certOidToName(oid);
+            var value = certDecodeString(valNode);
+            parts.push({ oid: oid, name: name, value: value });
+        }
+    }
+    return parts;
+}
+
+function certDecodeString(node) {
+    // UTF8String(12), PrintableString(19), IA5String(22), T61String(20), BMPString(30)
+    var tag = node.tag;
+    var bytes = node.value;
+    if (tag === 0x0C || tag === 0x13 || tag === 0x16 || tag === 0x14) {
+        var s = '';
+        for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+        if (tag === 0x0C) {
+            try { return decodeURIComponent(escape(s)); } catch(e) { return s; }
+        }
+        return s;
+    }
+    if (tag === 0x1E) {
+        // BMPString - big-endian UTF-16
+        var str = '';
+        for (var k = 0; k + 1 < bytes.length; k += 2) str += String.fromCharCode((bytes[k] << 8) | bytes[k + 1]);
+        return str;
+    }
+    // Fallback
+    var fb = '';
+    for (var m = 0; m < bytes.length; m++) fb += String.fromCharCode(bytes[m]);
+    return fb;
+}
+
+function certParseTime(node) {
+    var s = '';
+    for (var i = 0; i < node.value.length; i++) s += String.fromCharCode(node.value[i]);
+    var year, rest;
+    if (node.tag === 0x17) {
+        // UTCTime: YYMMDDHHMMSSZ
+        year = parseInt(s.substring(0, 2), 10);
+        year = year >= 50 ? 1900 + year : 2000 + year;
+        rest = s.substring(2);
+    } else if (node.tag === 0x18) {
+        // GeneralizedTime: YYYYMMDDHHMMSSZ
+        year = parseInt(s.substring(0, 4), 10);
+        rest = s.substring(4);
+    } else {
+        return null;
+    }
+    var month = parseInt(rest.substring(0, 2), 10) - 1;
+    var day = parseInt(rest.substring(2, 4), 10);
+    var hour = parseInt(rest.substring(4, 6), 10);
+    var min = parseInt(rest.substring(6, 8), 10);
+    var sec = parseInt(rest.substring(8, 10), 10);
+    return new Date(Date.UTC(year, month, day, hour, min, sec));
+}
+
+function certParseValidity(asn1Node) {
+    if (!asn1Node || !asn1Node.children || asn1Node.children.length < 2) return { notBefore: null, notAfter: null };
+    return {
+        notBefore: certParseTime(asn1Node.children[0]),
+        notAfter: certParseTime(asn1Node.children[1])
+    };
+}
+
+function certParseX509(der) {
+    var root = certParseAsn1(der, 0);
+    if (!root || !root.children) throw new Error('Invalid certificate structure');
+    var tbsCert = root.children[0];
+    if (!tbsCert || !tbsCert.children) throw new Error('Invalid TBSCertificate');
+    var idx = 0;
+    // Check for explicit version tag [0]
+    var version = 1;
+    if (tbsCert.children[0] && (tbsCert.children[0].tag & 0xA0) === 0xA0) {
+        var verNode = tbsCert.children[0];
+        if (verNode.children && verNode.children[0]) {
+            version = verNode.children[0].value[0] + 1;
+        }
+        idx = 1;
+    }
+    // Serial number
+    var serialNode = tbsCert.children[idx];
+    var serialHex = '';
+    if (serialNode) {
+        for (var i = 0; i < serialNode.value.length; i++) {
+            serialHex += ('0' + serialNode.value[i].toString(16)).slice(-2);
+        }
+    }
+    // Signature algorithm (in TBSCertificate)
+    var sigAlgNode = tbsCert.children[idx + 1];
+    var sigAlg = '';
+    if (sigAlgNode && sigAlgNode.children && sigAlgNode.children[0]) {
+        var sigOid = certParseOid(sigAlgNode.children[0].value);
+        sigAlg = certOidToName(sigOid);
+    }
+    // Issuer
+    var issuerNode = tbsCert.children[idx + 2];
+    var issuer = certParseName(issuerNode);
+    // Validity
+    var validityNode = tbsCert.children[idx + 3];
+    var validity = certParseValidity(validityNode);
+    // Subject
+    var subjectNode = tbsCert.children[idx + 4];
+    var subject = certParseName(subjectNode);
+    // Public key info
+    var pubKeyNode = tbsCert.children[idx + 5];
+    var pubKeyAlg = '';
+    if (pubKeyNode && pubKeyNode.children && pubKeyNode.children[0] && pubKeyNode.children[0].children) {
+        var pkOid = certParseOid(pubKeyNode.children[0].children[0].value);
+        pubKeyAlg = certOidToName(pkOid);
+        if (pubKeyNode.children[0].children.length > 1 && pubKeyNode.children[0].children[1].tag === 0x06) {
+            var curveOid = certParseOid(pubKeyNode.children[0].children[1].value);
+            pubKeyAlg += ' (' + certOidToName(curveOid) + ')';
+        }
+    }
+    return {
+        version: version,
+        serialNumber: serialHex.toUpperCase(),
+        signatureAlgorithm: sigAlg,
+        issuer: issuer,
+        subject: subject,
+        notBefore: validity.notBefore,
+        notAfter: validity.notAfter,
+        publicKeyAlgorithm: pubKeyAlg
+    };
+}
+
+async function certFingerprint(der, algo) {
+    try {
+        var hashBuffer = await crypto.subtle.digest(algo, der);
+        var hashArray = new Uint8Array(hashBuffer);
+        var hex = [];
+        for (var i = 0; i < hashArray.length; i++) hex.push(('0' + hashArray[i].toString(16)).slice(-2).toUpperCase());
+        return hex.join(':');
+    } catch(e) {
+        return 'N/A';
+    }
+}
+
+// JKS format helpers
+function certJksReadUtf(view, off) {
+    var len = view.getUint16(off);
+    var str = '';
+    for (var i = 0; i < len; i++) str += String.fromCharCode(view.getUint8(off + 2 + i));
+    return { value: str, bytesRead: 2 + len };
+}
+
+function certJksWriteUtf(arr, off, str) {
+    arr[off] = (str.length >> 8) & 0xFF;
+    arr[off + 1] = str.length & 0xFF;
+    for (var i = 0; i < str.length; i++) arr[off + 2 + i] = str.charCodeAt(i) & 0xFF;
+    return 2 + str.length;
+}
+
+async function certParseJks(buffer, password) {
+    var view = new DataView(buffer);
+    var magic = view.getUint32(0);
+    if (magic !== 0xFEEDFEED) throw new Error('Invalid JKS magic bytes');
+    var version = view.getUint32(4);
+    if (version !== 2) throw new Error('Unsupported JKS version: ' + version);
+    var entryCount = view.getUint32(8);
+    var off = 12;
+    var certs = [];
+    var keyDer = null;
+    for (var e = 0; e < entryCount; e++) {
+        var entryTag = view.getUint32(off); off += 4;
+        var aliasRes = certJksReadUtf(view, off); off += aliasRes.bytesRead;
+        var timestamp = Number(view.getBigUint64 ? view.getBigUint64(off) : 0); off += 8;
+        if (entryTag === 2) {
+            // Trusted certificate entry
+            var certTypeRes = certJksReadUtf(view, off); off += certTypeRes.bytesRead;
+            var certLen = view.getUint32(off); off += 4;
+            var certData = new Uint8Array(buffer, off, certLen); off += certLen;
+            certs.push({ alias: aliasRes.value, type: certTypeRes.value, der: new Uint8Array(certData) });
+        } else if (entryTag === 1) {
+            // Private key entry - decrypt the key data
+            var keyLen = view.getUint32(off); off += 4;
+            var encKeyData = new Uint8Array(buffer, off, keyLen); off += keyLen;
+            try {
+                keyDer = await certJksDecryptKey(new Uint8Array(encKeyData), password);
+            } catch(keyErr) {
+                // Could not decrypt - continue with certs
+            }
+            var chainLen = view.getUint32(off); off += 4;
+            for (var c = 0; c < chainLen; c++) {
+                var cTypeRes = certJksReadUtf(view, off); off += cTypeRes.bytesRead;
+                var cLen = view.getUint32(off); off += 4;
+                var cData = new Uint8Array(buffer, off, cLen); off += cLen;
+                certs.push({ alias: aliasRes.value + (chainLen > 1 ? '_chain_' + c : ''), type: cTypeRes.value, der: new Uint8Array(cData) });
+            }
+        }
+    }
+    // Verify store integrity hash: last 20 bytes = SHA-1(password_UTF16BE + "Mighty Aphrodite" + entries_data)
+    var dataEnd = off;
+    if (buffer.byteLength >= dataEnd + 20) {
+        var storedHash = new Uint8Array(buffer, dataEnd, 20);
+        var magicStr = 'Mighty Aphrodite';
+        var verifyBytes = new Uint8Array(password.length * 2 + magicStr.length + dataEnd - 12);
+        var vi = 0;
+        for (var pi = 0; pi < password.length; pi++) {
+            var pc = password.charCodeAt(pi);
+            verifyBytes[vi++] = (pc >> 8) & 0xFF;
+            verifyBytes[vi++] = pc & 0xFF;
+        }
+        for (var mi = 0; mi < magicStr.length; mi++) {
+            verifyBytes[vi++] = magicStr.charCodeAt(mi);
+        }
+        var storeData = new Uint8Array(buffer, 12, dataEnd - 12);
+        verifyBytes.set(storeData, vi);
+        vi += storeData.length;
+        var expectedBuf = await crypto.subtle.digest('SHA-1', verifyBytes.subarray(0, vi));
+        var expectedHash = new Uint8Array(expectedBuf);
+        var hashMatch = true;
+        for (var hi = 0; hi < 20; hi++) {
+            if (expectedHash[hi] !== storedHash[hi]) { hashMatch = false; break; }
+        }
+        if (!hashMatch) throw new Error('Wrong password — store integrity check failed');
+    }
+    return { certs: certs, keyDer: keyDer };
+}
+
+async function certBuildJks(certs, keyDer, password) {
+    if (!password) password = 'changeit';
+    var entryCount;
+    var encryptedKey = null;
+    if (keyDer && certs.length > 0) {
+        // Single private key entry (tag 1) with the full cert chain
+        encryptedKey = await certJksEncryptKey(keyDer, password);
+        entryCount = 1;
+    } else {
+        entryCount = certs.length;
+    }
+    // Calculate size
+    var size = 12; // header
+    if (keyDer && certs.length > 0) {
+        // Private key entry
+        var pkAlias = certs[0].alias || 'mykey';
+        size += 4; // tag
+        size += 2 + pkAlias.length; // alias
+        size += 8; // timestamp
+        size += 4; // encrypted key length
+        size += encryptedKey.length; // encrypted key data
+        size += 4; // chain length count
+        for (var ci = 0; ci < certs.length; ci++) {
+            size += 2 + 5; // cert type "X.509"
+            size += 4; // cert length
+            size += certs[ci].der.length;
+        }
+    } else {
+        for (var i = 0; i < certs.length; i++) {
+            var alias = certs[i].alias || ('cert_' + i);
+            size += 4; // tag
+            size += 2 + alias.length; // alias
+            size += 8; // timestamp
+            size += 2 + 5; // cert type "X.509"
+            size += 4; // cert length
+            size += certs[i].der.length;
+        }
+    }
+    size += 20; // SHA-1 hash at end
+    var buf = new Uint8Array(size);
+    var view = new DataView(buf.buffer);
+    view.setUint32(0, 0xFEEDFEED);
+    view.setUint32(4, 2);
+    view.setUint32(8, entryCount);
+    var off = 12;
+    var now = Date.now();
+    if (keyDer && certs.length > 0) {
+        // Write private key entry (tag 1)
+        var a = certs[0].alias || 'mykey';
+        view.setUint32(off, 1); off += 4;
+        off += certJksWriteUtf(buf, off, a);
+        var ts = now;
+        for (var b = 7; b >= 0; b--) { buf[off + b] = ts & 0xFF; ts = Math.floor(ts / 256); }
+        off += 8;
+        view.setUint32(off, encryptedKey.length); off += 4;
+        buf.set(encryptedKey, off); off += encryptedKey.length;
+        // Certificate chain
+        view.setUint32(off, certs.length); off += 4;
+        for (var ci2 = 0; ci2 < certs.length; ci2++) {
+            off += certJksWriteUtf(buf, off, 'X.509');
+            view.setUint32(off, certs[ci2].der.length); off += 4;
+            buf.set(certs[ci2].der, off); off += certs[ci2].der.length;
+        }
+    } else {
+        for (var j = 0; j < certs.length; j++) {
+            var a2 = certs[j].alias || ('cert_' + j);
+            view.setUint32(off, 2); off += 4; // trusted cert entry
+            off += certJksWriteUtf(buf, off, a2);
+            var ts2 = now;
+            for (var b2 = 7; b2 >= 0; b2--) { buf[off + b2] = ts2 & 0xFF; ts2 = Math.floor(ts2 / 256); }
+            off += 8;
+            off += certJksWriteUtf(buf, off, 'X.509');
+            view.setUint32(off, certs[j].der.length); off += 4;
+            buf.set(certs[j].der, off); off += certs[j].der.length;
+        }
+    }
+    return certJksComputeHash(buf, off, password);
+}
+
+async function certJksComputeHash(buf, dataEnd, password) {
+    var magic = 'Mighty Aphrodite';
+    // Password as UTF-16BE
+    var pwBytes = new Uint8Array(password.length * 2 + magic.length + dataEnd - 12);
+    var idx = 0;
+    for (var i = 0; i < password.length; i++) {
+        var code = password.charCodeAt(i);
+        pwBytes[idx++] = (code >> 8) & 0xFF;
+        pwBytes[idx++] = code & 0xFF;
+    }
+    for (var m = 0; m < magic.length; m++) {
+        pwBytes[idx++] = magic.charCodeAt(m);
+    }
+    // Copy the store data (after header is at offset 12 to dataEnd)
+    for (var d = 12; d < dataEnd; d++) {
+        pwBytes[idx++] = buf[d];
+    }
+    var hashBuf = await crypto.subtle.digest('SHA-1', pwBytes.subarray(0, idx));
+    var hash = new Uint8Array(hashBuf);
+    buf.set(hash, dataEnd);
+    return buf;
+}
+
+// File I/O
+function certHandleFile(toolId, file) {
+    if (!toolId || !file) return;
+    var widget = document.querySelector('.tool[data-tool="' + toolId + '"] .cert-widget');
+    if (!widget) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var arrayBuf = e.target.result;
+        var bytes = new Uint8Array(arrayBuf);
+        var fmt = certDetectFormat(bytes);
+        if (fmt === 'PEM') {
+            var str = '';
+            for (var i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+            // Separate key blocks from cert blocks
+            var allBlocks = certSplitPemChain(str);
+            var certBlocks = [];
+            var keyBlocks = [];
+            for (var b = 0; b < allBlocks.length; b++) {
+                if (allBlocks[b].indexOf('PRIVATE KEY') !== -1) {
+                    keyBlocks.push(allBlocks[b]);
+                } else {
+                    certBlocks.push(allBlocks[b]);
+                }
+            }
+            widget.querySelector('.cert-pem-input').value = certBlocks.join('\n\n');
+            var keyInput = widget.querySelector('.cert-key-input');
+            if (keyInput && keyBlocks.length > 0) keyInput.value = keyBlocks.join('\n\n');
+            certParse(widget.querySelector('.cert-action-btn'));
+        } else if (fmt === 'DER') {
+            try {
+                var parsed = certParseX509(bytes);
+                parsed.pem = certDerToPem(bytes, 'CERTIFICATE');
+                parsed.der = bytes;
+                certParsedCache[toolId] = { certs: [parsed], selectedIndex: 0, keyPem: null, keyDer: null, keyInfo: null };
+                widget.querySelector('.cert-pem-input').value = parsed.pem;
+                certRender(toolId);
+                certSetStatus(widget, 'Loaded DER certificate', 'success');
+            } catch(ex) {
+                certSetStatus(widget, 'Failed to parse DER: ' + ex.message, 'error');
+            }
+        } else if (fmt === 'JKS') {
+            try {
+                var pw = widget.querySelector('.cert-jks-pw').value || 'changeit';
+                certParseJks(arrayBuf, pw).then(function(jksResult) {
+                    var jksCerts = jksResult.certs;
+                    if (jksCerts.length === 0 && !jksResult.keyDer) {
+                        certSetStatus(widget, 'JKS file contains no entries', 'error');
+                        return;
+                    }
+                    var certs = [];
+                    var pemAll = [];
+                    for (var j = 0; j < jksCerts.length; j++) {
+                        try {
+                            var p = certParseX509(jksCerts[j].der);
+                            p.pem = certDerToPem(jksCerts[j].der, 'CERTIFICATE');
+                            p.der = jksCerts[j].der;
+                            p.jksAlias = jksCerts[j].alias;
+                            certs.push(p);
+                            pemAll.push(p.pem);
+                        } catch(ex2) {
+                            certs.push({ error: ex2.message, pem: '', der: jksCerts[j].der });
+                        }
+                    }
+                    var keyPem = null, keyDer = null, keyInfoObj = null;
+                    if (jksResult.keyDer) {
+                        keyDer = jksResult.keyDer;
+                        keyPem = certDerToPem(keyDer, 'PRIVATE KEY');
+                        keyInfoObj = certKeyInfo(keyDer);
+                        var keyInput = widget.querySelector('.cert-key-input');
+                        if (keyInput) keyInput.value = keyPem;
+                    }
+                    certParsedCache[toolId] = { certs: certs, selectedIndex: 0, keyPem: keyPem, keyDer: keyDer, keyInfo: keyInfoObj };
+                    widget.querySelector('.cert-pem-input').value = pemAll.join('\n\n');
+                    certRender(toolId);
+                    var msg = 'Loaded ' + certs.length + ' certificate(s) from JKS';
+                    if (keyDer) msg += ' + private key';
+                    certSetStatus(widget, msg, 'success');
+                }).catch(function(ex3) {
+                    certSetStatus(widget, 'Failed to parse JKS: ' + ex3.message, 'error');
+                });
+            } catch(ex3) {
+                certSetStatus(widget, 'Failed to parse JKS: ' + ex3.message, 'error');
+            }
+        } else {
+            // Try as DER fallback
+            try {
+                var parsedFB = certParseX509(bytes);
+                parsedFB.pem = certDerToPem(bytes, 'CERTIFICATE');
+                parsedFB.der = bytes;
+                certParsedCache[toolId] = { certs: [parsedFB], selectedIndex: 0, keyPem: null, keyDer: null, keyInfo: null };
+                widget.querySelector('.cert-pem-input').value = parsedFB.pem;
+                certRender(toolId);
+                certSetStatus(widget, 'Loaded certificate', 'success');
+            } catch(ex4) {
+                certSetStatus(widget, 'Unknown file format', 'error');
+            }
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function certDownloadPem(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    var cache = certParsedCache[toolId];
+    var cert = cache.certs[cache.selectedIndex];
+    if (!cert || !cert.pem) return;
+    var blob = new Blob([cert.pem], { type: 'application/x-pem-file' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (certNameShort(cert.subject) || 'certificate') + '.pem';
+    a.click();
+    URL.revokeObjectURL(url);
+    certSetStatus(widget, 'Downloaded PEM', 'success');
+}
+
+function certDownloadDer(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    var cache = certParsedCache[toolId];
+    var cert = cache.certs[cache.selectedIndex];
+    if (!cert || !cert.der) return;
+    var blob = new Blob([cert.der], { type: 'application/x-x509-ca-cert' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (certNameShort(cert.subject) || 'certificate') + '.der';
+    a.click();
+    URL.revokeObjectURL(url);
+    certSetStatus(widget, 'Downloaded DER', 'success');
+}
+
+async function certDownloadJks(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    var cache = certParsedCache[toolId];
+    var entries = [];
+    for (var i = 0; i < cache.certs.length; i++) {
+        if (cache.certs[i].der) {
+            entries.push({ alias: cache.certs[i].jksAlias || certNameShort(cache.certs[i].subject) || ('cert_' + i), der: cache.certs[i].der });
+        }
+    }
+    if (entries.length === 0) return;
+    var pw = widget.querySelector('.cert-jks-pw');
+    var password = (pw && pw.value) ? pw.value : 'changeit';
+    var keyDer = cache.keyDer || null;
+    try {
+        var jksBytes = await certBuildJks(entries, keyDer, password);
+        var blob = new Blob([jksBytes], { type: 'application/x-java-keystore' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'keystore.jks';
+        a.click();
+        URL.revokeObjectURL(url);
+        var msg = keyDer ? 'Downloaded JKS (private key + ' + entries.length + ' cert' + (entries.length > 1 ? 's' : '') + ')'
+                        : 'Downloaded JKS (' + entries.length + ' cert' + (entries.length > 1 ? 's' : '') + ')';
+        certSetStatus(widget, msg, 'success');
+    } catch(e) {
+        certSetStatus(widget, 'JKS export error: ' + e.message, 'error');
+    }
+}
+
+// UI helpers
+function certNameRows(nameArr) {
+    if (!nameArr || nameArr.length === 0) return '<tr><td colspan="2">N/A</td></tr>';
+    var html = '';
+    for (var i = 0; i < nameArr.length; i++) {
+        html += '<tr><td>' + certEscHtml(nameArr[i].name) + '</td><td>' + certEscHtml(nameArr[i].value) + '</td></tr>';
+    }
+    return html;
+}
+
+function certNameShort(nameArr) {
+    if (!nameArr) return '';
+    for (var i = 0; i < nameArr.length; i++) {
+        if (nameArr[i].name === 'CN') return nameArr[i].value;
+    }
+    return nameArr.length > 0 ? nameArr[0].value : '';
+}
+
+function certEscHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function certSetStatus(widget, msg, type) {
+    var el = widget.querySelector('.cert-status');
+    if (el) { el.textContent = msg; el.className = 'cert-status' + (type ? ' ' + type : ''); }
+}
+
+function certToggleDownloads(widget, enabled) {
+    widget.querySelectorAll('.cert-download-btn').forEach(function(btn) { btn.disabled = !enabled; });
+}
+
+// Private key helpers
+function certDetectKeyType(pem) {
+    if (!pem) return null;
+    if (pem.indexOf('-----BEGIN RSA PRIVATE KEY-----') !== -1) return 'PKCS1_RSA';
+    if (pem.indexOf('-----BEGIN EC PRIVATE KEY-----') !== -1) return 'EC_SEC1';
+    if (pem.indexOf('-----BEGIN PRIVATE KEY-----') !== -1) return 'PKCS8';
+    return null;
+}
+
+function certKeyInfo(keyDer) {
+    if (!keyDer || keyDer.length === 0) return null;
+    try {
+        var root = certParseAsn1(keyDer, 0);
+        if (!root || !root.children) return null;
+        // PKCS#8: SEQUENCE { SEQUENCE { OID, params }, OCTET STRING }
+        if (root.children.length >= 2 && root.children[0].tag === 0x30) {
+            var algoSeq = root.children[0];
+            if (algoSeq.children && algoSeq.children[0] && algoSeq.children[0].tag === 0x06) {
+                var oid = certParseOid(algoSeq.children[0].value);
+                if (oid === '1.2.840.113549.1.1.1') {
+                    // RSA — parse inner key to get modulus bit length
+                    var innerOctet = root.children[1];
+                    var innerBytes = innerOctet.value;
+                    if (innerBytes[0] === 0x04) {
+                        // Strip OCTET STRING wrapper if present in parsed form
+                        innerBytes = innerOctet.value;
+                    }
+                    try {
+                        var innerKey = certParseAsn1(innerBytes, 0);
+                        if (innerKey && innerKey.children && innerKey.children[0]) {
+                            var modulus = innerKey.children[0].value;
+                            var bitLen = (modulus[0] === 0 ? modulus.length - 1 : modulus.length) * 8;
+                            return { algo: 'RSA', bits: bitLen, curve: null };
+                        }
+                    } catch(e) {}
+                    return { algo: 'RSA', bits: null, curve: null };
+                }
+                if (oid === '1.2.840.10045.2.1') {
+                    // EC — get curve from params
+                    var curve = null;
+                    if (algoSeq.children.length > 1 && algoSeq.children[1].tag === 0x06) {
+                        var curveOid = certParseOid(algoSeq.children[1].value);
+                        curve = certOidToName(curveOid);
+                    }
+                    var ecBits = curve === 'prime256v1' ? 256 : curve === 'secp384r1' ? 384 : curve === 'secp521r1' ? 521 : null;
+                    return { algo: 'EC', bits: ecBits, curve: curve };
+                }
+                return { algo: certOidToName(oid), bits: null, curve: null };
+            }
+        }
+        // PKCS#1 RSA: SEQUENCE { INTEGER(modulus), INTEGER(pubExponent), ... }
+        if (root.children.length >= 2 && root.children[0].tag === 0x02) {
+            var mod = root.children[0].value;
+            var bits = (mod[0] === 0 ? mod.length - 1 : mod.length) * 8;
+            return { algo: 'RSA', bits: bits, curve: null };
+        }
+        return { algo: 'Unknown', bits: null, curve: null };
+    } catch(e) {
+        return null;
+    }
+}
+
+function certParsePkcs1ToKeyDer(pem) {
+    // Convert PKCS#1 RSA key to PKCS#8 wrapper for JKS compatibility
+    var der = certPemToDer(pem);
+    // Simple approach: wrap in PKCS#8 envelope
+    // SEQUENCE { SEQUENCE { OID rsaEncryption, NULL }, OCTET STRING { pkcs1_der } }
+    var rsaOid = new Uint8Array([0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01]); // 1.2.840.113549.1.1.1
+    var algoSeq = certBuildAsn1(0x30, [certBuildAsn1(0x06, rsaOid), new Uint8Array([0x05, 0x00])]); // OID + NULL
+    var octetKey = certBuildAsn1(0x04, der);
+    // version INTEGER 0
+    var version = new Uint8Array([0x02, 0x01, 0x00]);
+    return certBuildAsn1(0x30, [version, algoSeq, octetKey]);
+}
+
+function certParseEc1ToKeyDer(pem) {
+    // Parse SEC1 EC key, extract curve OID, wrap in PKCS#8
+    var der = certPemToDer(pem);
+    var root = certParseAsn1(der, 0);
+    var curveOidBytes = null;
+    if (root && root.children) {
+        for (var i = 0; i < root.children.length; i++) {
+            // Context tag [0] contains the curve OID
+            if ((root.children[i].tag & 0xE0) === 0xA0 && root.children[i].children) {
+                var inner = root.children[i].children[0];
+                if (inner && inner.tag === 0x06) {
+                    curveOidBytes = inner.value;
+                    break;
+                }
+            }
+        }
+    }
+    if (!curveOidBytes) curveOidBytes = new Uint8Array([0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07]); // prime256v1 default
+    var ecOid = new Uint8Array([0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01]); // 1.2.840.10045.2.1
+    var algoSeq = certBuildAsn1(0x30, [certBuildAsn1(0x06, ecOid), certBuildAsn1(0x06, curveOidBytes)]);
+    var octetKey = certBuildAsn1(0x04, der);
+    var version = new Uint8Array([0x02, 0x01, 0x00]);
+    return certBuildAsn1(0x30, [version, algoSeq, octetKey]);
+}
+
+function certBuildAsn1(tag, contentParts) {
+    // contentParts can be Uint8Array or array of Uint8Array
+    var content;
+    if (contentParts instanceof Uint8Array) {
+        content = contentParts;
+    } else {
+        var totalLen = 0;
+        for (var i = 0; i < contentParts.length; i++) totalLen += contentParts[i].length;
+        content = new Uint8Array(totalLen);
+        var off = 0;
+        for (var j = 0; j < contentParts.length; j++) {
+            content.set(contentParts[j], off);
+            off += contentParts[j].length;
+        }
+    }
+    var lenBytes;
+    if (content.length < 0x80) {
+        lenBytes = new Uint8Array([content.length]);
+    } else if (content.length < 0x100) {
+        lenBytes = new Uint8Array([0x81, content.length]);
+    } else if (content.length < 0x10000) {
+        lenBytes = new Uint8Array([0x82, (content.length >> 8) & 0xFF, content.length & 0xFF]);
+    } else {
+        lenBytes = new Uint8Array([0x83, (content.length >> 16) & 0xFF, (content.length >> 8) & 0xFF, content.length & 0xFF]);
+    }
+    var result = new Uint8Array(1 + lenBytes.length + content.length);
+    result[0] = tag;
+    result.set(lenBytes, 1);
+    result.set(content, 1 + lenBytes.length);
+    return result;
+}
+
+async function certJksEncryptKey(keyDer, password) {
+    if (!password) password = 'changeit';
+    // Generate 20-byte random salt
+    var salt = new Uint8Array(20);
+    crypto.getRandomValues(salt);
+    // Password as UTF-16BE
+    var pwUtf16 = new Uint8Array(password.length * 2);
+    for (var i = 0; i < password.length; i++) {
+        var code = password.charCodeAt(i);
+        pwUtf16[i * 2] = (code >> 8) & 0xFF;
+        pwUtf16[i * 2 + 1] = code & 0xFF;
+    }
+    // Build XOR stream: first round SHA-1(password_UTF16BE + salt), then SHA-1(password_UTF16BE + prev_hash)
+    var encrypted = new Uint8Array(keyDer.length);
+    var prevInput = new Uint8Array(pwUtf16.length + salt.length);
+    prevInput.set(pwUtf16, 0);
+    prevInput.set(salt, pwUtf16.length);
+    var pos = 0;
+    while (pos < keyDer.length) {
+        var hashBuf = await crypto.subtle.digest('SHA-1', prevInput);
+        var hashBytes = new Uint8Array(hashBuf);
+        for (var j = 0; j < 20 && pos < keyDer.length; j++, pos++) {
+            encrypted[pos] = keyDer[pos] ^ hashBytes[j];
+        }
+        // Next round input: password_UTF16BE + prev_hash
+        prevInput = new Uint8Array(pwUtf16.length + 20);
+        prevInput.set(pwUtf16, 0);
+        prevInput.set(hashBytes, pwUtf16.length);
+    }
+    // Check hash: SHA-1(password_UTF16BE + plaintext_key)
+    var checkInput = new Uint8Array(pwUtf16.length + keyDer.length);
+    checkInput.set(pwUtf16, 0);
+    checkInput.set(keyDer, pwUtf16.length);
+    var checkBuf = await crypto.subtle.digest('SHA-1', checkInput);
+    var checkHash = new Uint8Array(checkBuf);
+    // Return: [salt(20)][encrypted_key][check_hash(20)]
+    var result = new Uint8Array(20 + encrypted.length + 20);
+    result.set(salt, 0);
+    result.set(encrypted, 20);
+    result.set(checkHash, 20 + encrypted.length);
+    return result;
+}
+
+async function certJksDecryptKey(encData, password) {
+    if (!password) password = 'changeit';
+    if (encData.length < 40) throw new Error('Encrypted key data too short');
+    // Extract salt (first 20), encrypted key, check hash (last 20)
+    var salt = encData.subarray(0, 20);
+    var encrypted = encData.subarray(20, encData.length - 20);
+    var checkHash = encData.subarray(encData.length - 20);
+    // Password as UTF-16BE
+    var pwUtf16 = new Uint8Array(password.length * 2);
+    for (var i = 0; i < password.length; i++) {
+        var code = password.charCodeAt(i);
+        pwUtf16[i * 2] = (code >> 8) & 0xFF;
+        pwUtf16[i * 2 + 1] = code & 0xFF;
+    }
+    // Rebuild XOR stream and decrypt
+    var decrypted = new Uint8Array(encrypted.length);
+    var prevInput = new Uint8Array(pwUtf16.length + salt.length);
+    prevInput.set(pwUtf16, 0);
+    prevInput.set(salt, pwUtf16.length);
+    var pos = 0;
+    while (pos < encrypted.length) {
+        var hashBuf = await crypto.subtle.digest('SHA-1', prevInput);
+        var hashBytes = new Uint8Array(hashBuf);
+        for (var j = 0; j < 20 && pos < encrypted.length; j++, pos++) {
+            decrypted[pos] = encrypted[pos] ^ hashBytes[j];
+        }
+        prevInput = new Uint8Array(pwUtf16.length + 20);
+        prevInput.set(pwUtf16, 0);
+        prevInput.set(hashBytes, pwUtf16.length);
+    }
+    // Verify check hash: SHA-1(password_UTF16BE + plaintext_key)
+    var checkInput = new Uint8Array(pwUtf16.length + decrypted.length);
+    checkInput.set(pwUtf16, 0);
+    checkInput.set(decrypted, pwUtf16.length);
+    var verifyBuf = await crypto.subtle.digest('SHA-1', checkInput);
+    var verifyHash = new Uint8Array(verifyBuf);
+    for (var k = 0; k < 20; k++) {
+        if (verifyHash[k] !== checkHash[k]) throw new Error('Key decryption failed: wrong password or corrupted data');
+    }
+    return decrypted;
+}
+
+function certDownloadPemBundle(btn) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    var cache = certParsedCache[toolId];
+    var parts = [];
+    if (cache.keyPem) parts.push(cache.keyPem);
+    for (var i = 0; i < cache.certs.length; i++) {
+        if (cache.certs[i].pem) parts.push(cache.certs[i].pem);
+    }
+    if (parts.length === 0) return;
+    var bundle = parts.join('\n\n') + '\n';
+    var blob = new Blob([bundle], { type: 'application/x-pem-file' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'bundle.pem';
+    a.click();
+    URL.revokeObjectURL(url);
+    certSetStatus(widget, 'Downloaded PEM bundle', 'success');
+}
+
+async function certCopyBase64(btn, fmt) {
+    var widget = btn.closest('.cert-widget');
+    var toolId = certGetToolId(widget);
+    if (!toolId || !certParsedCache[toolId]) return;
+    var cache = certParsedCache[toolId];
+    var b64 = '';
+    var label = '';
+    if (fmt === 'der') {
+        var cert = (cache.certs && cache.certs.length > 0) ? cache.certs[cache.selectedIndex] : null;
+        if (!cert || !cert.der) return;
+        var binary = '';
+        for (var i = 0; i < cert.der.length; i++) binary += String.fromCharCode(cert.der[i]);
+        b64 = btoa(binary);
+        label = 'DER base64';
+    } else if (fmt === 'pem') {
+        var cert2 = (cache.certs && cache.certs.length > 0) ? cache.certs[cache.selectedIndex] : null;
+        if (!cert2 || !cert2.pem) return;
+        b64 = btoa(unescape(encodeURIComponent(cert2.pem)));
+        label = 'PEM base64';
+    } else if (fmt === 'jks') {
+        var entries = [];
+        for (var j = 0; j < cache.certs.length; j++) {
+            if (cache.certs[j].der) {
+                entries.push({ alias: cache.certs[j].jksAlias || certNameShort(cache.certs[j].subject) || ('cert_' + j), der: cache.certs[j].der });
+            }
+        }
+        if (entries.length === 0) return;
+        var pw = widget.querySelector('.cert-jks-pw');
+        var password = (pw && pw.value) ? pw.value : 'changeit';
+        var keyDer = cache.keyDer || null;
+        try {
+            var jksBytes = await certBuildJks(entries, keyDer, password);
+            var jksBin = '';
+            for (var k = 0; k < jksBytes.length; k++) jksBin += String.fromCharCode(jksBytes[k]);
+            b64 = btoa(jksBin);
+            label = 'JKS base64';
+        } catch(e) {
+            certSetStatus(widget, 'JKS base64 error: ' + e.message, 'error');
+            return;
+        }
+    } else if (fmt === 'bundle') {
+        var parts = [];
+        if (cache.keyPem) parts.push(cache.keyPem);
+        for (var m = 0; m < cache.certs.length; m++) {
+            if (cache.certs[m].pem) parts.push(cache.certs[m].pem);
+        }
+        if (parts.length === 0) return;
+        b64 = btoa(unescape(encodeURIComponent(parts.join('\n\n') + '\n')));
+        label = 'Bundle base64';
+    }
+    if (!b64) return;
+    navigator.clipboard.writeText(b64).then(function() {
+        certSetStatus(widget, label + ' copied to clipboard', 'success');
+    }).catch(function() {
+        certSetStatus(widget, 'Failed to copy to clipboard', 'error');
+    });
+}
+
 // The injected script only defines things if they don't already exist (for exported HTML)
 (function injectScriptsForExport() {
     if (document.getElementById('developer-tools-scripts')) return;
@@ -6473,7 +7862,16 @@ function hmcUpdateStatus(widget, message, type) { const status = widget.querySel
         ipinfoToBinary, ipinfoFormatHosts, ipinfoCalc, ipinfoToggleRef, ipinfoInit,
         hmcGetToolId, hmcGetData, hmcSaveData, hmcInit, hmcSetupResizer, hmcGetDirection,
         hmcSetDirection, hmcUpdateLabels, hmcOnInput, hmcAutoConvert, hmcConvert,
-        hmcDoConvert, hmcCopy, hmcSwap, hmcUpdateStatus
+        hmcDoConvert, hmcCopy, hmcSwap, hmcUpdateStatus,
+        certGetToolId, certInit, certParse, certRender, certSelectChainTab, certClear,
+        certPemToDer, certDerToPem, certDetectFormat, certSplitPemChain,
+        certParseAsn1, certParseOid, certOidToName, certParseName, certDecodeString,
+        certParseTime, certParseValidity, certParseX509, certFingerprint,
+        certJksReadUtf, certJksWriteUtf, certParseJks, certBuildJks, certJksComputeHash,
+        certHandleFile, certDownloadPem, certDownloadDer, certDownloadJks,
+        certNameRows, certNameShort, certEscHtml, certSetStatus, certToggleDownloads,
+        certDetectKeyType, certKeyInfo, certBuildAsn1, certParsePkcs1ToKeyDer, certParseEc1ToKeyDer,
+        certJksEncryptKey, certJksDecryptKey, certDownloadPemBundle, certCopyBase64
     ];
 
     // Wrap in IIFE that checks if already defined (plugin loaded) vs needs defining (exported HTML)
@@ -6481,6 +7879,8 @@ function hmcUpdateStatus(widget, message, type) { const status = widget.querySel
         'if (typeof diffGetToolId !== "undefined") return;\n' +
         'var epochIntervalId = null;\n' +
         'var hmcAutoConvertTimer = null;\n' +
+        'var certParsedCache = {};\n' +
+        'window.CERT_OID_MAP = ' + JSON.stringify(CERT_OID_MAP) + ';\n' +
         'window.LOREM_WORDS = ' + JSON.stringify(LOREM_WORDS) + ';\n' +
         'window.LOREM_FIRST_SENTENCE = ' + JSON.stringify(LOREM_FIRST_SENTENCE) + ';\n' +
         'window.ASCII_CONTROL_NAMES = ' + JSON.stringify(ASCII_CONTROL_NAMES) + ';\n' +
@@ -6501,4 +7901,4 @@ function hmcUpdateStatus(widget, message, type) { const status = widget.querySel
     (document.body || document.head).appendChild(script);
 })();
 
-console.log('Developer Tools plugin loaded: 22 tools');
+console.log('Developer Tools plugin loaded: 23 tools');
