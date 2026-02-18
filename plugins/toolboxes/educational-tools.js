@@ -95,6 +95,25 @@
 .ptable-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 .ptable-sep-row { grid-column: 1 / -1; height: 4px; }
 
+/* Speed/Distance/Time Calculator Styles */
+.sdt-widget { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.sdt-formula { text-align: center; font-size: 12px; color: var(--text-muted); background: var(--bg-tertiary); padding: 8px; border-radius: 6px; font-family: monospace; line-height: 1.6; }
+.sdt-formula strong { color: var(--text-primary); }
+.sdt-fields { display: flex; flex-direction: column; gap: 8px; }
+.sdt-field { display: flex; align-items: center; gap: 8px; }
+.sdt-field-label { width: 70px; font-size: 13px; font-weight: 600; color: var(--text-primary); flex-shrink: 0; }
+.sdt-field-input { flex: 1; padding: 7px 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 15px; font-family: monospace; background: var(--input-bg); color: var(--text-primary); outline: none; transition: border-color 0.2s; }
+.sdt-field-input:focus { border-color: #3498db; }
+.sdt-field-input.sdt-result { border-color: #27ae60; background: rgba(39,174,96,0.08); font-weight: 700; }
+.sdt-field-unit { padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); cursor: pointer; }
+.sdt-actions { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.sdt-solve-btn { flex: 1; }
+.sdt-solve-btn.active { background: #3498db; color: white; border-color: #3498db; }
+.sdt-result-box { text-align: center; padding: 10px; background: var(--bg-tertiary); border-radius: 6px; min-height: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.sdt-result-value { font-size: 22px; font-weight: 700; font-family: monospace; color: #27ae60; }
+.sdt-result-detail { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.sdt-error { color: #e74c3c; font-size: 13px; font-weight: 600; }
+
 /* Category colors */
 .ptable-cat-alkali { background: #ff6b6b; }
 .ptable-cat-alkaline { background: #ffa94d; }
@@ -1046,6 +1065,235 @@ function ptableInit() {
 }
 
 // =============================================
+// SPEED / DISTANCE / TIME CALCULATOR
+// =============================================
+
+var sdtState = {};
+
+function sdtGetToolId(el) {
+    var tool = el.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function sdtGetWidget(el) {
+    return el.closest('.sdt-widget');
+}
+
+function sdtInit() {
+    document.querySelectorAll('.sdt-widget').forEach(function(widget) {
+        var toolId = sdtGetToolId(widget);
+        if (!toolId) return;
+        sdtState[toolId] = { solveFor: null };
+        sdtClear(widget.querySelector('.pomo-btn'));
+    });
+}
+
+function sdtSolveFor(btn, field) {
+    var widget = sdtGetWidget(btn);
+    var toolId = sdtGetToolId(widget);
+    if (!toolId || !sdtState[toolId]) return;
+
+    // Toggle: clicking same button deselects
+    if (sdtState[toolId].solveFor === field) {
+        sdtState[toolId].solveFor = null;
+    } else {
+        sdtState[toolId].solveFor = field;
+    }
+
+    // Update button styles
+    var btns = widget.querySelectorAll('.sdt-solve-btn');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    if (sdtState[toolId].solveFor) {
+        btn.classList.add('active');
+    }
+
+    // Disable the solved-for input, enable others
+    var speedInput = widget.querySelector('.sdt-input-speed');
+    var distInput = widget.querySelector('.sdt-input-distance');
+    var timeInput = widget.querySelector('.sdt-input-time');
+    speedInput.disabled = false;
+    distInput.disabled = false;
+    timeInput.disabled = false;
+    speedInput.classList.remove('sdt-result');
+    distInput.classList.remove('sdt-result');
+    timeInput.classList.remove('sdt-result');
+
+    if (sdtState[toolId].solveFor === 'speed') {
+        speedInput.disabled = true;
+        speedInput.value = '';
+        speedInput.placeholder = 'Calculated';
+    } else {
+        speedInput.placeholder = 'e.g. 60';
+    }
+    if (sdtState[toolId].solveFor === 'distance') {
+        distInput.disabled = true;
+        distInput.value = '';
+        distInput.placeholder = 'Calculated';
+    } else {
+        distInput.placeholder = 'e.g. 120';
+    }
+    if (sdtState[toolId].solveFor === 'time') {
+        timeInput.disabled = true;
+        timeInput.value = '';
+        timeInput.placeholder = 'e.g. 2';
+    } else {
+        timeInput.placeholder = 'e.g. 2';
+    }
+
+    // Clear result
+    var resultBox = widget.querySelector('.sdt-result-box');
+    resultBox.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Select what to solve for, fill in the other two values, then press Calculate</span>';
+}
+
+function sdtCalculate(btn) {
+    var widget = sdtGetWidget(btn);
+    var toolId = sdtGetToolId(widget);
+    if (!toolId || !sdtState[toolId]) return;
+
+    var solveFor = sdtState[toolId].solveFor;
+    var resultBox = widget.querySelector('.sdt-result-box');
+
+    if (!solveFor) {
+        resultBox.innerHTML = '<span class="sdt-error">Choose what to solve for first</span>';
+        return;
+    }
+
+    var speedInput = widget.querySelector('.sdt-input-speed');
+    var distInput = widget.querySelector('.sdt-input-distance');
+    var timeInput = widget.querySelector('.sdt-input-time');
+    var speedUnit = widget.querySelector('.sdt-unit-speed').value;
+    var distUnit = widget.querySelector('.sdt-unit-distance').value;
+    var timeUnit = widget.querySelector('.sdt-unit-time').value;
+
+    // Parse values
+    var speed = parseFloat(speedInput.value);
+    var distance = parseFloat(distInput.value);
+    var time = parseFloat(timeInput.value);
+
+    // Validate inputs
+    if (solveFor !== 'speed' && isNaN(speed)) {
+        resultBox.innerHTML = '<span class="sdt-error">Enter a valid speed value</span>';
+        return;
+    }
+    if (solveFor !== 'distance' && isNaN(distance)) {
+        resultBox.innerHTML = '<span class="sdt-error">Enter a valid distance value</span>';
+        return;
+    }
+    if (solveFor !== 'time' && isNaN(time)) {
+        resultBox.innerHTML = '<span class="sdt-error">Enter a valid time value</span>';
+        return;
+    }
+
+    // Convert to base units: km/h, km, hours
+    var speedKmh, distKm, timeHrs;
+
+    if (solveFor !== 'speed') {
+        speedKmh = speedUnit === 'mph' ? speed * 1.60934 : (speedUnit === 'ms' ? speed * 3.6 : speed);
+    }
+    if (solveFor !== 'distance') {
+        distKm = distUnit === 'mi' ? distance * 1.60934 : (distUnit === 'm' ? distance / 1000 : distance);
+    }
+    if (solveFor !== 'time') {
+        timeHrs = timeUnit === 'min' ? time / 60 : (timeUnit === 'sec' ? time / 3600 : time);
+    }
+
+    var resultVal, resultLabel, formula;
+
+    if (solveFor === 'speed') {
+        if (timeHrs === 0) {
+            resultBox.innerHTML = '<span class="sdt-error">Time cannot be zero</span>';
+            return;
+        }
+        var resKmh = distKm / timeHrs;
+        // Convert back to selected unit
+        if (speedUnit === 'mph') {
+            resultVal = resKmh / 1.60934;
+        } else if (speedUnit === 'ms') {
+            resultVal = resKmh / 3.6;
+        } else {
+            resultVal = resKmh;
+        }
+        var unitLabel = speedUnit === 'mph' ? 'mph' : (speedUnit === 'ms' ? 'm/s' : 'km/h');
+        resultLabel = sdtFormatNum(resultVal) + ' ' + unitLabel;
+        formula = 'Speed = Distance \u00F7 Time';
+        speedInput.value = sdtFormatNum(resultVal);
+        speedInput.classList.add('sdt-result');
+    } else if (solveFor === 'distance') {
+        var resKm = speedKmh * timeHrs;
+        if (distUnit === 'mi') {
+            resultVal = resKm / 1.60934;
+        } else if (distUnit === 'm') {
+            resultVal = resKm * 1000;
+        } else {
+            resultVal = resKm;
+        }
+        var dUnitLabel = distUnit === 'mi' ? 'miles' : (distUnit === 'm' ? 'meters' : 'km');
+        resultLabel = sdtFormatNum(resultVal) + ' ' + dUnitLabel;
+        formula = 'Distance = Speed \u00D7 Time';
+        distInput.value = sdtFormatNum(resultVal);
+        distInput.classList.add('sdt-result');
+    } else if (solveFor === 'time') {
+        if (speedKmh === 0) {
+            resultBox.innerHTML = '<span class="sdt-error">Speed cannot be zero</span>';
+            return;
+        }
+        var resHrs = distKm / speedKmh;
+        if (timeUnit === 'min') {
+            resultVal = resHrs * 60;
+        } else if (timeUnit === 'sec') {
+            resultVal = resHrs * 3600;
+        } else {
+            resultVal = resHrs;
+        }
+        var tUnitLabel = timeUnit === 'min' ? 'minutes' : (timeUnit === 'sec' ? 'seconds' : 'hours');
+        resultLabel = sdtFormatNum(resultVal) + ' ' + tUnitLabel;
+        formula = 'Time = Distance \u00F7 Speed';
+        timeInput.value = sdtFormatNum(resultVal);
+        timeInput.classList.add('sdt-result');
+    }
+
+    resultBox.innerHTML = '<div class="sdt-result-value">' + resultLabel + '</div>' +
+        '<div class="sdt-result-detail">' + formula + '</div>';
+}
+
+function sdtFormatNum(n) {
+    if (Number.isInteger(n)) return String(n);
+    return n.toFixed(n < 10 ? 3 : 2).replace(/\.?0+$/, '');
+}
+
+function sdtClear(btn) {
+    var widget = sdtGetWidget(btn);
+    var toolId = sdtGetToolId(widget);
+    if (!toolId) return;
+
+    if (sdtState[toolId]) sdtState[toolId].solveFor = null;
+
+    var inputs = widget.querySelectorAll('.sdt-field-input');
+    inputs.forEach(function(inp) {
+        inp.value = '';
+        inp.disabled = false;
+        inp.classList.remove('sdt-result');
+    });
+    widget.querySelector('.sdt-input-speed').placeholder = 'e.g. 60';
+    widget.querySelector('.sdt-input-distance').placeholder = 'e.g. 120';
+    widget.querySelector('.sdt-input-time').placeholder = 'e.g. 2';
+
+    var btns = widget.querySelectorAll('.sdt-solve-btn');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+
+    var resultBox = widget.querySelector('.sdt-result-box');
+    resultBox.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Select what to solve for, fill in the other two values, then press Calculate</span>';
+}
+
+function sdtKeydown(e) {
+    if (e.key === 'Enter') {
+        var widget = sdtGetWidget(e.target);
+        var calcBtn = widget.querySelector('.sdt-calc-btn');
+        if (calcBtn) sdtCalculate(calcBtn);
+    }
+}
+
+// =============================================
 // SCRIPT INJECTION FOR HTML EXPORT
 // =============================================
 
@@ -1055,7 +1303,8 @@ function ptableInit() {
     var clockFunctions = [initClock, clockDrag, clockEndDrag, clockRender, clockSetNow, clockRandomize, clockClearChallenge, clockNewChallenge, clockCheckAnswer];
     var moneyFunctions = [moneyInit, moneyGetWidget, moneyRender, moneyAdd, moneyRemove, moneyClear, moneyTotal, moneyFormat, moneySetMode, moneyNewRound, moneyNewChallenge, moneyCheckAnswer, moneyNewChange, moneyNewNameit, moneyCheckNameit, moneyComputeOptimal, moneyNewLeast, moneyCheckLeast, moneyDragStart, moneyDragOver, moneyDragLeave, moneyDrop];
     var ptableFunctions = [ptableGetToolId, ptableGetWidget, ptableBuildGrid, ptableRender, ptableSelect, ptableSearch, ptableFilter, ptableInit];
-    var allFunctions = clockFunctions.concat(moneyFunctions).concat(ptableFunctions);
+    var sdtFunctions = [sdtGetToolId, sdtGetWidget, sdtInit, sdtSolveFor, sdtCalculate, sdtFormatNum, sdtClear, sdtKeydown];
+    var allFunctions = clockFunctions.concat(moneyFunctions).concat(ptableFunctions).concat(sdtFunctions);
 
     var code = '(function() {\n' +
         'if (typeof initClock !== "undefined") return;\n' +
@@ -1066,6 +1315,7 @@ function ptableInit() {
         'window.PTABLE_ELEMENTS = ' + JSON.stringify(PTABLE_ELEMENTS) + ';\n' +
         'window.PTABLE_CATEGORIES = ' + JSON.stringify(PTABLE_CATEGORIES) + ';\n' +
         'window.ptableState = {};\n' +
+        'window.sdtState = {};\n' +
         allFunctions.map(function(fn) { return 'window.' + fn.name + ' = ' + fn.toString(); }).join(';\n') + ';\n' +
         '})();';
     var encoded = btoa(unescape(encodeURIComponent(code)));
@@ -1087,7 +1337,7 @@ PluginRegistry.registerToolbox({
     icon: '\uD83C\uDF93',
     color: '#2ecc71',
     version: '1.0.0',
-    tools: ['analog-clock', 'money-counter', 'periodic-table'],
+    tools: ['analog-clock', 'money-counter', 'periodic-table', 'speed-distance-time'],
     source: 'external'
 });
 
@@ -1238,4 +1488,69 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Educational Tools plugin loaded (3 tools)');
+// Speed/Distance/Time Calculator
+PluginRegistry.registerTool({
+    id: 'speed-distance-time',
+    name: 'Speed/Distance/Time',
+    description: 'Calculate speed, distance, or time given any two values with unit conversions',
+    icon: '\uD83C\uDFCE',
+    version: '1.0.0',
+    toolbox: 'educational-tools',
+    tags: ['speed', 'distance', 'time', 'calculator', 'physics', 'math', 'velocity', 'education'],
+    title: 'Speed / Distance / Time',
+    content: '<div class="sdt-widget">' +
+        '<div class="sdt-formula">' +
+            '<strong>Speed = Distance \u00F7 Time</strong> &nbsp;|&nbsp; ' +
+            '<strong>Distance = Speed \u00D7 Time</strong> &nbsp;|&nbsp; ' +
+            '<strong>Time = Distance \u00F7 Speed</strong>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--text-muted);text-align:center;">Solve for:</div>' +
+        '<div class="sdt-actions">' +
+            '<button class="pomo-btn sdt-solve-btn" onclick="sdtSolveFor(this,\'speed\')">Speed</button>' +
+            '<button class="pomo-btn sdt-solve-btn" onclick="sdtSolveFor(this,\'distance\')">Distance</button>' +
+            '<button class="pomo-btn sdt-solve-btn" onclick="sdtSolveFor(this,\'time\')">Time</button>' +
+        '</div>' +
+        '<div class="sdt-fields">' +
+            '<div class="sdt-field">' +
+                '<span class="sdt-field-label">Speed</span>' +
+                '<input type="number" class="sdt-field-input sdt-input-speed" placeholder="e.g. 60" onkeydown="sdtKeydown(event)">' +
+                '<select class="sdt-field-unit sdt-unit-speed">' +
+                    '<option value="kmh">km/h</option>' +
+                    '<option value="mph">mph</option>' +
+                    '<option value="ms">m/s</option>' +
+                '</select>' +
+            '</div>' +
+            '<div class="sdt-field">' +
+                '<span class="sdt-field-label">Distance</span>' +
+                '<input type="number" class="sdt-field-input sdt-input-distance" placeholder="e.g. 120" onkeydown="sdtKeydown(event)">' +
+                '<select class="sdt-field-unit sdt-unit-distance">' +
+                    '<option value="km">km</option>' +
+                    '<option value="mi">miles</option>' +
+                    '<option value="m">meters</option>' +
+                '</select>' +
+            '</div>' +
+            '<div class="sdt-field">' +
+                '<span class="sdt-field-label">Time</span>' +
+                '<input type="number" class="sdt-field-input sdt-input-time" placeholder="e.g. 2" onkeydown="sdtKeydown(event)">' +
+                '<select class="sdt-field-unit sdt-unit-time">' +
+                    '<option value="hr">hours</option>' +
+                    '<option value="min">minutes</option>' +
+                    '<option value="sec">seconds</option>' +
+                '</select>' +
+            '</div>' +
+        '</div>' +
+        '<div class="sdt-actions">' +
+            '<button class="pomo-btn primary paused sdt-calc-btn" onclick="sdtCalculate(this)">Calculate</button>' +
+            '<button class="pomo-btn" onclick="sdtClear(this)">Clear</button>' +
+        '</div>' +
+        '<div class="sdt-result-box">' +
+            '<span style="color:var(--text-muted);font-size:13px;">Select what to solve for, fill in the other two values, then press Calculate</span>' +
+        '</div>' +
+    '</div>',
+    onInit: 'sdtInit',
+    defaultWidth: 380,
+    defaultHeight: 420,
+    source: 'external'
+});
+
+console.log('Educational Tools plugin loaded (4 tools)');
