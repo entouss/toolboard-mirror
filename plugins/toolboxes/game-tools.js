@@ -348,6 +348,26 @@
 .memmatch-win-title { font-size: 24px; font-weight: 700; color: #27ae60; margin-bottom: 8px; }
 .memmatch-win-stats { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; }
 .memmatch-win-best { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+/* Checkers Widget Styles */
+.tool-content:has(.ckr-widget) { display: flex; flex-direction: column; padding: 0; }
+.ckr-widget { display: flex; flex-direction: column; flex: 1; min-height: 0; background: #1a1a2e; position: relative; }
+.ckr-toolbar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; flex-shrink: 0; flex-wrap: wrap; border-bottom: 1px solid #0f3460; }
+.ckr-toolbar select { padding: 3px 6px; font-size: 11px; border: 1px solid #0f3460; border-radius: 4px; background: #16213e; color: #e0e0e0; cursor: pointer; }
+.ckr-toolbar button { padding: 4px 10px; border: 1px solid #0f3460; border-radius: 4px; background: #16213e; color: #e0e0e0; cursor: pointer; font-size: 11px; }
+.ckr-toolbar button:hover { background: #1a3a5c; }
+.ckr-status { font-size: 12px; font-weight: 700; color: #e0e0e0; flex: 1; text-align: center; min-width: 60px; }
+.ckr-status .ckr-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 4px; }
+.ckr-board-wrap { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 8px; }
+.ckr-canvas { cursor: pointer; max-width: 100%; max-height: 100%; }
+.ckr-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(26,26,46,0.85); z-index: 2; border-radius: 0 0 6px 6px; }
+.ckr-overlay.hidden { display: none; }
+.ckr-overlay-title { font-size: 22px; font-weight: 900; color: #f1c40f; text-shadow: 1px 1px 0 #0f3460; margin-bottom: 6px; font-family: 'Arial Black', Arial, sans-serif; }
+.ckr-overlay .ckr-play-btn { padding: 8px 24px; font-size: 14px; font-weight: 700; border: none; border-radius: 20px; background: #f1c40f; color: #1a1a2e; cursor: pointer; box-shadow: 0 3px 0 #d4a017; transition: transform 0.1s, box-shadow 0.1s; }
+.ckr-overlay .ckr-play-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #d4a017; }
+.ckr-overlay .ckr-play-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 #d4a017; }
+.ckr-score-row { display: flex; justify-content: center; gap: 16px; padding: 4px 10px; font-size: 11px; color: #e0e0e0; border-top: 1px solid #0f3460; }
+.ckr-score-row span { font-weight: 600; }
 `;
     document.head.appendChild(style);
 })();
@@ -7301,7 +7321,7 @@ PluginRegistry.registerToolbox({
     icon: '\u265E',
     color: '#8e44ad',
     version: '1.0.0',
-    tools: ['2048', 'breakout', 'chess', 'connect-four', 'flappy-bird', 'hangman', 'memory-match', 'memory-pattern', 'minesweeper', 'nonogram', 'reaction-time', 'snake', 'sudoku', 'tetris', 'tic-tac-toe', 'typing-test'],
+    tools: ['2048', 'breakout', 'checkers', 'chess', 'connect-four', 'flappy-bird', 'hangman', 'memory-match', 'memory-pattern', 'minesweeper', 'nonogram', 'reaction-time', 'snake', 'sudoku', 'tetris', 'tic-tac-toe', 'typing-test'],
     source: 'external'
 });
 
@@ -7878,4 +7898,709 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Game Tools plugin loaded (16 tools)');
+// =============================================
+// CHECKERS
+// =============================================
+
+const CKR_SIZE = 8;
+const CKR_EMPTY = 0;
+const CKR_RED = 1;
+const CKR_BLACK = 2;
+const CKR_RED_KING = 3;
+const CKR_BLACK_KING = 4;
+
+var ckrState = {};
+
+function ckrGetToolId(el) {
+    const tool = el.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function ckrGetWidget(el) {
+    return el.closest('.ckr-widget');
+}
+
+function ckrGetState(toolId) {
+    if (!ckrState[toolId]) {
+        const custom = loadToolCustomizations();
+        const saved = custom[toolId] && custom[toolId].ckrData;
+        if (saved) {
+            ckrState[toolId] = saved;
+        } else {
+            ckrState[toolId] = null;
+        }
+    }
+    return ckrState[toolId];
+}
+
+function ckrSaveData(toolId) {
+    const s = ckrState[toolId];
+    if (!s) return;
+    const custom = loadToolCustomizations();
+    custom[toolId] = custom[toolId] || {};
+    custom[toolId].ckrData = {
+        board: s.board,
+        turn: s.turn,
+        mode: s.mode,
+        difficulty: s.difficulty,
+        winner: s.winner,
+        gameOver: s.gameOver,
+        score: s.score
+    };
+    saveToolCustomizations(custom);
+}
+
+function ckrIsRed(p) { return p === CKR_RED || p === CKR_RED_KING; }
+function ckrIsBlack(p) { return p === CKR_BLACK || p === CKR_BLACK_KING; }
+function ckrIsKing(p) { return p === CKR_RED_KING || p === CKR_BLACK_KING; }
+function ckrOwner(p) {
+    if (ckrIsRed(p)) return CKR_RED;
+    if (ckrIsBlack(p)) return CKR_BLACK;
+    return CKR_EMPTY;
+}
+
+function ckrNewBoard() {
+    const b = [];
+    for (let r = 0; r < CKR_SIZE; r++) {
+        b.push(new Array(CKR_SIZE).fill(CKR_EMPTY));
+    }
+    // Black pieces on rows 0-2
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            if ((r + c) % 2 === 1) b[r][c] = CKR_BLACK;
+        }
+    }
+    // Red pieces on rows 5-7
+    for (let r = 5; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            if ((r + c) % 2 === 1) b[r][c] = CKR_RED;
+        }
+    }
+    return b;
+}
+
+function ckrGetJumps(board, r, c) {
+    const piece = board[r][c];
+    if (piece === CKR_EMPTY) return [];
+    const jumps = [];
+    const dirs = [];
+    if (ckrIsRed(piece) || ckrIsKing(piece)) dirs.push([-1, -1], [-1, 1]);
+    if (ckrIsBlack(piece) || ckrIsKing(piece)) dirs.push([1, -1], [1, 1]);
+
+    for (const [dr, dc] of dirs) {
+        const mr = r + dr;
+        const mc = c + dc;
+        const lr = r + dr * 2;
+        const lc = c + dc * 2;
+        if (lr < 0 || lr >= CKR_SIZE || lc < 0 || lc >= CKR_SIZE) continue;
+        if (board[mr][mc] === CKR_EMPTY || ckrOwner(board[mr][mc]) === ckrOwner(piece)) continue;
+        if (board[lr][lc] !== CKR_EMPTY) continue;
+        jumps.push({ fr: r, fc: c, tr: lr, tc: lc, cr: mr, cc: mc });
+    }
+    return jumps;
+}
+
+function ckrGetSimpleMoves(board, r, c) {
+    const piece = board[r][c];
+    if (piece === CKR_EMPTY) return [];
+    const moves = [];
+    const dirs = [];
+    if (ckrIsRed(piece) || ckrIsKing(piece)) dirs.push([-1, -1], [-1, 1]);
+    if (ckrIsBlack(piece) || ckrIsKing(piece)) dirs.push([1, -1], [1, 1]);
+
+    for (const [dr, dc] of dirs) {
+        const nr = r + dr;
+        const nc = c + dc;
+        if (nr < 0 || nr >= CKR_SIZE || nc < 0 || nc >= CKR_SIZE) continue;
+        if (board[nr][nc] !== CKR_EMPTY) continue;
+        moves.push({ fr: r, fc: c, tr: nr, tc: nc, cr: -1, cc: -1 });
+    }
+    return moves;
+}
+
+function ckrGetMultiJumps(board, r, c, piece) {
+    const sequences = [];
+    function dfs(curR, curC, seq, boardCopy) {
+        const jumps = ckrGetJumps(boardCopy, curR, curC);
+        if (jumps.length === 0 && seq.length > 0) {
+            sequences.push(seq.slice());
+            return;
+        }
+        for (const j of jumps) {
+            const captured = boardCopy[j.cr][j.cc];
+            boardCopy[j.cr][j.cc] = CKR_EMPTY;
+            boardCopy[j.fr][j.fc] = CKR_EMPTY;
+            boardCopy[j.tr][j.tc] = piece;
+            seq.push(j);
+            dfs(j.tr, j.tc, seq, boardCopy);
+            seq.pop();
+            boardCopy[j.cr][j.cc] = captured;
+            boardCopy[j.fr][j.fc] = piece;
+            boardCopy[j.tr][j.tc] = CKR_EMPTY;
+        }
+    }
+    const copy = board.map(row => row.slice());
+    dfs(r, c, [], copy);
+    return sequences;
+}
+
+function ckrGetAllMoves(board, player) {
+    const allJumps = [];
+    const allSimple = [];
+    for (let r = 0; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            if (ckrOwner(board[r][c]) !== player) continue;
+            const multiJumps = ckrGetMultiJumps(board, r, c, board[r][c]);
+            for (const seq of multiJumps) {
+                allJumps.push(seq);
+            }
+            const simple = ckrGetSimpleMoves(board, r, c);
+            for (const m of simple) {
+                allSimple.push([m]);
+            }
+        }
+    }
+    // Mandatory jump rule: if jumps available, must jump
+    if (allJumps.length > 0) return allJumps;
+    return allSimple;
+}
+
+function ckrApplyMove(board, moveSeq) {
+    const first = moveSeq[0];
+    const piece = board[first.fr][first.fc];
+    board[first.fr][first.fc] = CKR_EMPTY;
+    for (const m of moveSeq) {
+        if (m.cr >= 0) board[m.cr][m.cc] = CKR_EMPTY;
+    }
+    const last = moveSeq[moveSeq.length - 1];
+    let finalPiece = piece;
+    if (ckrIsRed(piece) && last.tr === 0) finalPiece = CKR_RED_KING;
+    if (ckrIsBlack(piece) && last.tr === CKR_SIZE - 1) finalPiece = CKR_BLACK_KING;
+    board[last.tr][last.tc] = finalPiece;
+    return finalPiece;
+}
+
+function ckrUnapplyMove(board, moveSeq, originalPiece, capturedPieces) {
+    const last = moveSeq[moveSeq.length - 1];
+    board[last.tr][last.tc] = CKR_EMPTY;
+    const first = moveSeq[0];
+    board[first.fr][first.fc] = originalPiece;
+    for (let i = 0; i < moveSeq.length; i++) {
+        const m = moveSeq[i];
+        if (m.cr >= 0) board[m.cr][m.cc] = capturedPieces[i];
+    }
+}
+
+function ckrCountPieces(board, player) {
+    let count = 0;
+    for (let r = 0; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            if (ckrOwner(board[r][c]) === player) count++;
+        }
+    }
+    return count;
+}
+
+function ckrEvalBoard(board, player) {
+    const opp = player === CKR_RED ? CKR_BLACK : CKR_RED;
+    let score = 0;
+    for (let r = 0; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            const p = board[r][c];
+            if (p === CKR_EMPTY) continue;
+            if (ckrOwner(p) === player) {
+                score += ckrIsKing(p) ? 5 : 3;
+                // Positional bonus: center control
+                if (c >= 2 && c <= 5) score += 1;
+                // Advancement bonus for non-kings
+                if (!ckrIsKing(p)) {
+                    if (player === CKR_RED) score += (7 - r);
+                    else score += r;
+                }
+            } else {
+                score -= ckrIsKing(p) ? 5 : 3;
+                if (c >= 2 && c <= 5) score -= 1;
+                if (!ckrIsKing(p)) {
+                    if (opp === CKR_RED) score -= (7 - r);
+                    else score -= r;
+                }
+            }
+        }
+    }
+    return score;
+}
+
+function ckrMinimax(board, depth, alpha, beta, maximizing, aiPlayer) {
+    const opp = aiPlayer === CKR_RED ? CKR_BLACK : CKR_RED;
+    const currentPlayer = maximizing ? aiPlayer : opp;
+    const moves = ckrGetAllMoves(board, currentPlayer);
+
+    if (moves.length === 0) {
+        return { score: maximizing ? -100000 : 100000, move: null };
+    }
+    if (depth === 0) {
+        return { score: ckrEvalBoard(board, aiPlayer), move: null };
+    }
+
+    if (maximizing) {
+        let best = { score: -Infinity, move: moves[0] };
+        for (const moveSeq of moves) {
+            const first = moveSeq[0];
+            const originalPiece = board[first.fr][first.fc];
+            const capturedPieces = moveSeq.map(m => m.cr >= 0 ? board[m.cr][m.cc] : CKR_EMPTY);
+            ckrApplyMove(board, moveSeq);
+            const result = ckrMinimax(board, depth - 1, alpha, beta, false, aiPlayer);
+            ckrUnapplyMove(board, moveSeq, originalPiece, capturedPieces);
+            if (result.score > best.score) {
+                best = { score: result.score, move: moveSeq };
+            }
+            alpha = Math.max(alpha, best.score);
+            if (alpha >= beta) break;
+        }
+        return best;
+    } else {
+        let best = { score: Infinity, move: moves[0] };
+        for (const moveSeq of moves) {
+            const first = moveSeq[0];
+            const originalPiece = board[first.fr][first.fc];
+            const capturedPieces = moveSeq.map(m => m.cr >= 0 ? board[m.cr][m.cc] : CKR_EMPTY);
+            ckrApplyMove(board, moveSeq);
+            const result = ckrMinimax(board, depth - 1, alpha, beta, true, aiPlayer);
+            ckrUnapplyMove(board, moveSeq, originalPiece, capturedPieces);
+            if (result.score < best.score) {
+                best = { score: result.score, move: moveSeq };
+            }
+            beta = Math.min(beta, best.score);
+            if (alpha >= beta) break;
+        }
+        return best;
+    }
+}
+
+function ckrAIMove(toolId) {
+    const s = ckrState[toolId];
+    if (!s || s.gameOver) return;
+    const aiPlayer = CKR_BLACK;
+    const depthMap = { easy: 2, medium: 4, hard: 6 };
+    const depth = depthMap[s.difficulty] || 4;
+    const moves = ckrGetAllMoves(s.board, aiPlayer);
+    if (moves.length === 0) return;
+
+    const result = ckrMinimax(s.board, depth, -Infinity, Infinity, true, aiPlayer);
+    const moveSeq = result.move || moves[Math.floor(Math.random() * moves.length)];
+    ckrPlayMove(toolId, moveSeq);
+}
+
+function ckrPlayMove(toolId, moveSeq) {
+    const s = ckrState[toolId];
+    if (!s || s.gameOver) return;
+
+    ckrApplyMove(s.board, moveSeq);
+
+    // Check for winner
+    const opp = s.turn === CKR_RED ? CKR_BLACK : CKR_RED;
+    const oppMoves = ckrGetAllMoves(s.board, opp);
+    if (oppMoves.length === 0 || ckrCountPieces(s.board, opp) === 0) {
+        s.winner = s.turn;
+        s.gameOver = true;
+        if (s.winner === CKR_RED) s.score.red++;
+        else s.score.black++;
+    } else {
+        s.turn = opp;
+    }
+
+    s.selected = null;
+    s.validMoves = [];
+    s.hoverCell = null;
+    ckrSaveData(toolId);
+    ckrRender(toolId);
+
+    if (s.gameOver) {
+        ckrShowResult(toolId);
+    }
+}
+
+function ckrNewGame(btn) {
+    const widget = ckrGetWidget(btn);
+    const toolId = ckrGetToolId(widget);
+    if (!toolId) return;
+    const modeSelect = widget.querySelector('.ckr-mode');
+    const diffSelect = widget.querySelector('.ckr-difficulty');
+    const mode = modeSelect ? modeSelect.value : 'ai';
+    const difficulty = diffSelect ? diffSelect.value : 'medium';
+    const prevScore = ckrState[toolId] ? ckrState[toolId].score : { red: 0, black: 0 };
+    ckrState[toolId] = {
+        board: ckrNewBoard(),
+        turn: CKR_RED,
+        mode: mode,
+        difficulty: difficulty,
+        winner: 0,
+        gameOver: false,
+        selected: null,
+        validMoves: [],
+        hoverCell: null,
+        score: prevScore
+    };
+    const overlay = widget.querySelector('.ckr-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    ckrSaveData(toolId);
+    ckrRender(toolId);
+}
+
+function ckrSetMode(sel) {
+    const widget = ckrGetWidget(sel);
+    const toolId = ckrGetToolId(widget);
+    if (!toolId) return;
+    const s = ckrState[toolId];
+    if (s) {
+        s.mode = sel.value;
+        const diffSelect = widget.querySelector('.ckr-difficulty');
+        if (diffSelect) diffSelect.style.display = sel.value === 'ai' ? '' : 'none';
+    }
+}
+
+function ckrSetDifficulty(sel) {
+    const widget = ckrGetWidget(sel);
+    const toolId = ckrGetToolId(widget);
+    if (!toolId) return;
+    const s = ckrState[toolId];
+    if (s) s.difficulty = sel.value;
+}
+
+function ckrShowResult(toolId) {
+    const s = ckrState[toolId];
+    if (!s) return;
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+    const overlay = widget.querySelector('.ckr-overlay');
+    let msg;
+    if (s.winner === CKR_RED) msg = '<span style="color:#e74c3c">Red</span> wins!';
+    else if (s.winner === CKR_BLACK) msg = '<span style="color:#333">Black</span> wins!';
+    else msg = 'Draw!';
+    overlay.innerHTML =
+        '<div class="ckr-overlay-title">' + msg + '</div>' +
+        '<button class="ckr-play-btn" onclick="ckrNewGame(this)">Play Again</button>';
+    overlay.classList.remove('hidden');
+}
+
+function ckrCanvasClick(toolId, e) {
+    const s = ckrState[toolId];
+    if (!s || s.gameOver) return;
+    if (s.mode === 'ai' && s.turn === CKR_BLACK) return;
+
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+    const canvas = widget.querySelector('.ckr-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    const cellSize = canvas.width / CKR_SIZE;
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    if (row < 0 || row >= CKR_SIZE || col < 0 || col >= CKR_SIZE) return;
+
+    const piece = s.board[row][col];
+
+    // Check if clicking on a valid move destination
+    if (s.selected && s.validMoves.length > 0) {
+        for (const moveSeq of s.validMoves) {
+            const last = moveSeq[moveSeq.length - 1];
+            if (last.tr === row && last.tc === col) {
+                ckrPlayMove(toolId, moveSeq);
+                if (!s.gameOver && s.mode === 'ai' && s.turn === CKR_BLACK) {
+                    setTimeout(() => ckrAIMove(toolId), 300);
+                }
+                return;
+            }
+        }
+    }
+
+    // Select own piece
+    if (ckrOwner(piece) === s.turn) {
+        s.selected = { r: row, c: col };
+        // Get all legal moves for this piece from the full set
+        const allMoves = ckrGetAllMoves(s.board, s.turn);
+        s.validMoves = allMoves.filter(seq => seq[0].fr === row && seq[0].fc === col);
+        ckrDraw(toolId);
+    } else {
+        s.selected = null;
+        s.validMoves = [];
+        ckrDraw(toolId);
+    }
+}
+
+function ckrCanvasMove(toolId, e) {
+    const s = ckrState[toolId];
+    if (!s || s.gameOver) return;
+
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+    const canvas = widget.querySelector('.ckr-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+
+    const cellSize = canvas.width / CKR_SIZE;
+    const col = Math.floor(x / cellSize);
+    const row = Math.floor(y / cellSize);
+    const prev = s.hoverCell;
+    if (prev && prev.r === row && prev.c === col) return;
+    s.hoverCell = { r: row, c: col };
+    ckrDraw(toolId);
+}
+
+function ckrCanvasLeave(toolId) {
+    const s = ckrState[toolId];
+    if (!s) return;
+    s.hoverCell = null;
+    ckrDraw(toolId);
+}
+
+function ckrRender(toolId) {
+    const s = ckrState[toolId];
+    if (!s) return;
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+
+    const status = widget.querySelector('.ckr-status');
+    if (s.gameOver) {
+        if (s.winner === CKR_RED) status.innerHTML = '<span class="ckr-dot" style="background:#e74c3c"></span>Red wins!';
+        else if (s.winner === CKR_BLACK) status.innerHTML = '<span class="ckr-dot" style="background:#333"></span>Black wins!';
+        else status.innerHTML = 'Draw!';
+    } else {
+        const color = s.turn === CKR_RED ? '#e74c3c' : '#333';
+        const name = s.turn === CKR_RED ? 'Red' : 'Black';
+        status.innerHTML = '<span class="ckr-dot" style="background:' + color + '"></span>' + name + '\'s turn';
+    }
+
+    const modeSelect = widget.querySelector('.ckr-mode');
+    const diffSelect = widget.querySelector('.ckr-difficulty');
+    if (modeSelect) modeSelect.value = s.mode;
+    if (diffSelect) {
+        diffSelect.value = s.difficulty;
+        diffSelect.style.display = s.mode === 'ai' ? '' : 'none';
+    }
+
+    // Score display
+    const scoreRow = widget.querySelector('.ckr-score-row');
+    if (scoreRow) {
+        scoreRow.innerHTML = '<span style="color:#e74c3c;">Red: ' + s.score.red + '</span><span style="color:#aaa;">Black: ' + s.score.black + '</span>';
+    }
+
+    ckrDraw(toolId);
+}
+
+function ckrDraw(toolId) {
+    const s = ckrState[toolId];
+    if (!s) return;
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+    const canvas = widget.querySelector('.ckr-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const W = canvas.width;
+    const cellSize = W / CKR_SIZE;
+    const pieceRadius = cellSize * 0.38;
+
+    // Draw board
+    for (let r = 0; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            const x = c * cellSize;
+            const y = r * cellSize;
+            if ((r + c) % 2 === 0) {
+                ctx.fillStyle = '#f0d9b5';
+            } else {
+                ctx.fillStyle = '#b58863';
+            }
+            ctx.fillRect(x, y, cellSize, cellSize);
+        }
+    }
+
+    // Highlight selected cell
+    if (s.selected) {
+        const x = s.selected.c * cellSize;
+        const y = s.selected.r * cellSize;
+        ctx.fillStyle = 'rgba(255, 255, 0, 0.4)';
+        ctx.fillRect(x, y, cellSize, cellSize);
+    }
+
+    // Highlight valid move destinations
+    if (s.validMoves && s.validMoves.length > 0) {
+        for (const moveSeq of s.validMoves) {
+            const last = moveSeq[moveSeq.length - 1];
+            const x = last.tc * cellSize;
+            const y = last.tr * cellSize;
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            ctx.fillRect(x, y, cellSize, cellSize);
+
+            // Draw a small dot in the center of valid destinations
+            ctx.fillStyle = 'rgba(0, 200, 0, 0.6)';
+            ctx.beginPath();
+            ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // Hover highlight
+    if (s.hoverCell && !s.gameOver) {
+        const { r, c } = s.hoverCell;
+        if (r >= 0 && r < CKR_SIZE && c >= 0 && c < CKR_SIZE) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+        }
+    }
+
+    // Draw pieces
+    for (let r = 0; r < CKR_SIZE; r++) {
+        for (let c = 0; c < CKR_SIZE; c++) {
+            const piece = s.board[r][c];
+            if (piece === CKR_EMPTY) continue;
+
+            const cx = c * cellSize + cellSize / 2;
+            const cy = r * cellSize + cellSize / 2;
+
+            // Shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.arc(cx + 2, cy + 2, pieceRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Piece body
+            if (ckrIsRed(piece)) {
+                ctx.fillStyle = '#cc2222';
+            } else {
+                ctx.fillStyle = '#222';
+            }
+            ctx.beginPath();
+            ctx.arc(cx, cy, pieceRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3D sheen
+            const grad = ctx.createRadialGradient(cx - pieceRadius * 0.3, cy - pieceRadius * 0.3, pieceRadius * 0.1, cx, cy, pieceRadius);
+            grad.addColorStop(0, 'rgba(255,255,255,0.35)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, pieceRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Piece border
+            ctx.strokeStyle = ckrIsRed(piece) ? '#991111' : '#000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, pieceRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // King crown
+            if (ckrIsKing(piece)) {
+                const crownColor = ckrIsRed(piece) ? '#ffd700' : '#ffd700';
+                ctx.fillStyle = crownColor;
+                ctx.font = 'bold ' + Math.floor(cellSize * 0.35) + 'px serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('\u265A', cx, cy + 1);
+            }
+        }
+    }
+}
+
+function ckrResizeCanvas(toolId) {
+    const widget = document.querySelector('.tool[data-tool="' + toolId + '"] .ckr-widget');
+    if (!widget) return;
+    const canvas = widget.querySelector('.ckr-canvas');
+    const wrap = widget.querySelector('.ckr-board-wrap');
+    if (!canvas || !wrap) return;
+
+    const wrapW = wrap.clientWidth - 16;
+    const wrapH = wrap.clientHeight - 16;
+    const size = Math.min(wrapW, wrapH);
+    canvas.width = Math.max(size, 100);
+    canvas.height = Math.max(size, 100);
+    ckrDraw(toolId);
+}
+
+function ckrInit() {
+    document.querySelectorAll('.ckr-widget').forEach(widget => {
+        const toolId = ckrGetToolId(widget);
+        if (!toolId) return;
+
+        let s = ckrGetState(toolId);
+        if (!s) {
+            ckrState[toolId] = {
+                board: ckrNewBoard(),
+                turn: CKR_RED,
+                mode: 'ai',
+                difficulty: 'medium',
+                winner: 0,
+                gameOver: false,
+                selected: null,
+                validMoves: [],
+                hoverCell: null,
+                score: { red: 0, black: 0 }
+            };
+        } else {
+            s.selected = null;
+            s.validMoves = [];
+            s.hoverCell = null;
+            if (!s.score) s.score = { red: 0, black: 0 };
+        }
+
+        ckrResizeCanvas(toolId);
+        ckrRender(toolId);
+
+        const canvas = widget.querySelector('.ckr-canvas');
+        canvas.addEventListener('click', (e) => ckrCanvasClick(toolId, e));
+        canvas.addEventListener('mousemove', (e) => ckrCanvasMove(toolId, e));
+        canvas.addEventListener('mouseleave', () => ckrCanvasLeave(toolId));
+
+        const ro = new ResizeObserver(() => ckrResizeCanvas(toolId));
+        ro.observe(widget.querySelector('.ckr-board-wrap'));
+    });
+}
+
+PluginRegistry.registerTool({
+    id: 'checkers',
+    name: 'Checkers',
+    description: 'Classic checkers (draughts) with AI opponent or two-player mode — mandatory jumps, multi-jumps, and king promotion',
+    icon: '\u26C0',
+    version: '1.0.0',
+    toolbox: 'game-tools',
+    tags: ['game', 'checkers', 'draughts', 'board', 'strategy', 'ai', 'two-player'],
+    title: 'Checkers',
+    content: '<div class="ckr-widget">' +
+        '<div class="ckr-toolbar">' +
+            '<select class="ckr-mode" onchange="ckrSetMode(this)">' +
+                '<option value="ai" selected>vs AI</option>' +
+                '<option value="2p">2 Player</option>' +
+            '</select>' +
+            '<select class="ckr-difficulty" onchange="ckrSetDifficulty(this)">' +
+                '<option value="easy">Easy</option>' +
+                '<option value="medium" selected>Medium</option>' +
+                '<option value="hard">Hard</option>' +
+            '</select>' +
+            '<button class="pomo-btn" onclick="ckrNewGame(this)">New Game</button>' +
+            '<span style="flex:1;"></span>' +
+            '<span class="ckr-status" style="color:#e0e0e0;font-size:12px;">Red\'s turn</span>' +
+        '</div>' +
+        '<div class="ckr-board-wrap">' +
+            '<canvas class="ckr-canvas"></canvas>' +
+        '</div>' +
+        '<div class="ckr-score-row"></div>' +
+        '<div class="ckr-overlay hidden">' +
+            '<div class="ckr-overlay-title"></div>' +
+            '<button class="ckr-play-btn" onclick="ckrNewGame(this)">Play Again</button>' +
+        '</div>' +
+    '</div>',
+    onInit: 'ckrInit',
+    defaultWidth: 420,
+    defaultHeight: 480,
+    source: 'external'
+});
+
+console.log('Game Tools plugin loaded (17 tools)');
