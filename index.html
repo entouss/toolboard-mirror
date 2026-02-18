@@ -2803,6 +2803,11 @@ tr:hover {
             <input type="text" id="toolboardTitleInput" placeholder="Board title">
             <label>Header Color</label>
             <div class="color-picker-row" id="toolboardColorPicker"></div>
+            <label>Favicon</label>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                <input type="text" id="toolboardFaviconInput" placeholder="Enter an emoji..." style="flex:1;" maxlength="2">
+                <button id="toolboardFaviconReset" title="Reset to default" style="background:none;border:1px solid var(--border-color);border-radius:3px;cursor:pointer;font-size:10px;padding:1px 5px;color:var(--text-secondary);">↺</button>
+            </div>
             <label style="display:flex;align-items:center;gap:6px;">Board Font <a href="https://fonts.google.com" target="_blank" rel="noopener" style="font-size:10px;color:#3498db;text-decoration:none;" title="Browse Google Fonts">Browse fonts ↗</a></label>
             <select id="toolboardFontFamily" class="font-select">
                 <option value="">System Default</option>
@@ -5948,7 +5953,7 @@ const DASHBOARD_COLORS = [
 ];
 
 function loadToolboardSettings() {
-    const defaults = { title: 'My Toolboard', color: '#2c3e50', fontFamily: '', fontSize: '', customFontName: '' };
+    const defaults = { title: 'My Toolboard', color: '#2c3e50', fontFamily: '', fontSize: '', customFontName: '', favicon: '' };
     const stored = localStorage.getItem(boardKey('toolboardSettings'));
     if (stored) {
         try {
@@ -5987,6 +5992,20 @@ function applyToolboardSettings() {
 
     // Update browser tab title
     document.title = toolboardSettings.title + ' - Toolboard';
+
+    // Apply favicon
+    const faviconLink = document.querySelector('link[rel="icon"]');
+    if (!applyToolboardSettings._defaultFavicon) {
+        applyToolboardSettings._defaultFavicon = faviconLink.getAttribute('href');
+    }
+    const faviconInput = document.getElementById('toolboardFaviconInput');
+    if (toolboardSettings.favicon) {
+        const emoji = encodeURIComponent(toolboardSettings.favicon);
+        faviconLink.setAttribute('href', `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="28">${emoji}</text></svg>`);
+    } else {
+        faviconLink.setAttribute('href', applyToolboardSettings._defaultFavicon);
+    }
+    if (faviconInput) faviconInput.value = toolboardSettings.favicon || '';
 
     // Populate color picker
     colorPicker.innerHTML = DASHBOARD_COLORS.map(c =>
@@ -6201,6 +6220,29 @@ function setupToolboardSettings() {
         if (fontSizeLabel) fontSizeLabel.textContent = 'default';
         saveToolboardSettings(toolboardSettings);
         applyAllToolFonts();
+    });
+
+    // Favicon input
+    const faviconInput = document.getElementById('toolboardFaviconInput');
+    const faviconReset = document.getElementById('toolboardFaviconReset');
+    const faviconLink = document.querySelector('link[rel="icon"]');
+    if (faviconInput) faviconInput.addEventListener('input', (e) => {
+        toolboardSettings.favicon = e.target.value;
+        saveToolboardSettings(toolboardSettings);
+        if (e.target.value) {
+            const emoji = encodeURIComponent(e.target.value);
+            faviconLink.setAttribute('href', `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="28">${emoji}</text></svg>`);
+        } else {
+            faviconLink.setAttribute('href', applyToolboardSettings._defaultFavicon);
+        }
+        updateBoardSelectorLabel();
+    });
+    if (faviconReset) faviconReset.addEventListener('click', () => {
+        faviconInput.value = '';
+        toolboardSettings.favicon = '';
+        saveToolboardSettings(toolboardSettings);
+        faviconLink.setAttribute('href', applyToolboardSettings._defaultFavicon);
+        updateBoardSelectorLabel();
     });
 
     // Close when clicking outside
@@ -9034,11 +9076,23 @@ async function exportToolAsPng(toolId) {
 
 // Board management functions
 
+function getBoardFavicon(boardId) {
+    try {
+        const stored = localStorage.getItem(`finance_${boardId}_toolboardSettings`);
+        if (stored) {
+            const settings = JSON.parse(stored);
+            return settings.favicon || '';
+        }
+    } catch (e) {}
+    return '';
+}
+
 function updateBoardSelectorLabel() {
     const trigger = document.getElementById('boardSelectorTrigger');
     if (!trigger) return;
     const board = boards.find(b => b.id === currentBoardId);
-    trigger.textContent = board ? board.name : 'Board';
+    const favicon = getBoardFavicon(currentBoardId);
+    trigger.textContent = (favicon ? favicon + ' ' : '') + (board ? board.name : 'Board');
 }
 
 function populateBoardSelector() {
@@ -9068,9 +9122,11 @@ function renderBoardList() {
         row.className = 'board-manager-item' + (board.id === currentBoardId ? ' active' : '');
         row.dataset.boardId = board.id;
 
+        const favicon = getBoardFavicon(board.id);
+
         const nameSpan = document.createElement('span');
         nameSpan.className = 'board-manager-item-name';
-        nameSpan.textContent = board.name;
+        nameSpan.textContent = (favicon ? favicon + ' ' : '') + board.name;
 
         const actions = document.createElement('div');
         actions.className = 'board-manager-actions';

@@ -182,6 +182,79 @@
 .msheet-hint { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 3px; }
 .msheet-playing { box-shadow: inset 0 0 0 2px #3498db; }
 
+/* Pixel Art Editor Widget Styles */
+.tool-content:has(.paed-widget) { display: flex; flex-direction: column; }
+.paed-widget { padding: 0; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; }
+.paed-toolbar { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; flex-wrap: wrap; }
+.paed-toolbar select { font-size: 11px; padding: 2px 4px; background: var(--input-bg); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 3px; }
+.paed-toolbar button { padding: 3px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; flex-shrink: 0; }
+.paed-toolbar button:hover { background: var(--table-hover); }
+.paed-toolbar button.active { background: #3498db; color: white; border-color: #3498db; }
+.paed-toolbar .paed-sep { width: 1px; height: 18px; background: var(--border-color); flex-shrink: 0; }
+.paed-palette { display: flex; align-items: center; gap: 3px; padding: 4px 8px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; flex-wrap: wrap; }
+.paed-swatch { width: 18px; height: 18px; border-radius: 3px; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; box-sizing: border-box; }
+.paed-swatch:hover { border-color: var(--text-muted); }
+.paed-swatch.active { border-color: #3498db; box-shadow: 0 0 0 1px #3498db; }
+.paed-palette input[type="color"] { width: 18px; height: 18px; border: 1px solid var(--border-color); border-radius: 3px; padding: 0; cursor: pointer; background: none; flex-shrink: 0; }
+.paed-canvas-wrap { flex: 1; position: relative; min-height: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%), linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e0e0e0 75%), linear-gradient(-45deg, transparent 75%, #e0e0e0 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0; }
+.paed-canvas { image-rendering: pixelated; cursor: crosshair; touch-action: none; }
+.paed-actions { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-top: 1px solid var(--border-color); flex-shrink: 0; }
+.paed-actions button { padding: 4px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; }
+.paed-actions button:hover { background: var(--table-hover); }
+.paed-actions .paed-status { flex: 1; text-align: right; font-size: 10px; color: var(--text-muted); }
+
+/* Color Palette Generator Styles */
+.tool-content:has(.cpal-widget) { display: flex; flex-direction: column; }
+.cpal-widget { padding: 10px; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; gap: 8px; }
+.cpal-toolbar { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.cpal-toolbar select { padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; background: var(--input-bg); color: var(--text-primary); cursor: pointer; }
+.cpal-toolbar select:focus { outline: none; border-color: #3498db; }
+.cpal-toolbar input[type="color"] { width: 28px; height: 28px; border: 1px solid var(--border-color); border-radius: 4px; padding: 0; cursor: pointer; background: none; flex-shrink: 0; }
+.cpal-toolbar button { padding: 4px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; flex-shrink: 0; }
+.cpal-toolbar button:hover { background: var(--table-hover); }
+.cpal-grid { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; align-content: flex-start; min-height: 0; overflow-y: auto; padding: 4px 0; }
+.cpal-swatch { position: relative; flex: 1 1 60px; min-width: 60px; max-width: 120px; min-height: 80px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; transition: transform 0.1s; }
+.cpal-swatch:hover { transform: scale(1.04); }
+.cpal-swatch-color { position: absolute; inset: 0; border-radius: 5px; }
+.cpal-swatch-label { position: relative; z-index: 1; font-size: 10px; font-family: monospace; padding: 3px 6px; background: rgba(0,0,0,0.45); color: #fff; width: 100%; text-align: center; box-sizing: border-box; letter-spacing: 0.3px; }
+.cpal-swatch-lock { position: absolute; top: 4px; right: 4px; z-index: 1; width: 20px; height: 20px; border: none; border-radius: 3px; background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.7); cursor: pointer; font-size: 11px; line-height: 20px; text-align: center; padding: 0; opacity: 0; transition: opacity 0.15s; }
+.cpal-swatch:hover .cpal-swatch-lock { opacity: 1; }
+.cpal-swatch-lock.locked { opacity: 1; background: rgba(0,0,0,0.55); color: #fff; }
+.cpal-swatch.copied .cpal-swatch-label { background: rgba(39,174,96,0.8); }
+.cpal-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.cpal-actions button { padding: 4px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; }
+.cpal-actions button:hover { background: var(--table-hover); }
+.cpal-status { flex: 1; text-align: right; font-size: 10px; color: var(--text-muted); min-height: 16px; }
+.cpal-status.success { color: var(--success-text, #27ae60); }
+
+/* SVG Path Editor Styles */
+.tool-content:has(.spe-widget) { display: flex; flex-direction: column; }
+.spe-widget { padding: 0; font-size: 12px; display: flex; flex-direction: column; flex: 1; width: 100%; box-sizing: border-box; min-height: 0; }
+.spe-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 8px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; flex-wrap: wrap; }
+.spe-sep { width: 1px; height: 18px; background: var(--border-color); flex-shrink: 0; }
+.spe-tool-btn { padding: 3px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; flex-shrink: 0; }
+.spe-tool-btn:hover { background: var(--table-hover); }
+.spe-tool-btn.active { background: #3498db; color: white; border-color: #3498db; }
+.spe-canvas-wrap { flex: 1; position: relative; min-height: 0; overflow: hidden; }
+.spe-svg { width: 100%; height: 100%; background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px); background-size: 20px 20px; cursor: crosshair; display: block; }
+.spe-svg.move-mode { cursor: default; }
+.spe-path { fill: none; stroke: #3498db; stroke-width: 2; }
+.spe-point { fill: #3498db; stroke: #fff; stroke-width: 1.5; cursor: grab; }
+.spe-point.selected { fill: #e74c3c; stroke: #fff; }
+.spe-point.dragging { cursor: grabbing; }
+.spe-control-point { fill: #e67e22; stroke: #fff; stroke-width: 1.5; cursor: grab; }
+.spe-control-point.dragging { cursor: grabbing; }
+.spe-control-line { stroke: #e67e22; stroke-width: 1; stroke-dasharray: 4 3; fill: none; opacity: 0.6; }
+.spe-output-wrap { display: flex; gap: 4px; padding: 4px 8px; border-top: 1px solid var(--border-color); flex-shrink: 0; }
+.spe-output { flex: 1; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 11px; font-family: monospace; background: var(--input-bg); color: var(--text-primary); resize: none; height: 22px; min-width: 0; }
+.spe-output:focus { outline: none; border-color: #3498db; }
+.spe-actions { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-top: 1px solid var(--border-color); flex-shrink: 0; }
+.spe-btn { padding: 3px 10px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; }
+.spe-btn:hover { background: var(--table-hover); }
+.spe-status { flex: 1; text-align: right; font-size: 10px; color: var(--text-muted); min-height: 14px; }
+.spe-status.success { color: var(--success-text, #27ae60); }
+.spe-hint { font-size: 10px; color: var(--text-muted); text-align: center; padding: 2px 8px 4px; flex-shrink: 0; }
+
 `;
     document.head.appendChild(style);
 })();
@@ -2456,6 +2529,1080 @@ function msheetInit() {
 }
 
 // =============================================
+// PIXEL ART EDITOR
+// =============================================
+
+const _paedState = new WeakMap();
+
+const PAED_PALETTE = [
+    '#000000', '#ffffff', '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71',
+    '#3498db', '#9b59b6', '#1abc9c', '#bdc3c7', '#7f8c8d', '#8e44ad',
+    '#d35400', '#2c3e50', '#f39c12', '#c0392b'
+];
+
+function paedGetToolId(widget) {
+    var tool = widget.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function paedGetState(widget) {
+    if (!_paedState.has(widget)) {
+        _paedState.set(widget, {
+            gridSize: 16,
+            pixels: null,
+            color: '#000000',
+            tool: 'draw',
+            showGrid: true,
+            isDrawing: false,
+            undoStack: [],
+            redoStack: [],
+            maxUndo: 30
+        });
+    }
+    return _paedState.get(widget);
+}
+
+function paedSaveData(widget) {
+    var toolId = paedGetToolId(widget);
+    if (!toolId) return;
+    var st = paedGetState(widget);
+    var customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].paedData = {
+        gridSize: st.gridSize,
+        pixels: st.pixels,
+        color: st.color,
+        tool: st.tool,
+        showGrid: st.showGrid
+    };
+    saveToolCustomizations(customizations);
+}
+
+function paedInitPixels(size) {
+    var pixels = [];
+    for (var r = 0; r < size; r++) {
+        var row = [];
+        for (var c = 0; c < size; c++) {
+            row.push(null);
+        }
+        pixels.push(row);
+    }
+    return pixels;
+}
+
+function paedRender(widget) {
+    var st = paedGetState(widget);
+    var canvas = widget.querySelector('.paed-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var size = st.gridSize;
+    var cellW = canvas.width / size;
+    var cellH = canvas.height / size;
+
+    // Clear
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw checkerboard background for empty cells, fill colored cells
+    for (var r = 0; r < size; r++) {
+        for (var c = 0; c < size; c++) {
+            var x = c * cellW;
+            var y = r * cellH;
+            if (st.pixels[r][c]) {
+                ctx.fillStyle = st.pixels[r][c];
+                ctx.fillRect(x, y, cellW, cellH);
+            } else {
+                // Checkerboard for transparency
+                var light = '#ffffff';
+                var dark = '#e0e0e0';
+                ctx.fillStyle = (r + c) % 2 === 0 ? light : dark;
+                ctx.fillRect(x, y, cellW, cellH);
+            }
+        }
+    }
+
+    // Draw grid lines
+    if (st.showGrid && cellW >= 3) {
+        ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (var i = 0; i <= size; i++) {
+            var gx = Math.floor(i * cellW) + 0.5;
+            var gy = Math.floor(i * cellH) + 0.5;
+            ctx.moveTo(gx, 0);
+            ctx.lineTo(gx, canvas.height);
+            ctx.moveTo(0, gy);
+            ctx.lineTo(canvas.width, gy);
+        }
+        ctx.stroke();
+    }
+}
+
+function paedCoordsToCell(widget, e) {
+    var st = paedGetState(widget);
+    var canvas = widget.querySelector('.paed-canvas');
+    var rect = canvas.getBoundingClientRect();
+    var x, y;
+    if (e.touches) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+    } else {
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+    }
+    var col = Math.floor(x / (rect.width / st.gridSize));
+    var row = Math.floor(y / (rect.height / st.gridSize));
+    if (row < 0 || row >= st.gridSize || col < 0 || col >= st.gridSize) return null;
+    return { row: row, col: col };
+}
+
+function paedSaveSnapshot(widget) {
+    var st = paedGetState(widget);
+    var snap = st.pixels.map(function(row) { return row.slice(); });
+    st.undoStack.push(snap);
+    if (st.undoStack.length > st.maxUndo) st.undoStack.shift();
+    st.redoStack = [];
+    paedUpdateStatus(widget);
+}
+
+function paedApplyTool(widget, row, col) {
+    var st = paedGetState(widget);
+    if (st.tool === 'draw') {
+        st.pixels[row][col] = st.color;
+    } else if (st.tool === 'erase') {
+        st.pixels[row][col] = null;
+    } else if (st.tool === 'fill') {
+        var target = st.pixels[row][col];
+        if (target === st.color) return;
+        paedFloodFill(widget, row, col, target, st.color);
+    } else if (st.tool === 'eyedropper') {
+        var picked = st.pixels[row][col];
+        if (picked) {
+            paedSetColor(widget, picked);
+        }
+    }
+    paedRender(widget);
+}
+
+function paedFloodFill(widget, row, col, target, fill) {
+    var st = paedGetState(widget);
+    var size = st.gridSize;
+    var queue = [{ r: row, c: col }];
+    var visited = {};
+    while (queue.length > 0) {
+        var p = queue.shift();
+        var key = p.r + ',' + p.c;
+        if (visited[key]) continue;
+        if (p.r < 0 || p.r >= size || p.c < 0 || p.c >= size) continue;
+        if (st.pixels[p.r][p.c] !== target) continue;
+        visited[key] = true;
+        st.pixels[p.r][p.c] = fill;
+        queue.push({ r: p.r - 1, c: p.c });
+        queue.push({ r: p.r + 1, c: p.c });
+        queue.push({ r: p.r, c: p.c - 1 });
+        queue.push({ r: p.r, c: p.c + 1 });
+    }
+}
+
+function paedHandleStart(widget, e) {
+    var st = paedGetState(widget);
+    var cell = paedCoordsToCell(widget, e);
+    if (!cell) return;
+    st.isDrawing = true;
+    paedSaveSnapshot(widget);
+    paedApplyTool(widget, cell.row, cell.col);
+    st._lastCell = cell;
+}
+
+function paedHandleMove(widget, e) {
+    var st = paedGetState(widget);
+    if (!st.isDrawing) return;
+    var cell = paedCoordsToCell(widget, e);
+    if (!cell) return;
+    if (st._lastCell && cell.row === st._lastCell.row && cell.col === st._lastCell.col) return;
+    if (st.tool === 'draw' || st.tool === 'erase') {
+        paedApplyTool(widget, cell.row, cell.col);
+    }
+    st._lastCell = cell;
+}
+
+function paedHandleEnd(widget) {
+    var st = paedGetState(widget);
+    st.isDrawing = false;
+    st._lastCell = null;
+    paedSaveData(widget);
+}
+
+function paedSetTool(widget, tool) {
+    var st = paedGetState(widget);
+    st.tool = tool;
+    var btns = widget.querySelectorAll('.paed-tool-btn');
+    btns.forEach(function(b) {
+        b.classList.toggle('active', b.dataset.tool === tool);
+    });
+    paedSaveData(widget);
+}
+
+function paedSetColor(widget, color) {
+    var st = paedGetState(widget);
+    st.color = color;
+    var swatches = widget.querySelectorAll('.paed-swatch');
+    swatches.forEach(function(s) {
+        s.classList.toggle('active', s.dataset.color === color);
+    });
+    var inp = widget.querySelector('.paed-color-input');
+    if (inp) inp.value = color;
+    // Switch to draw tool when a color is picked
+    if (st.tool === 'eyedropper') {
+        paedSetTool(widget, 'draw');
+    }
+    paedSaveData(widget);
+}
+
+function paedSetSize(widget, size) {
+    var st = paedGetState(widget);
+    st.gridSize = size;
+    st.pixels = paedInitPixels(size);
+    st.undoStack = [];
+    st.redoStack = [];
+    paedResizeCanvas(widget);
+    paedRender(widget);
+    paedUpdateStatus(widget);
+    paedSaveData(widget);
+}
+
+function paedColorInput(input) {
+    var widget = input.closest('.paed-widget');
+    if (!widget) return;
+    paedSetColor(widget, input.value);
+    // Deactivate all palette swatches since custom color
+    widget.querySelectorAll('.paed-swatch').forEach(function(s) {
+        s.classList.remove('active');
+    });
+}
+
+function paedUndo(widget) {
+    var st = paedGetState(widget);
+    if (st.undoStack.length === 0) return;
+    var snap = st.pixels.map(function(row) { return row.slice(); });
+    st.redoStack.push(snap);
+    st.pixels = st.undoStack.pop();
+    paedRender(widget);
+    paedUpdateStatus(widget);
+    paedSaveData(widget);
+}
+
+function paedRedo(widget) {
+    var st = paedGetState(widget);
+    if (st.redoStack.length === 0) return;
+    var snap = st.pixels.map(function(row) { return row.slice(); });
+    st.undoStack.push(snap);
+    st.pixels = st.redoStack.pop();
+    paedRender(widget);
+    paedUpdateStatus(widget);
+    paedSaveData(widget);
+}
+
+function paedClear(widget) {
+    var st = paedGetState(widget);
+    paedSaveSnapshot(widget);
+    st.pixels = paedInitPixels(st.gridSize);
+    paedRender(widget);
+    paedSaveData(widget);
+}
+
+function paedToggleGrid(widget) {
+    var st = paedGetState(widget);
+    st.showGrid = !st.showGrid;
+    var btn = widget.querySelector('.paed-grid-btn');
+    if (btn) btn.classList.toggle('active', st.showGrid);
+    paedRender(widget);
+    paedSaveData(widget);
+}
+
+function paedExport(widget) {
+    var st = paedGetState(widget);
+    var size = st.gridSize;
+    var scale;
+    if (size <= 16) scale = 16;
+    else if (size <= 32) scale = 8;
+    else scale = 4;
+    var outW = size * scale;
+    var outH = size * scale;
+    var offscreen = document.createElement('canvas');
+    offscreen.width = outW;
+    offscreen.height = outH;
+    var ctx = offscreen.getContext('2d');
+    for (var r = 0; r < size; r++) {
+        for (var c = 0; c < size; c++) {
+            if (st.pixels[r][c]) {
+                ctx.fillStyle = st.pixels[r][c];
+                ctx.fillRect(c * scale, r * scale, scale, scale);
+            }
+        }
+    }
+    var link = document.createElement('a');
+    link.download = 'pixel-art-' + size + 'x' + size + '.png';
+    link.href = offscreen.toDataURL('image/png');
+    link.click();
+}
+
+function paedResizeCanvas(widget) {
+    var st = paedGetState(widget);
+    var wrap = widget.querySelector('.paed-canvas-wrap');
+    var canvas = widget.querySelector('.paed-canvas');
+    if (!wrap || !canvas) return;
+    var rect = wrap.getBoundingClientRect();
+    var available = Math.min(rect.width - 8, rect.height - 8);
+    var dim = Math.max(Math.floor(available / st.gridSize) * st.gridSize, st.gridSize);
+    canvas.width = dim;
+    canvas.height = dim;
+    canvas.style.width = dim + 'px';
+    canvas.style.height = dim + 'px';
+    paedRender(widget);
+}
+
+function paedUpdateStatus(widget) {
+    var st = paedGetState(widget);
+    var el = widget.querySelector('.paed-status');
+    if (el) {
+        el.textContent = st.gridSize + '\u00d7' + st.gridSize + '  \u2502  Undo: ' + st.undoStack.length + '  Redo: ' + st.redoStack.length;
+    }
+}
+
+function paedInit() {
+    document.querySelectorAll('.paed-widget').forEach(function(widget) {
+        if (widget.dataset.inited) return;
+        widget.dataset.inited = '1';
+        var st = paedGetState(widget);
+
+        // Restore saved state
+        var toolId = paedGetToolId(widget);
+        var customizations = loadToolCustomizations();
+        var saved = (toolId && customizations[toolId]) ? customizations[toolId].paedData : null;
+        if (saved) {
+            st.gridSize = saved.gridSize || 16;
+            st.pixels = saved.pixels || paedInitPixels(st.gridSize);
+            st.color = saved.color || '#000000';
+            st.tool = saved.tool || 'draw';
+            st.showGrid = saved.showGrid !== undefined ? saved.showGrid : true;
+            // Update grid size select
+            var sel = widget.querySelector('.paed-toolbar select');
+            if (sel) sel.value = String(st.gridSize);
+            // Update color input
+            var cinp = widget.querySelector('.paed-color-input');
+            if (cinp) cinp.value = st.color;
+        } else {
+            st.pixels = paedInitPixels(st.gridSize);
+        }
+
+        var canvas = widget.querySelector('.paed-canvas');
+        var wrap = widget.querySelector('.paed-canvas-wrap');
+
+        // Initial canvas sizing
+        paedResizeCanvas(widget);
+
+        // Set initial active states
+        var swatches = widget.querySelectorAll('.paed-swatch');
+        swatches.forEach(function(s) {
+            s.classList.toggle('active', s.dataset.color === st.color);
+        });
+        var toolBtns = widget.querySelectorAll('.paed-tool-btn');
+        toolBtns.forEach(function(b) {
+            b.classList.toggle('active', b.dataset.tool === st.tool);
+        });
+        var gridBtn = widget.querySelector('.paed-grid-btn');
+        if (gridBtn) gridBtn.classList.toggle('active', st.showGrid);
+
+        // Mouse events
+        canvas.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            paedHandleStart(widget, e);
+            var onMove = function(ev) { ev.preventDefault(); paedHandleMove(widget, ev); };
+            var onUp = function() {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+                paedHandleEnd(widget);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+
+        // Touch events
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            paedHandleStart(widget, e);
+        }, { passive: false });
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            paedHandleMove(widget, e);
+        }, { passive: false });
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            paedHandleEnd(widget);
+        }, { passive: false });
+
+        // Resize observer
+        var ro = new ResizeObserver(function() { paedResizeCanvas(widget); });
+        ro.observe(wrap);
+
+        paedUpdateStatus(widget);
+    });
+}
+
+// =============================================
+// COLOR PALETTE GENERATOR
+// =============================================
+
+function cpalGetToolId(widget) {
+    return widget.closest('.tool').getAttribute('data-tool');
+}
+
+function cpalHslToHex(h, s, l) {
+    h = ((h % 360) + 360) % 360;
+    s = Math.max(0, Math.min(1, s));
+    l = Math.max(0, Math.min(1, l));
+    var c = (1 - Math.abs(2 * l - 1)) * s;
+    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    var m = l - c / 2;
+    var r, g, b;
+    if (h < 60)       { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else              { r = c; g = 0; b = x; }
+    var ri = Math.round((r + m) * 255);
+    var gi = Math.round((g + m) * 255);
+    var bi = Math.round((b + m) * 255);
+    return '#' + ((1 << 24) + (ri << 16) + (gi << 8) + bi).toString(16).slice(1);
+}
+
+function cpalHexToHsl(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    var r = parseInt(hex.substring(0, 2), 16) / 255;
+    var g = parseInt(hex.substring(2, 4), 16) / 255;
+    var b = parseInt(hex.substring(4, 6), 16) / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+        else if (max === g) h = ((b - r) / d + 2) * 60;
+        else h = ((r - g) / d + 4) * 60;
+    }
+    return { h: h, s: s, l: l };
+}
+
+function cpalGenerate(widget) {
+    var select = widget.querySelector('.cpal-mode');
+    var input = widget.querySelector('.cpal-base');
+    var mode = select ? select.value : 'complementary';
+    var baseHex = input ? input.value : '#3498db';
+    var base = cpalHexToHsl(baseHex);
+    var h = base.h, s = base.s, l = base.l;
+
+    var colors = [];
+    switch (mode) {
+        case 'complementary':
+            colors = [
+                { h: h, s: s, l: l },
+                { h: (h + 180) % 360, s: s, l: l }
+            ];
+            break;
+        case 'analogous':
+            colors = [
+                { h: (h - 30 + 360) % 360, s: s, l: l },
+                { h: (h - 15 + 360) % 360, s: s, l: l },
+                { h: h, s: s, l: l },
+                { h: (h + 15) % 360, s: s, l: l },
+                { h: (h + 30) % 360, s: s, l: l }
+            ];
+            break;
+        case 'triadic':
+            colors = [
+                { h: h, s: s, l: l },
+                { h: (h + 120) % 360, s: s, l: l },
+                { h: (h + 240) % 360, s: s, l: l }
+            ];
+            break;
+        case 'tetradic':
+            colors = [
+                { h: h, s: s, l: l },
+                { h: (h + 90) % 360, s: s, l: l },
+                { h: (h + 180) % 360, s: s, l: l },
+                { h: (h + 270) % 360, s: s, l: l }
+            ];
+            break;
+        case 'split-complementary':
+            colors = [
+                { h: h, s: s, l: l },
+                { h: (h + 150) % 360, s: s, l: l },
+                { h: (h + 210) % 360, s: s, l: l }
+            ];
+            break;
+        case 'monochromatic':
+            colors = [
+                { h: h, s: s, l: Math.max(0.1, l - 0.3) },
+                { h: h, s: s, l: Math.max(0.1, l - 0.15) },
+                { h: h, s: s, l: l },
+                { h: h, s: s, l: Math.min(0.9, l + 0.15) },
+                { h: h, s: s, l: Math.min(0.9, l + 0.3) }
+            ];
+            break;
+    }
+
+    var hexColors = colors.map(function(c) {
+        return cpalHslToHex(c.h, c.s, c.l);
+    });
+
+    if (!widget._cpalPalette) widget._cpalPalette = [];
+    if (!widget._cpalLocked) widget._cpalLocked = [];
+
+    var palette = [];
+    for (var i = 0; i < hexColors.length; i++) {
+        if (widget._cpalLocked[i]) {
+            palette.push(widget._cpalPalette[i] || hexColors[i]);
+        } else {
+            palette.push(hexColors[i]);
+        }
+    }
+    widget._cpalLocked = widget._cpalLocked.slice(0, hexColors.length);
+    widget._cpalPalette = palette;
+
+    cpalRender(widget);
+    cpalSaveState(widget);
+}
+
+function cpalRender(widget) {
+    var grid = widget.querySelector('.cpal-grid');
+    if (!grid) return;
+    var palette = widget._cpalPalette || [];
+    var locked = widget._cpalLocked || [];
+    var html = '';
+    for (var i = 0; i < palette.length; i++) {
+        var hex = palette[i];
+        var isLocked = locked[i] ? ' locked' : '';
+        var lockIcon = locked[i] ? '\uD83D\uDD12' : '\uD83D\uDD13';
+        html += '<div class="cpal-swatch" onclick="cpalCopyColor(this, ' + i + ')" title="Click to copy ' + hex + '">' +
+            '<div class="cpal-swatch-color" style="background:' + hex + '"></div>' +
+            '<button class="cpal-swatch-lock' + isLocked + '" onclick="event.stopPropagation(); cpalToggleLock(this, ' + i + ')" title="' + (locked[i] ? 'Unlock' : 'Lock') + '">' + lockIcon + '</button>' +
+            '<div class="cpal-swatch-label">' + hex.toUpperCase() + '</div>' +
+        '</div>';
+    }
+    grid.innerHTML = html;
+}
+
+function cpalSetMode(select) {
+    var widget = select.closest('.cpal-widget');
+    widget._cpalLocked = [];
+    cpalGenerate(widget);
+}
+
+function cpalSetBase(input) {
+    var widget = input.closest('.cpal-widget');
+    cpalGenerate(widget);
+}
+
+function cpalRandomize(btn) {
+    var widget = btn.closest('.cpal-widget');
+    var input = widget.querySelector('.cpal-base');
+    var h = Math.floor(Math.random() * 360);
+    var s = 0.5 + Math.random() * 0.4;
+    var l = 0.35 + Math.random() * 0.3;
+    var hex = cpalHslToHex(h, s, l);
+    if (input) input.value = hex;
+    cpalGenerate(widget);
+}
+
+function cpalToggleLock(btn, index) {
+    var widget = btn.closest('.cpal-widget');
+    if (!widget._cpalLocked) widget._cpalLocked = [];
+    widget._cpalLocked[index] = !widget._cpalLocked[index];
+    cpalRender(widget);
+    cpalSaveState(widget);
+}
+
+function cpalCopyColor(el, index) {
+    var widget = el.closest('.cpal-widget');
+    var palette = widget._cpalPalette || [];
+    var hex = palette[index];
+    if (!hex) return;
+    navigator.clipboard.writeText(hex.toUpperCase()).then(function() {
+        el.classList.add('copied');
+        var status = widget.querySelector('.cpal-status');
+        if (status) { status.textContent = 'Copied ' + hex.toUpperCase(); status.className = 'cpal-status success'; }
+        setTimeout(function() { el.classList.remove('copied'); }, 600);
+    });
+}
+
+function cpalCopyAll(btn) {
+    var widget = btn.closest('.cpal-widget');
+    var palette = widget._cpalPalette || [];
+    var text = palette.map(function(h) { return h.toUpperCase(); }).join(', ');
+    navigator.clipboard.writeText(text).then(function() {
+        var status = widget.querySelector('.cpal-status');
+        if (status) { status.textContent = 'Copied all colors'; status.className = 'cpal-status success'; }
+    });
+}
+
+function cpalSaveState(widget) {
+    var toolId = cpalGetToolId(widget);
+    var select = widget.querySelector('.cpal-mode');
+    var input = widget.querySelector('.cpal-base');
+    var customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].cpalMode = select ? select.value : 'complementary';
+    customizations[toolId].cpalBase = input ? input.value : '#3498db';
+    customizations[toolId].cpalPalette = widget._cpalPalette || [];
+    customizations[toolId].cpalLocked = widget._cpalLocked || [];
+    saveToolCustomizations(customizations);
+}
+
+function cpalInit() {
+    document.querySelectorAll('.cpal-widget').forEach(function(widget) {
+        if (widget._cpalReady) return;
+        widget._cpalReady = true;
+
+        var toolId = cpalGetToolId(widget);
+        var customizations = loadToolCustomizations();
+        var data = (customizations[toolId]) || {};
+
+        var select = widget.querySelector('.cpal-mode');
+        var input = widget.querySelector('.cpal-base');
+
+        if (data.cpalMode && select) select.value = data.cpalMode;
+        if (data.cpalBase && input) input.value = data.cpalBase;
+        widget._cpalPalette = data.cpalPalette || [];
+        widget._cpalLocked = data.cpalLocked || [];
+
+        if (widget._cpalPalette.length > 0) {
+            cpalRender(widget);
+        } else {
+            cpalGenerate(widget);
+        }
+    });
+}
+
+// =============================================
+// SVG PATH EDITOR
+// =============================================
+
+const _speState = new WeakMap();
+
+function speGetToolId(widget) {
+    var tool = widget.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function speGetState(widget) {
+    if (!_speState.has(widget)) {
+        _speState.set(widget, {
+            tool: 'line',
+            commands: [],
+            selectedIdx: -1,
+            dragging: null,
+            undoStack: [],
+            maxUndo: 30,
+            _justDragged: false,
+            _debounceTimer: null
+        });
+    }
+    return _speState.get(widget);
+}
+
+function speSaveData(widget) {
+    var toolId = speGetToolId(widget);
+    if (!toolId) return;
+    var st = speGetState(widget);
+    var customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].speData = {
+        tool: st.tool,
+        commands: st.commands
+    };
+    saveToolCustomizations(customizations);
+}
+
+function speSvgCoords(svg, e) {
+    var pt = svg.createSVGPoint();
+    var touch = e.touches ? e.touches[0] : e;
+    pt.x = touch.clientX;
+    pt.y = touch.clientY;
+    var ctm = svg.getScreenCTM();
+    if (ctm) pt = pt.matrixTransform(ctm.inverse());
+    return { x: Math.round(pt.x), y: Math.round(pt.y) };
+}
+
+function speCommandsToD(commands) {
+    var parts = [];
+    for (var i = 0; i < commands.length; i++) {
+        var c = commands[i];
+        if (c.type === 'M') parts.push('M ' + c.x + ' ' + c.y);
+        else if (c.type === 'L') parts.push('L ' + c.x + ' ' + c.y);
+        else if (c.type === 'Q') parts.push('Q ' + c.cx + ' ' + c.cy + ' ' + c.x + ' ' + c.y);
+        else if (c.type === 'C') parts.push('C ' + c.c1x + ' ' + c.c1y + ' ' + c.c2x + ' ' + c.c2y + ' ' + c.x + ' ' + c.y);
+    }
+    return parts.join(' ');
+}
+
+function speParseDString(d) {
+    if (!d || !d.trim()) return [];
+    var commands = [];
+    var re = /([MLQC])\s*([\d.\-e+,\s]+)/gi;
+    var match;
+    while ((match = re.exec(d)) !== null) {
+        var type = match[1].toUpperCase();
+        var nums = match[2].trim().split(/[\s,]+/).map(Number);
+        if (type === 'M' && nums.length >= 2) {
+            commands.push({ type: 'M', x: nums[0], y: nums[1] });
+        } else if (type === 'L' && nums.length >= 2) {
+            commands.push({ type: 'L', x: nums[0], y: nums[1] });
+        } else if (type === 'Q' && nums.length >= 4) {
+            commands.push({ type: 'Q', cx: nums[0], cy: nums[1], x: nums[2], y: nums[3] });
+        } else if (type === 'C' && nums.length >= 6) {
+            commands.push({ type: 'C', c1x: nums[0], c1y: nums[1], c2x: nums[2], c2y: nums[3], x: nums[4], y: nums[5] });
+        }
+    }
+    return commands;
+}
+
+function speSaveSnapshot(widget) {
+    var st = speGetState(widget);
+    st.undoStack.push(JSON.parse(JSON.stringify(st.commands)));
+    if (st.undoStack.length > st.maxUndo) st.undoStack.shift();
+}
+
+function speRender(widget) {
+    var st = speGetState(widget);
+    var svg = widget.querySelector('.spe-svg');
+    if (!svg) return;
+    var path = svg.querySelector('.spe-path');
+    if (path) path.setAttribute('d', speCommandsToD(st.commands));
+
+    // Remove old control elements
+    svg.querySelectorAll('.spe-point, .spe-control-point, .spe-control-line').forEach(function(el) { el.remove(); });
+
+    var ns = 'http://www.w3.org/2000/svg';
+    for (var i = 0; i < st.commands.length; i++) {
+        var c = st.commands[i];
+
+        // Draw control lines and control points for bezier commands
+        if (c.type === 'Q') {
+            var line1 = document.createElementNS(ns, 'line');
+            var prev = i > 0 ? st.commands[i - 1] : c;
+            line1.setAttribute('x1', prev.x); line1.setAttribute('y1', prev.y);
+            line1.setAttribute('x2', c.cx); line1.setAttribute('y2', c.cy);
+            line1.setAttribute('class', 'spe-control-line');
+            svg.appendChild(line1);
+            var line2 = document.createElementNS(ns, 'line');
+            line2.setAttribute('x1', c.cx); line2.setAttribute('y1', c.cy);
+            line2.setAttribute('x2', c.x); line2.setAttribute('y2', c.y);
+            line2.setAttribute('class', 'spe-control-line');
+            svg.appendChild(line2);
+            var cp = document.createElementNS(ns, 'circle');
+            cp.setAttribute('cx', c.cx); cp.setAttribute('cy', c.cy);
+            cp.setAttribute('r', 5);
+            cp.setAttribute('class', 'spe-control-point');
+            cp.setAttribute('data-idx', i); cp.setAttribute('data-handle', 'c');
+            svg.appendChild(cp);
+        } else if (c.type === 'C') {
+            var prev2 = i > 0 ? st.commands[i - 1] : c;
+            var cl1 = document.createElementNS(ns, 'line');
+            cl1.setAttribute('x1', prev2.x); cl1.setAttribute('y1', prev2.y);
+            cl1.setAttribute('x2', c.c1x); cl1.setAttribute('y2', c.c1y);
+            cl1.setAttribute('class', 'spe-control-line');
+            svg.appendChild(cl1);
+            var cl2 = document.createElementNS(ns, 'line');
+            cl2.setAttribute('x1', c.c2x); cl2.setAttribute('y1', c.c2y);
+            cl2.setAttribute('x2', c.x); cl2.setAttribute('y2', c.y);
+            cl2.setAttribute('class', 'spe-control-line');
+            svg.appendChild(cl2);
+            var cp1 = document.createElementNS(ns, 'circle');
+            cp1.setAttribute('cx', c.c1x); cp1.setAttribute('cy', c.c1y);
+            cp1.setAttribute('r', 5);
+            cp1.setAttribute('class', 'spe-control-point');
+            cp1.setAttribute('data-idx', i); cp1.setAttribute('data-handle', 'c1');
+            svg.appendChild(cp1);
+            var cp2 = document.createElementNS(ns, 'circle');
+            cp2.setAttribute('cx', c.c2x); cp2.setAttribute('cy', c.c2y);
+            cp2.setAttribute('r', 5);
+            cp2.setAttribute('class', 'spe-control-point');
+            cp2.setAttribute('data-idx', i); cp2.setAttribute('data-handle', 'c2');
+            svg.appendChild(cp2);
+        }
+
+        // Draw endpoint
+        var circle = document.createElementNS(ns, 'circle');
+        circle.setAttribute('cx', c.x); circle.setAttribute('cy', c.y);
+        circle.setAttribute('r', 5);
+        circle.setAttribute('class', 'spe-point' + (i === st.selectedIdx ? ' selected' : ''));
+        circle.setAttribute('data-idx', i);
+        svg.appendChild(circle);
+    }
+}
+
+function speUpdateOutput(widget) {
+    var st = speGetState(widget);
+    var textarea = widget.querySelector('.spe-output');
+    if (textarea) textarea.value = speCommandsToD(st.commands);
+}
+
+function speSetTool(btn, tool) {
+    var widget = btn.closest('.spe-widget');
+    if (!widget) return;
+    var st = speGetState(widget);
+    st.tool = tool;
+    widget.querySelectorAll('.spe-tool-btn[data-tool]').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-tool') === tool);
+    });
+    var svg = widget.querySelector('.spe-svg');
+    if (svg) svg.classList.toggle('move-mode', tool === 'move');
+    speSaveData(widget);
+}
+
+function speHandleClick(widget, e) {
+    var st = speGetState(widget);
+    if (st._justDragged) { st._justDragged = false; return; }
+    if (st.tool === 'move') return;
+    if (e.target.classList.contains('spe-point') || e.target.classList.contains('spe-control-point')) {
+        // Select point instead of adding
+        if (e.target.classList.contains('spe-point')) {
+            st.selectedIdx = parseInt(e.target.getAttribute('data-idx'));
+            speRender(widget);
+        }
+        return;
+    }
+    var svg = widget.querySelector('.spe-svg');
+    if (!svg) return;
+    var coords = speSvgCoords(svg, e);
+
+    speSaveSnapshot(widget);
+
+    if (st.commands.length === 0) {
+        // First point is always M
+        st.commands.push({ type: 'M', x: coords.x, y: coords.y });
+    } else {
+        var last = st.commands[st.commands.length - 1];
+        if (st.tool === 'line') {
+            st.commands.push({ type: 'L', x: coords.x, y: coords.y });
+        } else if (st.tool === 'quad') {
+            // Default control point: midpoint offset 40px up
+            var mx = (last.x + coords.x) / 2;
+            var my = (last.y + coords.y) / 2 - 40;
+            st.commands.push({ type: 'Q', cx: mx, cy: my, x: coords.x, y: coords.y });
+        } else if (st.tool === 'cubic') {
+            // Default control points: 1/3 and 2/3, offset 30px up
+            var dx = coords.x - last.x;
+            var dy = coords.y - last.y;
+            st.commands.push({
+                type: 'C',
+                c1x: Math.round(last.x + dx / 3), c1y: Math.round(last.y + dy / 3 - 30),
+                c2x: Math.round(last.x + 2 * dx / 3), c2y: Math.round(last.y + 2 * dy / 3 - 30),
+                x: coords.x, y: coords.y
+            });
+        }
+    }
+    st.selectedIdx = st.commands.length - 1;
+    speRender(widget);
+    speUpdateOutput(widget);
+    speSaveData(widget);
+}
+
+function speHandleMouseDown(widget, e) {
+    var target = e.target;
+    if (!target.classList.contains('spe-point') && !target.classList.contains('spe-control-point')) return;
+    e.preventDefault();
+    var st = speGetState(widget);
+    var idx = parseInt(target.getAttribute('data-idx'));
+
+    speSaveSnapshot(widget);
+
+    if (target.classList.contains('spe-point')) {
+        st.selectedIdx = idx;
+        st.dragging = { idx: idx, handle: null };
+    } else {
+        st.dragging = { idx: idx, handle: target.getAttribute('data-handle') };
+    }
+    target.classList.add('dragging');
+
+    var svg = widget.querySelector('.spe-svg');
+    var onMove = function(ev) {
+        ev.preventDefault();
+        speHandleMouseMove(widget, ev);
+    };
+    var onUp = function(ev) {
+        speHandleMouseUp(widget, ev);
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onUp);
+}
+
+function speHandleMouseMove(widget, e) {
+    var st = speGetState(widget);
+    if (!st.dragging) return;
+    var svg = widget.querySelector('.spe-svg');
+    if (!svg) return;
+    var coords = speSvgCoords(svg, e);
+    var c = st.commands[st.dragging.idx];
+    if (!c) return;
+
+    if (!st.dragging.handle) {
+        c.x = coords.x; c.y = coords.y;
+    } else if (st.dragging.handle === 'c') {
+        c.cx = coords.x; c.cy = coords.y;
+    } else if (st.dragging.handle === 'c1') {
+        c.c1x = coords.x; c.c1y = coords.y;
+    } else if (st.dragging.handle === 'c2') {
+        c.c2x = coords.x; c.c2y = coords.y;
+    }
+    speRender(widget);
+    speUpdateOutput(widget);
+}
+
+function speHandleMouseUp(widget, e) {
+    var st = speGetState(widget);
+    if (!st.dragging) return;
+    st._justDragged = true;
+    widget.querySelectorAll('.dragging').forEach(function(el) { el.classList.remove('dragging'); });
+    st.dragging = null;
+    speSaveData(widget);
+}
+
+function speDFromInput(widget) {
+    var st = speGetState(widget);
+    var textarea = widget.querySelector('.spe-output');
+    if (!textarea) return;
+    if (st._debounceTimer) clearTimeout(st._debounceTimer);
+    st._debounceTimer = setTimeout(function() {
+        speSaveSnapshot(widget);
+        st.commands = speParseDString(textarea.value);
+        st.selectedIdx = -1;
+        speRender(widget);
+        speSaveData(widget);
+    }, 500);
+}
+
+function speUndo(btn) {
+    var widget = btn.closest('.spe-widget');
+    if (!widget) return;
+    var st = speGetState(widget);
+    if (st.undoStack.length === 0) return;
+    st.commands = st.undoStack.pop();
+    st.selectedIdx = -1;
+    speRender(widget);
+    speUpdateOutput(widget);
+    speSaveData(widget);
+}
+
+function speClear(btn) {
+    var widget = btn.closest('.spe-widget');
+    if (!widget) return;
+    var st = speGetState(widget);
+    speSaveSnapshot(widget);
+    st.commands = [];
+    st.selectedIdx = -1;
+    speRender(widget);
+    speUpdateOutput(widget);
+    speSaveData(widget);
+}
+
+function speCopy(btn) {
+    var widget = btn.closest('.spe-widget');
+    if (!widget) return;
+    var st = speGetState(widget);
+    var d = speCommandsToD(st.commands);
+    var status = widget.querySelector('.spe-status');
+    if (!d) {
+        if (status) { status.textContent = 'Nothing to copy'; setTimeout(function() { status.textContent = ''; }, 1500); }
+        return;
+    }
+    navigator.clipboard.writeText(d).then(function() {
+        if (status) { status.textContent = 'Copied!'; status.classList.add('success'); setTimeout(function() { status.textContent = ''; status.classList.remove('success'); }, 1500); }
+    });
+}
+
+function speDeleteSelected(btn) {
+    var widget = btn.closest('.spe-widget');
+    if (!widget) return;
+    var st = speGetState(widget);
+    if (st.selectedIdx < 0 || st.selectedIdx >= st.commands.length) return;
+    speSaveSnapshot(widget);
+    st.commands.splice(st.selectedIdx, 1);
+    // Ensure first command is M if commands remain
+    if (st.commands.length > 0 && st.commands[0].type !== 'M') {
+        st.commands[0] = { type: 'M', x: st.commands[0].x, y: st.commands[0].y };
+    }
+    st.selectedIdx = Math.min(st.selectedIdx, st.commands.length - 1);
+    speRender(widget);
+    speUpdateOutput(widget);
+    speSaveData(widget);
+}
+
+function speInit() {
+    document.querySelectorAll('.spe-widget').forEach(function(widget) {
+        if (widget._speReady) return;
+        widget._speReady = true;
+
+        var st = speGetState(widget);
+        var toolId = speGetToolId(widget);
+        var customizations = loadToolCustomizations();
+        var data = customizations[toolId] && customizations[toolId].speData;
+        if (data) {
+            if (data.tool) st.tool = data.tool;
+            if (data.commands) st.commands = data.commands;
+        }
+
+        // Set active tool button
+        widget.querySelectorAll('.spe-tool-btn[data-tool]').forEach(function(b) {
+            b.classList.toggle('active', b.getAttribute('data-tool') === st.tool);
+        });
+
+        var svg = widget.querySelector('.spe-svg');
+        if (!svg) return;
+        svg.classList.toggle('move-mode', st.tool === 'move');
+
+        // Click to add points
+        svg.addEventListener('click', function(e) { speHandleClick(widget, e); });
+
+        // Mousedown for drag
+        svg.addEventListener('mousedown', function(e) { speHandleMouseDown(widget, e); });
+        svg.addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('spe-point') || e.target.classList.contains('spe-control-point')) {
+                e.preventDefault();
+                speHandleMouseDown(widget, e);
+            }
+        }, { passive: false });
+
+        // Textarea input
+        var textarea = widget.querySelector('.spe-output');
+        if (textarea) textarea.addEventListener('input', function() { speDFromInput(widget); });
+
+        // ResizeObserver to match viewBox to container size
+        var wrap = widget.querySelector('.spe-canvas-wrap');
+        if (wrap && svg) {
+            var ro = new ResizeObserver(function(entries) {
+                var entry = entries[0];
+                var w = Math.round(entry.contentRect.width) || 400;
+                var h = Math.round(entry.contentRect.height) || 300;
+                svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+            });
+            ro.observe(wrap);
+        }
+
+        speRender(widget);
+        speUpdateOutput(widget);
+    });
+}
+
+// =============================================
 // SCRIPT INJECTION FOR HTML EXPORT
 // =============================================
 
@@ -2467,12 +3614,18 @@ function msheetInit() {
     var drawFunctions = [drawGetState, drawInit, drawBeginStroke, drawMoveStroke, drawEndStroke, drawSetColor, drawSetSize, drawToggleEraser, drawClear, drawUndo, drawDownload, drawResizeCanvas, drawColorInput, drawSizeInput];
     var imgvFunctions = [imgvGetWidget, imgvGetToolId, imgvFlash, imgvGetState, imgvBuildFilterString, imgvBuildTransformString, imgvApplyStyles, imgvApplyCropLayout, imgvUpdateValueDisplay, imgvSliderChange, imgvToggleFlip, imgvShowImage, imgvLoad, imgvHandlePaste, imgvHandleDrop, imgvReset, imgvProcessTransparency, imgvTransColorChange, imgvTransToleranceChange, imgvPickToggle, imgvDisplayClick, imgvToggleMode, imgvCropStart, imgvCreateCropOverlay, imgvCropMouseDown, imgvCropMouseMove, imgvCropMouseUp, imgvCropUpdateRect, imgvCropApply, imgvCropCancel, imgvCropExit, imgvMemeChange, imgvMemeSizeChange, imgvMemeApply, imgvLoadTracer, imgvTraceSvg, imgvShowSvgModal, imgvSaveState, imgvInit];
     var msheetFunctions = [msheetGetToolId, msheetGetWidget, msheetGetState, msheetSaveData, msheetNoteYPos, msheetYToNote, msheetXToSlot, msheetDraw, msheetCanvasClick, msheetPlayNote, msheetPlay, msheetPlaySequence, msheetStop, msheetClear, msheetSetTempo, msheetSetDuration, msheetSetInstrument, msheetInit];
-    var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions).concat(imgvFunctions).concat(msheetFunctions);
+    var paedFunctions = [paedGetToolId, paedGetState, paedSaveData, paedInitPixels, paedRender, paedCoordsToCell, paedSaveSnapshot, paedApplyTool, paedFloodFill, paedHandleStart, paedHandleMove, paedHandleEnd, paedSetTool, paedSetColor, paedSetSize, paedColorInput, paedUndo, paedRedo, paedClear, paedToggleGrid, paedExport, paedResizeCanvas, paedUpdateStatus, paedInit];
+    var cpalFunctions = [cpalGetToolId, cpalHslToHex, cpalHexToHsl, cpalGenerate, cpalRender, cpalSetMode, cpalSetBase, cpalRandomize, cpalToggleLock, cpalCopyColor, cpalCopyAll, cpalSaveState, cpalInit];
+    var speFunctions = [speGetToolId, speGetState, speSaveData, speSvgCoords, speCommandsToD, speParseDString, speSaveSnapshot, speRender, speUpdateOutput, speSetTool, speHandleClick, speHandleMouseDown, speHandleMouseMove, speHandleMouseUp, speDFromInput, speUndo, speClear, speCopy, speDeleteSelected, speInit];
+    var allFunctions = cpkFunctions.concat(emoteFunctions).concat(drawFunctions).concat(imgvFunctions).concat(msheetFunctions).concat(paedFunctions).concat(cpalFunctions).concat(speFunctions);
 
     var code = '(function() {\n' +
         'if (typeof cpkInit !== "undefined") return;\n' +
         'window._cpkState = new WeakMap();\n' +
         'window._drawState = new WeakMap();\n' +
+        'window._paedState = new WeakMap();\n' +
+        'window._speState = new WeakMap();\n' +
+        'window.PAED_PALETTE = ' + JSON.stringify(PAED_PALETTE) + ';\n' +
         'window.EMOTE_DATA = ' + JSON.stringify(EMOTE_DATA) + ';\n' +
         'var imgvTracerLoaded = false;\n' +
         'window.IMGV_DEFAULTS = ' + JSON.stringify(IMGV_DEFAULTS) + ';\n' +
@@ -2506,7 +3659,7 @@ PluginRegistry.registerToolbox({
     icon: '\uD83C\uDFA8',
     color: '#e74c3c',
     version: '1.0.0',
-    tools: ['color-picker', 'drawing-canvas', 'emoticon-picker', 'music-sheet'],
+    tools: ['color-picker', 'drawing-canvas', 'emoticon-picker', 'music-sheet', 'pixel-art-editor', 'color-palette', 'svg-path-editor'],
     source: 'external'
 });
 
@@ -2740,4 +3893,129 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Creative Tools plugin loaded (5 tools: 4 creative + image-viewer registered to core)');
+// Pixel Art Editor
+PluginRegistry.registerTool({
+    id: 'pixel-art-editor',
+    name: 'Pixel Art Editor',
+    description: 'Grid-based canvas for creating pixel art with draw, erase, fill, and eyedropper tools',
+    icon: '\uD83D\uDFE7',
+    version: '1.0.0',
+    toolbox: 'creative-tools',
+    tags: ['pixel', 'art', 'sprite', 'draw', 'grid', 'canvas', 'editor', '8bit', 'retro'],
+    title: 'Pixel Art Editor',
+    content: '<div class="paed-widget">' +
+        '<div class="paed-toolbar">' +
+            '<select onchange="paedSetSize(this.closest(\'.paed-widget\'), parseInt(this.value))">' +
+                '<option value="8">8\u00d78</option>' +
+                '<option value="16" selected>16\u00d716</option>' +
+                '<option value="32">32\u00d732</option>' +
+                '<option value="64">64\u00d764</option>' +
+            '</select>' +
+            '<span class="paed-sep"></span>' +
+            '<button class="paed-tool-btn" data-tool="draw" onclick="paedSetTool(this.closest(\'.paed-widget\'), \'draw\')">\u270F Draw</button>' +
+            '<button class="paed-tool-btn" data-tool="erase" onclick="paedSetTool(this.closest(\'.paed-widget\'), \'erase\')">\u2395 Erase</button>' +
+            '<button class="paed-tool-btn" data-tool="fill" onclick="paedSetTool(this.closest(\'.paed-widget\'), \'fill\')">\uD83E\uDEA3 Fill</button>' +
+            '<button class="paed-tool-btn" data-tool="eyedropper" onclick="paedSetTool(this.closest(\'.paed-widget\'), \'eyedropper\')">\uD83D\uDCA7 Pick</button>' +
+            '<span class="paed-sep"></span>' +
+            '<button class="paed-grid-btn" onclick="paedToggleGrid(this.closest(\'.paed-widget\'))"># Grid</button>' +
+        '</div>' +
+        '<div class="paed-palette">' +
+            PAED_PALETTE.map(function(c) {
+                return '<div class="paed-swatch" data-color="' + c + '" style="background:' + c + '" onclick="paedSetColor(this.closest(\'.paed-widget\'), \'' + c + '\')"></div>';
+            }).join('') +
+            '<input type="color" class="paed-color-input" value="#000000" oninput="paedColorInput(this)">' +
+        '</div>' +
+        '<div class="paed-canvas-wrap">' +
+            '<canvas class="paed-canvas"></canvas>' +
+        '</div>' +
+        '<div class="paed-actions">' +
+            '<button onclick="paedClear(this.closest(\'.paed-widget\'))">Clear</button>' +
+            '<button onclick="paedUndo(this.closest(\'.paed-widget\'))">Undo</button>' +
+            '<button onclick="paedRedo(this.closest(\'.paed-widget\'))">Redo</button>' +
+            '<button onclick="paedExport(this.closest(\'.paed-widget\'))">Export PNG</button>' +
+            '<span class="paed-status"></span>' +
+        '</div>' +
+    '</div>',
+    onInit: 'paedInit',
+    defaultWidth: 480,
+    defaultHeight: 520,
+    source: 'external'
+});
+
+// Color Palette Generator
+PluginRegistry.registerTool({
+    id: 'color-palette',
+    name: 'Color Palette Generator',
+    description: 'Generate harmonious color palettes from a base color using color theory rules',
+    icon: '\uD83C\uDFA8',
+    version: '1.0.0',
+    toolbox: 'creative-tools',
+    tags: ['color', 'palette', 'harmony', 'complementary', 'analogous', 'triadic', 'tetradic', 'monochromatic', 'scheme', 'generator'],
+    title: 'Color Palette Generator',
+    content: '<div class="cpal-widget">' +
+        '<div class="cpal-toolbar">' +
+            '<select class="cpal-mode" onchange="cpalSetMode(this)">' +
+                '<option value="complementary">Complementary</option>' +
+                '<option value="analogous">Analogous</option>' +
+                '<option value="triadic">Triadic</option>' +
+                '<option value="tetradic">Tetradic</option>' +
+                '<option value="split-complementary">Split-Comp.</option>' +
+                '<option value="monochromatic">Monochromatic</option>' +
+            '</select>' +
+            '<input type="color" class="cpal-base" value="#3498db" onchange="cpalSetBase(this)" oninput="cpalSetBase(this)" title="Base color">' +
+            '<button onclick="cpalRandomize(this)" title="Random base color">\uD83C\uDFB2 Random</button>' +
+        '</div>' +
+        '<div class="cpal-grid"></div>' +
+        '<div class="cpal-actions">' +
+            '<button onclick="cpalCopyAll(this)">Copy All</button>' +
+            '<span class="cpal-status"></span>' +
+        '</div>' +
+    '</div>',
+    contentType: 'html',
+    onInit: 'cpalInit',
+    source: 'external',
+    defaultWidth: 340,
+    defaultHeight: 380
+});
+
+// SVG Path Editor
+PluginRegistry.registerTool({
+    id: 'svg-path-editor',
+    name: 'SVG Path Editor',
+    description: 'Visually create and edit SVG paths with bezier curves',
+    icon: '\u270F\uFE0F',
+    version: '1.0.0',
+    toolbox: 'creative-tools',
+    tags: ['svg', 'path', 'vector', 'bezier', 'curve', 'draw', 'editor', 'pen'],
+    title: 'SVG Path Editor',
+    content: '<div class="spe-widget">' +
+        '<div class="spe-toolbar">' +
+            '<button class="spe-tool-btn" data-tool="move" onclick="speSetTool(this, \'move\')">\u2630 Move</button>' +
+            '<button class="spe-tool-btn active" data-tool="line" onclick="speSetTool(this, \'line\')">\u2571 Line</button>' +
+            '<button class="spe-tool-btn" data-tool="quad" onclick="speSetTool(this, \'quad\')">\u223F Quad</button>' +
+            '<button class="spe-tool-btn" data-tool="cubic" onclick="speSetTool(this, \'cubic\')">\u0053 Cubic</button>' +
+            '<span class="spe-sep"></span>' +
+            '<button class="spe-tool-btn" onclick="speDeleteSelected(this)">\u2715 Del Pt</button>' +
+        '</div>' +
+        '<div class="spe-canvas-wrap">' +
+            '<svg class="spe-svg" viewBox="0 0 400 300"><path class="spe-path" d=""></path></svg>' +
+        '</div>' +
+        '<div class="spe-output-wrap">' +
+            '<textarea class="spe-output" spellcheck="false" placeholder="SVG path d attribute..."></textarea>' +
+        '</div>' +
+        '<div class="spe-actions">' +
+            '<button class="spe-btn" onclick="speCopy(this)">Copy</button>' +
+            '<button class="spe-btn" onclick="speUndo(this)">Undo</button>' +
+            '<button class="spe-btn" onclick="speClear(this)">Clear</button>' +
+            '<span class="spe-status"></span>' +
+        '</div>' +
+        '<div class="spe-hint">Click to place points \u2022 Drag to move \u2022 Edit d attribute below</div>' +
+    '</div>',
+    contentType: 'html',
+    onInit: 'speInit',
+    source: 'external',
+    defaultWidth: 500,
+    defaultHeight: 480
+});
+
+console.log('Creative Tools plugin loaded (8 tools: 7 creative + image-viewer registered to core)');

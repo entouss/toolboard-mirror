@@ -1171,6 +1171,224 @@
     font-weight: 600;
 }
 
+/* Breathing Exercise Widget Styles */
+.breathing-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    gap: 10px;
+}
+
+.breathing-circle-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breathing-circle-svg {
+    transform: rotate(-90deg);
+    width: 200px;
+    height: 200px;
+}
+
+.breathing-circle-bg {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 6;
+}
+
+.breathing-circle-fg {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke: var(--text-muted);
+    transition: stroke-dashoffset 0.4s linear, stroke 0.5s;
+}
+
+.breathing-circle-fg.inhale { stroke: #3498db; }
+.breathing-circle-fg.hold { stroke: #f39c12; }
+.breathing-circle-fg.exhale { stroke: #27ae60; }
+
+.breathing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.breathing-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.5s;
+}
+
+.breathing-label.inhale { color: #3498db; }
+.breathing-label.hold { color: #f39c12; }
+.breathing-label.exhale { color: #27ae60; }
+
+.breathing-timer {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-top: 4px;
+}
+
+.breathing-scale-wrap {
+    transition: transform 1s ease-in-out;
+}
+
+.breathing-scale-wrap.inhale { transform: scale(1.15); }
+.breathing-scale-wrap.hold { transform: scale(1.15); }
+.breathing-scale-wrap.exhale { transform: scale(0.9); }
+
+.breathing-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.breathing-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.breathing-btn:hover {
+    background: var(--bg-primary);
+    border-color: var(--text-muted);
+}
+
+.breathing-btn.primary {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.breathing-btn.primary:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.breathing-btn.primary.running {
+    background: #e67e22;
+    border-color: #e67e22;
+}
+
+.breathing-btn.primary.running:hover {
+    background: #d35400;
+    border-color: #d35400;
+}
+
+.breathing-cycle-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.breathing-preset-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.breathing-preset {
+    padding: 4px 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.breathing-preset:hover {
+    background: var(--table-hover);
+    border-color: #3498db;
+}
+
+.breathing-preset.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.breathing-settings {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.breathing-settings-toggle {
+    font-size: 11px;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+}
+
+.breathing-settings-toggle:hover {
+    color: var(--text-secondary);
+}
+
+.breathing-settings-panel {
+    display: none;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 6px;
+}
+
+.breathing-settings-panel.open {
+    display: block;
+}
+
+.breathing-settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+.breathing-settings-grid label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+    text-align: left;
+}
+
+.breathing-settings-grid input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 13px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    text-align: center;
+}
+
 /* YouTube Embed Widget */
 .ytembed-widget {
     padding: 12px;
@@ -1310,6 +1528,22 @@
 .kb-edit-btns .kb-del-btn:hover { background: #c0392b; }
 .kb-edit-btns .kb-cancel-btn { background: var(--bg-tertiary); color: var(--text-primary); }
 .kb-col-drop-placeholder { min-width: 200px; width: 200px; flex-shrink: 0; border: 2px dashed var(--border-color); border-radius: 6px; background: transparent; }
+
+/* World Clock Widget */
+.wc-widget { padding: 10px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; gap: 8px; }
+.wc-toolbar { display: flex; gap: 6px; flex-shrink: 0; }
+.wc-toolbar input { flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); font-family: inherit; }
+.wc-toolbar input:focus { outline: none; border-color: #3498db; }
+.wc-toolbar button { padding: 6px 12px; border: none; border-radius: 4px; background: #3498db; color: white; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.wc-toolbar button:hover { background: #2980b9; }
+.wc-list { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 4px 0; }
+.wc-row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center; padding: 8px 10px; background: var(--bg-secondary); border-radius: 6px; gap: 0 8px; }
+.wc-city { font-size: 12px; font-weight: 600; color: var(--text-heading); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wc-time { font-family: 'Monaco', 'Menlo', 'Courier New', monospace; font-size: 16px; font-weight: bold; color: var(--text-primary); letter-spacing: 1px; text-align: right; white-space: nowrap; }
+.wc-date { font-size: 10px; color: var(--text-muted); white-space: nowrap; text-align: right; }
+.wc-offset { font-size: 10px; color: var(--text-muted); background: var(--bg-tertiary); padding: 2px 5px; border-radius: 3px; white-space: nowrap; text-align: center; }
+.wc-remove { width: 20px; height: 20px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0; line-height: 1; }
+.wc-remove:hover { background: var(--bg-tertiary); color: #e74c3c; }
 
 `;
     document.head.appendChild(style);
@@ -3411,6 +3645,238 @@ function stopwatchInit() {
 }
 
 // ============================================================
+// Breathing Exercise Widget
+// ============================================================
+
+var breathingInstances = new Map();
+var BREATHING_CIRCLE_R = 80;
+var BREATHING_CIRCUMFERENCE = 2 * Math.PI * BREATHING_CIRCLE_R;
+
+var BREATHING_PRESETS = {
+    '4-4-4': { inhale: 4, hold: 4, exhale: 4 },
+    '4-7-8': { inhale: 4, hold: 7, exhale: 8 },
+    '5-5-5': { inhale: 5, hold: 5, exhale: 5 },
+    '4-0-4': { inhale: 4, hold: 0, exhale: 4 }
+};
+
+function breathingGetWidget(el) {
+    return el.closest('.breathing-widget');
+}
+
+function breathingGetToolId(el) {
+    var tool = el.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function breathingGetState(toolId) {
+    if (!breathingInstances.has(toolId)) {
+        breathingInstances.set(toolId, {
+            running: false,
+            phase: 'idle',
+            timeLeft: 0,
+            cycleCount: 0,
+            intervalId: null,
+            pattern: { inhale: 4, hold: 4, exhale: 4 },
+            activePreset: '4-4-4'
+        });
+    }
+    return breathingInstances.get(toolId);
+}
+
+function breathingInit() {
+    document.querySelectorAll('.breathing-widget').forEach(function(widget) {
+        var toolId = breathingGetToolId(widget);
+        if (toolId) breathingUpdateDisplay(widget, toolId);
+    });
+}
+
+function breathingToggle(btn) {
+    var widget = breathingGetWidget(btn);
+    var toolId = breathingGetToolId(btn);
+    var state = breathingGetState(toolId);
+
+    if (state.running) {
+        // Pause
+        state.running = false;
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+        breathingUpdateDisplay(widget, toolId);
+    } else {
+        // Start
+        if (state.phase === 'idle') {
+            state.phase = 'inhale';
+            state.timeLeft = state.pattern.inhale;
+            state.cycleCount = 0;
+        }
+        state.running = true;
+        breathingUpdateDisplay(widget, toolId);
+        state.intervalId = setInterval(function() {
+            breathingTick(widget, toolId);
+        }, 1000);
+    }
+}
+
+function breathingReset(btn) {
+    var widget = breathingGetWidget(btn);
+    var toolId = breathingGetToolId(btn);
+    var state = breathingGetState(toolId);
+
+    state.running = false;
+    if (state.intervalId) {
+        clearInterval(state.intervalId);
+        state.intervalId = null;
+    }
+    state.phase = 'idle';
+    state.timeLeft = 0;
+    state.cycleCount = 0;
+    breathingUpdateDisplay(widget, toolId);
+}
+
+function breathingTick(widget, toolId) {
+    var state = breathingGetState(toolId);
+    if (!state.running) return;
+
+    state.timeLeft--;
+    if (state.timeLeft <= 0) {
+        breathingAdvancePhase(toolId);
+    }
+    breathingUpdateDisplay(widget, toolId);
+}
+
+function breathingAdvancePhase(toolId) {
+    var state = breathingGetState(toolId);
+    if (state.phase === 'inhale') {
+        if (state.pattern.hold > 0) {
+            state.phase = 'hold';
+            state.timeLeft = state.pattern.hold;
+        } else {
+            state.phase = 'exhale';
+            state.timeLeft = state.pattern.exhale;
+        }
+    } else if (state.phase === 'hold') {
+        state.phase = 'exhale';
+        state.timeLeft = state.pattern.exhale;
+    } else if (state.phase === 'exhale') {
+        state.cycleCount++;
+        state.phase = 'inhale';
+        state.timeLeft = state.pattern.inhale;
+    }
+}
+
+function breathingUpdateDisplay(widget, toolId) {
+    var state = breathingGetState(toolId);
+
+    // Phase label
+    var label = widget.querySelector('.breathing-label');
+    var timer = widget.querySelector('.breathing-timer');
+    var circle = widget.querySelector('.breathing-circle-fg');
+    var scaleWrap = widget.querySelector('.breathing-scale-wrap');
+    var toggleBtn = widget.querySelector('.breathing-toggle');
+    var cycleDisplay = widget.querySelector('.breathing-cycle-count');
+
+    if (state.phase === 'idle') {
+        label.textContent = 'Press Start';
+        label.className = 'breathing-label';
+        timer.textContent = '';
+        circle.setAttribute('stroke-dashoffset', '0');
+        circle.className = 'breathing-circle-fg';
+        scaleWrap.className = 'breathing-scale-wrap';
+        toggleBtn.textContent = 'Start';
+        toggleBtn.classList.remove('running');
+    } else {
+        label.textContent = state.phase.charAt(0).toUpperCase() + state.phase.slice(1);
+        label.className = 'breathing-label ' + state.phase;
+        timer.textContent = state.timeLeft;
+
+        // Circle progress
+        var phaseDuration = state.pattern[state.phase];
+        var progress = phaseDuration > 0 ? (phaseDuration - state.timeLeft) / phaseDuration : 0;
+        var offset = BREATHING_CIRCUMFERENCE * (1 - progress);
+        circle.setAttribute('stroke-dashoffset', offset.toFixed(2));
+        circle.className = 'breathing-circle-fg ' + state.phase;
+
+        // Scale animation
+        scaleWrap.className = 'breathing-scale-wrap ' + state.phase;
+
+        // Button
+        if (state.running) {
+            toggleBtn.textContent = 'Pause';
+            toggleBtn.classList.add('running');
+        } else {
+            toggleBtn.textContent = 'Resume';
+            toggleBtn.classList.remove('running');
+        }
+    }
+
+    cycleDisplay.textContent = 'Cycles: ' + state.cycleCount;
+}
+
+function breathingSetPreset(btn, name) {
+    var widget = breathingGetWidget(btn);
+    var toolId = breathingGetToolId(btn);
+    var state = breathingGetState(toolId);
+    var preset = BREATHING_PRESETS[name];
+    if (!preset) return;
+
+    state.pattern = { inhale: preset.inhale, hold: preset.hold, exhale: preset.exhale };
+    state.activePreset = name;
+
+    // Update inputs
+    var panel = widget.querySelector('.breathing-settings-panel');
+    if (panel) {
+        var inputs = panel.querySelectorAll('input');
+        inputs[0].value = preset.inhale;
+        inputs[1].value = preset.hold;
+        inputs[2].value = preset.exhale;
+    }
+
+    // Update preset buttons
+    widget.querySelectorAll('.breathing-preset').forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-preset') === name);
+    });
+
+    if (!state.running) {
+        state.phase = 'idle';
+        state.timeLeft = 0;
+        breathingUpdateDisplay(widget, toolId);
+    }
+}
+
+function breathingApplySettings(el) {
+    var widget = breathingGetWidget(el);
+    var toolId = breathingGetToolId(el);
+    var state = breathingGetState(toolId);
+    var panel = widget.querySelector('.breathing-settings-panel');
+    var inputs = panel.querySelectorAll('input');
+
+    var inhale = Math.max(1, Math.min(15, parseInt(inputs[0].value) || 4));
+    var hold = Math.max(0, Math.min(15, parseInt(inputs[1].value) || 0));
+    var exhale = Math.max(1, Math.min(15, parseInt(inputs[2].value) || 4));
+
+    inputs[0].value = inhale;
+    inputs[1].value = hold;
+    inputs[2].value = exhale;
+
+    state.pattern = { inhale: inhale, hold: hold, exhale: exhale };
+    state.activePreset = null;
+
+    // Clear active preset buttons
+    widget.querySelectorAll('.breathing-preset').forEach(function(b) {
+        b.classList.remove('active');
+    });
+
+    if (state.phase === 'idle') {
+        breathingUpdateDisplay(widget, toolId);
+    }
+}
+
+function breathingToggleSettings(el) {
+    var widget = breathingGetWidget(el);
+    var panel = widget.querySelector('.breathing-settings-panel');
+    panel.classList.toggle('open');
+}
+
+// ============================================================
 // Dice Roller Widget
 // ============================================================
 
@@ -4014,6 +4480,181 @@ function kbInit() {
 }
 
 // =============================================
+// WORLD CLOCK
+// =============================================
+
+const wcInstances = new Map();
+const WC_DEFAULT_ZONES = ['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+var wcSearchIndex = null;
+
+function wcBuildSearchIndex() {
+    if (wcSearchIndex) return wcSearchIndex;
+    var allZones;
+    try { allZones = Intl.supportedValuesOf('timeZone'); } catch(e) { allZones = WC_DEFAULT_ZONES; }
+    var now = new Date();
+    wcSearchIndex = allZones.map(function(tz) {
+        var longName = '';
+        try {
+            var parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'long' }).formatToParts(now);
+            var tzPart = parts.find(function(p) { return p.type === 'timeZoneName'; });
+            if (tzPart) longName = tzPart.value;
+        } catch(e) {}
+        var city = tz.split('/').pop().replace(/_/g, ' ');
+        return { id: tz, longName: longName, city: city, search: (tz + ' ' + longName + ' ' + city).toLowerCase() };
+    });
+    return wcSearchIndex;
+}
+
+function wcGetWidget(el) {
+    return el.closest('.wc-widget');
+}
+
+function wcGetToolId(el) {
+    const tool = el.closest('.tool');
+    return tool ? tool.dataset.tool : null;
+}
+
+function wcGetState(toolId) {
+    if (!wcInstances.has(toolId)) {
+        wcInstances.set(toolId, { zones: [], timer: null });
+    }
+    return wcInstances.get(toolId);
+}
+
+function wcFormatTime(tz) {
+    const now = new Date();
+    const timeFmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
+    const dateFmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+    const time = timeFmt.format(now);
+    const date = dateFmt.format(now);
+
+    // Calculate UTC offset
+    const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+    const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+    const diffMin = Math.round((tzDate - utcDate) / 60000);
+    const sign = diffMin >= 0 ? '+' : '-';
+    const absMin = Math.abs(diffMin);
+    const offH = Math.floor(absMin / 60);
+    const offM = absMin % 60;
+    const offset = 'UTC' + sign + offH + (offM ? ':' + String(offM).padStart(2, '0') : '');
+
+    return { time: time, date: date, offset: offset };
+}
+
+function wcRender(widget) {
+    const toolId = wcGetToolId(widget);
+    const state = wcGetState(toolId);
+    const list = widget.querySelector('.wc-list');
+    list.innerHTML = state.zones.map(function(tz, idx) {
+        const info = wcFormatTime(tz);
+        const label = tz.replace(/_/g, ' ').replace(/\//g, ' / ');
+        return '<div class="wc-row">' +
+            '<span class="wc-city">' + escapeHtml(label) + '</span>' +
+            '<span class="wc-time" data-tz="' + escapeHtml(tz) + '">' + info.time + '</span>' +
+            '<span class="wc-date" data-tz="' + escapeHtml(tz) + '">' + info.date + '</span>' +
+            '<span class="wc-offset">' + info.offset + '</span>' +
+            '<button class="wc-remove" onclick="wcRemoveZone(this,' + idx + ')" title="Remove">\u00D7</button>' +
+        '</div>';
+    }).join('');
+}
+
+function wcTick(widget) {
+    widget.querySelectorAll('.wc-time').forEach(function(el) {
+        const tz = el.getAttribute('data-tz');
+        if (tz) {
+            const info = wcFormatTime(tz);
+            el.textContent = info.time;
+            const dateEl = el.closest('.wc-row').querySelector('.wc-date');
+            if (dateEl) dateEl.textContent = info.date;
+        }
+    });
+}
+
+function wcAddZone(btn) {
+    const widget = wcGetWidget(btn);
+    const toolId = wcGetToolId(btn);
+    const state = wcGetState(toolId);
+    const input = widget.querySelector('.wc-toolbar input');
+    const val = input.value.trim();
+    if (!val) return;
+
+    var index = wcBuildSearchIndex();
+    var lowerVal = val.toLowerCase();
+
+    // Exact match on IANA ID
+    var entry = index.find(function(e) { return e.id.toLowerCase() === lowerVal; });
+    // Exact match on long name (e.g. "India Standard Time")
+    if (!entry) entry = index.find(function(e) { return e.longName.toLowerCase() === lowerVal; });
+    // Partial match on IANA ID, long name, or city
+    if (!entry) entry = index.find(function(e) { return e.search.includes(lowerVal); });
+
+    if (!entry) { input.style.borderColor = '#e74c3c'; setTimeout(function() { input.style.borderColor = ''; }, 1000); return; }
+    if (state.zones.indexOf(entry.id) !== -1) { input.value = ''; return; }
+
+    state.zones.push(entry.id);
+    input.value = '';
+    wcRender(widget);
+    wcSaveState(widget);
+}
+
+function wcRemoveZone(btn, index) {
+    const widget = wcGetWidget(btn);
+    const toolId = wcGetToolId(btn);
+    const state = wcGetState(toolId);
+    state.zones.splice(index, 1);
+    wcRender(widget);
+    wcSaveState(widget);
+}
+
+function wcSaveState(widget) {
+    const toolId = wcGetToolId(widget);
+    const state = wcGetState(toolId);
+    const customizations = loadToolCustomizations();
+    if (!customizations[toolId]) customizations[toolId] = {};
+    customizations[toolId].wcZones = state.zones;
+    saveToolCustomizations(customizations);
+}
+
+function wcInit() {
+    document.querySelectorAll('.wc-widget').forEach(function(widget) {
+        const toolId = wcGetToolId(widget);
+        if (!toolId) return;
+        const state = wcGetState(toolId);
+
+        // Restore state or use defaults
+        const customizations = loadToolCustomizations();
+        const custom = customizations[toolId] || {};
+        state.zones = custom.wcZones || WC_DEFAULT_ZONES.slice();
+
+        wcRender(widget);
+
+        // Start ticking
+        if (state.timer) clearInterval(state.timer);
+        state.timer = setInterval(function() { wcTick(widget); }, 1000);
+
+        // Allow Enter key to add zone
+        var input = widget.querySelector('.wc-toolbar input');
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { wcAddZone(widget.querySelector('.wc-toolbar button')); }
+        });
+
+        // Add datalist for autocomplete with long timezone names
+        var index = wcBuildSearchIndex();
+        var listId = 'wc-tz-list-' + toolId.replace(/[^a-zA-Z0-9]/g, '');
+        if (!document.getElementById(listId)) {
+            var datalist = document.createElement('datalist');
+            datalist.id = listId;
+            datalist.innerHTML = index.map(function(e) {
+                var label = e.longName ? e.id + ' \u2014 ' + e.longName : e.id;
+                return '<option value="' + e.id + '">' + label + '</option>';
+            }).join('');
+            document.body.appendChild(datalist);
+        }
+        input.setAttribute('list', listId);
+    });
+}
+
+// =============================================
 // SCRIPT INJECTION FOR HTML EXPORT
 // =============================================
 
@@ -4029,7 +4670,9 @@ function kbInit() {
     var swFunctions = [swGetWidget, swGetToolId, swGetState, swFormatTime, swUpdateDisplay, swTick, swToggle, swLap, swReset, swRenderLaps, stopwatchInit];
     var ytFunctions = [ytembedGetWidget, ytembedGetToolId, ytembedExtractId, ytembedParseTimestamp, ytembedLoad, ytembedSaveState, ytembedInit];
     var kbFunctions = [kbGetToolId, kbGetData, kbSaveData, kbRender, kbEsc, kbTagColor, kbAddColumn, kbShowAddForm, kbAddFormKey, kbAddCard, kbCancelAdd, kbEditColTitle, kbColMenu, kbEditCard, kbSaveCard, kbDeleteCard, kbCardDragStart, kbCardDragOver, kbCardDragLeave, kbCardDrop, kbColDragStart, kbColDragOver, kbColDragLeave, kbColDrop, kbInit];
-    var allFunctions = pomoFunctions.concat(ucFunctions).concat(pbsFunctions).concat(calendarFunctions).concat(pickerFunctions).concat(diceFunctions).concat(swFunctions).concat(ytFunctions).concat(kbFunctions);
+    var breathingFunctions = [breathingGetWidget, breathingGetToolId, breathingGetState, breathingInit, breathingToggle, breathingReset, breathingTick, breathingAdvancePhase, breathingUpdateDisplay, breathingSetPreset, breathingApplySettings, breathingToggleSettings];
+    var wcFunctions = [wcBuildSearchIndex, wcGetWidget, wcGetToolId, wcGetState, wcFormatTime, wcRender, wcTick, wcAddZone, wcRemoveZone, wcSaveState, wcInit];
+    var allFunctions = pomoFunctions.concat(ucFunctions).concat(pbsFunctions).concat(calendarFunctions).concat(pickerFunctions).concat(diceFunctions).concat(swFunctions).concat(ytFunctions).concat(kbFunctions).concat(breathingFunctions).concat(wcFunctions);
 
     var code = '(function() {\n' +
         'if (typeof initPomodoro !== "undefined") return;\n' +
@@ -4046,6 +4689,13 @@ function kbInit() {
         'window.swInstances = new Map();\n' +
         'window.KB_TAG_COLORS = ' + JSON.stringify(KB_TAG_COLORS) + ';\n' +
         'window.kbDragState = { type: null, colIdx: null, cardIdx: null, sourceColIdx: null, toolId: null };\n' +
+        'window.breathingInstances = new Map();\n' +
+        'window.BREATHING_CIRCLE_R = ' + BREATHING_CIRCLE_R + ';\n' +
+        'window.BREATHING_CIRCUMFERENCE = ' + BREATHING_CIRCUMFERENCE + ';\n' +
+        'window.BREATHING_PRESETS = ' + JSON.stringify(BREATHING_PRESETS) + ';\n' +
+        'window.wcInstances = new Map();\n' +
+        'window.wcSearchIndex = null;\n' +
+        'window.WC_DEFAULT_ZONES = ' + JSON.stringify(WC_DEFAULT_ZONES) + ';\n' +
         'if (typeof escapeHtml === "undefined") { window.escapeHtml = ' + escapeHtml.toString() + '; }\n' +
         allFunctions.map(function(fn) { return 'window.' + fn.name + ' = ' + fn.toString(); }).join(';\n') + ';\n' +
         '})();';
@@ -4068,7 +4718,7 @@ PluginRegistry.registerToolbox({
     icon: '\uD83D\uDCCB',
     color: '#9b59b6',
     version: '1.0.0',
-    tools: ['calendar', 'dice-roller', 'kanban-board', 'playback-speed-calc', 'pomodoro-timer', 'random-picker', 'stopwatch', 'unit-converter', 'youtube-embed'],
+    tools: ['breathing-exercise', 'calendar', 'dice-roller', 'kanban-board', 'playback-speed-calc', 'pomodoro-timer', 'random-picker', 'stopwatch', 'unit-converter', 'world-clock', 'youtube-embed'],
     source: 'external'
 });
 
@@ -4334,6 +4984,57 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
+// Breathing Exercise
+PluginRegistry.registerTool({
+    id: 'breathing-exercise',
+    name: 'Breathing Exercise',
+    description: 'Guided breathing with customizable inhale/hold/exhale patterns',
+    icon: '\uD83C\uDF2C\uFE0F',
+    version: '1.0.0',
+    toolbox: 'productivity',
+    tags: ['breathing', 'meditation', 'relax', 'focus', 'wellness'],
+    title: 'Breathing Exercise',
+    content: '<div class="breathing-widget">' +
+        '<div class="breathing-circle-container">' +
+            '<div class="breathing-scale-wrap">' +
+                '<svg class="breathing-circle-svg" viewBox="0 0 200 200">' +
+                    '<circle class="breathing-circle-bg" cx="100" cy="100" r="' + BREATHING_CIRCLE_R + '"></circle>' +
+                    '<circle class="breathing-circle-fg" cx="100" cy="100" r="' + BREATHING_CIRCLE_R + '" stroke-dasharray="' + BREATHING_CIRCUMFERENCE.toFixed(2) + '" stroke-dashoffset="0"></circle>' +
+                '</svg>' +
+            '</div>' +
+            '<div class="breathing-overlay">' +
+                '<div class="breathing-label">Press Start</div>' +
+                '<div class="breathing-timer"></div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="breathing-controls">' +
+            '<button class="breathing-btn primary breathing-toggle" onclick="breathingToggle(this)">Start</button>' +
+            '<button class="breathing-btn" onclick="breathingReset(this)">Reset</button>' +
+        '</div>' +
+        '<div class="breathing-cycle-count">Cycles: 0</div>' +
+        '<div class="breathing-preset-row">' +
+            '<button class="breathing-preset active" data-preset="4-4-4" onclick="breathingSetPreset(this,\'4-4-4\')">4-4-4</button>' +
+            '<button class="breathing-preset" data-preset="4-7-8" onclick="breathingSetPreset(this,\'4-7-8\')">4-7-8</button>' +
+            '<button class="breathing-preset" data-preset="5-5-5" onclick="breathingSetPreset(this,\'5-5-5\')">5-5-5</button>' +
+            '<button class="breathing-preset" data-preset="4-0-4" onclick="breathingSetPreset(this,\'4-0-4\')">4-0-4</button>' +
+        '</div>' +
+        '<div class="breathing-settings">' +
+            '<div class="breathing-settings-toggle" onclick="breathingToggleSettings(this)">\u2699 Settings</div>' +
+            '<div class="breathing-settings-panel">' +
+                '<div class="breathing-settings-grid">' +
+                    '<div><label>Inhale (s)</label><input type="number" value="4" min="1" max="15" onchange="breathingApplySettings(this)"></div>' +
+                    '<div><label>Hold (s)</label><input type="number" value="4" min="0" max="15" onchange="breathingApplySettings(this)"></div>' +
+                    '<div><label>Exhale (s)</label><input type="number" value="4" min="1" max="15" onchange="breathingApplySettings(this)"></div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+    '</div>',
+    onInit: 'breathingInit',
+    defaultWidth: 320,
+    defaultHeight: 440,
+    source: 'external'
+});
+
 PluginRegistry.registerTool({
     id: 'youtube-embed',
     name: 'YouTube Embed',
@@ -4379,4 +5080,27 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Productivity Tools plugin loaded (9 tools)');
+// World Clock
+PluginRegistry.registerTool({
+    id: 'world-clock',
+    name: 'World Clock',
+    description: 'Live clocks showing current time in multiple time zones',
+    icon: '\uD83C\uDF0D',
+    version: '1.0.0',
+    toolbox: 'productivity',
+    tags: ['clock', 'time', 'timezone', 'world', 'utc', 'international'],
+    title: 'World Clock',
+    content: '<div class="wc-widget">' +
+        '<div class="wc-toolbar">' +
+            '<input type="text" placeholder="Add timezone (e.g. Europe/Paris)..." spellcheck="false">' +
+            '<button onclick="wcAddZone(this)">+ Add</button>' +
+        '</div>' +
+        '<div class="wc-list"></div>' +
+    '</div>',
+    onInit: 'wcInit',
+    defaultWidth: 300,
+    defaultHeight: 380,
+    source: 'external'
+});
+
+console.log('Productivity Tools plugin loaded (11 tools)');
