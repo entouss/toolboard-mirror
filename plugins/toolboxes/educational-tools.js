@@ -62,6 +62,52 @@
 .money-mat-item.readonly:hover { opacity: 1; }
 .money-mode-buttons { display: flex; flex-wrap: wrap; gap: 4px; }
 
+/* Periodic Table Widget Styles */
+.tool-content:has(.ptable-widget) { display: flex; flex-direction: column; overflow: hidden; }
+.ptable-widget { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; padding: 6px; gap: 6px; font-family: system-ui, -apple-system, sans-serif; }
+.ptable-toolbar { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.ptable-search { padding: 4px 8px; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-primary); width: 140px; outline: none; }
+.ptable-search:focus { border-color: #3498db; }
+.ptable-filter { padding: 4px 6px; font-size: 11px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-primary); cursor: pointer; }
+.ptable-temp-toggle { padding: 3px 8px; font-size: 11px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-secondary); color: var(--text-primary); cursor: pointer; }
+.ptable-temp-toggle:hover { background: var(--bg-tertiary); }
+.ptable-grid-wrap { flex: 1; overflow: auto; min-height: 0; }
+.ptable-grid { display: grid; grid-template-columns: repeat(18, 1fr); gap: 1px; min-width: 540px; }
+.ptable-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; min-width: 0; padding: 1px; border: 1px solid transparent; }
+.ptable-cell:hover { transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,0.25); z-index: 2; border-color: var(--text-primary); }
+.ptable-cell.selected { transform: scale(1.1); border: 2px solid var(--text-primary); z-index: 3; }
+.ptable-cell.dimmed { opacity: 0.2; }
+.ptable-cell-num { font-size: 7px; line-height: 1; color: rgba(0,0,0,0.6); }
+.ptable-cell-sym { font-size: 12px; font-weight: 700; line-height: 1.1; color: rgba(0,0,0,0.85); }
+.ptable-cell-name { font-size: 5px; line-height: 1; color: rgba(0,0,0,0.5); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.ptable-cell-mass { font-size: 5px; line-height: 1; color: rgba(0,0,0,0.45); }
+.ptable-spacer { visibility: hidden; }
+.ptable-lanthanide-label, .ptable-actinide-label { font-size: 8px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; grid-column: span 2; white-space: nowrap; }
+.ptable-detail { flex-shrink: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; display: flex; gap: 12px; align-items: center; min-height: 60px; }
+.ptable-detail-sym { font-size: 36px; font-weight: 900; line-height: 1; min-width: 60px; text-align: center; border-radius: 6px; padding: 6px 8px; }
+.ptable-detail-info { flex: 1; min-width: 0; }
+.ptable-detail-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.ptable-detail-row { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+.ptable-detail-row strong { color: var(--text-primary); }
+.ptable-detail-placeholder { font-size: 12px; color: var(--text-muted); text-align: center; width: 100%; }
+.ptable-legend { display: flex; flex-wrap: wrap; gap: 4px; flex-shrink: 0; }
+.ptable-legend-item { display: flex; align-items: center; gap: 3px; font-size: 9px; color: var(--text-secondary); }
+.ptable-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.ptable-sep-row { grid-column: 1 / -1; height: 4px; }
+
+/* Category colors */
+.ptable-cat-alkali { background: #ff6b6b; }
+.ptable-cat-alkaline { background: #ffa94d; }
+.ptable-cat-transition { background: #ffd43b; }
+.ptable-cat-post-transition { background: #69db7c; }
+.ptable-cat-metalloid { background: #38d9a9; }
+.ptable-cat-nonmetal { background: #4dabf7; }
+.ptable-cat-halogen { background: #748ffc; }
+.ptable-cat-noble { background: #da77f2; }
+.ptable-cat-lanthanide { background: #f783ac; }
+.ptable-cat-actinide { background: #e599f7; }
+.ptable-cat-unknown { background: #adb5bd; }
+
 `;
     document.head.appendChild(style);
 })();
@@ -689,6 +735,317 @@ function moneyCheckLeast(btn) {
 }
 
 // =============================================
+// PERIODIC TABLE OF ELEMENTS
+// =============================================
+
+var PTABLE_ELEMENTS = [
+    {n:1,s:'H',name:'Hydrogen',m:1.008,cat:'nonmetal',ec:'1s1',p:1,g:1},
+    {n:2,s:'He',name:'Helium',m:4.003,cat:'noble',ec:'1s2',p:1,g:18},
+    {n:3,s:'Li',name:'Lithium',m:6.941,cat:'alkali',ec:'[He] 2s1',p:2,g:1},
+    {n:4,s:'Be',name:'Beryllium',m:9.012,cat:'alkaline',ec:'[He] 2s2',p:2,g:2},
+    {n:5,s:'B',name:'Boron',m:10.81,cat:'metalloid',ec:'[He] 2s2 2p1',p:2,g:13},
+    {n:6,s:'C',name:'Carbon',m:12.011,cat:'nonmetal',ec:'[He] 2s2 2p2',p:2,g:14},
+    {n:7,s:'N',name:'Nitrogen',m:14.007,cat:'nonmetal',ec:'[He] 2s2 2p3',p:2,g:15},
+    {n:8,s:'O',name:'Oxygen',m:15.999,cat:'nonmetal',ec:'[He] 2s2 2p4',p:2,g:16},
+    {n:9,s:'F',name:'Fluorine',m:18.998,cat:'halogen',ec:'[He] 2s2 2p5',p:2,g:17},
+    {n:10,s:'Ne',name:'Neon',m:20.180,cat:'noble',ec:'[He] 2s2 2p6',p:2,g:18},
+    {n:11,s:'Na',name:'Sodium',m:22.990,cat:'alkali',ec:'[Ne] 3s1',p:3,g:1},
+    {n:12,s:'Mg',name:'Magnesium',m:24.305,cat:'alkaline',ec:'[Ne] 3s2',p:3,g:2},
+    {n:13,s:'Al',name:'Aluminium',m:26.982,cat:'post-transition',ec:'[Ne] 3s2 3p1',p:3,g:13},
+    {n:14,s:'Si',name:'Silicon',m:28.086,cat:'metalloid',ec:'[Ne] 3s2 3p2',p:3,g:14},
+    {n:15,s:'P',name:'Phosphorus',m:30.974,cat:'nonmetal',ec:'[Ne] 3s2 3p3',p:3,g:15},
+    {n:16,s:'S',name:'Sulfur',m:32.065,cat:'nonmetal',ec:'[Ne] 3s2 3p4',p:3,g:16},
+    {n:17,s:'Cl',name:'Chlorine',m:35.453,cat:'halogen',ec:'[Ne] 3s2 3p5',p:3,g:17},
+    {n:18,s:'Ar',name:'Argon',m:39.948,cat:'noble',ec:'[Ne] 3s2 3p6',p:3,g:18},
+    {n:19,s:'K',name:'Potassium',m:39.098,cat:'alkali',ec:'[Ar] 4s1',p:4,g:1},
+    {n:20,s:'Ca',name:'Calcium',m:40.078,cat:'alkaline',ec:'[Ar] 4s2',p:4,g:2},
+    {n:21,s:'Sc',name:'Scandium',m:44.956,cat:'transition',ec:'[Ar] 3d1 4s2',p:4,g:3},
+    {n:22,s:'Ti',name:'Titanium',m:47.867,cat:'transition',ec:'[Ar] 3d2 4s2',p:4,g:4},
+    {n:23,s:'V',name:'Vanadium',m:50.942,cat:'transition',ec:'[Ar] 3d3 4s2',p:4,g:5},
+    {n:24,s:'Cr',name:'Chromium',m:51.996,cat:'transition',ec:'[Ar] 3d5 4s1',p:4,g:6},
+    {n:25,s:'Mn',name:'Manganese',m:54.938,cat:'transition',ec:'[Ar] 3d5 4s2',p:4,g:7},
+    {n:26,s:'Fe',name:'Iron',m:55.845,cat:'transition',ec:'[Ar] 3d6 4s2',p:4,g:8},
+    {n:27,s:'Co',name:'Cobalt',m:58.933,cat:'transition',ec:'[Ar] 3d7 4s2',p:4,g:9},
+    {n:28,s:'Ni',name:'Nickel',m:58.693,cat:'transition',ec:'[Ar] 3d8 4s2',p:4,g:10},
+    {n:29,s:'Cu',name:'Copper',m:63.546,cat:'transition',ec:'[Ar] 3d10 4s1',p:4,g:11},
+    {n:30,s:'Zn',name:'Zinc',m:65.38,cat:'transition',ec:'[Ar] 3d10 4s2',p:4,g:12},
+    {n:31,s:'Ga',name:'Gallium',m:69.723,cat:'post-transition',ec:'[Ar] 3d10 4s2 4p1',p:4,g:13},
+    {n:32,s:'Ge',name:'Germanium',m:72.63,cat:'metalloid',ec:'[Ar] 3d10 4s2 4p2',p:4,g:14},
+    {n:33,s:'As',name:'Arsenic',m:74.922,cat:'metalloid',ec:'[Ar] 3d10 4s2 4p3',p:4,g:15},
+    {n:34,s:'Se',name:'Selenium',m:78.96,cat:'nonmetal',ec:'[Ar] 3d10 4s2 4p4',p:4,g:16},
+    {n:35,s:'Br',name:'Bromine',m:79.904,cat:'halogen',ec:'[Ar] 3d10 4s2 4p5',p:4,g:17},
+    {n:36,s:'Kr',name:'Krypton',m:83.798,cat:'noble',ec:'[Ar] 3d10 4s2 4p6',p:4,g:18},
+    {n:37,s:'Rb',name:'Rubidium',m:85.468,cat:'alkali',ec:'[Kr] 5s1',p:5,g:1},
+    {n:38,s:'Sr',name:'Strontium',m:87.62,cat:'alkaline',ec:'[Kr] 5s2',p:5,g:2},
+    {n:39,s:'Y',name:'Yttrium',m:88.906,cat:'transition',ec:'[Kr] 4d1 5s2',p:5,g:3},
+    {n:40,s:'Zr',name:'Zirconium',m:91.224,cat:'transition',ec:'[Kr] 4d2 5s2',p:5,g:4},
+    {n:41,s:'Nb',name:'Niobium',m:92.906,cat:'transition',ec:'[Kr] 4d4 5s1',p:5,g:5},
+    {n:42,s:'Mo',name:'Molybdenum',m:95.96,cat:'transition',ec:'[Kr] 4d5 5s1',p:5,g:6},
+    {n:43,s:'Tc',name:'Technetium',m:98,cat:'transition',ec:'[Kr] 4d5 5s2',p:5,g:7},
+    {n:44,s:'Ru',name:'Ruthenium',m:101.07,cat:'transition',ec:'[Kr] 4d7 5s1',p:5,g:8},
+    {n:45,s:'Rh',name:'Rhodium',m:102.906,cat:'transition',ec:'[Kr] 4d8 5s1',p:5,g:9},
+    {n:46,s:'Pd',name:'Palladium',m:106.42,cat:'transition',ec:'[Kr] 4d10',p:5,g:10},
+    {n:47,s:'Ag',name:'Silver',m:107.868,cat:'transition',ec:'[Kr] 4d10 5s1',p:5,g:11},
+    {n:48,s:'Cd',name:'Cadmium',m:112.411,cat:'transition',ec:'[Kr] 4d10 5s2',p:5,g:12},
+    {n:49,s:'In',name:'Indium',m:114.818,cat:'post-transition',ec:'[Kr] 4d10 5s2 5p1',p:5,g:13},
+    {n:50,s:'Sn',name:'Tin',m:118.710,cat:'post-transition',ec:'[Kr] 4d10 5s2 5p2',p:5,g:14},
+    {n:51,s:'Sb',name:'Antimony',m:121.760,cat:'metalloid',ec:'[Kr] 4d10 5s2 5p3',p:5,g:15},
+    {n:52,s:'Te',name:'Tellurium',m:127.60,cat:'metalloid',ec:'[Kr] 4d10 5s2 5p4',p:5,g:16},
+    {n:53,s:'I',name:'Iodine',m:126.904,cat:'halogen',ec:'[Kr] 4d10 5s2 5p5',p:5,g:17},
+    {n:54,s:'Xe',name:'Xenon',m:131.293,cat:'noble',ec:'[Kr] 4d10 5s2 5p6',p:5,g:18},
+    {n:55,s:'Cs',name:'Caesium',m:132.905,cat:'alkali',ec:'[Xe] 6s1',p:6,g:1},
+    {n:56,s:'Ba',name:'Barium',m:137.327,cat:'alkaline',ec:'[Xe] 6s2',p:6,g:2},
+    {n:57,s:'La',name:'Lanthanum',m:138.905,cat:'lanthanide',ec:'[Xe] 5d1 6s2',p:8,g:3},
+    {n:58,s:'Ce',name:'Cerium',m:140.116,cat:'lanthanide',ec:'[Xe] 4f1 5d1 6s2',p:8,g:4},
+    {n:59,s:'Pr',name:'Praseodymium',m:140.908,cat:'lanthanide',ec:'[Xe] 4f3 6s2',p:8,g:5},
+    {n:60,s:'Nd',name:'Neodymium',m:144.242,cat:'lanthanide',ec:'[Xe] 4f4 6s2',p:8,g:6},
+    {n:61,s:'Pm',name:'Promethium',m:145,cat:'lanthanide',ec:'[Xe] 4f5 6s2',p:8,g:7},
+    {n:62,s:'Sm',name:'Samarium',m:150.36,cat:'lanthanide',ec:'[Xe] 4f6 6s2',p:8,g:8},
+    {n:63,s:'Eu',name:'Europium',m:151.964,cat:'lanthanide',ec:'[Xe] 4f7 6s2',p:8,g:9},
+    {n:64,s:'Gd',name:'Gadolinium',m:157.25,cat:'lanthanide',ec:'[Xe] 4f7 5d1 6s2',p:8,g:10},
+    {n:65,s:'Tb',name:'Terbium',m:158.925,cat:'lanthanide',ec:'[Xe] 4f9 6s2',p:8,g:11},
+    {n:66,s:'Dy',name:'Dysprosium',m:162.500,cat:'lanthanide',ec:'[Xe] 4f10 6s2',p:8,g:12},
+    {n:67,s:'Ho',name:'Holmium',m:164.930,cat:'lanthanide',ec:'[Xe] 4f11 6s2',p:8,g:13},
+    {n:68,s:'Er',name:'Erbium',m:167.259,cat:'lanthanide',ec:'[Xe] 4f12 6s2',p:8,g:14},
+    {n:69,s:'Tm',name:'Thulium',m:168.934,cat:'lanthanide',ec:'[Xe] 4f13 6s2',p:8,g:15},
+    {n:70,s:'Yb',name:'Ytterbium',m:173.054,cat:'lanthanide',ec:'[Xe] 4f14 6s2',p:8,g:16},
+    {n:71,s:'Lu',name:'Lutetium',m:174.967,cat:'lanthanide',ec:'[Xe] 4f14 5d1 6s2',p:8,g:17},
+    {n:72,s:'Hf',name:'Hafnium',m:178.49,cat:'transition',ec:'[Xe] 4f14 5d2 6s2',p:6,g:4},
+    {n:73,s:'Ta',name:'Tantalum',m:180.948,cat:'transition',ec:'[Xe] 4f14 5d3 6s2',p:6,g:5},
+    {n:74,s:'W',name:'Tungsten',m:183.84,cat:'transition',ec:'[Xe] 4f14 5d4 6s2',p:6,g:6},
+    {n:75,s:'Re',name:'Rhenium',m:186.207,cat:'transition',ec:'[Xe] 4f14 5d5 6s2',p:6,g:7},
+    {n:76,s:'Os',name:'Osmium',m:190.23,cat:'transition',ec:'[Xe] 4f14 5d6 6s2',p:6,g:8},
+    {n:77,s:'Ir',name:'Iridium',m:192.217,cat:'transition',ec:'[Xe] 4f14 5d7 6s2',p:6,g:9},
+    {n:78,s:'Pt',name:'Platinum',m:195.084,cat:'transition',ec:'[Xe] 4f14 5d9 6s1',p:6,g:10},
+    {n:79,s:'Au',name:'Gold',m:196.967,cat:'transition',ec:'[Xe] 4f14 5d10 6s1',p:6,g:11},
+    {n:80,s:'Hg',name:'Mercury',m:200.59,cat:'transition',ec:'[Xe] 4f14 5d10 6s2',p:6,g:12},
+    {n:81,s:'Tl',name:'Thallium',m:204.383,cat:'post-transition',ec:'[Xe] 4f14 5d10 6s2 6p1',p:6,g:13},
+    {n:82,s:'Pb',name:'Lead',m:207.2,cat:'post-transition',ec:'[Xe] 4f14 5d10 6s2 6p2',p:6,g:14},
+    {n:83,s:'Bi',name:'Bismuth',m:208.980,cat:'post-transition',ec:'[Xe] 4f14 5d10 6s2 6p3',p:6,g:15},
+    {n:84,s:'Po',name:'Polonium',m:209,cat:'post-transition',ec:'[Xe] 4f14 5d10 6s2 6p4',p:6,g:16},
+    {n:85,s:'At',name:'Astatine',m:210,cat:'halogen',ec:'[Xe] 4f14 5d10 6s2 6p5',p:6,g:17},
+    {n:86,s:'Rn',name:'Radon',m:222,cat:'noble',ec:'[Xe] 4f14 5d10 6s2 6p6',p:6,g:18},
+    {n:87,s:'Fr',name:'Francium',m:223,cat:'alkali',ec:'[Rn] 7s1',p:7,g:1},
+    {n:88,s:'Ra',name:'Radium',m:226,cat:'alkaline',ec:'[Rn] 7s2',p:7,g:2},
+    {n:89,s:'Ac',name:'Actinium',m:227,cat:'actinide',ec:'[Rn] 6d1 7s2',p:9,g:3},
+    {n:90,s:'Th',name:'Thorium',m:232.038,cat:'actinide',ec:'[Rn] 6d2 7s2',p:9,g:4},
+    {n:91,s:'Pa',name:'Protactinium',m:231.036,cat:'actinide',ec:'[Rn] 5f2 6d1 7s2',p:9,g:5},
+    {n:92,s:'U',name:'Uranium',m:238.029,cat:'actinide',ec:'[Rn] 5f3 6d1 7s2',p:9,g:6},
+    {n:93,s:'Np',name:'Neptunium',m:237,cat:'actinide',ec:'[Rn] 5f4 6d1 7s2',p:9,g:7},
+    {n:94,s:'Pu',name:'Plutonium',m:244,cat:'actinide',ec:'[Rn] 5f6 7s2',p:9,g:8},
+    {n:95,s:'Am',name:'Americium',m:243,cat:'actinide',ec:'[Rn] 5f7 7s2',p:9,g:9},
+    {n:96,s:'Cm',name:'Curium',m:247,cat:'actinide',ec:'[Rn] 5f7 6d1 7s2',p:9,g:10},
+    {n:97,s:'Bk',name:'Berkelium',m:247,cat:'actinide',ec:'[Rn] 5f9 7s2',p:9,g:11},
+    {n:98,s:'Cf',name:'Californium',m:251,cat:'actinide',ec:'[Rn] 5f10 7s2',p:9,g:12},
+    {n:99,s:'Es',name:'Einsteinium',m:252,cat:'actinide',ec:'[Rn] 5f11 7s2',p:9,g:13},
+    {n:100,s:'Fm',name:'Fermium',m:257,cat:'actinide',ec:'[Rn] 5f12 7s2',p:9,g:14},
+    {n:101,s:'Md',name:'Mendelevium',m:258,cat:'actinide',ec:'[Rn] 5f13 7s2',p:9,g:15},
+    {n:102,s:'No',name:'Nobelium',m:259,cat:'actinide',ec:'[Rn] 5f14 7s2',p:9,g:16},
+    {n:103,s:'Lr',name:'Lawrencium',m:266,cat:'actinide',ec:'[Rn] 5f14 7s2 7p1',p:9,g:17},
+    {n:104,s:'Rf',name:'Rutherfordium',m:267,cat:'transition',ec:'[Rn] 5f14 6d2 7s2',p:7,g:4},
+    {n:105,s:'Db',name:'Dubnium',m:268,cat:'transition',ec:'[Rn] 5f14 6d3 7s2',p:7,g:5},
+    {n:106,s:'Sg',name:'Seaborgium',m:269,cat:'transition',ec:'[Rn] 5f14 6d4 7s2',p:7,g:6},
+    {n:107,s:'Bh',name:'Bohrium',m:270,cat:'transition',ec:'[Rn] 5f14 6d5 7s2',p:7,g:7},
+    {n:108,s:'Hs',name:'Hassium',m:277,cat:'transition',ec:'[Rn] 5f14 6d6 7s2',p:7,g:8},
+    {n:109,s:'Mt',name:'Meitnerium',m:278,cat:'unknown',ec:'[Rn] 5f14 6d7 7s2',p:7,g:9},
+    {n:110,s:'Ds',name:'Darmstadtium',m:281,cat:'unknown',ec:'[Rn] 5f14 6d8 7s2',p:7,g:10},
+    {n:111,s:'Rg',name:'Roentgenium',m:282,cat:'unknown',ec:'[Rn] 5f14 6d9 7s2',p:7,g:11},
+    {n:112,s:'Cn',name:'Copernicium',m:285,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2',p:7,g:12},
+    {n:113,s:'Nh',name:'Nihonium',m:286,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p1',p:7,g:13},
+    {n:114,s:'Fl',name:'Flerovium',m:289,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p2',p:7,g:14},
+    {n:115,s:'Mc',name:'Moscovium',m:290,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p3',p:7,g:15},
+    {n:116,s:'Lv',name:'Livermorium',m:293,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p4',p:7,g:16},
+    {n:117,s:'Ts',name:'Tennessine',m:294,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p5',p:7,g:17},
+    {n:118,s:'Og',name:'Oganesson',m:294,cat:'unknown',ec:'[Rn] 5f14 6d10 7s2 7p6',p:7,g:18}
+];
+
+var PTABLE_CATEGORIES = {
+    'alkali': 'Alkali Metal',
+    'alkaline': 'Alkaline Earth',
+    'transition': 'Transition Metal',
+    'post-transition': 'Post-Transition',
+    'metalloid': 'Metalloid',
+    'nonmetal': 'Nonmetal',
+    'halogen': 'Halogen',
+    'noble': 'Noble Gas',
+    'lanthanide': 'Lanthanide',
+    'actinide': 'Actinide',
+    'unknown': 'Unknown'
+};
+
+var ptableState = {};
+
+function ptableGetToolId(el) {
+    var tool = el.closest('.tool');
+    return tool ? tool.getAttribute('data-tool') : null;
+}
+
+function ptableGetWidget(el) {
+    return el.closest('.ptable-widget');
+}
+
+function ptableBuildGrid() {
+    // Build the standard periodic table layout as a 10-row x 18-col grid
+    // Rows 1-7 = periods 1-7, row 8 = separator, row 9 = lanthanides (p=8), row 10 = actinides (p=9)
+    var grid = [];
+    for (var r = 0; r < 10; r++) {
+        grid.push(new Array(18).fill(null));
+    }
+    // Map elements to grid positions
+    for (var i = 0; i < PTABLE_ELEMENTS.length; i++) {
+        var el = PTABLE_ELEMENTS[i];
+        var row, col;
+        if (el.p >= 8) {
+            // Lanthanides (p=8) go to row 9, Actinides (p=9) go to row 10 (0-indexed: 8, 9)
+            row = el.p === 8 ? 8 : 9;
+            col = el.g - 1;
+        } else {
+            row = el.p - 1;
+            col = el.g - 1;
+        }
+        grid[row][col] = el;
+    }
+    // Row 6 col 2 (La placeholder) and Row 7 col 2 (Ac placeholder) are handled by actual elements being in rows 8/9
+    return grid;
+}
+
+function ptableRender(widget) {
+    var toolId = ptableGetToolId(widget);
+    if (!toolId) return;
+    var state = ptableState[toolId];
+    if (!state) return;
+
+    var gridWrap = widget.querySelector('.ptable-grid');
+    var detailPanel = widget.querySelector('.ptable-detail');
+    if (!gridWrap) return;
+
+    var grid = ptableBuildGrid();
+    var search = state.search.toLowerCase();
+    var filter = state.filter;
+    var selectedNum = state.selected;
+
+    var html = '';
+
+    for (var r = 0; r < 10; r++) {
+        // Separator row before lanthanides
+        if (r === 7) {
+            html += '<div class="ptable-sep-row"></div>';
+            continue;
+        }
+
+        for (var c = 0; c < 18; c++) {
+            var el = grid[r][c];
+
+            // Period 6 row, col 2 (group 3): show La-Lu marker
+            if (r === 5 && c === 2) {
+                html += '<div class="ptable-cell ptable-cat-lanthanide" style="font-size:7px;cursor:default;opacity:0.7;" title="Lanthanides: see row below">57-71</div>';
+                continue;
+            }
+            // Period 7 row, col 2 (group 3): show Ac-Lr marker
+            if (r === 6 && c === 2) {
+                html += '<div class="ptable-cell ptable-cat-actinide" style="font-size:7px;cursor:default;opacity:0.7;" title="Actinides: see row below">89-103</div>';
+                continue;
+            }
+
+            // Lanthanide/actinide row labels
+            if ((r === 8 || r === 9) && c < 2) {
+                if (c === 0) {
+                    html += '<div class="ptable-lanthanide-label">' + (r === 8 ? 'Lan' : 'Act') + '</div>';
+                }
+                continue;
+            }
+
+            if (!el) {
+                html += '<div class="ptable-spacer"></div>';
+                continue;
+            }
+
+            var dimmed = false;
+            if (search) {
+                var matchesSearch = el.name.toLowerCase().indexOf(search) >= 0 ||
+                    el.s.toLowerCase().indexOf(search) >= 0 ||
+                    String(el.n) === search;
+                if (!matchesSearch) dimmed = true;
+            }
+            if (filter && filter !== 'all' && el.cat !== filter) dimmed = true;
+
+            var cls = 'ptable-cell ptable-cat-' + el.cat;
+            if (dimmed) cls += ' dimmed';
+            if (selectedNum === el.n) cls += ' selected';
+
+            html += '<div class="' + cls + '" data-num="' + el.n + '" onclick="ptableSelect(this,' + el.n + ')" title="' + el.n + ' - ' + el.name + ' (' + el.s + ')">';
+            html += '<span class="ptable-cell-num">' + el.n + '</span>';
+            html += '<span class="ptable-cell-sym">' + el.s + '</span>';
+            html += '<span class="ptable-cell-name">' + el.name + '</span>';
+            html += '<span class="ptable-cell-mass">' + el.m + '</span>';
+            html += '</div>';
+        }
+    }
+
+    gridWrap.innerHTML = html;
+
+    // Update detail panel
+    if (detailPanel) {
+        if (selectedNum) {
+            var sel = null;
+            for (var j = 0; j < PTABLE_ELEMENTS.length; j++) {
+                if (PTABLE_ELEMENTS[j].n === selectedNum) { sel = PTABLE_ELEMENTS[j]; break; }
+            }
+            if (sel) {
+                var catLabel = PTABLE_CATEGORIES[sel.cat] || sel.cat;
+                detailPanel.innerHTML =
+                    '<div class="ptable-detail-sym ptable-cat-' + sel.cat + '">' + sel.s + '</div>' +
+                    '<div class="ptable-detail-info">' +
+                        '<div class="ptable-detail-name">' + sel.name + '</div>' +
+                        '<div class="ptable-detail-row"><strong>Atomic Number:</strong> ' + sel.n + '&emsp;<strong>Mass:</strong> ' + sel.m + '</div>' +
+                        '<div class="ptable-detail-row"><strong>Category:</strong> ' + catLabel + '&emsp;<strong>Period:</strong> ' + (sel.p > 7 ? sel.p - 2 : sel.p) + '&emsp;<strong>Group:</strong> ' + sel.g + '</div>' +
+                        '<div class="ptable-detail-row"><strong>Electron Config:</strong> ' + sel.ec + '</div>' +
+                    '</div>';
+            }
+        } else {
+            detailPanel.innerHTML = '<div class="ptable-detail-placeholder">Click an element to see details</div>';
+        }
+    }
+}
+
+function ptableSelect(el, num) {
+    var widget = ptableGetWidget(el);
+    var toolId = ptableGetToolId(widget);
+    if (!toolId || !ptableState[toolId]) return;
+    ptableState[toolId].selected = ptableState[toolId].selected === num ? null : num;
+    ptableRender(widget);
+}
+
+function ptableSearch(input) {
+    var widget = ptableGetWidget(input);
+    var toolId = ptableGetToolId(widget);
+    if (!toolId || !ptableState[toolId]) return;
+    ptableState[toolId].search = input.value;
+    ptableRender(widget);
+}
+
+function ptableFilter(select) {
+    var widget = ptableGetWidget(select);
+    var toolId = ptableGetToolId(widget);
+    if (!toolId || !ptableState[toolId]) return;
+    ptableState[toolId].filter = select.value;
+    ptableRender(widget);
+}
+
+function ptableInit() {
+    document.querySelectorAll('.ptable-widget').forEach(function(widget) {
+        var toolId = ptableGetToolId(widget);
+        if (!toolId) return;
+        ptableState[toolId] = {
+            selected: null,
+            search: '',
+            filter: 'all'
+        };
+        ptableRender(widget);
+    });
+}
+
+// =============================================
 // SCRIPT INJECTION FOR HTML EXPORT
 // =============================================
 
@@ -697,7 +1054,8 @@ function moneyCheckLeast(btn) {
 
     var clockFunctions = [initClock, clockDrag, clockEndDrag, clockRender, clockSetNow, clockRandomize, clockClearChallenge, clockNewChallenge, clockCheckAnswer];
     var moneyFunctions = [moneyInit, moneyGetWidget, moneyRender, moneyAdd, moneyRemove, moneyClear, moneyTotal, moneyFormat, moneySetMode, moneyNewRound, moneyNewChallenge, moneyCheckAnswer, moneyNewChange, moneyNewNameit, moneyCheckNameit, moneyComputeOptimal, moneyNewLeast, moneyCheckLeast, moneyDragStart, moneyDragOver, moneyDragLeave, moneyDrop];
-    var allFunctions = clockFunctions.concat(moneyFunctions);
+    var ptableFunctions = [ptableGetToolId, ptableGetWidget, ptableBuildGrid, ptableRender, ptableSelect, ptableSearch, ptableFilter, ptableInit];
+    var allFunctions = clockFunctions.concat(moneyFunctions).concat(ptableFunctions);
 
     var code = '(function() {\n' +
         'if (typeof initClock !== "undefined") return;\n' +
@@ -705,6 +1063,9 @@ function moneyCheckLeast(btn) {
         'window.clockFaceSvg = ' + JSON.stringify(clockFaceSvg) + ';\n' +
         'window.MONEY_DENOMS = ' + JSON.stringify(MONEY_DENOMS) + ';\n' +
         'window.moneyState = ' + JSON.stringify(moneyState) + ';\n' +
+        'window.PTABLE_ELEMENTS = ' + JSON.stringify(PTABLE_ELEMENTS) + ';\n' +
+        'window.PTABLE_CATEGORIES = ' + JSON.stringify(PTABLE_CATEGORIES) + ';\n' +
+        'window.ptableState = {};\n' +
         allFunctions.map(function(fn) { return 'window.' + fn.name + ' = ' + fn.toString(); }).join(';\n') + ';\n' +
         '})();';
     var encoded = btoa(unescape(encodeURIComponent(code)));
@@ -726,7 +1087,7 @@ PluginRegistry.registerToolbox({
     icon: '\uD83C\uDF93',
     color: '#2ecc71',
     version: '1.0.0',
-    tools: ['analog-clock', 'money-counter'],
+    tools: ['analog-clock', 'money-counter', 'periodic-table'],
     source: 'external'
 });
 
@@ -829,4 +1190,52 @@ PluginRegistry.registerTool({
     source: 'external'
 });
 
-console.log('Educational Tools plugin loaded (2 tools)');
+// Periodic Table of Elements
+PluginRegistry.registerTool({
+    id: 'periodic-table',
+    name: 'Periodic Table',
+    description: 'Interactive periodic table of elements with search, category filtering, and detailed element information',
+    icon: '\u269B',
+    version: '1.0.0',
+    toolbox: 'educational-tools',
+    tags: ['periodic', 'table', 'elements', 'chemistry', 'science', 'education', 'atoms'],
+    title: 'Periodic Table',
+    content: '<div class="ptable-widget">' +
+        '<div class="ptable-toolbar">' +
+            '<input type="text" class="ptable-search" placeholder="Search elements..." oninput="ptableSearch(this)">' +
+            '<select class="ptable-filter" onchange="ptableFilter(this)">' +
+                '<option value="all">All Categories</option>' +
+                '<option value="alkali">Alkali Metals</option>' +
+                '<option value="alkaline">Alkaline Earth</option>' +
+                '<option value="transition">Transition Metals</option>' +
+                '<option value="post-transition">Post-Transition</option>' +
+                '<option value="metalloid">Metalloids</option>' +
+                '<option value="nonmetal">Nonmetals</option>' +
+                '<option value="halogen">Halogens</option>' +
+                '<option value="noble">Noble Gases</option>' +
+                '<option value="lanthanide">Lanthanides</option>' +
+                '<option value="actinide">Actinides</option>' +
+            '</select>' +
+        '</div>' +
+        '<div class="ptable-detail"><div class="ptable-detail-placeholder">Click an element to see details</div></div>' +
+        '<div class="ptable-grid-wrap"><div class="ptable-grid"></div></div>' +
+        '<div class="ptable-legend">' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-alkali"></div>Alkali</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-alkaline"></div>Alk. Earth</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-transition"></div>Transition</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-post-transition"></div>Post-Trans.</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-metalloid"></div>Metalloid</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-nonmetal"></div>Nonmetal</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-halogen"></div>Halogen</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-noble"></div>Noble Gas</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-lanthanide"></div>Lanthanide</div>' +
+            '<div class="ptable-legend-item"><div class="ptable-legend-dot ptable-cat-actinide"></div>Actinide</div>' +
+        '</div>' +
+    '</div>',
+    onInit: 'ptableInit',
+    defaultWidth: 680,
+    defaultHeight: 520,
+    source: 'external'
+});
+
+console.log('Educational Tools plugin loaded (3 tools)');
