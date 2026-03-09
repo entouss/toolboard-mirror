@@ -5685,11 +5685,10 @@ function setupContentEditor() {
         }
     });
 
-    // Close on overlay click
+    // Save and close on overlay click
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
-            overlay.classList.remove('open');
-            currentEditingTool = null;
+            saveBtn.click();
         }
     });
 
