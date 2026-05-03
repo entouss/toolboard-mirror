@@ -2234,8 +2234,9 @@ async function calendarFetchICS(url) {
     } catch (e) {
         // Direct fetch failed (likely CORS), try proxy
     }
-    // Fallback: CORS proxy
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(cacheBust(url));
+    // Fallback: self-hosted CORS proxy (GCP Cloud Function, project toolboard-me, us-east1)
+    const ICS_PROXY = 'https://ics-proxy-esjyexqdtq-ue.a.run.app';
+    const proxyUrl = ICS_PROXY + '?url=' + encodeURIComponent(cacheBust(url));
     const response = await fetch(proxyUrl, { cache: 'no-store' });
     if (!response.ok) throw new Error('Fetch failed: ' + response.status);
     const text = await response.text();
