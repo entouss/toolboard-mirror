@@ -3461,19 +3461,70 @@ function expandRRULE(event) {
     const endDate = event.endDate ? new Date(event.endDate) : new Date(event.startDate);
     const duration = endDate - startDate;
 
-    const count = parts.COUNT ? parseInt(parts.COUNT) : 52; // Default to 1 year of weekly events
+    const maxCount = parts.COUNT ? parseInt(parts.COUNT) : 500;
     const interval = parts.INTERVAL ? parseInt(parts.INTERVAL) : 1;
 
-    let until = parts.UNTIL ? new Date(parseICSDate(parts.UNTIL)) : null;
+    // Fix UNTIL: preserve Z suffix so UTC datetimes parse correctly
+    let until = null;
+    if (parts.UNTIL) {
+        const u = parts.UNTIL;
+        until = u.endsWith('Z')
+            ? new Date(u.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/, '$1-$2-$3T$4:$5:$6Z'))
+            : new Date(parseICSDate(u));
+    }
     if (!until) {
         until = new Date(startDate);
         until.setFullYear(until.getFullYear() + 1);
     }
 
+    const toLocalDateStr = d => {
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    };
+
+    // Handle WEEKLY+BYDAY (e.g. every weekday: BYDAY=MO,TU,WE,TH,FR)
+    if (parts.FREQ === 'WEEKLY' && parts.BYDAY) {
+        const dayMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
+        const targetDays = new Set(parts.BYDAY.split(',').map(d => dayMap[d.replace(/[+\-\d]/g, '')]));
+        const wkstDay = parts.WKST ? (dayMap[parts.WKST] ?? 0) : 0;
+
+        // Rewind to the start of the week containing startDate
+        const weekStart = new Date(startDate);
+        while (((weekStart.getDay() - wkstDay + 7) % 7) !== 0) {
+            weekStart.setDate(weekStart.getDate() - 1);
+        }
+
+        let occurrences = 1;
+        const weekCursor = new Date(weekStart);
+
+        outer: while (occurrences < maxCount) {
+            for (let d = 0; d < 7; d++) {
+                const day = new Date(weekCursor);
+                day.setDate(weekCursor.getDate() + d);
+                if (day > until) break outer;
+                if (day <= startDate) continue; // base event already included
+                if (!targetDays.has(day.getDay())) continue;
+
+                const newEnd = new Date(day.getTime() + duration);
+                events.push({
+                    ...event,
+                    uid: `${event.uid}_${occurrences}`,
+                    startDate: toLocalDateStr(day),
+                    endDate: toLocalDateStr(newEnd),
+                    rrule: undefined
+                });
+                if (++occurrences >= maxCount) break outer;
+            }
+            weekCursor.setDate(weekCursor.getDate() + 7 * interval);
+        }
+
+        return events;
+    }
+
     let currentDate = new Date(startDate);
     let occurrences = 1;
 
-    while (occurrences < count && currentDate < until) {
+    while (occurrences < maxCount && currentDate < until) {
         // Advance to next occurrence
         switch (parts.FREQ) {
             case 'DAILY':
@@ -3498,8 +3549,8 @@ function expandRRULE(event) {
         events.push({
             ...event,
             uid: event.uid + '_' + occurrences,
-            startDate: currentDate.toISOString().split('T')[0],
-            endDate: newEndDate.toISOString().split('T')[0],
+            startDate: toLocalDateStr(currentDate),
+            endDate: toLocalDateStr(newEndDate),
             rrule: undefined
         });
 
