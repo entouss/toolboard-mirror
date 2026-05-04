@@ -765,6 +765,13 @@
     flex: 1;
 }
 
+.calendar-day-tooltip-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 .calendar-event-delete {
     background: none;
     border: none;
@@ -2480,6 +2487,16 @@ function calendarRenderMonth(year, month, data) {
     return html;
 }
 
+function formatEventTime(dateStr) {
+    if (!dateStr || !dateStr.includes('T')) return null;
+    const timePart = dateStr.split('T')[1];
+    let h = parseInt(timePart.substring(0, 2), 10);
+    const m = timePart.substring(3, 5);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return m === '00' ? `${h} ${ampm}` : `${h}:${m} ${ampm}`;
+}
+
 function calendarGetEventsForDate(data, dateStr) {
     const hiddenIds = new Set(data.calendars.filter(c => c.hidden).map(c => c.id));
     return data.events.filter(event => {
@@ -2487,7 +2504,7 @@ function calendarGetEventsForDate(data, dateStr) {
         const startDate = event.startDate.split('T')[0];
         const endDate = event.endDate ? event.endDate.split('T')[0] : startDate;
         return dateStr >= startDate && dateStr <= endDate;
-    });
+    }).sort((a, b) => a.startDate < b.startDate ? -1 : a.startDate > b.startDate ? 1 : 0);
 }
 
 function calendarCountByType(data, year, month) {
@@ -2714,7 +2731,9 @@ function calendarRenderMonthView(widget, toolId) {
         dayEvents.slice(0, 3).forEach(event => {
             const cal = data.calendars.find(c => c.id === event.calendarId);
             const color = cal ? cal.color : '#999';
-            html += `<div class="calendar-day-event" style="background:${color}" title="${event.summary}">${event.summary}</div>`;
+            const timeStr = formatEventTime(event.startDate);
+            const label = timeStr ? `${timeStr} ${event.summary}` : event.summary;
+            html += `<div class="calendar-day-event" style="background:${color}" title="${event.summary}">${label}</div>`;
         });
 
         if (dayEvents.length > 3) {
@@ -2764,8 +2783,10 @@ function calendarShowDayEvents(dayEl, dateStr) {
     events.forEach(event => {
         const cal = data.calendars.find(c => c.id === event.calendarId);
         const color = cal ? cal.color : '#999';
+        const timeStr = formatEventTime(event.startDate);
         html += `<div class="calendar-day-tooltip-event">
             <span class="calendar-day-tooltip-dot" style="background:${color}"></span>
+            ${timeStr ? `<span class="calendar-day-tooltip-time">${timeStr}</span>` : ''}
             <span class="calendar-day-tooltip-text">${event.summary}</span>
             <button class="calendar-event-delete" onclick="calendarDeleteEvent('${event.uid}')" title="Delete event">&times;</button>
         </div>`;
@@ -3481,6 +3502,11 @@ function expandRRULE(event) {
         const pad = n => String(n).padStart(2, '0');
         return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     };
+    const toOccurrenceStartStr = (d, origStartDate) => {
+        const dateOnly = toLocalDateStr(d);
+        if (!origStartDate.includes('T')) return dateOnly;
+        return dateOnly + origStartDate.substring(10);
+    };
 
     // Handle WEEKLY+BYDAY (e.g. every weekday: BYDAY=MO,TU,WE,TH,FR)
     if (parts.FREQ === 'WEEKLY' && parts.BYDAY) {
@@ -3509,7 +3535,7 @@ function expandRRULE(event) {
                 events.push({
                     ...event,
                     uid: `${event.uid}_${occurrences}`,
-                    startDate: toLocalDateStr(day),
+                    startDate: toOccurrenceStartStr(day, event.startDate),
                     endDate: toLocalDateStr(newEnd),
                     rrule: undefined
                 });
@@ -3549,7 +3575,7 @@ function expandRRULE(event) {
         events.push({
             ...event,
             uid: event.uid + '_' + occurrences,
-            startDate: toLocalDateStr(currentDate),
+            startDate: toOccurrenceStartStr(currentDate, event.startDate),
             endDate: toLocalDateStr(newEndDate),
             rrule: undefined
         });
