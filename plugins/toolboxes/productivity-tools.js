@@ -3396,9 +3396,13 @@ function parseICSContent(text, calendarId) {
             let key = line.substring(0, colonIndex);
             const value = line.substring(colonIndex + 1);
 
-            // Handle parameters in key (e.g., DTSTART;VALUE=DATE:20240101)
+            // Handle parameters in key (e.g., DTSTART;TZID=America/New_York:20240101)
+            let tzid = null;
             const semiIndex = key.indexOf(';');
             if (semiIndex !== -1) {
+                const params = key.substring(semiIndex + 1);
+                const tzidMatch = params.match(/TZID=([^;:]+)/);
+                if (tzidMatch) tzid = tzidMatch[1];
                 key = key.substring(0, semiIndex);
             }
 
@@ -3410,7 +3414,7 @@ function parseICSContent(text, calendarId) {
                     currentEvent.summary = value.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\n/g, '\n');
                     break;
                 case 'DTSTART':
-                    currentEvent.startDate = parseICSDate(value);
+                    currentEvent.startDate = parseICSDate(value, tzid);
                     break;
                 case 'DTEND':
                     // ICS end dates are exclusive for all-day events
@@ -3425,7 +3429,7 @@ function parseICSContent(text, calendarId) {
                         d.setDate(d.getDate() - 1);
                         currentEvent.endDate = d.toISOString().split('T')[0];
                     } else {
-                        currentEvent.endDate = parseICSDate(value);
+                        currentEvent.endDate = parseICSDate(value, tzid);
                     }
                     break;
                 case 'RRULE':
@@ -3450,19 +3454,65 @@ function parseICSContent(text, calendarId) {
     return expandedEvents;
 }
 
-function parseICSDate(value) {
-    // Handle formats: 20240115, 20240115T103000, 20240115T103000Z
+function parseICSDate(value, tzid) {
+    // Handle formats: 20240115, 20240115T103000, 20240115T103000Z, 20240115T103000 with TZID
+    const isUTC = value.endsWith('Z');
     const cleaned = value.replace('Z', '');
 
     if (cleaned.length === 8) {
-        // Date only: YYYYMMDD
+        // Date only: YYYYMMDD — no timezone conversion needed
         return `${cleaned.substring(0, 4)}-${cleaned.substring(4, 6)}-${cleaned.substring(6, 8)}`;
     } else if (cleaned.length >= 15) {
-        // DateTime: YYYYMMDDTHHMMSS
-        return `${cleaned.substring(0, 4)}-${cleaned.substring(4, 6)}-${cleaned.substring(6, 8)}T${cleaned.substring(9, 11)}:${cleaned.substring(11, 13)}:${cleaned.substring(13, 15)}`;
+        const localStr = `${cleaned.substring(0, 4)}-${cleaned.substring(4, 6)}-${cleaned.substring(6, 8)}T${cleaned.substring(9, 11)}:${cleaned.substring(11, 13)}:${cleaned.substring(13, 15)}`;
+
+        if (isUTC) {
+            // UTC timestamp: convert to browser-local time so date parts reflect the local calendar day
+            return toLocalISOString(new Date(localStr + 'Z'));
+        }
+
+        if (tzid) {
+            // Named timezone: convert from tzid to browser-local time
+            return toLocalISOString(fromTimezoneToUTC(localStr, tzid));
+        }
+
+        // No timezone info — treat as local (unchanged)
+        return localStr;
     }
 
     return value;
+}
+
+function fromTimezoneToUTC(localStr, tzid) {
+    // Convert a wall-clock datetime string in `tzid` to a UTC Date.
+    // Strategy: treat localStr as UTC to get a reference point, then measure
+    // how far off that reference is from what tzid shows, and correct.
+    try {
+        const referenceDate = new Date(localStr + 'Z');
+        const parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: tzid,
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: false
+        }).formatToParts(referenceDate);
+        const p = {};
+        parts.forEach(({ type, value }) => p[type] = value);
+        const tzShownStr = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}`;
+        // Both strings are parsed as browser-local, so the local offset cancels out in the diff
+        const diff = new Date(localStr) - new Date(tzShownStr);
+        return new Date(referenceDate.getTime() + diff);
+    } catch (e) {
+        return new Date(localStr);
+    }
+}
+
+function toLocalISOString(date) {
+    const y = date.getFullYear();
+    const mo = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const h = String(date.getHours()).padStart(2, '0');
+    const mi = String(date.getMinutes()).padStart(2, '0');
+    const s = String(date.getSeconds()).padStart(2, '0');
+    return `${y}-${mo}-${d}T${h}:${mi}:${s}`;
 }
 
 function expandRRULE(event) {
@@ -4939,7 +4989,7 @@ function wcInit() {
     var pomoFunctions = [initPomodoro, getModeLabel, getModeClass, getDurationForMode, playPomodoroBeep, advancePomodoroMode, togglePomodoro, resetPomodoro, skipPomodoro, togglePomodoroSettings, applyPomodoroSettings, updatePomodoroDisplay];
     var ucFunctions = [ucGetToolId, ucGetData, ucSaveData, ucInit, ucRenderCategories, ucRenderSelects, ucSetCategory, ucOnInput, ucOnUnitChange, ucSwap, ucConvertTemp, ucFormatNumber, ucConvert];
     var pbsFunctions = [pbsSpeedLabel, pbsToFraction, pbsFmtDuration, pbsGetTotalSeconds, pbsGetSpeed, pbsCalc, pbsSetSpeed, pbsRangeChanged, pbsInit];
-    var calendarFunctions = [calendarGetToolId, calendarGetData, calendarSaveData, calendarInit, calendarFetchICS, calendarRefreshSubscriptions, calendarBuildLegendHtml, calendarToggleCalendar, calendarRender, calendarRenderMonth, calendarGetEventsForDate, calendarCountByType, calendarCountTotal, calendarSaveViewState, calendarPrevYear, calendarNextYear, calendarSetView, calendarPrevMonth, calendarNextMonth, calendarGoToMonth, calendarGoToToday, calendarRenderMonthView, calendarShowDayEvents, calendarOpenManage, calendarCloseManage, calendarSelectColor, calendarRenderManageList, calendarSaveName, calendarPickColor, calendarApplyColor, calendarSaveUrl, calendarMoveCalendar, calendarAddCalendar, calendarAddEvent, calendarAddEventFromDay, calendarDeleteEvent, calendarRemoveCalendar, calendarHandleFileImport, calendarImportFromUrl, calendarImportICS, parseICSContent, parseICSDate, expandRRULE];
+    var calendarFunctions = [calendarGetToolId, calendarGetData, calendarSaveData, calendarInit, calendarFetchICS, calendarRefreshSubscriptions, calendarBuildLegendHtml, calendarToggleCalendar, calendarRender, calendarRenderMonth, calendarGetEventsForDate, calendarCountByType, calendarCountTotal, calendarSaveViewState, calendarPrevYear, calendarNextYear, calendarSetView, calendarPrevMonth, calendarNextMonth, calendarGoToMonth, calendarGoToToday, calendarRenderMonthView, calendarShowDayEvents, calendarOpenManage, calendarCloseManage, calendarSelectColor, calendarRenderManageList, calendarSaveName, calendarPickColor, calendarApplyColor, calendarSaveUrl, calendarMoveCalendar, calendarAddCalendar, calendarAddEvent, calendarAddEventFromDay, calendarDeleteEvent, calendarRemoveCalendar, calendarHandleFileImport, calendarImportFromUrl, calendarImportICS, parseICSContent, parseICSDate, fromTimezoneToUTC, toLocalISOString, expandRRULE];
     var pickerFunctions = [pickerGetToolId, pickerGetData, pickerSaveData, pickerInit, pickerRender, pickerAddItem, pickerRemoveItem, pickerSpin, pickerDrawWheel];
     var diceFunctions = [diceGetWidget, diceGetToolId, diceRenderFace, diceChangeCount, diceRoll, diceAddHistory, diceRollerInit];
     var swFunctions = [swGetWidget, swGetToolId, swGetState, swFormatTime, swUpdateDisplay, swTick, swToggle, swLap, swReset, swRenderLaps, stopwatchInit];
