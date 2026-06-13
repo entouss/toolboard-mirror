@@ -2817,7 +2817,8 @@ function tlGetData(toolId) {
         events: data.events || [],
         categories: data.categories || [],
         eras: data.eras || [],
-        showEras: data.showEras !== false
+        showEras: data.showEras !== false,
+        showDates: data.showDates !== false
     };
 }
 
@@ -2837,7 +2838,8 @@ function tlInit() {
                 events: [],
                 categories: JSON.parse(JSON.stringify(TL_DEFAULT_CATEGORIES)),
                 eras: JSON.parse(JSON.stringify(TL_DEFAULT_ERAS)),
-                showEras: true
+                showEras: true,
+                showDates: true
             });
         }
         tlRender(widget, toolId);
@@ -2939,10 +2941,13 @@ function tlRender(widget, toolId) {
                 html += tlRenderEraBanner(era);
             }
             lastEraId = eraId;
-            html += tlRenderEvent(event, data.categories);
+            html += tlRenderEvent(event, data.categories, data.showDates);
         });
         lineEl.innerHTML = html;
     }
+
+    var datesBtn = widget.querySelector('.tl-dates-toggle');
+    if (datesBtn) datesBtn.textContent = data.showDates ? '🗓 Hide Dates' : '🗓 Show Dates';
 
     tlPopulateCategorySelect(widget, toolId);
     if (widget.querySelector('.tl-category-manager.open')) tlRenderCategoryList(widget, toolId);
@@ -2956,12 +2961,13 @@ function tlRenderEraBanner(era) {
         ' <span class="tl-era-range">(' + tlFormatEraRange(era) + ')</span></div>';
 }
 
-function tlRenderEvent(event, categories) {
+function tlRenderEvent(event, categories, showDates) {
     var category = tlGetCategoryById(categories, event.categoryId);
     var color = category ? tlSafeColor(category.color, '#95a5a6') : null;
     var dotStyle = color ? ' style="background:' + color + '"' : '';
     var chip = category ? '<div class="tl-event-chip" style="background:' + color + '">' + escapeHtml(category.name) + '</div>' : '';
     var desc = event.description ? '<div class="tl-event-desc">' + parseMarkdown(event.description) + '</div>' : '';
+    var dateHtml = showDates ? '<div class="tl-event-date">' + tlFormatDate(event) + '</div>' : '';
     return '<div class="tl-event">' +
         '<div class="tl-event-dot-col"><div class="tl-event-dot"' + dotStyle + '></div></div>' +
         '<div class="tl-event-content">' +
@@ -2969,7 +2975,7 @@ function tlRenderEvent(event, categories) {
                 '<button class="tl-icon-btn" onclick="tlEditEvent(this,\'' + event.id + '\')" title="Edit">✎</button>' +
                 '<button class="tl-icon-btn delete" onclick="tlDeleteEvent(this,\'' + event.id + '\')" title="Delete">×</button>' +
             '</div>' +
-            '<div class="tl-event-date">' + tlFormatDate(event) + '</div>' +
+            dateHtml +
             '<div class="tl-event-title">' + escapeHtml(event.title) + '</div>' +
             desc +
             chip +
@@ -3185,6 +3191,15 @@ function tlToggleEraManager(btn) {
     }
 }
 
+function tlToggleDates(btn) {
+    var widget = tlGetWidget(btn);
+    var toolId = tlGetToolId(widget);
+    var data = tlGetData(toolId);
+    data.showDates = !data.showDates;
+    tlSaveData(toolId, data);
+    tlRender(widget, toolId);
+}
+
 function tlToggleShowEras(checkbox) {
     var widget = tlGetWidget(checkbox);
     var toolId = tlGetToolId(widget);
@@ -3309,7 +3324,7 @@ function tlLoadEraPreset(btn) {
     var multFunctions = [multGetToolId, multGetWidget, multInit, multSetTab, multRenderGrid, multSetMax, multSetHalf, multToggleHard, multCellHover, multCellOut, multRenderChallenge, multToggleDigit, multNextQuestion, multCheckAnswer, multSubmitChallenge, multUpdateScore, multNewChallenge];
     var nlFunctions = [nlGetToolId, nlGetWidget, nlDefaultState, nlInit, nlSetMode, nlRender, nlRenderWidget, nlTickLevel, nlBuildLine, nlBuildLineZoomOut, nlFractionRender, nlFractionSetDenom, nlFractionToggleLabels, nlFractionToggleBar, nlSvgClick, nlMarkerDown, nlSvgMove, nlSvgUp, nlFrogRender, nlFrogSetStart, nlFrogAddJump, nlFrogClear, nlFrogRemoveJump, nlZoomRender, nlZoomSvgClick, nlZoomSetValue, nlZoomSetRoundTo, nlZoomAnswer, nlGameNew, nlGameSetDenom, nlGameRender, nlGameBuildSvg, nlGameCheck];
     var angFunctions = [angGetToolId, angGetWidget, angComputeAngle, angArcPath, angClassify, angInit, angRayDown, angDialDown, angSvgMove, angSvgUp, angRender, angToggleSnap, angToggleBigMode, angAddTurn, angResetDial];
-    var tlFunctions = [tlGetToolId, tlGetWidget, tlGetData, tlSaveData, tlInit, tlGenId, tlSafeColor, tlClosePanels, tlFormatSingleDate, tlFormatDate, tlFormatEraYear, tlFormatEraRange, tlContrastColor, tlEraTypeOptionsHtml, tlSortEvents, tlFindEraForEvent, tlGetCategoryById, tlRender, tlRenderEraBanner, tlRenderEvent, tlPopulateCategorySelect, tlOpenEventForm, tlEditEvent, tlCloseEventForm, tlSaveEvent, tlDeleteEvent, tlToggleCategoryManager, tlRenderCategoryList, tlAddCategory, tlRenameCategory, tlSetCategoryColor, tlDeleteCategory, tlToggleEraManager, tlRenderEraList, tlAddEra, tlUpdateEraField, tlDeleteEra, tlLoadEraPreset, tlToggleShowEras];
+    var tlFunctions = [tlGetToolId, tlGetWidget, tlGetData, tlSaveData, tlInit, tlGenId, tlSafeColor, tlClosePanels, tlFormatSingleDate, tlFormatDate, tlFormatEraYear, tlFormatEraRange, tlContrastColor, tlEraTypeOptionsHtml, tlSortEvents, tlFindEraForEvent, tlGetCategoryById, tlRender, tlRenderEraBanner, tlRenderEvent, tlPopulateCategorySelect, tlOpenEventForm, tlEditEvent, tlCloseEventForm, tlSaveEvent, tlDeleteEvent, tlToggleCategoryManager, tlRenderCategoryList, tlAddCategory, tlRenameCategory, tlSetCategoryColor, tlDeleteCategory, tlToggleEraManager, tlRenderEraList, tlAddEra, tlUpdateEraField, tlDeleteEra, tlLoadEraPreset, tlToggleShowEras, tlToggleDates];
     var allFunctions = clockFunctions.concat(moneyFunctions).concat(ptableFunctions).concat(sdtFunctions).concat(multFunctions).concat(nlFunctions).concat(angFunctions).concat(tlFunctions);
 
     var code = '(function() {\n' +
@@ -3803,6 +3818,7 @@ PluginRegistry.registerTool({
             '<button class="tl-toolbar-btn" onclick="tlOpenEventForm(this)">+ Add Event</button>' +
             '<button class="tl-toolbar-btn" onclick="tlToggleCategoryManager(this)">🏷 Categories</button>' +
             '<button class="tl-toolbar-btn" onclick="tlToggleEraManager(this)">📅 Eras</button>' +
+            '<button class="tl-toolbar-btn tl-dates-toggle" onclick="tlToggleDates(this)">🗓 Hide Dates</button>' +
         '</div>' +
         '<div class="tl-panel tl-event-form">' +
             '<input type="hidden" class="tl-form-event-id" value="">' +
