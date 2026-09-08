@@ -18,6 +18,12 @@
 .clock-hand-grab { stroke: transparent; stroke-width: 22; stroke-linecap: round; cursor: grab; pointer-events: stroke; }
 .clock-hand-grab:active { cursor: grabbing; }
 .clock-center-dot { fill: var(--text-primary); }
+/* The hands cannot say whether it is morning or night, so the face does. */
+.clock-day { display: block; width: 150px; height: 42px; margin: 2px auto; }
+.clock-day-arc { stroke: var(--border-color); stroke-width: 2; stroke-dasharray: 3 4; }
+.clock-day-horizon { stroke: var(--text-muted); stroke-width: 1.5; opacity: 0.45; }
+.clock-day-token { font-size: 19px; }
+.clock-day:hover .clock-day-token { opacity: 0.75; }
 .clock-digital { font-size: 28px; font-weight: 700; font-family: monospace; color: var(--text-primary); margin-bottom: 8px; line-height: 1.2; }
 .clock-controls { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
 .clock-section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); margin: 8px 0 6px; letter-spacing: 1px; }
@@ -555,6 +561,18 @@ function clockEndDrag() {
     clockState.prevMinAngle = null;
 }
 
+// An analog face has no way to say which half of the day it is, so the sun and the
+// moon do — and since they are the only thing that can say it, they are also the only
+// sensible thing to touch to change it. Before this the meridiem could only be moved
+// by sweeping the minute hand a full twelve times round, which made half of the set
+// challenges unwinnable in practice.
+function clockToggleAmpm() {
+    // Not while reading the clock: there the sun or moon is the question, not the answer.
+    if (clockState.challengeMode === 'read') return;
+    clockState.ampm = clockState.ampm === 'AM' ? 'PM' : 'AM';
+    clockRender();
+}
+
 function clockRender() {
     var st = clockState;
     var minAngle = st.minute * 6;
@@ -572,10 +590,44 @@ function clockRender() {
     if (minGrab) minGrab.setAttribute('transform', minTrans);
     if (hrGrab) hrGrab.setAttribute('transform', hrTrans);
 
+    // A sun for the morning, a moon for the night. The hands cannot express which
+    // half of the day it is, so nothing else on the face can either — which is why
+    // the read challenge used to be a coin toss.
+    // Day and night are not the same split as AM and PM: noon is the middle of the
+    // day and midnight the middle of the night, so twelve o'clock sits at the top of
+    // the arc either way. Driving this from the meridiem got both of them exactly
+    // wrong, which is why it follows the hour instead.
+    var dayEl = document.getElementById('clockDay');
+    var tokenEl = document.getElementById('clockDayToken');
+    if (tokenEl && dayEl) {
+        var reading = st.challengeMode === 'read';
+        var hour24 = (st.hour % 12) + (st.ampm === 'PM' ? 12 : 0) + st.minute / 60;
+        var isDay = hour24 >= 6 && hour24 < 18;
+        // Always the real hour, including while the clock is being read. Parking it at
+        // the zenith kept the answer secret but put a midday sun over a half-past-three
+        // clock, and a dial that contradicts the hands teaches the wrong thing in the
+        // one mode meant to teach. It does hint at the hour; the hands still hold the
+        // minutes, and a dial that always means the same thing is worth more.
+        var along = isDay ? (hour24 - 6) / 12 : ((hour24 < 6 ? hour24 + 24 : hour24) - 18) / 12;
+        var theta = Math.PI * (1 - along);
+        tokenEl.setAttribute('x', (100 + 80 * Math.cos(theta)).toFixed(1));
+        tokenEl.setAttribute('y', (46 - 36 * Math.sin(theta)).toFixed(1));
+        tokenEl.textContent = isDay ? '\u2600\uFE0F' : '\uD83C\uDF19';
+        dayEl.setAttribute('aria-label', (isDay ? 'daytime' : 'night-time') +
+            (reading ? '' : ', activate for ' + (isDay ? 'night-time' : 'daytime')));
+        dayEl.style.cursor = reading ? 'default' : 'pointer';
+        dayEl.setAttribute('tabindex', reading ? '-1' : '0');
+    }
+
     var digitalEl = document.getElementById('clockDigital');
     if (digitalEl) {
         if (st.challengeMode === 'read') {
             digitalEl.textContent = '??:??';
+        } else if (st.challengeMode === 'set') {
+            // The hour and minute are the answer and stay hidden. The meridiem is not:
+            // it is being set too, by dragging the hour hand past twelve, and that is
+            // invisible without somewhere to read it.
+            digitalEl.textContent = '??:?? ' + st.ampm;
         } else {
             digitalEl.textContent = st.hour + ':' + (st.minute < 10 ? '0' : '') + st.minute + ' ' + st.ampm;
         }
@@ -5246,7 +5298,7 @@ function mapResetProgress(btn) {
 (function injectScriptsForExport() {
     if (document.getElementById('educational-tools-scripts')) return;
 
-    var clockFunctions = [initClock, clockDrag, clockEndDrag, clockRender, clockSetNow, clockRandomize, clockClearChallenge, clockNewChallenge, clockCheckAnswer];
+    var clockFunctions = [initClock, clockDrag, clockEndDrag, clockToggleAmpm, clockRender, clockSetNow, clockRandomize, clockClearChallenge, clockNewChallenge, clockCheckAnswer];
     var moneyFunctions = [moneyInit, moneyGetWidget, moneyRender, moneyAdd, moneyRemove, moneyClear, moneyTotal, moneyFormat, moneySetMode, moneyNewRound, moneyNewChallenge, moneyCheckAnswer, moneyNewChange, moneyNewNameit, moneyCheckNameit, moneyComputeOptimal, moneyNewLeast, moneyCheckLeast, moneyDragStart, moneyDragOver, moneyDragLeave, moneyDrop];
     var ptableFunctions = [ptableGetToolId, ptableGetWidget, ptableBuildGrid, ptableRender, ptableSelect, ptableSearch, ptableFilter, ptableInit];
     var sdtFunctions = [sdtGetToolId, sdtGetWidget, sdtInit, sdtSolveFor, sdtCalculate, sdtFormatNum, sdtClear, sdtKeydown];
@@ -5348,13 +5400,20 @@ PluginRegistry.registerTool({
             '<svg id="clockSvg" class="clock-svg" viewBox="0 0 200 200">' +
                 '<circle class="clock-face" cx="100" cy="100" r="92"/>' +
                 clockFaceSvg +
-                '<line id="clockHrHand" class="clock-hand-hr" x1="100" y1="100" x2="100" y2="42"/>' +
+                                '<line id="clockHrHand" class="clock-hand-hr" x1="100" y1="100" x2="100" y2="42"/>' +
                 '<line id="clockMinHand" class="clock-hand-min" x1="100" y1="100" x2="100" y2="22"/>' +
                 '<line id="clockHrGrab" class="clock-hand-grab" x1="100" y1="100" x2="100" y2="42"/>' +
                 '<line id="clockMinGrab" class="clock-hand-grab" x1="100" y1="100" x2="100" y2="22"/>' +
                 '<circle class="clock-center-dot" cx="100" cy="100" r="4"/>' +
             '</svg>' +
         '</div>' +
+        '<svg id="clockDay" class="clock-day" viewBox="0 0 200 56" role="button" tabindex="0" ' +
+            'onclick="clockToggleAmpm()" ' +
+            'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();clockToggleAmpm();}">' +
+            '<path class="clock-day-arc" d="M20 46 A 80 36 0 0 1 180 46" fill="none"/>' +
+            '<line class="clock-day-horizon" x1="12" y1="46" x2="188" y2="46"/>' +
+            '<text id="clockDayToken" class="clock-day-token" x="100" y="10" text-anchor="middle" dominant-baseline="central">\u2600\uFE0F</text>' +
+        '</svg>' +
         '<div id="clockDigital" class="clock-digital">12:00 AM</div>' +
         '<div class="clock-controls">' +
             '<button class="pomo-btn" onclick="clockSetNow()">Now</button>' +
