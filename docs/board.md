@@ -11,10 +11,17 @@
     "toolCustomizations": { "toolId": { "title": "...", "customContent": "..." } },
     "customTools": [],
     "hiddenTools": [],
-    "toolboardSettings": { "title": "...", "color": "#hex" }
+    "toolboardSettings": {
+      "title": "...", "color": "#hex",
+      "grid": { "on": false, "size": 20 },
+      "pageGuide": { "on": false, "orientation": "portrait" }
+    }
   }]
 }
 ```
+
+`grid` and `pageGuide` are the placement guides — see [Storage](storage.md). A board
+exported before they existed simply arrives without them, and reads as both off.
 
 ## Board Template Plugins
 

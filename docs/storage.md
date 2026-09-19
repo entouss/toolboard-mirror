@@ -8,8 +8,24 @@ All data is board-scoped via `boardKey(key)` → `finance_${currentBoardId}_${ke
 - `toolCustomizations` — per-tool state
 - `customTools` — user-created tools
 - `hiddenTools` — tools hidden from the board
-- `toolboardSettings` — board-level settings (title, color)
+- `toolboardSettings` — board-level settings (title, color, and the placement guides below)
 - `variables` — user-defined variables
+
+### Placement guides
+
+`toolboardSettings` carries the two guides a board is laid out against:
+
+```js
+grid:      { on: false, size: 20 }                    // size in px, 5–200
+pageGuide: { on: false, orientation: 'portrait' }     // 8.5 × 11in at 96px/in
+```
+
+Both are read through `boardGridSettings()` / `boardPageGuideSettings()` rather than
+directly, because settings are merged shallowly from storage: a board that stored
+`{ on: true }` and nothing else still has to come back with a usable size. `grid.on`
+both draws the lines and makes drags and resizes snap to them — the two are one
+switch, and Shift already bypasses snapping. Guides are drawn by
+`renderBoardGuides()`, behind the tools, and are left out of PNG exports.
 
 ## Tool-Specific Data
 

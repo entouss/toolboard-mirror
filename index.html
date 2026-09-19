@@ -825,16 +825,38 @@ header h1 {
 }
 
 /* Settings drawer, shared by the current-board row and each list row */
-.board-settings-drawer {
+.board-settings-overlay {
     display: none;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--bg-primary);
-    max-height: 46vh;
-    overflow-y: auto;
+    position: fixed;
+    inset: 0;
+    /* A lighter scrim than a lone modal gets: the board list it opens over has
+       already dimmed the page once, and two full backdrops nearly black it out. */
+    background: rgba(0, 0, 0, 0.3);
+    /* Above the board list it opens from. */
+    z-index: 10020;
+    justify-content: center;
+    align-items: center;
 }
 
-.board-settings-drawer.open { display: block; }
+.board-settings-overlay.open { display: flex; }
+
+.board-settings-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 520px;
+    max-width: 92%;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-heavy) 0 8px 30px;
+    overflow: hidden;
+}
+
+.board-settings-drawer {
+    padding: 14px 20px 20px;
+    overflow-y: auto;
+}
 
 .board-settings-drawer label {
     display: block;
@@ -871,6 +893,7 @@ header h1 {
 }
 
 .board-settings-drawer .bs-row input[type="range"] { flex: 1; cursor: pointer; }
+.board-settings-drawer .bs-row + .bs-row { margin-top: 6px; }
 
 .board-settings-drawer .bs-font-size-label {
     font-size: 11px;
@@ -891,7 +914,21 @@ header h1 {
 
 .board-settings-drawer .bs-mini:hover:not(:disabled) { background: var(--table-hover); }
 .board-settings-drawer .bs-mini:disabled { opacity: 0.4; cursor: default; }
-.board-settings-drawer .bs-order-at { font-size: 10px; color: var(--text-secondary); margin-left: auto; }
+.board-settings-drawer .bs-order-at,
+.board-settings-drawer .bs-page-size { font-size: 10px; color: var(--text-secondary); margin-left: auto; }
+
+/* A checkbox that sits in a row rather than labelling the field under it. */
+.board-settings-drawer .bs-check {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    min-width: 92px;
+    cursor: pointer;
+}
+
+.board-settings-drawer .bs-check input { cursor: pointer; }
+.board-settings-drawer .bs-mini.selected { background: var(--table-hover); color: var(--text-primary); }
 
 .board-card-rename-wrap {
     flex: 1;
@@ -1212,6 +1249,49 @@ main#toolboard {
     position: relative;
     min-height: 100vh;
     padding: 20px;
+}
+
+/* Placement guides. Behind every tool, and never in the way of the pointer. */
+.board-guide {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.board-grid-overlay {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        repeating-linear-gradient(to right, var(--border-color) 0 1px, transparent 1px 100%),
+        repeating-linear-gradient(to bottom, var(--border-color) 0 1px, transparent 1px 100%);
+    background-size: 20px 20px;
+    opacity: 0.45;
+}
+
+.board-page-guide {
+    top: 0;
+    left: 0;
+    border: 1px solid var(--text-secondary);
+    border-radius: 2px;
+}
+
+.board-page-guide-margin {
+    position: absolute;
+    inset: 48px;
+    border: 1px dashed var(--border-color);
+}
+
+/* Inside the top corner, where it stays on screen however tall the sheet is. */
+.board-page-guide-label {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+    color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .tool {
@@ -3345,7 +3425,6 @@ tr:hover {
                 <button class="board-manager-close" title="Close">&times;</button>
             </div>
             <div id="boardManagerCurrent" class="board-manager-current"></div>
-            <div id="boardSettingsDrawer" class="board-settings-drawer"></div>
             <div class="board-manager-search-wrap">
                 <input id="boardManagerSearch" class="board-manager-search" type="search" placeholder="Search boards…" autocomplete="off" spellcheck="false">
             </div>
@@ -3353,6 +3432,17 @@ tr:hover {
             <div class="board-manager-footer">
                 <button id="boardManagerNewBtn" class="board-manager-new-btn">+ New Board</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Board Settings Popup — opens over the board list, for any board -->
+    <div id="boardSettingsOverlay" class="board-settings-overlay">
+        <div class="board-settings-content">
+            <div class="board-manager-header">
+                <span class="board-manager-title" id="boardSettingsTitle">Board Settings</span>
+                <button class="board-manager-close board-settings-close" title="Close">&times;</button>
+            </div>
+            <div id="boardSettingsDrawer" class="board-settings-drawer"></div>
         </div>
     </div>
 
@@ -5166,6 +5256,9 @@ function setupResponsiveLayout() {
                 }
             });
         }
+        // A stacked board has no positions to guide, so the guides come and go with
+        // the layout rather than with the setting.
+        renderBoardGuides();
     }
 
     applyLayout(mql.matches);
@@ -5934,6 +6027,9 @@ function renderToolboard() {
         }
     }
     if (!currentFullscreenTool && backdrop) backdrop.classList.remove('active');
+
+    // The board was emptied above, guides and all. Put them back.
+    renderBoardGuides();
 }
 
 function initializeCalculators() {
@@ -6768,8 +6864,100 @@ const DASHBOARD_COLORS = [
     '#d35400', '#e67e22', '#c0392b', '#e74c3c', '#7f8c8d'
 ];
 
+// Placement guides — a grid to line tools up on, and the outline of a sheet of
+// paper to line them up inside. Both are board chrome: they are drawn behind the
+// tools, never dragged, and kept out of exports.
+const GRID_DEFAULT_SIZE = 20;
+const GRID_MIN_SIZE = 5;
+const GRID_MAX_SIZE = 200;
+
+// One CSS inch, which is what a page outline has to be measured in for the outline
+// to mean anything once it reaches a printer.
+const PAGE_DPI = 96;
+const PAGE_INCHES = { width: 8.5, height: 11 };
+const PAGE_MARGIN_INCHES = 0.5;
+
+// Settings are merged shallowly from storage, so a board saved by an older version
+// — or one that stored `{ on: true }` and nothing else — still reads whole here.
+function boardGridSettings(settings) {
+    const g = (settings || toolboardSettings).grid || {};
+    const size = parseInt(g.size, 10);
+    return {
+        on: !!g.on,
+        size: Math.min(GRID_MAX_SIZE, Math.max(GRID_MIN_SIZE, isNaN(size) ? GRID_DEFAULT_SIZE : size))
+    };
+}
+
+function boardPageGuideSettings(settings) {
+    const p = (settings || toolboardSettings).pageGuide || {};
+    return { on: !!p.on, orientation: p.orientation === 'landscape' ? 'landscape' : 'portrait' };
+}
+
+// The page outline in pixels, the long side down the board unless it is turned.
+function pageGuideSize(orientation) {
+    const w = PAGE_INCHES.width * PAGE_DPI;
+    const h = PAGE_INCHES.height * PAGE_DPI;
+    return orientation === 'landscape' ? { width: h, height: w } : { width: w, height: h };
+}
+
+// Draws both guides to match the current board. Elements are found by id and
+// reused rather than appended: the HTML export writes out the live document, so an
+// exported board arrives with a copy of these already in it.
+function renderBoardGuides() {
+    const toolboard = document.getElementById('toolboard');
+    if (!toolboard) return;
+
+    const mobile = toolboard.classList.contains('mobile-layout');
+    const grid = boardGridSettings();
+    const page = boardPageGuideSettings();
+
+    let gridEl = document.getElementById('boardGridOverlay');
+    if (!gridEl) {
+        gridEl = document.createElement('div');
+        gridEl.id = 'boardGridOverlay';
+        gridEl.className = 'board-guide board-grid-overlay';
+        gridEl.setAttribute('aria-hidden', 'true');
+    }
+    if (gridEl.parentElement !== toolboard) toolboard.insertBefore(gridEl, toolboard.firstChild);
+
+    if (grid.on && !mobile) {
+        gridEl.style.display = '';
+        gridEl.style.backgroundSize = grid.size + 'px ' + grid.size + 'px';
+    } else {
+        gridEl.style.display = 'none';
+    }
+
+    let pageEl = document.getElementById('boardPageGuide');
+    if (!pageEl) {
+        pageEl = document.createElement('div');
+        pageEl.id = 'boardPageGuide';
+        pageEl.className = 'board-guide board-page-guide';
+        pageEl.setAttribute('aria-hidden', 'true');
+        pageEl.innerHTML = '<div class="board-page-guide-margin"></div><span class="board-page-guide-label"></span>';
+    }
+    if (pageEl.parentElement !== toolboard) toolboard.insertBefore(pageEl, toolboard.firstChild);
+
+    if (page.on && !mobile) {
+        const size = pageGuideSize(page.orientation);
+        pageEl.style.display = '';
+        pageEl.style.width = size.width + 'px';
+        pageEl.style.height = size.height + 'px';
+        pageEl.querySelector('.board-page-guide-margin').style.inset = (PAGE_MARGIN_INCHES * PAGE_DPI) + 'px';
+        pageEl.querySelector('.board-page-guide-label').textContent =
+            PAGE_INCHES.width + ' \u00d7 ' + PAGE_INCHES.height + '\u2033 \u00b7 ' +
+            (page.orientation === 'landscape' ? 'Landscape' : 'Portrait');
+    } else {
+        pageEl.style.display = 'none';
+    }
+}
+
 function loadToolboardSettings() {
-    const defaults = { title: 'My Toolboard', color: '#2c3e50', fontFamily: '', fontSize: '', customFontName: '', favicon: '' };
+    const defaults = {
+        title: 'My Toolboard', color: '#2c3e50', fontFamily: '', fontSize: '', customFontName: '', favicon: '',
+        // Placement guides. Off on a board that has never asked for them.
+        grid: { on: false, size: GRID_DEFAULT_SIZE },
+        pageGuide: { on: false, orientation: 'portrait' }
+    };
     const stored = localStorage.getItem(boardKey('toolboardSettings'));
     if (stored) {
         try {
@@ -6830,6 +7018,8 @@ function applyToolboardSettings() {
     // Re-apply tool-specific fonts (they override board settings)
     applyAllToolFonts();
     applyAllToolZooms();
+
+    renderBoardGuides();
 }
 
 function loadGoogleFont(fontName) {
@@ -7030,9 +7220,22 @@ function refreshBoardRow(boardId) {
 
 function closeBoardSettingsDrawer() {
     boardSettingsOpenFor = null;
+    const overlay = document.getElementById('boardSettingsOverlay');
+    if (overlay) overlay.classList.remove('open');
     const drawer = document.getElementById('boardSettingsDrawer');
-    if (drawer) { drawer.innerHTML = ''; drawer.classList.remove('open'); }
+    if (drawer) drawer.innerHTML = '';
     document.querySelectorAll('.board-card-settings-btn.active').forEach(b => b.classList.remove('active'));
+}
+
+function boardSettingsIsOpen() {
+    const overlay = document.getElementById('boardSettingsOverlay');
+    return !!overlay && overlay.classList.contains('open');
+}
+
+// Says which board is being edited, since settings can be opened for any of them.
+function setBoardSettingsTitle(boardId) {
+    const title = document.getElementById('boardSettingsTitle');
+    if (title) title.textContent = getBoardName(boardId) + ' \u00b7 Settings';
 }
 
 function toggleBoardSettingsDrawer(boardId) {
@@ -7045,6 +7248,8 @@ function renderBoardSettingsDrawer(boardId) {
     if (!drawer) return;
     boardSettingsOpenFor = boardId;
     const s = getBoardSettings(boardId);
+    const grid = boardGridSettings(s);
+    const page = boardPageGuideSettings(s);
 
     drawer.innerHTML =
         '<label>Name</label>' +
@@ -7071,8 +7276,21 @@ function renderBoardSettingsDrawer(boardId) {
             '<input type="range" class="bs-font-size" min="8" max="120" value="' + (parseInt(s.fontSize) || 12) + '">' +
             '<span class="bs-font-size-label">' + (s.fontSize || 'default') + '</span>' +
             '<button class="bs-mini bs-font-size-reset" title="Reset">↺</button>' +
+        '</div>' +
+        '<label>Layout</label>' +
+        '<div class="bs-row">' +
+            '<label class="bs-check"><input type="checkbox" class="bs-grid"' + (grid.on ? ' checked' : '') + '>Grid</label>' +
+            '<input type="range" class="bs-grid-size" min="' + GRID_MIN_SIZE + '" max="' + GRID_MAX_SIZE + '" step="5" value="' + grid.size + '">' +
+            '<span class="bs-font-size-label bs-grid-size-label">' + grid.size + 'px</span>' +
+        '</div>' +
+        '<div class="bs-row">' +
+            '<label class="bs-check"><input type="checkbox" class="bs-page"' + (page.on ? ' checked' : '') + '>Page Guide</label>' +
+            '<button class="bs-mini bs-page-orient' + (page.orientation === 'portrait' ? ' selected' : '') + '" data-orientation="portrait">Portrait</button>' +
+            '<button class="bs-mini bs-page-orient' + (page.orientation === 'landscape' ? ' selected' : '') + '" data-orientation="landscape">Landscape</button>' +
+            '<span class="bs-page-size">' + PAGE_INCHES.width + ' \u00d7 ' + PAGE_INCHES.height + '\u2033</span>' +
         '</div>';
-    drawer.classList.add('open');
+    document.getElementById('boardSettingsOverlay').classList.add('open');
+    setBoardSettingsTitle(boardId);
 
     document.querySelectorAll('.board-card-settings-btn').forEach(b =>
         b.classList.toggle('active', b.dataset.boardId === boardId));
@@ -7080,7 +7298,10 @@ function renderBoardSettingsDrawer(boardId) {
     // Name
     const nameInput = drawer.querySelector('.bs-name');
     nameInput.addEventListener('input', (e) => {
-        if (setBoardName(boardId, e.target.value)) refreshBoardRow(boardId);
+        if (setBoardName(boardId, e.target.value)) {
+            refreshBoardRow(boardId);
+            setBoardSettingsTitle(boardId);
+        }
     });
 
     // Colour
@@ -7192,6 +7413,31 @@ function renderBoardSettingsDrawer(boardId) {
         updateBoardSetting(boardId, { fontSize: '' });
         applyAllToolFonts();
         applyAllToolZooms();
+    });
+
+    // Layout guides. Each write reads the board back first, so turning the grid on
+    // never drops the size it was set to.
+    const writeGrid = (patch) =>
+        updateBoardSetting(boardId, { grid: { ...boardGridSettings(getBoardSettings(boardId)), ...patch } });
+    const writePage = (patch) =>
+        updateBoardSetting(boardId, { pageGuide: { ...boardPageGuideSettings(getBoardSettings(boardId)), ...patch } });
+
+    const gridSizeLabel = drawer.querySelector('.bs-grid-size-label');
+    drawer.querySelector('.bs-grid').addEventListener('change', (e) => writeGrid({ on: e.target.checked }));
+    drawer.querySelector('.bs-grid-size').addEventListener('input', (e) => {
+        gridSizeLabel.textContent = e.target.value + 'px';
+        writeGrid({ size: parseInt(e.target.value, 10) });
+    });
+
+    const pageToggle = drawer.querySelector('.bs-page');
+    pageToggle.addEventListener('change', (e) => writePage({ on: e.target.checked }));
+    drawer.querySelectorAll('.bs-page-orient').forEach(btn => {
+        btn.addEventListener('click', () => {
+            drawer.querySelectorAll('.bs-page-orient').forEach(b => b.classList.toggle('selected', b === btn));
+            // Turning the page is also a way of asking for it.
+            pageToggle.checked = true;
+            writePage({ on: true, orientation: btn.getAttribute('data-orientation') });
+        });
     });
 }
 
@@ -8303,6 +8549,16 @@ function getResizeSnapPosition(tool, left, top, width, height, handle) {
         horizontalEdges.push(sTop, sBottom);
     });
 
+    // With the grid on, the nearest line to each edge joins the candidates. The
+    // loops below take the first edge within reach, so a neighbouring tool still
+    // wins over a grid line when both are close.
+    const rGrid = boardGridSettings();
+    if (rGrid.on) {
+        const near = v => Math.round(v / rGrid.size) * rGrid.size;
+        verticalEdges.push(near(left), near(right));
+        horizontalEdges.push(near(top), near(bottom));
+    }
+
     // Snap right edge (when resizing east)
     if (handle.includes('e')) {
         for (const edge of verticalEdges) {
@@ -8395,6 +8651,15 @@ function getSnapPosition(draggedTool, x, y) {
         horizontalEdges.push(top, bottom);
     });
 
+    // The grid's nearest lines are candidates like any other edge; the best-match
+    // search below picks whichever the tool is actually closest to.
+    const grid = boardGridSettings();
+    if (grid.on) {
+        const near = v => Math.round(v / grid.size) * grid.size;
+        verticalEdges.push(near(dragLeft), near(dragRight));
+        horizontalEdges.push(near(dragTop), near(dragBottom));
+    }
+
     // Find best vertical snap (X position)
     for (const edge of verticalEdges) {
         // Snap left edge of dragged to this edge
@@ -8482,6 +8747,80 @@ function updateSnapGuides(guides) {
 
         toolboard.appendChild(el);
     });
+}
+
+// Placing the tools already on the board. A tool blown up to fill the screen has
+// no position of its own to rewrite, so it sits these out.
+function placeableTools() {
+    const toolboard = document.getElementById('toolboard');
+    if (toolboard.classList.contains('mobile-layout')) return [];
+    return [...toolboard.querySelectorAll('.tool')].filter(el => !el.classList.contains('fullscreen'));
+}
+
+// Moves one tool, keeping everything about it that isn't where it is.
+function placeToolAt(el, x, y) {
+    const id = el.getAttribute('data-tool');
+    const prev = positions[id] || {};
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    positions[id] = {
+        x: x,
+        y: y,
+        z: parseInt(el.style.zIndex) || prev.z || 1,
+        width: prev.width || el.offsetWidth,
+        height: prev.height || el.offsetHeight,
+        rotation: prev.rotation || 0
+    };
+}
+
+// Lays every tool out in rows and columns, in the order they currently read: down
+// the board, then across. Each tool keeps its own size — the columns are as wide as
+// the widest tool and the rows as tall as the tallest, so the edges all line up.
+function arrangeToolsInGrid() {
+    const toolboard = document.getElementById('toolboard');
+    const tools = placeableTools();
+    if (!tools.length) return 0;
+
+    const gap = boardGridSettings().size;
+    const colWidth = Math.max(...tools.map(el => el.offsetWidth));
+    const rowHeight = Math.max(...tools.map(el => el.offsetHeight));
+
+    // Band by the row height of the layout being built, so tools that share a row
+    // now stay in one, whatever their tops differ by.
+    const ordered = tools.slice().sort((a, b) =>
+        (Math.floor(a.offsetTop / rowHeight) - Math.floor(b.offsetTop / rowHeight)) ||
+        (a.offsetLeft - b.offsetLeft));
+
+    // The same gutter runs down the left and across the top as between the columns,
+    // so the block sits in from the edge rather than against it — and on a grid line,
+    // since the gutter is the cell size.
+    const perRow = Math.max(1, Math.floor(toolboard.clientWidth / (colWidth + gap)));
+
+    ordered.forEach((el, i) => {
+        placeToolAt(el,
+            gap + (i % perRow) * (colWidth + gap),
+            gap + Math.floor(i / perRow) * (rowHeight + gap));
+    });
+
+    savePositions(positions);
+    showToolToast('Arranged ' + ordered.length + (ordered.length === 1 ? ' tool' : ' tools') + ' in a grid');
+    return ordered.length;
+}
+
+// Nudges each tool onto the nearest grid line without changing the arrangement.
+function snapAllToolsToGrid() {
+    const grid = boardGridSettings();
+    if (!grid.on) return 0;
+
+    const tools = placeableTools();
+    if (!tools.length) return 0;
+
+    const near = v => Math.max(0, Math.round(v / grid.size) * grid.size);
+    tools.forEach(el => placeToolAt(el, near(el.offsetLeft), near(el.offsetTop)));
+
+    savePositions(positions);
+    showToolToast('Snapped ' + tools.length + (tools.length === 1 ? ' tool' : ' tools') + ' to the grid');
+    return tools.length;
 }
 
 // Import/Export functionality
@@ -9855,6 +10194,7 @@ function captureAndDownloadPNG() {
             windowWidth: document.documentElement.scrollWidth,
             windowHeight: document.documentElement.scrollHeight,
             ignoreElements: (el) => el.classList && (
+                el.classList.contains('board-guide') ||
                 el.classList.contains('snap-guide') ||
                 el.classList.contains('tool-marquee') ||
                 el.classList.contains('resize-handle') ||
@@ -10480,6 +10820,21 @@ function setupToolSelection() {
             openToolSettingsFor(selected.length ? selected : all, null);
         };
         menu.appendChild(settingsItem);
+
+        // Placement. Arranging works whether or not the grid is showing — it makes
+        // its own rows — but there is nothing to snap to until the grid is on.
+        const arrangeItem = document.createElement('button');
+        arrangeItem.textContent = 'Arrange in Grid';
+        arrangeItem.disabled = !placeableTools().length;
+        arrangeItem.onclick = () => { closeBoardContextMenu(); arrangeToolsInGrid(); };
+        menu.appendChild(arrangeItem);
+
+        const snapItem = document.createElement('button');
+        snapItem.textContent = 'Snap All to Grid';
+        snapItem.disabled = !placeableTools().length || !boardGridSettings().on;
+        snapItem.title = boardGridSettings().on ? '' : 'Turn the grid on in board settings first';
+        snapItem.onclick = () => { closeBoardContextMenu(); snapAllToolsToGrid(); };
+        menu.appendChild(snapItem);
 
         menu.style.left = e.clientX + 'px';
         menu.style.top = e.clientY + 'px';
@@ -11578,9 +11933,19 @@ function setupBoardManager() {
         if (e.target === overlay) closeBoardManager();
     };
 
-    // Close on Escape
+    // The settings popup opens over the list, and closes on its own terms.
+    const settingsOverlay = document.getElementById('boardSettingsOverlay');
+    settingsOverlay.querySelector('.board-settings-close').onclick = closeBoardSettingsDrawer;
+    settingsOverlay.onclick = (e) => {
+        if (e.target === settingsOverlay) closeBoardSettingsDrawer();
+    };
+
+    // Close on Escape — the settings popup first, since it is the one on top.
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        if (e.key !== 'Escape') return;
+        if (boardSettingsIsOpen()) {
+            closeBoardSettingsDrawer();
+        } else if (overlay.classList.contains('open')) {
             closeBoardManager();
         }
     });
