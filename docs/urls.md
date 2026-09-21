@@ -11,6 +11,8 @@ Every board and every tool is addressable by URL hash. A tool link works for som
 | `#BoardName/tool/<toolId>` | Opens the board, then the tool maximized |
 | `#tool/<toolId>/view` | Opens that tool alone, with no chrome — see [View only](#view-only) |
 | `#BoardName/tool/<toolId>/view` | The same, on that board |
+| `#import?src=<url>` | Offers to load a tools export from that URL — see [Loading from a URL](#loading-from-a-url) |
+| `#BoardName/import?src=<url>` | The same, onto that board |
 
 `<toolId>` is the tool's plugin id (`PluginRegistry.registerTool({ id })`) — e.g. `#tool/jwt-decoder` — so the link means the same thing in anyone's browser. Tools with no plugin id (freeform notes) fall back to their board-local instance id, which only resolves in the browser that created them.
 
@@ -41,6 +43,36 @@ Anything the parameters name has to be reachable from the browser: `http`/`https
 - **Maximizing and the URL stay in sync.** Maximizing a tool writes its hash; restoring it (button, backdrop, `Esc`) writes the board hash back. Navigating back to a bare board hash restores the maximized tool.
 - **Reuse over duplication.** If the board already has an instance of the tool — same instance id, or anything created from the same template — it is focused and maximized instead of a second copy being created.
 - **A tool left maximized in a previous session stays maximized on load.** Only in-session hash changes count as navigation.
+
+## Loading from a URL
+
+A tools export kept somewhere public — a file in a Git repo, say — can be loaded by
+URL instead of downloaded and pasted:
+
+```
+#import?src=https%3A%2F%2Fraw.githubusercontent.com%2F…%2Ftools-export.json&link=1
+```
+
+`src` is the export; `link=1` asks for the board to be kept in sync with it. The
+segment only counts as the route when `src` is present, so a board actually named
+"import" is still reachable at `#import`.
+
+**Following the link writes nothing on its own.** It fetches the payload, then shows
+what it found — the host, the type and how many tools — and waits. Only on accepting
+does anything land on the board. A link is content someone else chose, and tool
+content is rendered as written, so the confirmation is the point rather than a
+formality.
+
+Without `link=1` the load is a copy and the URL is forgotten. With it, the URL is
+recorded as a linked source and re-fetched on every board load; see
+[Storage](storage.md#linked-sources) for what sync does and does not overwrite. The
+same two routes are available from **Import ▸ Import from URL**, which also lists the
+board's linked sources with *Reload now* and *Unlink*.
+
+Anything `src` names has to be reachable from the browser, exactly as for tool
+parameters above — `raw.githubusercontent.com` sends `access-control-allow-origin: *`
+and works directly. Unlike the Curriculum Explorer, this route has no proxy fallback:
+a host that refuses cross-origin reads is reported and nothing is loaded.
 
 ## View only
 

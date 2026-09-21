@@ -10,6 +10,7 @@ All data is board-scoped via `boardKey(key)` → `finance_${currentBoardId}_${ke
 - `hiddenTools` — tools hidden from the board
 - `toolboardSettings` — board-level settings (title, color, and the placement guides below)
 - `variables` — user-defined variables
+- `linkedSources` — URLs this board loads tools from, and what each one placed
 
 ### Placement guides
 
@@ -26,6 +27,38 @@ directly, because settings are merged shallowly from storage: a board that store
 both draws the lines and makes drags and resizes snap to them — the two are one
 switch, and Shift already bypasses snapping. Guides are drawn by
 `renderBoardGuides()`, behind the tools, and are left out of PNG exports.
+
+### Linked sources
+
+A tools export can be loaded from a URL (see [URL Hashes](urls.md#loading-from-a-url)).
+Ticking *keep in sync* records it here, and every board load re-fetches it:
+
+```js
+[{
+  url: 'https://raw.githubusercontent.com/…/tools-export.json',
+  addedAt: ISO, lastFetchedAt: ISO,
+  lastResult: 'ok',                       // or the error, shown in the panel
+  map: { '<id in the export>': '<tool id here>' }
+}]
+```
+
+`map` is what makes a re-fetch idempotent. `importTools` mints a fresh id whenever a
+custom tool id is already taken — right for importing the same file twice on purpose,
+and fatal for something re-fetched on every load — so `syncToolsFromSource` upserts
+through the map instead:
+
+| Map entry | What sync does |
+| --- | --- |
+| None | Imports the tool and records the mapping |
+| Present, tool still on the board | Overwrites `toolCustomizations`, **keeps the local position** |
+| Present, tool deleted here | Leaves it deleted — *Reload now* is the way back |
+
+Where a window sits is the user's; what is in it is the source's. Only `tools` and
+`notes` exports can be linked: which board would win on a re-fetch of a `boards`
+export is not a question this answers, so linking one is refused.
+
+A fetch that fails leaves `lastResult` set and the board untouched — a board has to
+open with the network down.
 
 ## Tool-Specific Data
 

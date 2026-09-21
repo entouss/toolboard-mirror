@@ -1235,6 +1235,146 @@ header h1 {
     font-size: 13px;
 }
 
+/* Loading a tools export over the network, and the sources kept in sync. */
+.import-url-hint {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin: 0 0 8px;
+}
+
+.import-url-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.import-url-input {
+    flex: 1;
+    min-width: 0;
+    padding: 7px 9px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+.import-url-btn { flex: 0 0 auto; }
+
+.import-url-keep {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.linked-sources:not(:empty) {
+    margin-top: 12px;
+    border-top: 1px solid var(--border-light);
+    padding-top: 10px;
+    padding-bottom: 8px;
+}
+
+.linked-source {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.linked-source:last-child { border-bottom: none; }
+
+.linked-source-main { flex: 1; min-width: 0; }
+
+.linked-source-url {
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.linked-source-meta { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+.linked-source-meta.error { color: var(--error-text); }
+
+.linked-source button {
+    flex: 0 0 auto;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 3px 7px;
+}
+
+.linked-source button:hover { background: var(--table-hover); }
+
+/* A link may not write to someone's board without being accepted first. */
+.import-link-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    z-index: 10030;
+    justify-content: center;
+    align-items: center;
+}
+
+.import-link-overlay.open { display: flex; }
+
+.import-link-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 480px;
+    max-width: 92%;
+    box-shadow: var(--shadow-heavy) 0 8px 30px;
+    overflow: hidden;
+}
+
+.import-link-body { padding: 16px 20px; }
+.import-link-lead { margin: 0 0 10px; font-size: 13px; color: var(--text-primary); }
+
+.import-link-url {
+    font-size: 12px;
+    word-break: break-all;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: var(--text-secondary);
+}
+
+.import-link-warn { margin: 12px 0 0; font-size: 11px; color: var(--text-muted); }
+
+.import-link-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px 16px;
+}
+
+.import-link-actions button {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 6px 14px;
+}
+
+.import-link-actions .import-btn {
+    border-color: transparent;
+    background: #3498db;
+    color: white;
+}
+
+.import-link-actions .import-btn:hover { background: #2980b9; }
+
 .import-result.success {
     background: var(--success-bg);
     color: var(--success-text);
@@ -3446,6 +3586,28 @@ tr:hover {
         </div>
     </div>
 
+    <!-- Confirmation for a #import link, which writes to the board only once accepted -->
+    <div id="importLinkOverlay" class="import-link-overlay">
+        <div class="import-link-content">
+            <div class="board-manager-header">
+                <span class="board-manager-title">Load tools from a link?</span>
+                <button class="board-manager-close import-link-cancel" title="Cancel">&times;</button>
+            </div>
+            <div class="import-link-body">
+                <p class="import-link-lead">This link wants to add <b id="importLinkSummary"></b> to the board
+                    <b id="importLinkBoard"></b>, from:</p>
+                <div class="import-link-url" id="importLinkUrl"></div>
+                <label class="import-url-keep"><input type="checkbox" id="importLinkKeep">Keep this board in sync with the URL</label>
+                <p class="import-link-warn">Tools carry their own content, which is rendered as written. Load this
+                    only from somewhere you trust — and a linked source can change after you accept it.</p>
+            </div>
+            <div class="import-link-actions">
+                <button class="import-link-cancel">Cancel</button>
+                <button id="importLinkGo" class="import-btn">Load</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Import/Export Modal -->
     <div id="importExportModal" class="import-export-modal">
         <div class="import-export-content">
@@ -3477,6 +3639,16 @@ tr:hover {
 
             <!-- Import Tool -->
             <div id="importTool" class="import-export-tool">
+                <h3>Import from URL</h3>
+                <p class="import-url-hint">Load a tools export over the network — a file in a Git repo, or anything served with cross-origin reads allowed.</p>
+                <div class="import-url-row">
+                    <input type="url" id="importUrlInput" class="import-url-input" placeholder="https://raw.githubusercontent.com/…/tools-export.json" spellcheck="false">
+                    <button id="importUrlBtn" class="import-btn import-url-btn">Load</button>
+                </div>
+                <label class="import-url-keep"><input type="checkbox" id="importUrlKeep">Keep in sync with this URL</label>
+                <div id="importUrlResult"></div>
+                <div id="linkedSourcesList" class="linked-sources"></div>
+
                 <h3>Import from File</h3>
                 <input type="file" id="importFileInput" class="import-file-input" accept=".json">
 
@@ -4601,6 +4773,7 @@ function formatNumber(num) {
 // Main application
 let variables = loadVariables();
 let positions = loadPositions();
+let linkedSources = loadLinkedSources();
 let maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 1);
 
 // Snap threshold in pixels
@@ -4742,6 +4915,7 @@ async function init() {
     populateBoardSelector();
     applyToolboardSettings();
     renderToolboard();
+    syncLinkedSources();
     setupDragging();
     setupToolSelection();
     setupResizing();
@@ -5083,7 +5257,7 @@ function parseStorageKey(key) {
     if (globalKeys[key]) return globalKeys[key];
 
     // Match board-specific keys: finance_{boardId}_{suffix}
-    const match = key.match(/^finance_(.+?)_(variables|positions|toolCustomizations|customTools|hiddenTools|toolboardSettings)$/);
+    const match = key.match(/^finance_(.+?)_(variables|positions|toolCustomizations|customTools|hiddenTools|toolboardSettings|linkedSources)$/);
     if (match) {
         const boardId = match[1];
         const suffix = match[2];
@@ -5095,7 +5269,8 @@ function parseStorageKey(key) {
             'toolCustomizations': 'Tool settings (titles, colors, content)',
             'customTools': 'Custom tool IDs',
             'hiddenTools': 'Hidden tool IDs',
-            'toolboardSettings': 'Board settings'
+            'toolboardSettings': 'Board settings',
+            'linkedSources': 'Linked tool sources'
         };
         return { boardId, boardName, suffix, desc: suffixLabels[suffix] || suffix };
     }
@@ -7470,6 +7645,27 @@ function saveToolCustomizations(customizations) {
 }
 
 // Custom tools storage
+// Sources this board loads tools from. A source is a URL that was imported with
+// "keep in sync" ticked; `map` records which tool in the export became which tool
+// here, which is what lets a re-fetch update in place instead of adding a copy.
+function loadLinkedSources() {
+    const stored = localStorage.getItem(boardKey('linkedSources'));
+    if (stored) {
+        try {
+            const list = JSON.parse(stored);
+            return Array.isArray(list) ? list : [];
+        } catch (e) {
+            return [];
+        }
+    }
+    return [];
+}
+
+function saveLinkedSources(sources) {
+    localStorage.setItem(boardKey('linkedSources'), JSON.stringify(sources));
+    updateStorageIndicator();
+}
+
 function loadCustomTools() {
     const stored = localStorage.getItem(boardKey('customTools'));
     if (stored) {
@@ -8868,6 +9064,96 @@ function setupImportExport() {
     // Import
     document.getElementById('importDataBtn').onclick = importData;
     document.getElementById('importFileInput').onchange = handleFileImport;
+
+    // Import from URL
+    const urlInput = document.getElementById('importUrlInput');
+    const urlBtn = document.getElementById('importUrlBtn');
+    urlBtn.onclick = () => importFromUrlInput();
+    urlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); importFromUrlInput(); }
+    });
+    renderLinkedSources();
+}
+
+function setImportUrlResult(kind, text) {
+    const el = document.getElementById('importUrlResult');
+    if (!el) return;
+    el.className = kind ? 'import-result ' + kind : '';
+    el.textContent = text || '';
+}
+
+async function importFromUrlInput() {
+    const input = document.getElementById('importUrlInput');
+    const keep = document.getElementById('importUrlKeep').checked;
+    const btn = document.getElementById('importUrlBtn');
+    const url = input.value.trim();
+
+    btn.disabled = true;
+    setImportUrlResult('', 'Loading ' + describeHost(url) + '…');
+    try {
+        const outcome = await loadFromUrl(url, { keepLinked: keep });
+        setImportUrlResult('success', outcome.linked
+            ? 'Loaded ' + outcome.summary + ' and kept in sync with this URL.'
+            : 'Loaded ' + outcome.summary + '.');
+        input.value = '';
+        renderToolboard();
+        populateBoardSelector();
+        populateExportLists();
+        renderLinkedSources();
+    } catch (e) {
+        setImportUrlResult('error', e.message);
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function renderLinkedSources() {
+    const el = document.getElementById('linkedSourcesList');
+    if (!el) return;
+    if (!linkedSources.length) { el.innerHTML = ''; return; }
+
+    el.innerHTML = '<h3>Linked sources</h3>' + linkedSources.map(source => {
+        const owned = Object.keys(source.map || {}).length;
+        const when = source.lastFetchedAt
+            ? new Date(source.lastFetchedAt).toLocaleString()
+            : 'not loaded yet';
+        const failed = source.lastResult && source.lastResult !== 'ok';
+        const meta = failed
+            ? escapeHtml(source.lastResult)
+            : owned + (owned === 1 ? ' tool' : ' tools') + ' · last loaded ' + escapeHtml(when);
+        return '<div class="linked-source">' +
+            '<div class="linked-source-main">' +
+                '<div class="linked-source-url">' + escapeHtml(source.url) + '</div>' +
+                '<div class="linked-source-meta' + (failed ? ' error' : '') + '">' + meta + '</div>' +
+            '</div>' +
+            '<button data-reload="' + escapeHtml(source.url) + '">Reload now</button>' +
+            '<button data-unlink="' + escapeHtml(source.url) + '">Unlink</button>' +
+        '</div>';
+    }).join('');
+
+    el.querySelectorAll('[data-unlink]').forEach(btn => {
+        btn.onclick = () => unlinkSource(btn.getAttribute('data-unlink'));
+    });
+    el.querySelectorAll('[data-reload]').forEach(btn => {
+        btn.onclick = async () => {
+            const url = btn.getAttribute('data-reload');
+            btn.disabled = true;
+            setImportUrlResult('', 'Reloading ' + describeHost(url) + '…');
+            try {
+                const outcome = await loadFromUrl(url, { keepLinked: true });
+                const c = outcome.counts;
+                setImportUrlResult('success', 'Reloaded: ' + c.added + ' added, ' + c.updated +
+                    ' updated' + (c.skipped ? ', ' + c.skipped + ' left deleted' : '') + '.');
+                renderToolboard();
+                populateExportLists();
+            } catch (e) {
+                setImportUrlResult('error', e.message);
+            } finally {
+                btn.disabled = false;
+                renderLinkedSources();
+            }
+        };
+    });
 }
 
 // Feature Selection Modal
@@ -9926,7 +10212,8 @@ function exportBoards() {
             toolCustomizations: JSON.parse(localStorage.getItem(`finance_${boardId}_toolCustomizations`) || '{}'),
             customTools: JSON.parse(localStorage.getItem(`finance_${boardId}_customTools`) || '[]'),
             hiddenTools: JSON.parse(localStorage.getItem(`finance_${boardId}_hiddenTools`) || '[]'),
-            toolboardSettings: JSON.parse(localStorage.getItem(`finance_${boardId}_toolboardSettings`) || 'null')
+            toolboardSettings: JSON.parse(localStorage.getItem(`finance_${boardId}_toolboardSettings`) || 'null'),
+            linkedSources: JSON.parse(localStorage.getItem(`finance_${boardId}_linkedSources`) || '[]')
         };
 
         exportData.boards.push(boardData);
@@ -10229,12 +10516,15 @@ function handleFileImport(e) {
     reader.readAsText(file);
 }
 
-function importData() {
+async function importData() {
     const textarea = document.getElementById('importTextarea');
     const resultDiv = document.getElementById('importResult');
 
     try {
         const data = JSON.parse(textarea.value);
+        const problem = validateImportPayload(data);
+        if (problem) throw new Error(problem);
+        await ensurePluginsForPayload(data);
 
         if (data.type === 'tools' || data.type === 'notes') {
             importTools(data);
@@ -10258,6 +10548,198 @@ function importData() {
         resultDiv.className = 'import-result error';
         resultDiv.textContent = `Error: ${err.message}`;
     }
+}
+
+// ── Loading tools from a URL ───────────────────────────────────────────────────
+// A payload is the same JSON the Export tab writes. Fetching one is a copy by
+// default; ticking "keep in sync" records the URL as a linked source, and every
+// later load re-fetches it.
+
+const LINKED_SOURCE_TYPES = ['tools', 'notes'];
+
+function describeHost(url) {
+    try { return new URL(url, window.location.href).host || url; } catch (e) { return url; }
+}
+
+// One shape check for every route in, so a bad payload is refused before anything
+// is written rather than half-imported.
+function validateImportPayload(data) {
+    if (!data || typeof data !== 'object') return 'That is not a Toolboard export.';
+    const list = data.tools || data.notes;
+    if (LINKED_SOURCE_TYPES.includes(data.type)) {
+        if (!Array.isArray(list)) return 'The export says it holds tools, but has no tools array.';
+        return null;
+    }
+    if (data.type === 'boards') {
+        if (!Array.isArray(data.boards)) return 'The export says it holds boards, but has no boards array.';
+        return null;
+    }
+    return 'Unknown export format. Expected "tools" or "boards" type.';
+}
+
+function payloadSummary(data) {
+    if (data.type === 'boards') {
+        const n = data.boards.length;
+        return n + (n === 1 ? ' board' : ' boards');
+    }
+    const n = (data.tools || data.notes || []).length;
+    return n + (n === 1 ? ' tool' : ' tools');
+}
+
+async function fetchImportPayload(url) {
+    if (window.location.protocol === 'file:' && !/^https?:/i.test(url)) {
+        throw new Error('A page opened from disk cannot read files from disk — the browser forbids it.');
+    }
+    let response;
+    try {
+        response = await fetch(url, { credentials: 'omit', redirect: 'follow' });
+    } catch (e) {
+        throw new Error(describeHost(url) + ' could not be read from the browser — ' +
+            'the host may not allow cross-origin reads.');
+    }
+    if (!response.ok) throw new Error(describeHost(url) + ' answered ' + response.status + ' ' + response.statusText + '.');
+    const text = await response.text();
+    let data;
+    try {
+        data = JSON.parse(text);
+    } catch (e) {
+        throw new Error('What came back from ' + describeHost(url) + ' is not JSON.');
+    }
+    const problem = validateImportPayload(data);
+    if (problem) throw new Error(problem);
+    return data;
+}
+
+// A tool arrives naming the template it was made from. Without that template's
+// plugin the tool renders as an empty note, so the plugins a payload needs are
+// installed before any of it lands — the same path a board template takes.
+async function ensurePluginsForPayload(data) {
+    const lists = data.type === 'boards'
+        ? data.boards.map(b => Object.values(b.toolCustomizations || {}))
+        : [(data.tools || data.notes || []).map(t => t.customizations || {})];
+    const wanted = new Set();
+    lists.forEach(list => list.forEach(custom => {
+        if (custom && custom.templateId) wanted.add(custom.templateId);
+    }));
+    for (const templateId of wanted) {
+        try {
+            await ensureToolPlugin(templateId);
+        } catch (e) {
+            // A tool whose plugin cannot be found still imports; it just renders
+            // as a note until that plugin is installed.
+            console.warn('No plugin found for tool template', templateId, e);
+        }
+    }
+}
+
+function findLinkedSource(url) {
+    return linkedSources.find(s => s.url === url) || null;
+}
+
+// Places a payload's tools against what this source has already placed. The map is
+// the record: no entry means new, an entry whose tool is still here means update in
+// place, and an entry whose tool is gone means the user deleted it and it does not
+// come back on its own.
+function syncToolsFromSource(source, data) {
+    const list = data.tools || data.notes || [];
+    const result = { added: 0, updated: 0, skipped: 0 };
+    source.map = source.map || {};
+
+    list.forEach(toolData => {
+        const sourceId = toolData.id;
+        if (!sourceId) return;
+        const mapped = source.map[sourceId];
+
+        if (mapped) {
+            const stillHere = customTools.includes(mapped) || SECTIONS.includes(mapped);
+            if (!stillHere) { result.skipped++; return; }
+            // The content is the source's; where the window sits is the user's.
+            toolCustomizations[mapped] = { ...(toolData.customizations || {}) };
+            result.updated++;
+            return;
+        }
+
+        // New to this board. Keep the source's own id where it is free, so the same
+        // export lands under the same id on every machine.
+        let localId = sourceId;
+        if (toolData.isCustom && customTools.includes(localId)) {
+            localId = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+        }
+        if (toolData.isCustom && !customTools.includes(localId)) customTools.push(localId);
+        toolCustomizations[localId] = { ...(toolData.customizations || {}) };
+        if (toolData.position) {
+            const pos = { ...toolData.position };
+            pos.z = ++maxZ;
+            positions[localId] = pos;
+        }
+        source.map[sourceId] = localId;
+        result.added++;
+    });
+
+    saveCustomTools(customTools);
+    saveToolCustomizations(toolCustomizations);
+    savePositions(positions);
+    return result;
+}
+
+// The one way in, whichever button or link started it.
+async function loadFromUrl(url, options = {}) {
+    const clean = (url || '').trim();
+    if (!clean) throw new Error('Enter a URL first.');
+    const data = await fetchImportPayload(clean);
+    await ensurePluginsForPayload(data);
+
+    if (options.keepLinked && !LINKED_SOURCE_TYPES.includes(data.type)) {
+        throw new Error('Only a tools export can be kept in sync. A boards export can be loaded as a copy.');
+    }
+
+    if (!options.keepLinked) {
+        if (data.type === 'boards') importBoards(data);
+        else importTools(data);
+        return { data: data, summary: payloadSummary(data), linked: false };
+    }
+
+    let source = findLinkedSource(clean);
+    if (!source) {
+        source = { url: clean, addedAt: new Date().toISOString(), map: {} };
+        linkedSources.push(source);
+    }
+    const counts = syncToolsFromSource(source, data);
+    source.lastFetchedAt = new Date().toISOString();
+    source.lastResult = 'ok';
+    saveLinkedSources(linkedSources);
+    return { data: data, summary: payloadSummary(data), linked: true, counts: counts };
+}
+
+// Every linked source, on board load. Failures are recorded on the source and shown
+// in the panel rather than thrown at the page: a board must still open when the
+// network is down or a repo has moved.
+async function syncLinkedSources() {
+    if (!linkedSources.length) return;
+    let touched = false;
+    for (const source of linkedSources) {
+        try {
+            const data = await fetchImportPayload(source.url);
+            await ensurePluginsForPayload(data);
+            syncToolsFromSource(source, data);
+            source.lastResult = 'ok';
+        } catch (e) {
+            source.lastResult = e.message;
+        }
+        source.lastFetchedAt = new Date().toISOString();
+        touched = true;
+    }
+    if (touched) {
+        saveLinkedSources(linkedSources);
+        renderToolboard();
+        renderLinkedSources();
+    }
+}
+
+function unlinkSource(url) {
+    linkedSources = linkedSources.filter(s => s.url !== url);
+    saveLinkedSources(linkedSources);
+    renderLinkedSources();
 }
 
 function importTools(data) {
@@ -10334,6 +10816,9 @@ function importBoards(data) {
         }
         if (boardData.toolboardSettings) {
             localStorage.setItem(`finance_${boardId}_toolboardSettings`, JSON.stringify(boardData.toolboardSettings));
+        }
+        if (boardData.linkedSources) {
+            localStorage.setItem(`finance_${boardId}_linkedSources`, JSON.stringify(boardData.linkedSources));
         }
     });
 
@@ -11518,6 +12003,7 @@ function deleteBoard(boardId) {
     localStorage.removeItem(prefix + 'customTools');
     localStorage.removeItem(prefix + 'hiddenTools');
     localStorage.removeItem(prefix + 'toolboardSettings');
+    localStorage.removeItem(prefix + 'linkedSources');
 
     // Remove from boards array
     boards = boards.filter(b => b.id !== boardId);
@@ -11596,6 +12082,7 @@ function switchToBoard(boardId) {
     customTools = loadCustomTools();
     hiddenTools = loadHiddenTools();
     toolboardSettings = loadToolboardSettings();
+    linkedSources = loadLinkedSources();
     maxZ = Math.max(...Object.values(positions).map(p => p.z || 1), 1);
 
     // Update URL hash to board name
@@ -11613,6 +12100,7 @@ function switchToBoard(boardId) {
     updateBoardSelectorLabel();
     applyToolboardSettings();
     renderToolboard();
+    syncLinkedSources();
 }
 
 // ============================================================
@@ -11634,6 +12122,7 @@ function switchToBoard(boardId) {
 
 const TOOL_HASH_SEGMENT = 'tool';
 const VIEW_HASH_SEGMENT = 'view';
+const IMPORT_HASH_SEGMENT = 'import';
 
 // Splitting happens before decoding: board names are percent-encoded, so a "/"
 // in a board name can never be mistaken for a separator.
@@ -11666,6 +12155,12 @@ function parseToolboardHash(rawHash) {
         parts.pop();
     }
 
+    if (params.src && parts.length === 1 && parts[0].toLowerCase() === IMPORT_HASH_SEGMENT) {
+        return { boardName: '', toolId: '', params, view: false, importRoute: true };
+    }
+    if (params.src && parts.length === 2 && parts[1].toLowerCase() === IMPORT_HASH_SEGMENT) {
+        return { boardName: decode(parts[0]), toolId: '', params, view: false, importRoute: true };
+    }
     if (parts.length >= 2 && parts[0].toLowerCase() === TOOL_HASH_SEGMENT) {
         return { boardName: '', toolId: decode(parts.slice(1).join('/')), params, view };
     }
@@ -11856,7 +12351,7 @@ async function openToolByHashId(toolId, params) {
 // maximized in a previous session should stay maximized. Later hash changes are
 // navigation: going back to a bare board hash restores the maximized tool.
 async function applyLocationHash(rawHash, options = {}) {
-    const { boardName, toolId, params, view } = parseToolboardHash(rawHash);
+    const { boardName, toolId, params, view, importRoute } = parseToolboardHash(rawHash);
     let switchedBoard = false;
 
     // View-only is a rendering of the URL, not a state of the board: set before
@@ -11872,11 +12367,63 @@ async function applyLocationHash(rawHash, options = {}) {
         }
     }
 
+    if (importRoute) {
+        await openImportLinkConfirm(params.src, params.link === '1' || params.link === 'true');
+        return;
+    }
+
     if (toolId) {
         await openToolByHashId(toolId, params);
     } else if (!options.initial && !switchedBoard) {
         exitToolFullscreen();
     }
+}
+
+// A link names a URL; the board is only written to once someone says so. The
+// payload is fetched first so the dialog can say what is actually in it.
+async function openImportLinkConfirm(url, keepLinked) {
+    const overlay = document.getElementById('importLinkOverlay');
+    if (!overlay || !url) return;
+
+    let data;
+    try {
+        data = await fetchImportPayload(url);
+    } catch (e) {
+        showToolToast(e.message);
+        return;
+    }
+
+    document.getElementById('importLinkSummary').textContent = payloadSummary(data);
+    document.getElementById('importLinkBoard').textContent = getBoardName(currentBoardId);
+    document.getElementById('importLinkUrl').textContent = url;
+    const keepBox = document.getElementById('importLinkKeep');
+    const linkable = LINKED_SOURCE_TYPES.includes(data.type);
+    keepBox.checked = keepLinked && linkable;
+    keepBox.disabled = !linkable;
+    keepBox.closest('label').title = linkable ? '' : 'Only a tools export can be kept in sync.';
+    overlay.classList.add('open');
+
+    const close = () => {
+        overlay.classList.remove('open');
+        overlay.querySelectorAll('.import-link-cancel').forEach(b => { b.onclick = null; });
+        document.getElementById('importLinkGo').onclick = null;
+    };
+    overlay.querySelectorAll('.import-link-cancel').forEach(b => { b.onclick = close; });
+    overlay.onclick = (e) => { if (e.target === overlay) close(); };
+    document.getElementById('importLinkGo').onclick = async () => {
+        const keep = keepBox.checked;
+        close();
+        try {
+            const outcome = await loadFromUrl(url, { keepLinked: keep });
+            renderToolboard();
+            populateBoardSelector();
+            populateExportLists();
+            renderLinkedSources();
+            showToolToast('Loaded ' + outcome.summary + (outcome.linked ? ', kept in sync' : ''));
+        } catch (e) {
+            showToolToast(e.message);
+        }
+    };
 }
 
 function deleteCurrentBoard() {
