@@ -22,6 +22,7 @@ The runner serves the repo on port 8777 and starts each suite against it. Set
 | `boards-*.mjs` | the board templates in `plugins/boards` |
 | `*-check.mjs` | the catalogs in `learn/data`, and the guide pages |
 | `curr-lib.mjs`, `cdoc-lib.mjs`, `cbld-lib.mjs`, `boards-lib.mjs` | shared setup: seed localStorage, open a page |
+| `dynamic-tool.mjs` | the tool the user writes: its markup, script and data |
 | `cursor.mjs` | a drawn pointer, for recordings |
 | `fixtures/` | an invented curriculum the suites plan against |
 | `out/` | screenshots and scratch output, not committed |

@@ -67,9 +67,34 @@ export is not a question this answers, so linking one is refused.
 A fetch that fails leaves `lastResult` set and the board untouched — a board has to
 open with the network down.
 
+One thing a re-fetch deliberately does *not* overwrite is `scriptApproved`. A synced
+tool that carries a script keeps the approval given here, so a source that re-fetches
+unchanged goes on running; a source that changes its script no longer matches what
+was approved, and that tool stops and asks again rather than inheriting a yes given
+to different code. See [Dynamic Tools](dynamic-tool.md).
+
 ## Tool-Specific Data
 
 Tool-specific data is stored as a named property inside `toolCustomizations[toolId]` (e.g., `checklistItems`, `dirtreeItems`, `diffData`).
+
+### Dynamic tools — a tool the user wrote
+
+A tool made from the `script` template keeps what it is in four keys, plus the pane
+it was last edited on:
+
+| Key | What it holds |
+| --- | --- |
+| `customContent` | The markup (the shared field, holding HTML rather than markdown here) |
+| `toolScript` | The script |
+| `toolData` | The data the script reads, and what `api.save()` writes back |
+| `scriptApproved` | The exact script text approved **in this browser** |
+| `scriptTab` | `body`, `script` or `data` — where the editor was left |
+
+`scriptApproved` is the whole of the trust rule: the script runs only while it is
+character-for-character what was approved, so a source that changes its code stops
+and asks again. It is stripped from every export and from every import, which is
+what makes it a local fact rather than something a file can assert about itself —
+see [Dynamic Tools](dynamic-tool.md#scripts-that-arrive-from-somewhere-else).
 
 ### Curriculum Explorer — a record of schools
 

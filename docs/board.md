@@ -73,6 +73,12 @@ than an empty widget:
 The key to use is whatever that tool reads — `mermaidCode`, `checklistItems`,
 `sqlExplainData`, and so on. Find it in the tool's own `*GetData` function.
 
+A template may place a dynamic tool the same way, giving `customContent`,
+`toolScript` and `toolData` in `state`. The script arrives inert and runs only once
+whoever opened the board has read it and said so; a `scriptApproved` in `state` is
+dropped on the way in, since a template does not get to approve its own code. See
+[Dynamic Tools](dynamic-tool.md).
+
 ### Tools from plugins that are not installed
 
 A template may name any tool. `instantiateBoardTemplate` resolves each id through

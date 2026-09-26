@@ -1817,6 +1817,58 @@ main#toolboard {
 }
 .note-btn:hover { background: var(--table-hover); }
 
+/* The dynamic tool. Same two panes as the note, but the source is three of them —
+   the markup, the script that wires it up, and the data the script reads — shown
+   one at a time behind a tab strip. Three textareas side by side in a 500px window
+   would each be too narrow to read a line of code in. */
+.dyn-widget { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%; }
+.dyn-widget .authoring-source { display: flex; flex-direction: column; min-width: 0; flex: 1 1 50%; }
+.dyn-widget .authoring-result { flex: 1 1 50%; min-width: 0; overflow: auto; }
+.tool.authoring-split .dyn-widget .authoring-source { padding-right: 10px; }
+.tool.authoring-split .dyn-widget .authoring-result { padding-left: 10px; }
+.dyn-tabs { display: flex; gap: 4px; margin-bottom: 6px; flex: 0 0 auto; }
+.dyn-tab {
+    padding: 2px 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary);
+    color: var(--text-secondary); cursor: pointer; font-size: 10px; border-radius: 3px;
+}
+.dyn-tab:hover { background: var(--table-hover); }
+.dyn-tab.active { background: var(--accent-color, #3498db); border-color: var(--accent-color, #3498db); color: #fff; }
+.dyn-pane { display: none; flex: 1; min-height: 0; }
+.dyn-pane.active { display: flex; }
+.dyn-source {
+    flex: 1; resize: none; padding: 6px; border: 1px solid var(--border-color);
+    border-radius: 3px; background: var(--bg-primary); color: var(--text-primary);
+    font-family: 'Fira Code', 'Monaco', 'Menlo', monospace; font-size: 12px;
+    line-height: 1.45; min-height: 60px; white-space: pre; tab-size: 2;
+}
+.dyn-source:focus { outline: none; border-color: var(--accent-color, #3498db); }
+/* Code that came from somewhere else, waiting to be looked at. Deliberately not
+   styled as an error — nothing has gone wrong, there is a question outstanding. */
+.dyn-untrusted {
+    flex: 0 0 auto; margin-bottom: 6px; padding: 5px 7px; border-radius: 3px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: rgba(243, 156, 18, 0.12); border: 1px solid rgba(243, 156, 18, 0.5);
+    color: var(--text-primary); font-size: 11px;
+}
+.dyn-untrusted-text { flex: 1 1 auto; min-width: 120px; }
+.dyn-untrusted-actions { display: flex; gap: 4px; flex: 0 0 auto; }
+.dyn-btn {
+    padding: 2px 8px; border: 1px solid var(--border-color); background: var(--bg-secondary);
+    color: var(--text-primary); cursor: pointer; font-size: 11px; border-radius: 3px; white-space: nowrap;
+}
+.dyn-btn:hover { background: var(--table-hover); }
+.dyn-btn-go { background: var(--accent-color, #3498db); border-color: var(--accent-color, #3498db); color: #fff; }
+.dyn-btn-go:hover { filter: brightness(1.1); background: var(--accent-color, #3498db); }
+
+/* Outside the result pane on purpose: the script owns the result node and is free
+   to empty it, which would take the report of its own failure with it. */
+.dyn-error {
+    flex: 0 0 auto; margin-top: 6px; padding: 5px 7px; border-radius: 3px;
+    background: rgba(231, 76, 60, 0.12); border: 1px solid rgba(231, 76, 60, 0.45);
+    color: #c0392b; font-family: 'Fira Code', 'Monaco', 'Menlo', monospace;
+    font-size: 11px; white-space: pre-wrap; word-break: break-word;
+}
+
 /* Anything a tool draws inside itself that is chrome rather than result — a syntax
    hint, a status line. Render means the result and nothing else, and the tool
    should not have to know that; it just marks what is not the result. */
@@ -3991,6 +4043,70 @@ const NOTE_TEMPLATES = {
             actions: '.note-actions',
             onRender: 'noteRender'
         }
+    },
+    // A tool the user writes themselves: markup, a script that wires it up, and the
+    // data the script reads. None of this is new capability — a note renders its
+    // markdown through innerHTML, so raw HTML with an inline onclick has always run
+    // here, and the plugin manager loads whole scripts from any URL you give it.
+    // What was missing was a place to put code that is not an attribute: something
+    // that runs when the tool opens rather than only when something is clicked, a
+    // field for the values you want to change without editing code, and per-instance
+    // state. That is all this is.
+    //
+    // The script is compiled with `new Function`, not `eval`: it closes over nothing
+    // here, so it cannot reach into the app's own locals by accident. It runs on the
+    // page, with the page's powers — an iframe would take the theme, the sizing and
+    // the board's storage away with it, and would be a pretence besides while the
+    // plugin manager runs remote scripts unsandboxed.
+    'script': {
+        id: 'script',
+        name: 'Dynamic Tool',
+        description: 'A tool you write yourself: HTML, a script, and its data',
+        icon: '⚙️',
+        title: 'Dynamic Tool',
+        content: '',
+        // The body is per-instance, so it cannot come from a static `content`
+        // string the way a plugin tool's does. The shell is built per tool.
+        shell: 'dynamicShellHtml',
+        defaultWidth: 560,
+        defaultHeight: 420,
+        // A new one arrives working. The alternative is three empty boxes and a
+        // guess at what `el` is; this answers that by being the example.
+        defaultState: {
+            customContent: [
+                '<div class="row">',
+                '  <input class="q" placeholder="Search term">',
+                '  <button class="go">Open</button>',
+                '</div>',
+                '<p class="out"></p>'
+            ].join('\n'),
+            toolScript: [
+                '// el   — this tool\'s own content area, and nothing outside it',
+                '// data — whatever the Data tab holds',
+                '// api  — api.save(value) writes data back, api.onCleanup(fn) runs on close',
+                'const field = el.querySelector(\'.q\');',
+                'const out = el.querySelector(\'.out\');',
+                '',
+                'el.querySelector(\'.go\').onclick = () => {',
+                '    const url = data.url.replace(\'{q}\', encodeURIComponent(field.value));',
+                '    out.textContent = url;',
+                '    window.open(url, \'_blank\');',
+                '};'
+            ].join('\n'),
+            toolData: '{\n    "url": "https://example.com/search?q={q}"\n}'
+        },
+        authoring: {
+            modes: ['edit', 'split', 'render'],
+            defaultMode: 'render',
+            editMode: 'split',
+            // "Both" is the layout, but for this tool it is also simply where the
+            // work happens: you change the script and watch the thing react.
+            labels: { edit: 'Source', split: 'Build' },
+            titles: { edit: 'Only the markup, script and data', split: 'The source and the running tool, side by side' },
+            source: '.authoring-source',
+            result: '.authoring-result',
+            onRender: 'runDynamicTool'
+        }
     }
 };
 
@@ -4564,7 +4680,7 @@ PluginRegistry.registerToolbox({
     description: 'Basic toolboard tools',
     icon: '📝',
     color: '#7f8c8d',
-    tools: ['blank', 'image-viewer']
+    tools: ['blank', 'script', 'image-viewer']
 });
 
 // ============================================================
@@ -4574,16 +4690,18 @@ PluginRegistry.registerToolbox({
 // ============================================================
 (function registerCoreTools() {
     // Tools to register (productivity + core only)
-    const coreToolIds = ['blank'];
+    const coreToolIds = ['blank', 'script'];
 
     // Toolbox mappings
     const toolboxMap = {
-        'blank': 'core'
+        'blank': 'core',
+        'script': 'core'
     };
 
     // Tag mappings
     const tagsMap = {
-        'blank': ['blank', 'empty', 'new']
+        'blank': ['blank', 'empty', 'new'],
+        'script': ['script', 'javascript', 'js', 'dynamic', 'custom', 'code', 'form']
     };
 
     for (const id of coreToolIds) {
@@ -4599,6 +4717,13 @@ PluginRegistry.registerToolbox({
                 title: template.title,
                 content: template.content,
                 onInit: template.onInit,
+                // Carried across so the registry's copy describes the same tool.
+                // Every lookup reads NOTE_TEMPLATES first, so dropping these was
+                // harmless until something resolved one of these ids the other way
+                // round and got a tool with no panes and no body.
+                shell: template.shell,
+                authoring: template.authoring,
+                defaultState: template.defaultState,
                 source: 'embedded'
             });
         }
@@ -6142,6 +6267,10 @@ function setupToolControls() {
 // Render all tools
 function renderToolboard() {
     const toolboard = document.getElementById('toolboard');
+    // The tools about to be thrown away include any that were running something of
+    // their own. Their elements go with the innerHTML below; a timer they started
+    // does not.
+    cleanupAllDynamicTools();
     toolboard.innerHTML = '';
 
     const toolsToAutoFit = [];
@@ -7737,7 +7866,7 @@ function createTool(toolId) {
         </div>
         <div class="tool-content">
             ${authoringDecl && !authoringDecl.actions ? authoringOverlayHtml(authoringDecl, savedMode) : ''}
-            ${!content.isNote && custom.customContent ? renderToolContent(custom.customContent, custom.plainText, getTextTransforms(custom)) : content.html}
+            ${!content.ownsContent && custom.customContent ? renderToolContent(custom.customContent, custom.plainText, getTextTransforms(custom)) : content.html}
         </div>
         <div class="resize-handle resize-handle-n" data-resize="n"></div>
         <div class="resize-handle resize-handle-s" data-resize="s"></div>
@@ -7903,7 +8032,7 @@ function noteShellHtml(toolId, custom) {
     const text = custom.customContent != null ? custom.customContent : '';
     return '<div class="note-widget">' +
         '<div class="note-actions">' +
-            '<button class="note-btn" onclick="openContentEditor(noteToolId(this))" ' +
+            '<button class="note-btn" onclick="openContentEditor(toolIdOf(this))" ' +
                 'title="The big editor: find and replace, line sorting, word count">Editor</button>' +
         '</div>' +
         '<div class="authoring-split">' +
@@ -7917,9 +8046,10 @@ function noteShellHtml(toolId, custom) {
     '</div>';
 }
 
-/** The tool a note control belongs to — its buttons are lifted into the overlay,
- *  so the widget is no longer above them. */
-function noteToolId(element) {
+/** The tool instance a control belongs to. A tool's own buttons are lifted into
+ *  the overlay, so the widget is no longer above them and `closest('.tool')` is
+ *  the only reliable way back. */
+function toolIdOf(element) {
     const tool = element.closest('.tool');
     return tool ? tool.getAttribute('data-tool') : null;
 }
@@ -7934,12 +8064,305 @@ function noteRender(toolId) {
 }
 
 function noteOnInput(textarea) {
-    const toolId = noteToolId(textarea);
+    const toolId = toolIdOf(textarea);
     if (!toolId) return;
     if (!toolCustomizations[toolId]) toolCustomizations[toolId] = {};
     toolCustomizations[toolId].customContent = textarea.value;
     saveToolCustomizations(toolCustomizations);
     noteRender(toolId);
+}
+
+// ---- the dynamic tool ---------------------------------------------------------
+//
+// Three fields and one function. `customContent` is the markup, `toolScript` the
+// code, `toolData` the values the code reads; `runDynamicTool` draws the markup,
+// compiles the code and hands it the pair. The authoring framework supplies
+// everything else — the two panes, the mode bar, double-click to edit, and a View
+// mode that is just the running tool with no frame around it.
+
+/** Which source pane is showing. Tabs rather than three panes side by side: in a
+ *  500px window three columns are each too narrow to read a line of code in. */
+const DYN_TABS = [
+    { id: 'body', label: 'Body', field: 'customContent', hint: 'HTML' },
+    { id: 'script', label: 'Script', field: 'toolScript', hint: 'JavaScript' },
+    { id: 'data', label: 'Data', field: 'toolData', hint: 'JSON' }
+];
+
+function dynamicTab(custom) {
+    const saved = (custom || {}).scriptTab;
+    return DYN_TABS.some(t => t.id === saved) ? saved : 'body';
+}
+
+function dynamicShellHtml(toolId, custom) {
+    const tab = dynamicTab(custom);
+    const tabs = DYN_TABS.map(t =>
+        '<button class="dyn-tab' + (t.id === tab ? ' active' : '') + '" data-tab="' + t.id +
+        '" onclick="dynamicSetTab(this)" title="' + t.hint + '">' + t.label + '</button>').join('');
+    const panes = DYN_TABS.map(t =>
+        '<div class="dyn-pane' + (t.id === tab ? ' active' : '') + '" data-pane="' + t.id + '">' +
+            '<textarea class="dyn-source" spellcheck="false" data-field="' + t.field + '" ' +
+                'oninput="dynamicOnInput(this)" placeholder="' + t.hint + '">' +
+                escapeHtml(custom[t.field] || '') +
+            '</textarea>' +
+        '</div>').join('');
+
+    return '<div class="dyn-widget">' +
+        // Above the panes rather than inside the result, so it is there in View
+        // too — the mode a shared board is most likely to arrive in.
+        '<div class="dyn-untrusted" style="display:none">' +
+            '<span class="dyn-untrusted-text"></span>' +
+            '<span class="dyn-untrusted-actions">' +
+                '<button class="dyn-btn" onclick="reviewDynamicScript(this)">Review</button>' +
+                '<button class="dyn-btn dyn-btn-go" onclick="approveDynamicScript(this)">Run it</button>' +
+            '</span>' +
+        '</div>' +
+        '<div class="authoring-split">' +
+            '<div class="authoring-source">' +
+                '<div class="dyn-tabs">' + tabs + '</div>' +
+                panes +
+            '</div>' +
+            '<div class="authoring-resizer"></div>' +
+            '<div class="authoring-result"></div>' +
+        '</div>' +
+        '<div class="dyn-error" style="display:none"></div>' +
+    '</div>';
+}
+
+function dynamicShowTab(toolId, tab) {
+    const widget = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"] .dyn-widget');
+    if (!widget) return;
+    widget.querySelectorAll('.dyn-tab').forEach(b =>
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab));
+    widget.querySelectorAll('.dyn-pane').forEach(p =>
+        p.classList.toggle('active', p.getAttribute('data-pane') === tab));
+    if (!toolCustomizations[toolId]) toolCustomizations[toolId] = {};
+    toolCustomizations[toolId].scriptTab = tab;
+    saveToolCustomizations(toolCustomizations);
+}
+
+function dynamicSetTab(btn) {
+    const toolId = toolIdOf(btn);
+    if (toolId) dynamicShowTab(toolId, btn.getAttribute('data-tab'));
+}
+
+// Typing is saved immediately and run shortly after. Running on every keystroke
+// would execute half-written code — `el.innerHTML = ''` is a complete statement
+// well before the line the author means to type is.
+const dynamicRunTimers = {};
+
+function dynamicOnInput(textarea) {
+    const toolId = toolIdOf(textarea);
+    if (!toolId) return;
+    if (!toolCustomizations[toolId]) toolCustomizations[toolId] = {};
+    const field = textarea.getAttribute('data-field');
+    toolCustomizations[toolId][field] = textarea.value;
+    // Typing in the script pane is authorship: you are looking at the code and
+    // changing it, which is everything the banner would otherwise be asking for.
+    if (field === 'toolScript') toolCustomizations[toolId][SCRIPT_APPROVAL_KEY] = textarea.value;
+    saveToolCustomizations(toolCustomizations);
+    clearTimeout(dynamicRunTimers[toolId]);
+    dynamicRunTimers[toolId] = setTimeout(() => runDynamicTool(toolId), 400);
+}
+
+/**
+ * What the Data tab holds, as the script sees it.
+ *
+ * Text that opens with a brace or a bracket was meant to be JSON, so a parse
+ * failure there is a mistake worth reporting rather than a string to hand over —
+ * silently passing `{ "url": }` through as text gives the script an undefined
+ * property and no clue why. Anything else is a plain value, and arrives as one.
+ */
+function parseDynamicData(text) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) return {};
+    if (trimmed[0] !== '{' && trimmed[0] !== '[') return trimmed;
+    return JSON.parse(trimmed);
+}
+
+// Teardown a script registered for itself: timers it set, listeners it put on
+// window. Without this a tool with a setInterval kept running after the board was
+// switched away from, and a second copy started on every visit back.
+const dynamicCleanups = {};
+
+function cleanupDynamicTool(toolId) {
+    const fns = dynamicCleanups[toolId] || [];
+    delete dynamicCleanups[toolId];
+    clearTimeout(dynamicRunTimers[toolId]);
+    delete dynamicRunTimers[toolId];
+    fns.forEach(fn => {
+        try { fn(); } catch (e) { console.error('Dynamic tool cleanup failed:', e); }
+    });
+}
+
+function cleanupAllDynamicTools() {
+    Object.keys(dynamicCleanups).forEach(cleanupDynamicTool);
+}
+
+/** The surface a script is given beyond its own element and its data. Small on
+ *  purpose: everything else it might reach for, it can reach for directly. */
+function dynamicToolApi(toolId) {
+    return {
+        toolId: toolId,
+        /** Store `value` as this tool's data, where it survives a reload and shows
+         *  up in the Data tab — the script's state is the tool's state. */
+        save(value) {
+            if (!toolCustomizations[toolId]) toolCustomizations[toolId] = {};
+            const text = typeof value === 'string' ? value : JSON.stringify(value, null, 4);
+            toolCustomizations[toolId].toolData = text;
+            saveToolCustomizations(toolCustomizations);
+            const tool = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"]');
+            const field = tool && tool.querySelector('.dyn-source[data-field="toolData"]');
+            // Not while it is being typed in — that would fight the author for the
+            // caret in the one pane they are working in.
+            if (field && document.activeElement !== field) field.value = text;
+        },
+        /** Run `fn` when this tool is closed, re-run, or the board switches away. */
+        onCleanup(fn) {
+            if (typeof fn !== 'function') return;
+            (dynamicCleanups[toolId] = dynamicCleanups[toolId] || []).push(fn);
+        }
+    };
+}
+
+// ---- whose script is it -------------------------------------------------------
+//
+// Running your own code is one thing; running code a file or a URL brought with it
+// is another, and until this tool existed nothing imported could run at all. A
+// board you load from someone else is data — it must not become an executable the
+// moment it lands.
+//
+// Approval is the exact script text the person here said yes to, kept beside the
+// script itself. Trust is therefore a property of the code rather than of the tool:
+// a linked source that re-fetches unchanged still matches and keeps running, and
+// the same source pushing different code next week does not — it stops and asks
+// again, without the sync path needing to know any of this. Storing the text and
+// comparing it is deliberate. A short hash would be smaller and would invite a
+// collision from the one party who gets to choose the new script.
+//
+// `scriptApproved` is stripped from everything that leaves here and everything that
+// arrives, so it can only ever be set by someone pressing the button in this
+// browser. An approval that travelled with a board would approve its own script.
+const SCRIPT_APPROVAL_KEY = 'scriptApproved';
+
+/** Whether this tool's script is the one that was approved here. A tool with no
+ *  script has nothing to approve and is never in the way. */
+function dynamicScriptApproved(custom) {
+    const src = ((custom || {}).toolScript || '').trim();
+    if (!src) return true;
+    return (((custom || {})[SCRIPT_APPROVAL_KEY]) || '').trim() === src;
+}
+
+/** A copy of one tool's customizations with the local approval taken out. */
+function withoutScriptApproval(custom) {
+    if (!custom || typeof custom !== 'object' || !(SCRIPT_APPROVAL_KEY in custom)) return custom;
+    const copy = { ...custom };
+    delete copy[SCRIPT_APPROVAL_KEY];
+    return copy;
+}
+
+/** The same, for a whole board's worth of them. */
+function withoutScriptApprovals(map) {
+    if (!map || typeof map !== 'object') return map;
+    const out = {};
+    Object.keys(map).forEach(id => { out[id] = withoutScriptApproval(map[id]); });
+    return out;
+}
+
+/** Record that the script this tool holds right now is wanted. */
+function approveScriptFor(toolId) {
+    if (!toolCustomizations[toolId]) toolCustomizations[toolId] = {};
+    toolCustomizations[toolId][SCRIPT_APPROVAL_KEY] = toolCustomizations[toolId].toolScript || '';
+    saveToolCustomizations(toolCustomizations);
+}
+
+function approveDynamicScript(btn) {
+    const toolId = toolIdOf(btn);
+    if (!toolId) return;
+    approveScriptFor(toolId);
+    runDynamicTool(toolId);
+}
+
+/** Show the person the code they are being asked about. Reading it is the whole
+ *  point of the banner, so this puts the script in front of them rather than
+ *  telling them where to find it. */
+function reviewDynamicScript(btn) {
+    const toolId = toolIdOf(btn);
+    if (!toolId) return;
+    dynamicShowTab(toolId, 'script');
+    const authoring = getAuthoring(toolId);
+    if (authoring && getToolMode(toolId) === 'render') setToolMode(toolId, authoring.editMode);
+}
+
+function showDynamicUntrusted(tool, message) {
+    const banner = tool && tool.querySelector('.dyn-untrusted');
+    if (!banner) return;
+    const text = banner.querySelector('.dyn-untrusted-text');
+    if (text) text.textContent = message || '';
+    banner.style.display = message ? '' : 'none';
+}
+
+function showDynamicError(tool, message) {
+    const strip = tool && tool.querySelector('.dyn-error');
+    if (!strip) return;
+    strip.textContent = message || '';
+    strip.style.display = message ? '' : 'none';
+}
+
+/**
+ * Draw the markup, then run the script against it.
+ *
+ * This is the tool's `onRender`, so the framework calls it whenever the result
+ * needs to be up to date: on open, on a mode change into Build or View, and after
+ * an edit settles. Every run starts from the stored markup, so a script that
+ * rewrote the DOM last time is not looking at its own leftovers.
+ *
+ * A script that throws leaves its message in the tool rather than only in the
+ * console — the person who wrote it is looking at the tool. Errors thrown later,
+ * from a handler the script installed, are the browser's to report; catching those
+ * would mean wrapping every callback and lying about where they came from.
+ */
+function runDynamicTool(toolId) {
+    const tool = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"]');
+    const result = tool && tool.querySelector('.authoring-result');
+    if (!result) return;
+
+    cleanupDynamicTool(toolId);
+    showDynamicError(tool, null);
+
+    const custom = toolCustomizations[toolId] || {};
+    result.innerHTML = custom.customContent || '';
+
+    const src = (custom.toolScript || '').trim();
+    if (!src) { showDynamicUntrusted(tool, null); return; }
+
+    // Markup and data are just content and are shown either way; the code waits.
+    // Saying which it is matters — a tool whose script has changed under it is a
+    // different situation from one that arrived with code you have never seen.
+    if (!dynamicScriptApproved(custom)) {
+        showDynamicUntrusted(tool, custom[SCRIPT_APPROVAL_KEY]
+            ? 'This tool\'s script has changed since you ran it. Nothing has run.'
+            : 'This tool came with a script. Nothing has run.');
+        return;
+    }
+    showDynamicUntrusted(tool, null);
+
+    let data;
+    try {
+        data = parseDynamicData(custom.toolData);
+    } catch (e) {
+        showDynamicError(tool, 'Data is not valid JSON — ' + e.message);
+        return;
+    }
+
+    try {
+        // `new Function`, not eval: the body is compiled in global scope, so it
+        // closes over nothing in here and cannot reach the app's own variables by
+        // accident. It still runs on the page, which is the deal this tool makes.
+        const fn = new Function('el', 'data', 'api', '"use strict";\n' + src);
+        fn(result, data, dynamicToolApi(toolId));
+    } catch (e) {
+        showDynamicError(tool, (e && e.name ? e.name + ': ' : '') + (e && e.message ? e.message : String(e)));
+    }
 }
 
 function renderToolContent(text, plainText, transforms) {
@@ -7973,6 +8396,16 @@ function getToolContent(toolId) {
         // Check if this tool uses a template with HTML content
         if (custom.templateId && (NOTE_TEMPLATES[custom.templateId] || PluginRegistry.getTool(custom.templateId))) {
             const template = NOTE_TEMPLATES[custom.templateId] || PluginRegistry.getTool(custom.templateId);
+            // A template whose body is different in every window builds its own
+            // shell. `content` is one static string shared by every instance, which
+            // is exactly what a tool the user writes cannot use.
+            if (template.shell && typeof window[template.shell] === 'function') {
+                return {
+                    title: custom.title || template.title,
+                    ownsContent: true,
+                    html: window[template.shell](toolId, custom)
+                };
+            }
             const isHtml = template.content.trim().startsWith('<');
             if (isHtml) {
                 return {
@@ -7983,8 +8416,11 @@ function getToolContent(toolId) {
         }
 
         return {
+            // The shell already put `customContent` where it belongs — as the note's
+            // source and its rendered result — so the generic path below must not
+            // render it a second time underneath.
             title: custom.title || 'New Tool',
-            isNote: true,
+            ownsContent: true,
             html: noteShellHtml(toolId, custom)
         };
     }
@@ -9539,6 +9975,9 @@ async function instantiateBoardTemplate(boardId) {
         // widget. The keys belong to the tool, so they are copied across as given.
         if (toolConfig.state && typeof toolConfig.state === 'object') {
             Object.assign(toolCustomizations[toolId], toolConfig.state);
+            // Except that one: a board template is free to carry a script, and not
+            // free to declare it already approved.
+            toolCustomizations[toolId] = withoutScriptApproval(toolCustomizations[toolId]);
         }
     });
 
@@ -10051,6 +10490,17 @@ function createNoteWithTemplate(templateId, options = {}) {
         templateId: templateId, // Store template ID for HTML templates
         customContent: isHtml ? '' : template.content // Only store markdown in customContent
     };
+    // A template that ships starting state — the dynamic tool's markup, script and
+    // data — hands it over here. Copied verbatim, like a board template's `state`,
+    // and last so a template that means to fill in the content can.
+    if (template.defaultState && typeof template.defaultState === 'object') {
+        Object.assign(toolCustomizations[toolId], template.defaultState);
+    }
+    // A template's own script is as trusted as whatever registered the template:
+    // the built-in one ships in this page, and a plugin's ran its own code to get
+    // here. Pressing Add is asking for that tool. What needs approving is a script
+    // that came from a file or a URL, and those paths strip this key.
+    if (toolCustomizations[toolId].toolScript) approveScriptFor(toolId);
     saveToolCustomizations(toolCustomizations);
 
     // Create and add the note to the toolboard
@@ -10099,6 +10549,11 @@ function createNoteWithTemplate(templateId, options = {}) {
                 setTimeout(doAutoFit, 50);
             }, 50);
         } else {
+            // A tool that declares authoring still needs its panes put into the
+            // right state, and that is what draws its result for the first time.
+            // Only the onInit branch did this, so a template with panes and no
+            // onInit arrived with neither — no mode class, no result, nothing run.
+            if (getAuthoring(toolId)) applyToolMode(tool, toolId);
             // No onInit, auto-fit immediately
             doAutoFit();
         }
@@ -10112,6 +10567,12 @@ function createNoteWithTemplate(templateId, options = {}) {
             const source = tool.querySelector('.note-source');
             if (source) source.focus();
             else openContentEditor(toolId);
+        }
+
+        // A dynamic tool opens on both panes: the source is the point of it, and
+        // the running tool beside it is how you know what the source just did.
+        if (templateId === 'script' && !options.skipEditor) {
+            setToolMode(toolId, 'split');
         }
     }
 
@@ -10185,7 +10646,10 @@ function exportTools() {
         const toolData = {
             id: toolId,
             isCustom: customTools.includes(toolId),
-            customizations: toolCustomizations[toolId] || {},
+            // The script travels; the fact that you approved it does not. It says
+            // nothing about whoever opens this file, and carried along it would
+            // answer a question only they can be asked.
+            customizations: withoutScriptApproval(toolCustomizations[toolId] || {}),
             position: positions[toolId] || null
         };
         exportData.tools.push(toolData);
@@ -10217,7 +10681,8 @@ function exportBoards() {
             name: board.name,
             variables: JSON.parse(localStorage.getItem(`finance_${boardId}_variables`) || 'null'),
             positions: JSON.parse(localStorage.getItem(`finance_${boardId}_positions`) || '{}'),
-            toolCustomizations: JSON.parse(localStorage.getItem(`finance_${boardId}_toolCustomizations`) || '{}'),
+            toolCustomizations: withoutScriptApprovals(
+                JSON.parse(localStorage.getItem(`finance_${boardId}_toolCustomizations`) || '{}')),
             customTools: JSON.parse(localStorage.getItem(`finance_${boardId}_customTools`) || '[]'),
             hiddenTools: JSON.parse(localStorage.getItem(`finance_${boardId}_hiddenTools`) || '[]'),
             toolboardSettings: JSON.parse(localStorage.getItem(`finance_${boardId}_toolboardSettings`) || 'null'),
@@ -10276,7 +10741,7 @@ function exportBoardAsHTML() {
         currentBoard: 'default',
         variables: variables,
         positions: positions,
-        toolCustomizations: toolCustomizations,
+        toolCustomizations: withoutScriptApprovals(toolCustomizations),
         customTools: customTools,
         hiddenTools: hiddenTools,
         toolboardSettings: toolboardSettings,
@@ -10656,7 +11121,7 @@ function placeToolFromSource(source, toolData) {
         localId = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
     }
     if (toolData.isCustom && !customTools.includes(localId)) customTools.push(localId);
-    toolCustomizations[localId] = { ...(toolData.customizations || {}) };
+    toolCustomizations[localId] = withoutScriptApproval({ ...(toolData.customizations || {}) });
     if (toolData.position) {
         const pos = { ...toolData.position };
         pos.z = ++maxZ;
@@ -10688,7 +11153,13 @@ function syncToolsFromSource(source, data, options = {}) {
                 return;
             }
             // The content is the source's; where the window sits is the user's.
-            toolCustomizations[mapped] = { ...(toolData.customizations || {}) };
+            // So is the approval: it survives the overwrite, and then either still
+            // matches the incoming script — an unchanged source keeps running, as
+            // it should — or does not, which is a source that changed its code
+            // under a board that trusted the old one, and it stops and asks.
+            const approved = (toolCustomizations[mapped] || {})[SCRIPT_APPROVAL_KEY];
+            toolCustomizations[mapped] = withoutScriptApproval({ ...(toolData.customizations || {}) });
+            if (approved != null) toolCustomizations[mapped][SCRIPT_APPROVAL_KEY] = approved;
             result.updated++;
             return;
         }
@@ -10780,9 +11251,11 @@ function importTools(data) {
             }
         }
 
-        // Import customizations
+        // Import customizations. A tool that brought a script with it arrives with
+        // the script inert: approval is a local fact, and one carried in a file
+        // would be the file approving itself.
         if (toolData.customizations && Object.keys(toolData.customizations).length > 0) {
-            toolCustomizations[toolId] = { ...toolData.customizations };
+            toolCustomizations[toolId] = withoutScriptApproval({ ...toolData.customizations });
         }
 
         // Import position (with offset if position exists)
@@ -10827,7 +11300,8 @@ function importBoards(data) {
             localStorage.setItem(`finance_${boardId}_positions`, JSON.stringify(boardData.positions));
         }
         if (boardData.toolCustomizations) {
-            localStorage.setItem(`finance_${boardId}_toolCustomizations`, JSON.stringify(boardData.toolCustomizations));
+            localStorage.setItem(`finance_${boardId}_toolCustomizations`,
+                JSON.stringify(withoutScriptApprovals(boardData.toolCustomizations)));
         }
         if (boardData.customTools) {
             localStorage.setItem(`finance_${boardId}_customTools`, JSON.stringify(boardData.customTools));
@@ -10881,6 +11355,9 @@ function deleteTool(toolId) {
         }
 
         if (isCustom) {
+            // Anything the tool was running stops with it
+            cleanupDynamicTool(toolId);
+
             // Remove from customTools array
             customTools = customTools.filter(id => id !== toolId);
             saveCustomTools(customTools);
@@ -10940,6 +11417,7 @@ function deleteAllTools() {
     if (!confirm('Delete all tools on this board? This cannot be undone.')) return;
 
     exitToolFullscreen();
+    cleanupAllDynamicTools();
 
     tools.forEach(tool => {
         const toolId = tool.getAttribute('data-tool');
@@ -11503,7 +11981,7 @@ function exportToolAsFullHtml(toolId, title) {
             }
         },
         toolCustomizations: {
-            [toolId]: custom
+            [toolId]: withoutScriptApproval(custom)
         },
         customTools: customTools.includes(toolId) ? [toolId] : [],
         hiddenTools: customTools.filter(id => id !== toolId),
