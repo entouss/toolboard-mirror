@@ -167,6 +167,36 @@ s = await state();
 ok('a deleted tool stays deleted', !s.custom.includes('custom-shared-2'), JSON.stringify(s.custom));
 ok('and the other one is still synced', s.custom.includes('custom-shared-1'), JSON.stringify(s.custom));
 
+// 5b. But asking for it back gets it back. A page load must not undo a deletion;
+//     pressing Load means "put these on my board", and has to be able to.
+await openImportPanel();
+msg = await loadUrl(URL_OF(NAME), true);
+s = await state();
+ok('loading again brings a deleted tool back', s.custom.includes('custom-shared-2'),
+    JSON.stringify(s.custom));
+ok('and says it added one rather than claiming a no-op loaded', /1 added/.test(msg), msg);
+ok('without duplicating the one that was already there',
+    s.custom.filter(id => id === 'custom-shared-1').length === 1, JSON.stringify(s.custom));
+ok('and the map still has one entry per source tool',
+    Object.keys(s.sources[0].map).length === 2, JSON.stringify(s.sources[0].map));
+
+// Deleted again, Reload now is the other way back — the one the docs promise.
+await page.evaluate(() => deleteTool('custom-shared-2'));
+await page.waitForTimeout(400);
+await openImportPanel();
+await page.click('.linked-source [data-reload]');
+await page.waitForTimeout(1200);
+s = await state();
+ok('Reload now also brings it back', s.custom.includes('custom-shared-2'), JSON.stringify(s.custom));
+
+// And a page load still leaves a deletion alone.
+await page.evaluate(() => deleteTool('custom-shared-2'));
+await page.waitForTimeout(400);
+await goto();
+s = await state();
+ok('while a page load still respects the deletion', !s.custom.includes('custom-shared-2'),
+    JSON.stringify(s.custom));
+
 // 6. Unlinking stops the syncing but leaves the tools.
 await openImportPanel();
 await page.click('.linked-source [data-unlink]');

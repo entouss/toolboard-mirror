@@ -9075,6 +9075,16 @@ function setupImportExport() {
     renderLinkedSources();
 }
 
+// What a linked load actually did, rather than what the file happened to contain —
+// "Loaded 1 tool" while adding nothing is how a silent no-op reads as a success.
+function describeSyncCounts(counts) {
+    const parts = [];
+    if (counts.added) parts.push(counts.added + ' added');
+    if (counts.updated) parts.push(counts.updated + ' updated');
+    if (counts.skipped) parts.push(counts.skipped + ' left deleted');
+    return parts.length ? parts.join(', ') : 'nothing to change';
+}
+
 function setImportUrlResult(kind, text) {
     const el = document.getElementById('importUrlResult');
     if (!el) return;
@@ -9093,7 +9103,7 @@ async function importFromUrlInput() {
     try {
         const outcome = await loadFromUrl(url, { keepLinked: keep });
         setImportUrlResult('success', outcome.linked
-            ? 'Loaded ' + outcome.summary + ' and kept in sync with this URL.'
+            ? describeSyncCounts(outcome.counts) + ' — kept in sync with this URL.'
             : 'Loaded ' + outcome.summary + '.');
         input.value = '';
         renderToolboard();
@@ -9141,9 +9151,7 @@ function renderLinkedSources() {
             setImportUrlResult('', 'Reloading ' + describeHost(url) + '…');
             try {
                 const outcome = await loadFromUrl(url, { keepLinked: true });
-                const c = outcome.counts;
-                setImportUrlResult('success', 'Reloaded: ' + c.added + ' added, ' + c.updated +
-                    ' updated' + (c.skipped ? ', ' + c.skipped + ' left deleted' : '') + '.');
+                setImportUrlResult('success', 'Reloaded: ' + describeSyncCounts(outcome.counts) + '.');
                 renderToolboard();
                 populateExportLists();
             } catch (e) {
@@ -10640,7 +10648,28 @@ function findLinkedSource(url) {
 // the record: no entry means new, an entry whose tool is still here means update in
 // place, and an entry whose tool is gone means the user deleted it and it does not
 // come back on its own.
-function syncToolsFromSource(source, data) {
+// Puts a tool on the board under the source's own id where that id is free, so the
+// same export lands under the same id on every machine.
+function placeToolFromSource(source, toolData) {
+    let localId = toolData.id;
+    if (toolData.isCustom && customTools.includes(localId)) {
+        localId = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+    }
+    if (toolData.isCustom && !customTools.includes(localId)) customTools.push(localId);
+    toolCustomizations[localId] = { ...(toolData.customizations || {}) };
+    if (toolData.position) {
+        const pos = { ...toolData.position };
+        pos.z = ++maxZ;
+        positions[localId] = pos;
+    }
+    source.map[toolData.id] = localId;
+}
+
+// `options.explicit` separates a background re-fetch from someone asking for the
+// tools. A page load must not undo a deletion — that is what the map is for — but
+// pressing Load, or Reload now, or accepting an import link, means "put these on my
+// board", and has to be able to bring a deleted one back.
+function syncToolsFromSource(source, data, options = {}) {
     const list = data.tools || data.notes || [];
     const result = { added: 0, updated: 0, skipped: 0 };
     source.map = source.map || {};
@@ -10652,27 +10681,19 @@ function syncToolsFromSource(source, data) {
 
         if (mapped) {
             const stillHere = customTools.includes(mapped) || SECTIONS.includes(mapped);
-            if (!stillHere) { result.skipped++; return; }
+            if (!stillHere) {
+                if (!options.explicit) { result.skipped++; return; }
+                placeToolFromSource(source, toolData);
+                result.added++;
+                return;
+            }
             // The content is the source's; where the window sits is the user's.
             toolCustomizations[mapped] = { ...(toolData.customizations || {}) };
             result.updated++;
             return;
         }
 
-        // New to this board. Keep the source's own id where it is free, so the same
-        // export lands under the same id on every machine.
-        let localId = sourceId;
-        if (toolData.isCustom && customTools.includes(localId)) {
-            localId = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
-        }
-        if (toolData.isCustom && !customTools.includes(localId)) customTools.push(localId);
-        toolCustomizations[localId] = { ...(toolData.customizations || {}) };
-        if (toolData.position) {
-            const pos = { ...toolData.position };
-            pos.z = ++maxZ;
-            positions[localId] = pos;
-        }
-        source.map[sourceId] = localId;
+        placeToolFromSource(source, toolData);
         result.added++;
     });
 
@@ -10704,7 +10725,7 @@ async function loadFromUrl(url, options = {}) {
         source = { url: clean, addedAt: new Date().toISOString(), map: {} };
         linkedSources.push(source);
     }
-    const counts = syncToolsFromSource(source, data);
+    const counts = syncToolsFromSource(source, data, { explicit: true });
     source.lastFetchedAt = new Date().toISOString();
     source.lastResult = 'ok';
     saveLinkedSources(linkedSources);

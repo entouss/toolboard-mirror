@@ -51,9 +51,16 @@ through the map instead:
 | --- | --- |
 | None | Imports the tool and records the mapping |
 | Present, tool still on the board | Overwrites `toolCustomizations`, **keeps the local position** |
-| Present, tool deleted here | Leaves it deleted — *Reload now* is the way back |
+| Present, tool deleted here | A background sync leaves it deleted; an explicit load puts it back |
 
-Where a window sits is the user's; what is in it is the source's. Only `tools` and
+Where a window sits is the user's; what is in it is the source's.
+
+The last row is two rules, not one. The re-fetch on every board load must not undo a
+deletion, or a tool you removed would return on the next reload. But pressing *Load*
+or *Reload now*, or accepting an `#import` link, means "put these on my board", so
+those pass `explicit` and re-add what is missing. Without that split, deleting a
+synced tool made it unreachable: the map entry outlived the tool and every later
+import silently skipped it while reporting success. Only `tools` and
 `notes` exports can be linked: which board would win on a re-fetch of a `boards`
 export is not a question this answers, so linking one is refused.
 
