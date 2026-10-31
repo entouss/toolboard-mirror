@@ -350,7 +350,11 @@ lines and `javascript:` addresses dropped (`mermDiagAI*`). `applyLabels` may be 
 target, for a button that names something only the tool knows now: the Kanban Board's
 Draft cards adds to “Backlog” when that is what its first column is called, and is
 never offered over the board. The Checklist's Break into steps replaces or adds to the
-list (`checklistAI*`, `kbAI*`). An
+list (`checklistAI*`, `kbAI*`). The Project Table's ✨ never does the table's arithmetic: it reads each
+row with its days, dates and slack already worked out (`projAIRowLine`), and drafts
+tasks, sizes from the table's own scale and which earlier task each comes after, for
+the table to schedule; Break this row down works on the row whose cell has the caret
+(`projAI*`). An
 `apply` that returns `false` refuses, and the popup stays open. The Agenda Timer uses
 all of them: planning, **Draft an agenda…** asks what it is for and fills the plan by
 Replace the plan or Add to the plan; after a run, **Write-up** and **Action items**

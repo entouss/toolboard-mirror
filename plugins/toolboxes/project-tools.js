@@ -514,6 +514,16 @@
     document.head.appendChild(style);
 })();
 
+// What ✨ is told and asked for in the Project Table; read by its registration below,
+// so set before it. The functions it names are further down, with the rest of ✨.
+const PROJ_AI_SYSTEM = 'You help plan and track a project. Be brief and concrete, and use only what the plan says. ' +
+    'Reply with the result only: no preface, no closing remarks.';
+const PROJ_AI_MAX_ROWS = 20;
+const PROJ_AI_MAX_SUB = 10;
+const PROJ_AI_LIST = 60;
+const PROJ_AI_ROWS_SCHEMA = { type: 'object', required: ['rows'], properties: { rows: { type: 'array', items: { type: 'object',
+    required: ['task', 'size', 'after'], properties: { task: { type: 'string' }, size: { type: 'string' }, after: { type: 'integer' }, note: { type: 'string' } } } } } };
+
 PluginRegistry.registerToolbox({
     id: 'project',
     name: 'Project Tools',
@@ -585,6 +595,43 @@ PluginRegistry.registerTool({
         source: '.authoring-source',
         result: '.authoring-result',
         onRender: 'projOnRender'
+    },
+    // ✨ where Chrome's own model can run. It drafts tasks, sizes and their order, for
+    // the table to schedule; it reads the plan with the dates and slack already worked
+    // out, and what it says about them is to copy.
+    ai: {
+        target: 'projAITarget',
+        apply: 'projAIApply',
+        actions: ['ask'],
+        custom: [
+            { id: 'rows', group: 'Plan', label: 'Draft rows', system: PROJ_AI_SYSTEM, needsText: false,
+                input: 'What is the work? “launch the new help page by mid-December”',
+                applyLabels: { insert: 'Add to the table', replace: 'Replace the rows' },
+                schema: PROJ_AI_ROWS_SCHEMA, parse: (j) => projAICleanRows(j, PROJ_AI_MAX_ROWS), preview: projAIRowsPreview,
+                prompt: (text, what, t) => 'Draft the rows of a project plan for: ' + what + '\n\nGive 4 to 12 tasks in the order they ' +
+                    'happen, each a short action starting with a verb, with a T-shirt size from this scale: ' + (t && t.sizes) +
+                    '. "after" is the number of an earlier task in your list that must finish first, or 0. Add a one-line note only ' +
+                    'where it helps.' + (text ? '\n\nThe plan already has these, so do not repeat them:\n' + text : '') },
+            { id: 'breakdown', group: 'Plan', label: 'Break this row down', system: PROJ_AI_SYSTEM,
+                show: (t) => !!(t.row && t.row.canNest),
+                applyHow: ['insert'],
+                applyLabels: (t) => ({ insert: 'Add as sub-rows of #' + (t.row ? t.row.number : '') }),
+                schema: PROJ_AI_ROWS_SCHEMA, parse: (j) => projAICleanRows(j, PROJ_AI_MAX_SUB), preview: projAIRowsPreview,
+                prompt: (text, what, t) => 'Break this task into the smaller tasks that make it up, in the order they happen:\n' +
+                    (t && t.row ? t.row.line : '') + '\n\nGive 2 to 8 tasks, each a short action starting with a verb, with a T-shirt ' +
+                    'size from this scale: ' + (t && t.sizes) + '. "after" is the number of an earlier task in your list that must ' +
+                    'finish first, or 0.\n\nThe rest of the plan, for context:\n' + text },
+            { id: 'status', group: 'Plan', label: 'Status update', system: PROJ_AI_SYSTEM, apply: false,
+                show: (t) => !!t.text,
+                prompt: (text) => 'Write a short status update from this plan under four headings: "Done", "In progress", ' +
+                    '"At risk" and "Next", each a few bullets naming the rows. A row is at risk when its slack is Late, No room ' +
+                    'or Tight. Use the dates and numbers as they are given.\n\n' + text },
+            { id: 'risks', group: 'Plan', label: 'Risks', system: PROJ_AI_SYSTEM, apply: false,
+                show: (t) => !!t.text,
+                prompt: (text) => 'List the risks in this plan, worst first, one bullet each naming the row: slack that is Late, ' +
+                    'No room or Tight; rows with no size, nobody assigned or no deadline; long chains of rows that each wait on ' +
+                    'the one before. If there are none, say so.\n\n' + text }
+        ]
     },
     onInit: 'projInit',
     defaultWidth: 900,
@@ -2086,6 +2133,126 @@ function projCopyPeriods(btn) {
     if (!tl || !tl._model) return;
     copyTextToClipboard(projPeriodsText(tl._model), 'Periods copied');
 }
+
+// ---- ✨: Chrome's own model, for a plan -------------------------------------------
+//
+// The table works out every date, total and slack itself, so the model never does
+// that arithmetic: it reads the plan with those already worked out, and what it
+// drafts is tasks, sizes and which comes after which, for the table to schedule.
+
+
+/** The sizes this table uses, as a line the model can choose from. */
+function projAISizeScale(data) {
+    return PROJ_SIZE_RAMP.filter(s => data.sizes[s] > 0).map(s => s + ' = ' + data.sizes[s] + ' days').join(', ');
+}
+
+/** One row as the model reads it: what the table shows, worked out. */
+function projAIRowLine(data, row) {
+    const num = projRowNumber(data, row);
+    const facts = [];
+    const size = projCell(row, 'size');
+    const total = projRoundDays(projTotalDays(data, row));
+    if (projIsParent(data, row)) facts.push('made of its sub-rows, ' + total + ' d in all');
+    else facts.push('size ' + (size || 'not set') + (total ? ' (' + total + ' d)' : ''));
+    facts.push(projPercent(data, row) + '% done, ' + projRoundDays(projRemainingDays(data, row)) + ' d left');
+    const dates = projRowDates(data, row);
+    facts.push(dates.start + ' to ' + dates.end);
+    const deadline = projCell(row, 'deadline');
+    const slack = projSlackDays(data, row);
+    if (deadline) facts.push('deadline ' + deadline + (slack == null ? '' : ', slack ' + (slack > 0 ? '+' : '') + projRoundDays(slack) + ' d (' + projSlackBand(slack).label + ')'));
+    else facts.push('no deadline');
+    const who = projResourcesOf(row, 'resources');
+    facts.push(who.length ? 'assigned ' + who.join(', ') : 'nobody assigned');
+    const deps = (projCell(row, 'deps') || []).map(id => data.rows.find(r => r.id === id)).filter(Boolean).map(r => '#' + projRowNumber(data, r));
+    if (deps.length) facts.push('after ' + deps.join(', '));
+    const note = String(((row.notes || {}).item) || '').replace(/\s+/g, ' ').trim();
+    return '#' + num + ' ' + (String(projCell(row, 'item') || '').trim() || 'Untitled') + ': ' + facts.join('; ') + (note ? '. Note: ' + note.slice(0, 160) : '');
+}
+
+/** The row whose cell has the caret, if it is in this tool. */
+function projAIFocusedRow(toolId, data) {
+    const tool = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"]');
+    const at = document.activeElement;
+    const cell = tool && at && tool.contains(at) ? at.closest('[data-row]') : null;
+    return cell ? data.rows.find(r => r.id === cell.dataset.row) || null : null;
+}
+
+/** What ✨ works on: the plan, worked out — and the row being worked in, if there is one. */
+function projAITarget(toolId) {
+    const data = projGetData(toolId);
+    const rows = projOrderedRows(data);
+    const lines = rows.slice(0, PROJ_AI_LIST).map(r => projAIRowLine(data, r));
+    if (rows.length > PROJ_AI_LIST) lines.push('…and ' + (rows.length - PROJ_AI_LIST) + ' more rows.');
+    const row = projAIFocusedRow(toolId, data);
+    const depth = row ? projRowDepth(data, row) : 0;
+    return {
+        scope: 'whole', kind: 'plan',
+        text: rows.length ? 'Plan as of ' + projFormatDate(projToday()) + ', ' + rows.length + (rows.length === 1 ? ' row' : ' rows') + '. Sizes: ' +
+            projAISizeScale(data) + '.\n\n' + lines.join('\n') : '',
+        row: row ? { id: row.id, number: projRowNumber(data, row), name: String(projCell(row, 'item') || '').trim() || 'Untitled',
+            line: projAIRowLine(data, row), canNest: depth < PROJ_MAX_DEPTH } : null,
+        sizes: projAISizeScale(data),
+        label: 'On this plan (' + rows.length + (rows.length === 1 ? ' row' : ' rows') + ')' +
+            (row ? ' · row #' + projRowNumber(data, row) + ' ' + (String(projCell(row, 'item') || '').trim() || 'Untitled') : ''),
+        emptyLabel: 'No rows yet: draft some from a description.'
+    };
+}
+
+/** Rows from the model made into rows the table can take — or nothing usable. Each
+ *  may come after one earlier in the same draft, never one later. */
+function projAICleanRows(json, max) {
+    const list = json && Array.isArray(json.rows) ? json.rows : [];
+    const text = (s, n) => String(s == null ? '' : s).replace(/^\s*(?:[-*+]\s*)?(?:\d+[.)]\s*)?/, '').replace(/\s+/g, ' ').trim().slice(0, n);
+    const kept = [];
+    const place = {};
+    list.forEach((r, i) => {
+        const task = text(r && r.task, 120);
+        if (!task || kept.length >= (max || PROJ_AI_MAX_ROWS)) return;
+        const size = String((r && r.size) || '').trim().toUpperCase();
+        const after = Number(r && r.after);
+        place[i + 1] = kept.length;
+        kept.push({ task: task, size: PROJ_SIZE_ORDER.indexOf(size) >= 0 && size !== 'O' ? size : '?',
+            after: after >= 1 && after <= i && place[after] != null ? place[after] : null, note: text(r && r.note, 300) });
+    });
+    if (!kept.length) throw new Error('No rows came back. Try saying a little more about the work.');
+    return kept;
+}
+
+function projAIRowsPreview(rows) {
+    const esc = (s) => s.replace(/([\\`*_[\]<>#|])/g, '\\$1');
+    return '| # | Task | Size | After |\n| --- | --- | --- | --- |\n' + rows.map((r, i) =>
+        '| ' + (i + 1) + ' | ' + esc(r.task) + (r.note ? ' — *' + esc(r.note) + '*' : '') + ' | ' + r.size + ' | ' + (r.after == null ? '' : '#' + (r.after + 1)) + ' |').join('\n') +
+        '\n\nThe table works out the days, dates and slack from the sizes.';
+}
+
+/** Drafted rows into the table — after what is there, over it, or under a row —
+ *  through the ordinary save, so Undo takes them back. */
+function projAIApply(toolId, result, how, target, info) {
+    if (!info || !Array.isArray(info.data) || (info.action !== 'rows' && info.action !== 'breakdown')) return false;
+    const data = projGetData(toolId);
+    let parent = null;
+    if (info.action === 'breakdown') {
+        parent = target && target.row ? data.rows.find(r => r.id === target.row.id) : null;
+        if (!parent || how !== 'insert' || projRowDepth(data, parent) >= PROJ_MAX_DEPTH) {
+            if (typeof showToolToast === 'function') showToolToast(parent ? 'That row is as deep as rows go' : 'Click into the row to break down first');
+            return false;
+        }
+    }
+    const ids = info.data.map(() => projNewId('r'));
+    const made = info.data.map((r, i) => {
+        const row = { id: ids[i], cells: { item: r.task, size: r.size, pct: 0, deps: r.after == null ? [] : [ids[r.after]], links: [] } };
+        if (parent) row.parent = parent.id;
+        if (r.note) row.notes = { item: r.note };
+        return row;
+    });
+    if (info.action === 'rows' && how === 'replace') data.rows = made;
+    else data.rows = data.rows.concat(made);
+    projSetData(toolId, data);
+    const widget = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"] .proj-widget');
+    if (widget) projRender(widget, toolId);
+    return true;
+}
+
 
 function projInit() {
     document.querySelectorAll('.proj-widget').forEach(widget => {
@@ -4591,6 +4758,7 @@ function projRowDrop(tr, event) {
         projRolledSize, projSizeStep, projPercentStep, projSchedule,
         projSplitOf, projApplySplit, projSaveSplit, projSplitDown, projSplitKey, projSplitReset,
         projYearQuarters, projTimelineModel, projTimelineFit, projKeepTicksIn, projShortDate, projLongDate, projRenderTimeline, projPeriodsText, projCopyPeriods,
+        projAISizeScale, projAIRowLine, projAIFocusedRow, projAITarget, projAICleanRows, projAIRowsPreview, projAIApply,
         projInit, projOnRender, projRender, projAutoFit, projRefresh, projRenderSizes,
         projColumnHeadHtml, projCellHtml, projRenderTable, projTickStep, projRenderGantt,
         projMutate, projUpdateDerived, projOnSizeDays, projOnCell, projOnColumnTitle, projOnColumnType,
