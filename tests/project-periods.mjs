@@ -69,6 +69,29 @@ ok('and where its days are', Math.abs(q[1].left - (Date.UTC(2026, 9, 1) - Date.U
 const today = await page.evaluate((s) => parseFloat(document.querySelector(s + ' .proj-tl-today').style.left), TL);
 ok('a line for today, inside the quarter it is in', today > q[1].left && today < q[1].left + q[1].width, String(today));
 
+// 2b. Under the quarters, their timeboxes and sprints: two six-week timeboxes of three
+// fortnights, then the planning week, each counted inside its parent.
+const tb = await segs('timeboxes'), sp = await segs('sprints');
+const q4 = (list) => brief(list.filter(s => s.name.startsWith('2026 Q4')));
+ok('the timeboxes of a quarter, and its planning week', q4(tb) ===
+    '2026 Q4 T1 2026-10-01..2026-11-11 [now] | 2026 Q4 T2 2026-11-12..2026-12-23 | 2026 Q4 planning week 2026-12-24..2026-12-30 [planning]', q4(tb));
+ok('the sprints of each timebox, counted again from 1 in each', q4(sp) ===
+    '2026 Q4 T1 S1 2026-10-01..2026-10-14 [past] | 2026 Q4 T1 S2 2026-10-15..2026-10-28 [past] | 2026 Q4 T1 S3 2026-10-29..2026-11-11 [now] | ' +
+    '2026 Q4 T2 S1 2026-11-12..2026-11-25 | 2026 Q4 T2 S2 2026-11-26..2026-12-09 | 2026 Q4 T2 S3 2026-12-10..2026-12-23 | ' +
+    '2026 Q4 planning week 2026-12-24..2026-12-30 [planning]', q4(sp));
+ok('every quarter drawn is divided, and the day left over is not', tb.filter(s => !s.cls.includes('planning')).length === 2 * 5 &&
+    !tb.concat(sp).some(s => s.start === '2026-12-31'), brief(tb));
+ok('in full on hover', sp.find(s => s.name === '2026 Q4 T1 S3').title === '2026 Q4 T1 S3 (now): Oct 29, 2026 – Nov 11, 2026, 14 days');
+const shown = await page.evaluate((s) => {
+    const vis = (e) => e && getComputedStyle(e).display !== 'none';
+    const seg = (row, name) => Array.from(document.querySelectorAll(s + ' .proj-tl-row.' + row + ' .proj-tl-seg')).find(e => e.dataset.name === name);
+    const sprint = seg('sprints', '2026 Q4 T1 S3'), quarter = seg('quarters', '2026 Q4');
+    return { sprintName: sprint.querySelector('.proj-tl-name').textContent, sprintNameShown: vis(sprint.querySelector('.proj-tl-name')),
+        sprintDates: vis(sprint.querySelector('.proj-tl-edge')), quarterDates: vis(quarter.querySelector('.proj-tl-edge')), width: sprint.getBoundingClientRect().width };
+}, TL);
+ok('a sprint as narrow as a year-wide view makes it is just its name; a quarter keeps its dates', shown.sprintName === 'S3' && shown.sprintNameShown &&
+    !shown.sprintDates && shown.quarterDates, JSON.stringify(shown));
+
 // 3. Copy.
 await page.hover(TL);
 await page.click(TL + ' .proj-tl-copy');
@@ -76,7 +99,10 @@ await page.waitForTimeout(200);
 const copied = await page.evaluate(() => navigator.clipboard.readText());
 ok('Copy gives the quarters and halves, now marked', copied === [
     '2026 Q4: 2026-10-01 – 2026-12-30 (91 days, now)', '2027 Q1: 2027-01-01 – 2027-04-01 (91 days)', '2027 Q2: 2027-04-02 – 2027-07-01 (91 days)',
-    '2027 Q3: 2027-07-02 – 2027-09-30 (91 days)', '2026 H2: 2026-07-02 – 2026-12-31 (183 days, now)', '2027 H1: 2027-01-01 – 2027-07-01 (182 days)'].join('\n'), copied);
+    '2027 Q3: 2027-07-02 – 2027-09-30 (91 days)', '2026 H2: 2026-07-02 – 2026-12-31 (183 days, now)', '2027 H1: 2027-01-01 – 2027-07-01 (182 days)',
+    '2026 Q4 T1: 2026-10-01 – 2026-11-11 (42 days, now)', '2026 Q4 T2: 2026-11-12 – 2026-12-23 (42 days)',
+    '2026 Q4 T1 S3: 2026-10-29 – 2026-11-11 (14 days, now)', '2026 Q4 T2 S1: 2026-11-12 – 2026-11-25 (14 days)', '2026 Q4 T2 S2: 2026-11-26 – 2026-12-09 (14 days)',
+    '2026 Q4 T2 S3: 2026-12-10 – 2026-12-23 (14 days)', '2026 Q4 planning week: 2026-12-24 – 2026-12-30 (7 days)'].join('\n'), copied);
 ok('and pressing it does not move the divider', (await page.evaluate((i) => (toolCustomizations[i] || {}).projSplit, id)) === undefined);
 
 // 4. Counted as the chart counts: a fiscal year, a start of one's own, another ladder.
@@ -97,6 +123,14 @@ await page.evaluate((s) => { const el = document.querySelector(s); el.value = 'f
 await page.waitForTimeout(300);
 ok('changed in the settings strip, it follows at once', (await segs('quarters')).some(s => /^FY\d\d Q/.test(s.name)));
 await setUnits({ yearMode: 'calendar', planningWeeks: 1 });
+await setUnits({ sprintsPerTimebox: 2, timeboxesPerQuarter: 3 });
+const tb3 = await segs('timeboxes'), sp3 = await segs('sprints');
+ok('another ladder: three four-week timeboxes of two sprints', q4(tb3) ===
+    '2026 Q4 T1 2026-10-01..2026-10-28 [past] | 2026 Q4 T2 2026-10-29..2026-11-25 [now] | 2026 Q4 T3 2026-11-26..2026-12-23 | 2026 Q4 planning week 2026-12-24..2026-12-30 [planning]', q4(tb3));
+ok('and the sprint now is T2 S1', sp3.find(s => s.cls.includes('now')).name === '2026 Q4 T2 S1', brief(sp3.filter(s => s.cls.includes('now'))));
+await setUnits({ sprintsPerTimebox: 3, timeboxesPerQuarter: 2, planningWeeks: 0 });
+ok('with no planning week, none is drawn', !(await segs('timeboxes')).some(s => s.cls.includes('planning')) && !(await segs('sprints')).some(s => s.cls.includes('planning')));
+await setUnits({ planningWeeks: 1 });
 
 // 5. The divider.
 const heights = () => page.evaluate((s) => [document.querySelector(s + ' .proj-table-pane').getBoundingClientRect().height,
@@ -143,6 +177,21 @@ const compact = await page.evaluate(async (i) => {
     return small && !tl.classList.contains('proj-tl-compact');
 }, id);
 ok('in a window too short for the dates, it is a thin divider; given room again, the dates come back', compact);
+const short = await page.evaluate(async (i) => {
+    const t = document.querySelector('.tool[data-tool="' + i + '"]');
+    const before = t.style.height;
+    const rows = (tl) => ['halves', 'quarters', 'timeboxes', 'sprints'].map(r => getComputedStyle(tl.querySelector('.proj-tl-row.' + r)).display !== 'none');
+    const tl = t.querySelector('.proj-timeline');
+    const full = rows(tl);
+    t.style.height = '420px';
+    await new Promise(r => setTimeout(r, 150));
+    const mid = rows(tl), midH = tl.getBoundingClientRect().height;
+    t.style.height = before;
+    await new Promise(r => setTimeout(r, 150));
+    return { full: full.join(), mid: mid.join(), midH: midH, after: rows(tl).join() };
+}, id);
+ok('given less room, the timeboxes and sprints go first, and the halves and quarters stay', short.full === 'true,true,true,true' &&
+    short.mid === 'true,true,false,false' && short.midH < 62 && short.after === short.full, JSON.stringify(short));
 // The chart does not scroll sideways because of its own labels: the last one, centred
 // on a day near the edge, used to stick out by half its width whatever the axis.
 const overflow = () => page.evaluate((i) => {
