@@ -55,6 +55,40 @@
 .tool.authoring-split .proj-widget .authoring-source { padding-bottom: 8px; border-bottom: 1px solid var(--border-light); }
 .tool.authoring-split .proj-widget .authoring-result { padding-top: 8px; }
 
+/* ---- The periods timeline, which is also the divider --------------------------
+
+   Between the table and the chart, in Both: the quarter the plan is in and the three
+   after it, the half it is in and the next, each with its first and last day, to
+   scale. Dragged, it shares the height between the two panes. */
+.proj-timeline { display: none; position: relative; flex: 0 0 auto; height: 58px; margin: 4px 0; cursor: row-resize;
+    border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); background: var(--bg-secondary, var(--bg-tertiary));
+    user-select: none; touch-action: none; font-variant-numeric: tabular-nums; }
+.tool.authoring-split .proj-widget .proj-timeline { display: block; }
+.proj-timeline:focus-visible { outline: 2px solid #3498db; outline-offset: -2px; }
+.proj-timeline.proj-dragging, .proj-timeline:hover { border-color: #3498db; }
+.proj-tl-rows { position: absolute; left: 8px; right: 30px; top: 4px; bottom: 4px; }
+.proj-tl-row { position: absolute; left: 0; right: 0; height: 24px; }
+.proj-tl-row.halves { top: 0; }
+.proj-tl-row.quarters { top: 26px; }
+.proj-tl-seg { position: absolute; top: 0; bottom: 0; box-sizing: border-box; border: 1px solid var(--border-color); border-radius: 3px;
+    background: var(--bg-primary); overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 4px;
+    padding: 0 3px; font-size: 10px; color: var(--text-secondary); white-space: nowrap; }
+.proj-tl-row.halves .proj-tl-seg { background: rgba(52, 152, 219, 0.10); }
+.proj-tl-seg.now { border-color: #3498db; color: var(--text-primary); }
+.proj-tl-seg.now .proj-tl-name { font-weight: 700; }
+.proj-tl-seg.past { opacity: 0.5; }
+.proj-tl-seg.leftover { padding: 0; background: repeating-linear-gradient(45deg, var(--border-color) 0 2px, transparent 2px 4px); }
+.proj-tl-name { font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; }
+.proj-tl-edge { color: var(--text-muted); }
+.proj-tl-today { position: absolute; top: -2px; bottom: -2px; width: 0; border-left: 2px solid #e74c3c; pointer-events: none; }
+.proj-tl-copy { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); border: 1px solid var(--border-color); border-radius: 3px;
+    background: var(--bg-tertiary); color: var(--text-secondary); font-size: 11px; padding: 1px 4px; cursor: pointer; }
+.proj-tl-copy:hover { color: var(--text-primary); }
+/* A window too short for the periods keeps the divider and loses the dates: the
+   panes need the height more than the timeline does. */
+.proj-timeline.proj-tl-compact { height: 8px; }
+.proj-timeline.proj-tl-compact .proj-tl-rows, .proj-timeline.proj-tl-compact .proj-tl-copy { display: none; }
+
 /* Days per size. One line, always in view: it is what every calculated column is
    built on, and a number you cannot see is a number you cannot trust. */
 /* The three setting strips fold away together: a plan being read rather than set up
@@ -523,6 +557,8 @@ PluginRegistry.registerTool({
                 '<div class="proj-table-scroll"><table class="proj-table"></table></div>' +
             '</div>' +
             '<div class="authoring-resizer"></div>' +
+            '<div class="proj-timeline" role="separator" aria-orientation="horizontal" tabindex="0" ' +
+                'onkeydown="projSplitKey(event, this)" ondblclick="projSplitReset(event, this)"></div>' +
             '<div class="authoring-result proj-gantt-pane"></div>' +
         '</div>' +
     '</div>',
@@ -1836,6 +1872,221 @@ function projSchedule(data) {
 // Rendering
 // ============================================================
 
+// ---- The periods timeline between the panes, and the split it sets ---------------
+
+const PROJ_SPLIT_DEFAULT = 0.58;
+const PROJ_SPLIT_MIN = 0.12;
+const PROJ_SPLIT_MAX = 0.88;
+
+/** The table's share of the height, as saved, or the default. */
+function projSplitOf(toolId) {
+    const f = Number((toolCustomizations[toolId] || {}).projSplit);
+    return f >= PROJ_SPLIT_MIN && f <= PROJ_SPLIT_MAX ? f : PROJ_SPLIT_DEFAULT;
+}
+
+/** The two panes at a share of the height, as percentages of it — the way the
+ *  stylesheet had them, so a window sized by its content still is. */
+function projApplySplit(widget, fraction) {
+    const source = widget.querySelector('.proj-table-pane');
+    const result = widget.querySelector('.proj-gantt-pane');
+    if (!source || !result) return;
+    source.style.flex = '1 1 ' + (fraction * 100).toFixed(1) + '%';
+    result.style.flex = '1 1 ' + ((1 - fraction) * 100).toFixed(1) + '%';
+    const tl = widget.querySelector('.proj-timeline');
+    if (tl) tl.setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
+}
+
+function projSaveSplit(toolId, fraction) {
+    toolCustomizations[toolId] = toolCustomizations[toolId] || {};
+    if (fraction == null) delete toolCustomizations[toolId].projSplit;
+    else toolCustomizations[toolId].projSplit = Math.round(fraction * 1000) / 1000;
+    saveToolCustomizations(toolCustomizations);
+}
+
+/** Dragging the timeline: the table's share follows the pointer, kept when let go. */
+function projSplitDown(e) {
+    const tl = e.currentTarget;
+    if (e.button !== 0 || e.target.closest('.proj-tl-copy')) return;
+    const widget = projWidget(tl), toolId = projToolId(tl);
+    const split = widget && widget.querySelector('.authoring-split');
+    if (!split || !toolId) return;
+    e.preventDefault();
+    tl.focus({ preventScroll: true });
+    tl.setPointerCapture(e.pointerId);
+    tl.classList.add('proj-dragging');
+    let fraction = projSplitOf(toolId);
+    const move = (ev) => {
+        const r = split.getBoundingClientRect();
+        const room = r.height - tl.offsetHeight;
+        if (room <= 0) return;
+        fraction = Math.max(PROJ_SPLIT_MIN, Math.min(PROJ_SPLIT_MAX, (ev.clientY - r.top - tl.offsetHeight / 2) / room));
+        projApplySplit(widget, fraction);
+    };
+    const up = () => {
+        tl.removeEventListener('pointermove', move);
+        tl.removeEventListener('pointerup', up);
+        tl.removeEventListener('pointercancel', up);
+        tl.classList.remove('proj-dragging');
+        projSaveSplit(toolId, fraction);
+    };
+    tl.addEventListener('pointermove', move);
+    tl.addEventListener('pointerup', up);
+    tl.addEventListener('pointercancel', up);
+}
+
+/** ↑ and ↓ on the focused timeline move it a step; Home and End to the limits. */
+function projSplitKey(event, tl) {
+    const toolId = projToolId(tl), widget = projWidget(tl);
+    if (!toolId || !widget) return;
+    const now = projSplitOf(toolId);
+    const to = event.key === 'ArrowUp' ? now - 0.05 : event.key === 'ArrowDown' ? now + 0.05
+        : event.key === 'Home' ? PROJ_SPLIT_MIN : event.key === 'End' ? PROJ_SPLIT_MAX : null;
+    if (to == null) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const fraction = Math.max(PROJ_SPLIT_MIN, Math.min(PROJ_SPLIT_MAX, Math.round(to * 100) / 100));
+    projApplySplit(widget, fraction);
+    projSaveSplit(toolId, fraction);
+}
+
+/** A double-click puts the split back where a new table has it. */
+function projSplitReset(event, tl) {
+    if (event.target.closest('.proj-tl-copy')) return;
+    const toolId = projToolId(tl), widget = projWidget(tl);
+    if (!toolId || !widget) return;
+    projApplySplit(widget, PROJ_SPLIT_DEFAULT);
+    projSaveSplit(toolId, null);
+}
+
+/**
+ * The quarters of the year a day is in, as the chart counts them: from the year's
+ * start at the ladder's length, the last cut short by the next year's start. A piece
+ * shorter than a quarter at the end is what the chart calls Q5 — days no quarter
+ * holds — and is marked `leftover`.
+ */
+function projYearQuarters(units, atMs) {
+    const start = projYearStart(units, atMs);
+    const next = projYearStart(units, start + 370 * PROJ_DAY);
+    const plan = projQuarterPlan(units);
+    const year = projYearLabel(units, start).trim();
+    const out = [];
+    for (let k = 0, s = start; s < next && k < 12; k++, s += plan.quarter * PROJ_DAY) {
+        const end = Math.min(s + plan.quarter * PROJ_DAY, next) - PROJ_DAY;
+        const days = Math.round((end - s) / PROJ_DAY) + 1;
+        out.push({ kind: 'quarter', name: year + ' Q' + (k + 1), start: s, end: end, days: days, leftover: days < plan.quarter });
+    }
+    return { start: start, next: next, year: year, quarters: out };
+}
+
+/**
+ * What the timeline shows: the quarter today is in and the three whole quarters after
+ * it; the half today is in and the next. H1 is the year's first two quarters, H2 the
+ * rest of it, whatever is left over included.
+ */
+function projTimelineModel(units, today) {
+    const years = [projYearQuarters(units, today)];
+    const more = () => years.push(projYearQuarters(units, years[years.length - 1].next));
+    while (years.length < 4) more();
+    const all = [].concat(...years.map(y => y.quarters));
+    let at = all.findIndex(q => q.start <= today && today <= q.end);
+    if (at < 0) at = all.findIndex(q => q.start > today);
+    while (at >= 0 && all[at] && all[at].leftover && all[at].start > today) at++;
+    const quarters = [];
+    for (let i = at; i < all.length && quarters.length < 4; i++) if (!all[i].leftover || (all[i].start <= today && today <= all[i].end)) quarters.push(all[i]);
+    const halves = [];
+    years.forEach(y => {
+        const full = y.quarters.filter(q => !q.leftover);
+        if (full.length >= 2) {
+            const h1end = full[Math.min(1, full.length - 1)].end;
+            halves.push({ kind: 'half', name: y.year + ' H1', start: y.start, end: h1end });
+            if (h1end + PROJ_DAY < y.next) halves.push({ kind: 'half', name: y.year + ' H2', start: h1end + PROJ_DAY, end: y.next - PROJ_DAY });
+        } else {
+            halves.push({ kind: 'half', name: y.year, start: y.start, end: y.next - PROJ_DAY });
+        }
+    });
+    halves.forEach(h => { h.days = Math.round((h.end - h.start) / PROJ_DAY) + 1; });
+    let hAt = halves.findIndex(h => h.start <= today && today <= h.end);
+    if (hAt < 0) hAt = 0;
+    const shownHalves = halves.slice(hAt, hAt + 2);
+    const from = Math.min(shownHalves[0].start, quarters[0].start);
+    const to = Math.max(shownHalves[shownHalves.length - 1].end, quarters[quarters.length - 1].end);
+    // Every quarter in the span is drawn — the one the half began in, past, and the
+    // leftover days between years — so the row reads as the calendar does.
+    const row = all.filter(q => q.end >= from && q.start <= to);
+    const mark = (p) => Object.assign({}, p, { now: p.start <= today && today <= p.end, past: p.end < today });
+    return { from: from, to: to, today: today, halves: shownHalves.map(mark), quarters: row.map(mark),
+        listed: quarters.map(mark).concat(shownHalves.map(mark)) };
+}
+
+/** Below this height the two panes and the timeline do not all fit; the dates go. */
+const PROJ_TIMELINE_ROOM = 260;
+
+function projTimelineFit(widget) {
+    const tl = widget.querySelector('.proj-timeline'), split = widget.querySelector('.authoring-split');
+    if (!tl || !split) return;
+    const h = split.getBoundingClientRect().height;
+    tl.classList.toggle('proj-tl-compact', h > 0 && h < PROJ_TIMELINE_ROOM);
+}
+
+function projShortDate(ms) {
+    return new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
+}
+
+function projLongDate(ms) {
+    return new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+}
+
+function projRenderTimeline(widget, data) {
+    const tl = widget.querySelector('.proj-timeline');
+    if (!tl) return;
+    const toolId = projToolId(widget);
+    if (toolId) projApplySplit(widget, projSplitOf(toolId));
+    if (!tl.dataset.wired) {
+        tl.dataset.wired = '1';
+        tl.addEventListener('pointerdown', projSplitDown);
+        const split = widget.querySelector('.authoring-split');
+        if (split && window.ResizeObserver) new ResizeObserver(() => projTimelineFit(widget)).observe(split);
+    }
+    projTimelineFit(widget);
+    const units = projUnits(data);
+    const m = projTimelineModel(units, projToday());
+    const span = Math.max(1, (m.to - m.from) / PROJ_DAY + 1);
+    const pct = (ms) => ((ms - m.from) / PROJ_DAY / span * 100);
+    const seg = (p) => {
+        const left = pct(p.start), width = (p.days / span) * 100;
+        const title = p.leftover
+            ? projLongDate(p.start) + (p.days > 1 ? ' – ' + projLongDate(p.end) : '') + ': ' + p.days + (p.days === 1 ? ' day' : ' days') +
+                ' outside any quarter (the chart’s ' + p.name.split(' ').pop() + '), counted in the year’s second half'
+            : p.name + (p.now ? ' (now)' : '') + ': ' + projLongDate(p.start) + ' – ' + projLongDate(p.end) + ', ' + p.days + ' days';
+        const cls = 'proj-tl-seg' + (p.now ? ' now' : '') + (p.past ? ' past' : '') + (p.leftover ? ' leftover' : '');
+        return '<div class="' + cls + '" style="left:' + left.toFixed(3) + '%;width:' + width.toFixed(3) + '%" title="' + escapeHtml(title) + '"' +
+            ' data-name="' + escapeHtml(p.name) + '" data-start="' + projFormatDate(p.start) + '" data-end="' + projFormatDate(p.end) + '">' +
+            (p.leftover ? '' : '<span class="proj-tl-edge">' + escapeHtml(projShortDate(p.start)) + '</span>' +
+                '<span class="proj-tl-name">' + escapeHtml(p.name) + '</span>' +
+                '<span class="proj-tl-edge">' + escapeHtml(projShortDate(p.end)) + '</span>') + '</div>';
+    };
+    tl.setAttribute('aria-label', 'Periods, and the divider between the table and the chart: drag, or ↑ and ↓, to share the height; double-click to reset');
+    tl.title = 'Drag to share the height between the table and the chart · double-click to reset';
+    tl.innerHTML = '<div class="proj-tl-rows">' +
+            '<div class="proj-tl-row halves">' + m.halves.map(seg).join('') + '</div>' +
+            '<div class="proj-tl-row quarters">' + m.quarters.map(seg).join('') + '</div>' +
+            '<div class="proj-tl-today" style="left:' + pct(m.today + PROJ_DAY / 2).toFixed(3) + '%" title="Today"></div>' +
+        '</div>' +
+        '<button type="button" class="proj-tl-copy" onclick="projCopyPeriods(this)" title="Copy these periods and their dates">⎘</button>';
+    tl._model = m;
+}
+
+/** The periods as lines of text: name, first and last day, length, and which is now. */
+function projPeriodsText(m) {
+    return m.listed.map(p => p.name + ': ' + projFormatDate(p.start) + ' – ' + projFormatDate(p.end) + ' (' + p.days + ' days' + (p.now ? ', now' : '') + ')').join('\n');
+}
+
+function projCopyPeriods(btn) {
+    const tl = btn.closest('.proj-timeline');
+    if (!tl || !tl._model) return;
+    copyTextToClipboard(projPeriodsText(tl._model), 'Periods copied');
+}
+
 function projInit() {
     document.querySelectorAll('.proj-widget').forEach(widget => {
         const toolId = projToolId(widget);
@@ -2504,6 +2755,9 @@ function projTickStep(spanDays) {
 }
 
 function projRenderGantt(widget, data) {
+    // The timeline counts periods the way the chart does, so it is drawn with it:
+    // whatever moves a quarter boundary on the chart moves it here.
+    projRenderTimeline(widget, data);
     const pane = widget.querySelector('.proj-gantt-pane');
     if (!pane) return;
     if (!data.rows.length) {
@@ -2702,6 +2956,36 @@ function projRenderGantt(widget, data) {
             '</div>' + rows +
         '</div></div>' + warn +
     '</div>';
+    projKeepTicksIn(pane);
+    if (!pane.dataset.tickWatch && window.ResizeObserver) {
+        pane.dataset.tickWatch = '1';
+        new ResizeObserver(() => projKeepTicksIn(pane)).observe(pane);
+    }
+}
+
+/**
+ * Axis labels kept inside the chart. Each is centred on its day, so the last one —
+ * on a day near the right edge — stuck out by half its width, and the chart scrolled
+ * sideways by that much whatever the axis showed. One that would cross the edge ends
+ * at it instead; one that would then cover its neighbour is left out. Done again
+ * whenever the chart's width changes, since the labels are placed in percent.
+ */
+function projKeepTicksIn(pane) {
+    const axis = pane.querySelector('.proj-axis');
+    if (!axis) return;
+    const edge = axis.getBoundingClientRect().right;
+    let prevRight = -Infinity;
+    axis.querySelectorAll('.proj-tick').forEach(t => {
+        t.style.transform = '';
+        t.style.visibility = '';
+        let r = t.getBoundingClientRect();
+        if (r.right > edge) {
+            t.style.transform = 'translateX(-100%)';
+            r = t.getBoundingClientRect();
+        }
+        if (r.left < prevRight + 2) t.style.visibility = 'hidden';
+        else prevRight = r.right;
+    });
 }
 
 // ============================================================
@@ -4305,6 +4589,8 @@ function projRowDrop(tr, event) {
         projNote, projNoteOpener, projOpenModal, projModalHeading, projOpenNote,
         projOnNoteInput, projCloseModal,
         projRolledSize, projSizeStep, projPercentStep, projSchedule,
+        projSplitOf, projApplySplit, projSaveSplit, projSplitDown, projSplitKey, projSplitReset,
+        projYearQuarters, projTimelineModel, projTimelineFit, projKeepTicksIn, projShortDate, projLongDate, projRenderTimeline, projPeriodsText, projCopyPeriods,
         projInit, projOnRender, projRender, projAutoFit, projRefresh, projRenderSizes,
         projColumnHeadHtml, projCellHtml, projRenderTable, projTickStep, projRenderGantt,
         projMutate, projUpdateDerived, projOnSizeDays, projOnCell, projOnColumnTitle, projOnColumnType,
