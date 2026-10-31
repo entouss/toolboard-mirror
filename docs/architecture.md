@@ -364,7 +364,12 @@ list (`checklistAI*`, `kbAI*`). The Project Table's ✨ never does the table's a
 row with its days, dates and slack already worked out (`projAIRowLine`), and drafts
 tasks, sizes from the table's own scale and which earlier task each comes after, for
 the table to schedule; Break this row down works on the row whose cell has the caret
-(`projAI*`). An
+(`projAI*`). Its status update carries a status square on every row it names — 🟩 done or on track,
+🟧 tight, 🟥 late, 🟦 under way with no deadline, ⬜ not started — from the table's
+own slack bands: given to the model with each row, and then put right on each bullet
+by `finish(result, target)`, a tool action's last word on what came back
+(`projAISquareUp`), so the square is the table's wherever it knows. A row it can
+only call not started keeps the model's square, which may come from the notes. An
 `apply` that returns `false` refuses, and the popup stays open. The Agenda Timer uses
 all of them: planning, **Draft an agenda…** asks what it is for and fills the plan by
 Replace the plan or Add to the plan; after a run, **Write-up** and **Action items**

@@ -623,9 +623,11 @@ PluginRegistry.registerTool({
                     'finish first, or 0.\n\nThe rest of the plan, for context:\n' + text },
             { id: 'status', group: 'Plan', label: 'Status update', system: PROJ_AI_SYSTEM, apply: false,
                 show: (t) => !!t.text,
+                finish: projAISquareUp,
                 prompt: (text) => 'Write a short status update from this plan under four headings: "Done", "In progress", ' +
-                    '"At risk" and "Next", each a few bullets naming the rows. A row is at risk when its slack is Late, No room ' +
-                    'or Tight. Use the dates and numbers as they are given.\n\n' + text },
+                    '"At risk" and "Next", each a few bullets. Start every bullet with the row\'s status square exactly as the ' +
+                    'plan gives it, then its number and name, like "- ' + PROJ_AI_SQUARES.tight + ' #2 Build: \u2026". A row is at ' +
+                    'risk when its slack is Late, No room or Tight. Use the dates and numbers as they are given.\n\n' + text },
             { id: 'risks', group: 'Plan', label: 'Risks', system: PROJ_AI_SYSTEM, apply: false,
                 show: (t) => !!t.text,
                 prompt: (text) => 'List the risks in this plan, worst first, one bullet each naming the row: slack that is Late, ' +
@@ -2146,7 +2148,53 @@ function projAISizeScale(data) {
     return PROJ_SIZE_RAMP.filter(s => data.sizes[s] > 0).map(s => s + ' = ' + data.sizes[s] + ' days').join(', ');
 }
 
-/** One row as the model reads it: what the table shows, worked out. */
+/**
+ * A row's status, as a coloured square: done 🟩, late 🟥, tight or no room 🟧, under
+ * way with room 🟩, under way with no deadline to judge it by 🟦, not started ⬜. The
+ * table's own slack bands decide it, so the square says what the Slack column says.
+ */
+const PROJ_AI_SQUARES = { done: '\u{1F7E9}', late: '\u{1F7E5}', tight: '\u{1F7E7}', good: '\u{1F7E9}', info: '\u{1F7E6}', todo: '\u2B1C' };
+const PROJ_AI_SQUARE_KEY = PROJ_AI_SQUARES.done + ' done or on track \u00B7 ' + PROJ_AI_SQUARES.tight + ' tight \u00B7 ' + PROJ_AI_SQUARES.late +
+    ' late \u00B7 ' + PROJ_AI_SQUARES.info + ' under way, no deadline \u00B7 ' + PROJ_AI_SQUARES.todo + ' not started';
+
+function projAIRowSquare(data, row) {
+    if (projIsDone(data, row)) return PROJ_AI_SQUARES.done;
+    const slack = projSlackDays(data, row);
+    const started = projPercent(data, row) > 0;
+    if (slack != null) {
+        const band = projSlackBand(slack).role;
+        if (band === 'critical') return PROJ_AI_SQUARES.late;
+        if (band === 'serious' || band === 'warning') return PROJ_AI_SQUARES.tight;
+        return started ? PROJ_AI_SQUARES.good : PROJ_AI_SQUARES.todo;
+    }
+    return started ? PROJ_AI_SQUARES.info : PROJ_AI_SQUARES.todo;
+}
+
+/**
+ * Every bullet of a status update that names a row given the row's own square — added
+ * where the model left it off, put right where it chose another — and the key at the
+ * end. The model writes the update; the table says how each row stands, wherever it
+ * knows: done, late, tight or under way. A row it can only call not started keeps
+ * whichever square the model chose.
+ */
+function projAISquareUp(text, target) {
+    const squares = (target && target.squares) || {};
+    const any = new RegExp('^(\\s*(?:[-*+]|\\d+[.)])\\s+)(?:(?:' + Object.values(PROJ_AI_SQUARES).join('|') + ')\\uFE0F?\\s*)*', 'u');
+    const lines = String(text).split('\n').map(line => {
+        const m = any.exec(line);
+        const ref = /#(\d+(?:\.\d+)*)/.exec(line);
+        if (!m || !ref || !squares[ref[1]]) return line;
+        // Not started is all the table can say of a row with no progress and nothing
+        // pressing: the model, reading its notes and your instructions, may know more,
+        // so its square stands there. Only where it gave none does the row get ⬜.
+        const given = m[0].slice(m[1].length).trim();
+        if (squares[ref[1]] === PROJ_AI_SQUARES.todo && given) return line;
+        return m[1] + squares[ref[1]] + ' ' + line.slice(m[0].length);
+    });
+    return lines.join('\n').replace(/\s+$/, '') + '\n\n*' + PROJ_AI_SQUARE_KEY + '*';
+}
+
+/** One row as the model reads it: its square, and what the table shows, worked out. */
 function projAIRowLine(data, row) {
     const num = projRowNumber(data, row);
     const facts = [];
@@ -2166,7 +2214,7 @@ function projAIRowLine(data, row) {
     const deps = (projCell(row, 'deps') || []).map(id => data.rows.find(r => r.id === id)).filter(Boolean).map(r => '#' + projRowNumber(data, r));
     if (deps.length) facts.push('after ' + deps.join(', '));
     const note = String(((row.notes || {}).item) || '').replace(/\s+/g, ' ').trim();
-    return '#' + num + ' ' + (String(projCell(row, 'item') || '').trim() || 'Untitled') + ': ' + facts.join('; ') + (note ? '. Note: ' + note.slice(0, 160) : '');
+    return projAIRowSquare(data, row) + ' #' + num + ' ' + (String(projCell(row, 'item') || '').trim() || 'Untitled') + ': ' + facts.join('; ') + (note ? '. Note: ' + note.slice(0, 160) : '');
 }
 
 /** The row whose cell has the caret, if it is in this tool. */
@@ -2185,10 +2233,13 @@ function projAITarget(toolId) {
     if (rows.length > PROJ_AI_LIST) lines.push('…and ' + (rows.length - PROJ_AI_LIST) + ' more rows.');
     const row = projAIFocusedRow(toolId, data);
     const depth = row ? projRowDepth(data, row) : 0;
+    const squares = {};
+    rows.forEach(r => { squares[projRowNumber(data, r)] = projAIRowSquare(data, r); });
     return {
         scope: 'whole', kind: 'plan',
         text: rows.length ? 'Plan as of ' + projFormatDate(projToday()) + ', ' + rows.length + (rows.length === 1 ? ' row' : ' rows') + '. Sizes: ' +
-            projAISizeScale(data) + '.\n\n' + lines.join('\n') : '',
+            projAISizeScale(data) + '. Each row starts with its status: ' + PROJ_AI_SQUARE_KEY + '.\n\n' + lines.join('\n') : '',
+        squares: squares,
         row: row ? { id: row.id, number: projRowNumber(data, row), name: String(projCell(row, 'item') || '').trim() || 'Untitled',
             line: projAIRowLine(data, row), canNest: depth < PROJ_MAX_DEPTH } : null,
         sizes: projAISizeScale(data),
@@ -4758,7 +4809,7 @@ function projRowDrop(tr, event) {
         projRolledSize, projSizeStep, projPercentStep, projSchedule,
         projSplitOf, projApplySplit, projSaveSplit, projSplitDown, projSplitKey, projSplitReset,
         projYearQuarters, projTimelineModel, projTimelineFit, projKeepTicksIn, projShortDate, projLongDate, projRenderTimeline, projPeriodsText, projCopyPeriods,
-        projAISizeScale, projAIRowLine, projAIFocusedRow, projAITarget, projAICleanRows, projAIRowsPreview, projAIApply,
+        projAISizeScale, projAIRowSquare, projAISquareUp, projAIRowLine, projAIFocusedRow, projAITarget, projAICleanRows, projAIRowsPreview, projAIApply,
         projInit, projOnRender, projRender, projAutoFit, projRefresh, projRenderSizes,
         projColumnHeadHtml, projCellHtml, projRenderTable, projTickStep, projRenderGantt,
         projMutate, projUpdateDerived, projOnSizeDays, projOnCell, projOnColumnTitle, projOnColumnType,

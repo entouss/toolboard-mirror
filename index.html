@@ -10029,6 +10029,7 @@ function getToolAI(toolId) {
             applyHow: Array.isArray(a.applyHow) ? a.applyHow : ['replace', 'insert'],
             clean: typeof a.clean === 'function' ? a.clean : null, format: typeof a.format === 'function' ? a.format : null,
             check: typeof a.check === 'function' ? a.check : null, repair: typeof a.repair === 'function' ? a.repair : null,
+            finish: typeof a.finish === 'function' ? a.finish : null,
             show: typeof a.show === 'function' ? a.show : null }));
     return { target, apply, groups, custom: own };
 }
@@ -10410,6 +10411,11 @@ async function boardAIRun(action, extra) {
                 }
                 if (!mine()) return;
                 st.checkError = problem || '';
+            }
+            // The last word is the tool's: what it knows for certain, put right in the
+            // answer — a row's status square, say, rather than whichever the model chose.
+            if (own.finish && result) {
+                try { result = own.finish(String(result), st.target) || result; } catch (e) { /* the answer as it came */ }
             }
         } else if (action === 'keypoints' || action === 'tldr') {
             const type = action === 'tldr' ? 'tldr' : 'key-points';

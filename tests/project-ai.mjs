@@ -163,6 +163,39 @@ await run('rows', 'anything');
 ok('nor are rows with no task', /No rows came back/.test(await page.textContent(P + '.bai-status')));
 ok('the model is told what it is for', await page.evaluate(() => window.__ai.calls.some(c => c.op === 'create' && c.system === PROJ_AI_SYSTEM)));
 
+// 5b. The status update's squares are the table's: each row's, from its slack and progress,
+// put on every bullet that names it whatever the model wrote, with the key below.
+const SQ = { green: String.fromCodePoint(0x1F7E9), red: String.fromCodePoint(0x1F7E5), orange: String.fromCodePoint(0x1F7E7), blue: String.fromCodePoint(0x1F7E6), white: String.fromCharCode(0x2B1C) };
+await page.evaluate((i) => {
+    const d = projGetData(i);
+    d.rows = projSeedData().rows;
+    // Slack is the table's: days to the deadline less the row's own days left.
+    d.rows.find(r => r.id === 'r-launch').cells.deadline = '2026-11-02';
+    d.rows.find(r => r.id === 'r-build').cells.deadline = '2026-12-02';
+    projSetData(i, d);
+    projRender(document.querySelector('.tool[data-tool="' + i + '"] .proj-widget'), i);
+}, id);
+await page.waitForTimeout(300);
+const squares = await page.evaluate((i) => projAITarget(i).squares, id);
+ok('each row has its square, by the table’s own slack bands', JSON.stringify(squares) === JSON.stringify({ 1: SQ.green, 2: SQ.orange, 3: SQ.red }), JSON.stringify(squares));
+await replies(['## Done\n\n- #1 Discovery is well along\n- ' + SQ.red + ' #2 Build needs a push\n- No row named here\n\n## Next\n\n1. #3 Launch']);
+await run('status');
+call = (await prompts())[0];
+ok('the model is given each row with its square, and asked to start each bullet with it', call.input.includes(SQ.orange + ' #2 Build:') &&
+    /Start every bullet with the row's status square exactly as the plan gives it/.test(call.input));
+const result = await page.evaluate(() => boardAIState.result);
+ok('a bullet the model left bare gets its row’s square', result.includes('- ' + SQ.green + ' #1 Discovery is well along'), result);
+ok('a wrong one is put right', result.includes('- ' + SQ.orange + ' #2 Build needs a push') && !result.includes(SQ.red + ' #2'), result);
+ok('a numbered one too', result.includes('1. ' + SQ.red + ' #3 Launch'), result);
+ok('a bullet naming no row is left as it was', result.includes('- No row named here'));
+ok('and the key is at the end', result.trim().endsWith('not started*') && result.includes(SQ.orange + ' tight'), result.slice(-120));
+ok('as it reads in the popup', (await page.textContent(P + '.bai-out')).includes(SQ.green + ' #1 Discovery'));
+const kept = await page.evaluate((sq) => projAISquareUp('- ' + sq.green + ' #4 Ready to go\n- #5 Waiting\n- ' + sq.red + ' #6 Slipping',
+    { squares: { 4: sq.white, 5: sq.white, 6: sq.orange } }), SQ);
+ok('a row the table can only call not started keeps the model’s square', kept.includes('- ' + SQ.green + ' #4 Ready to go'), kept);
+ok('and gets ' + SQ.white + ' where the model gave none', kept.includes('- ' + SQ.white + ' #5 Waiting'), kept);
+ok('where the table knows, it still has the last word', kept.includes('- ' + SQ.orange + ' #6 Slipping'), kept);
+
 // 6. The person's own instructions: said last on a status update, where a small model
 // heeds them; not on a draft, which has to come back as JSON.
 await page.evaluate((t) => BoardAI.setInstructions(t), 'When providing feedback, use 🟩 good, 🟥 late, 🟧 warning.');
