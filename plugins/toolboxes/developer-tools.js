@@ -21,6 +21,19 @@
 .diff-match.same { color: #27ae60; }
 .diff-match.looks-same { color: #e67e22; }
 .diff-match.differ { color: var(--text-secondary); font-weight: normal; }
+.diff-nav { display: inline-flex; align-items: center; gap: 4px; }
+.diff-nav[hidden] { display: none; }
+.diff-nav-count { font-size: 11px; color: var(--text-secondary); min-width: 44px; text-align: center; white-space: nowrap; }
+.diff-output.has-cm { display: flex; }
+.diff-output.has-cm > .cm-mergeView, .diff-output.has-cm > .cm-editor { flex: 1; min-width: 0; }
+.diff-stripe { position: relative; width: 12px; flex-shrink: 0; background: var(--bg-tertiary); border-left: 1px solid var(--border-light); cursor: pointer; touch-action: none; }
+.diff-stripe-view { position: absolute; left: 0; right: 0; background: rgba(52, 152, 219, 0.18); border: 1px solid rgba(52, 152, 219, 0.7); border-radius: 2px; pointer-events: none; box-sizing: border-box; }
+.diff-stripe-tick { position: absolute; left: 2px; right: 2px; min-height: 3px; border-radius: 1px; }
+.diff-stripe-tick:hover { left: 0; right: 0; }
+.diff-stripe-tick.added { background: #27ae60; }
+.diff-stripe-tick.removed { background: #e74c3c; }
+.diff-stripe-tick.changed { background: #3498db; }
+.diff-stripe-tick.invisible { background: #e67e22; }
 .diff-view-btn { padding: 2px 7px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-secondary); cursor: pointer; font-size: 10px; border-radius: 3px; white-space: nowrap; }
 .diff-view-btn:hover:not(.active) { background: var(--table-hover); }
 .diff-view-btn.active { background: #27ae60; color: white; border-color: #27ae60; }
@@ -1416,6 +1429,7 @@ PluginRegistry.registerTool({
 <button class="diff-view-btn" data-view="unified" onclick="diffSetView(this, 'unified')" title="One list, additions and deletions together">Inline</button>
 <button class="diff-view-btn diff-tidy-btn" onclick="diffTidyInvisible(this)" disabled title="Make lines that only look the same the same: no-break and other odd spaces become spaces; zero-width characters, trailing spaces and stray carriage returns go; accents are written one way. Undo puts them back.">Tidy invisible characters</button>
 <span class="diff-match" aria-live="polite"></span>
+<span class="diff-nav" hidden><button class="diff-view-btn diff-prev" onclick="diffStripeStep(this, -1)" title="Previous change (Alt+↑ or Shift+F7)" aria-label="Previous change">↑</button><span class="diff-nav-count"></span><button class="diff-view-btn diff-next" onclick="diffStripeStep(this, 1)" title="Next change (Alt+↓ or F7)" aria-label="Next change">↓</button></span>
 </div>
 <div class="diff-body">
 <div class="diff-edit-container">
@@ -2315,7 +2329,7 @@ function diffLoadCM(done) {
 }
 
 /** Invisible characters drawn, named — and trailing spaces shaded — in an editor. */
-function diffCMExtensions(CM, onChange, hint) {
+function diffCMExtensions(CM, onChange, hint, widget) {
     var invisible = CM.highlightSpecialChars({
         addSpecialChars: /[\u00A0\u202F\u2000-\u200A\u205F\u3000\u1680\u2060]/,
         render: function(code) {
@@ -2331,9 +2345,16 @@ function diffCMExtensions(CM, onChange, hint) {
     var trailingPlugin = CM.ViewPlugin.define(function(view) {
         return { decorations: trailing.createDeco(view), update: function(u) { this.decorations = trailing.updateDeco(u, this.decorations); } };
     }, { decorations: function(v) { return v.decorations; } });
+    // Next and previous change, as in IntelliJ: F7, or Alt with an arrow — which in an
+    // editor moves the line, but here, where the lines are being compared, finds them.
+    var step = function(dir) { return function() { if (widget) diffStripeStep(widget, dir); return !!widget; }; };
+    var stepKeys = [{ key: 'Alt-ArrowDown', run: step(1) }, { key: 'Alt-ArrowUp', run: step(-1) }, { key: 'F7', run: step(1) }, { key: 'Shift-F7', run: step(-1) }];
     return [CM.lineNumbers(), CM.history(), CM.drawSelection(), CM.highlightActiveLine(), CM.highlightSelectionMatches(), CM.EditorView.lineWrapping,
-        CM.keymap.of([].concat(CM.defaultKeymap, CM.historyKeymap, CM.searchKeymap)), invisible, trailingPlugin,
-        CM.placeholder(hint || ''), CM.EditorView.updateListener.of(function(u) { if (u.docChanged) onChange(); })];
+        CM.keymap.of([].concat(stepKeys, CM.defaultKeymap, CM.historyKeymap, CM.searchKeymap)), invisible, trailingPlugin,
+        CM.placeholder(hint || ''), CM.EditorView.updateListener.of(function(u) {
+            if (u.docChanged) onChange();
+            if (widget && (u.docChanged || u.geometryChanged || u.heightChanged)) diffStripeSchedule(widget);
+        })];
 }
 
 /** What the editors say now: the two texts. */
@@ -2399,8 +2420,8 @@ function diffMountCM(widget, toolId, output, data) {
     var view;
     if (kind === 'split') {
         view = new CM.MergeView({
-            a: { doc: data.original, extensions: diffCMExtensions(CM, changed, 'Paste or type the original') },
-            b: { doc: data.modified, extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text') },
+            a: { doc: data.original, extensions: diffCMExtensions(CM, changed, 'Paste or type the original', widget) },
+            b: { doc: data.modified, extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text', widget) },
             parent: output, highlightChanges: true, gutter: true, revertControls: 'a-to-b',
             renderRevertControl: function() {
                 var b = document.createElement('button');
@@ -2413,11 +2434,170 @@ function diffMountCM(widget, toolId, output, data) {
     } else {
         view = new CM.EditorView({
             doc: data.modified, parent: output,
-            extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text').concat([CM.unifiedMergeView({ original: data.original, highlightChanges: true, gutter: true, mergeControls: true })])
+            extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text', widget).concat([CM.unifiedMergeView({ original: data.original, highlightChanges: true, gutter: true, mergeControls: true })])
         });
         merge = { kind: kind, view: view, dom: view.dom };
     }
     widget._merge = merge;
+    diffStripeMount(widget, output);
+}
+
+// ---- The change stripe: where the changes are, the length of the whole text --------
+
+/**
+ * Each change as the stripe shows it: where it starts and ends in the scrolling text,
+ * what kind it is — added, removed, changed, or only looking changed — and the lines.
+ * Read from the merge view's own chunks, at the modified side's real line heights, so
+ * wrapped lines and the gaps that keep the sides level are counted as they are drawn.
+ */
+function diffStripeModel(widget) {
+    var merge = widget._merge, CM = window.ToolboardCodeMirror;
+    if (!merge || !CM || !merge.dom.isConnected) return null;
+    var view = merge.kind === 'split' ? merge.view.b : merge.view;
+    var aDoc = merge.kind === 'split' ? merge.view.a.state.doc : CM.getOriginalDoc(view.state);
+    var bDoc = view.state.doc;
+    var scroller = merge.kind === 'split' ? merge.dom : view.scrollDOM;
+    var found = CM.getChunks(view.state);
+    var offset = view.documentTop - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    var clampB = function(n) { return Math.max(0, Math.min(n, bDoc.length)); };
+    var clampA = function(n) { return Math.max(0, Math.min(n, aDoc.length)); };
+    var lines = function(doc, from, to, clamp) {
+        var first = doc.lineAt(clamp(from)).number, last = doc.lineAt(clamp(Math.max(from, to - 1))).number;
+        return first === last ? 'Line ' + first : 'Lines ' + first + '\u2013' + last;
+    };
+    var chunks = ((found && found.chunks) || []).map(function(c) {
+        var added = c.fromA === c.toA, removed = c.fromB === c.toB;
+        var aText = aDoc.sliceString(clampA(c.fromA), clampA(c.toA)), bText = bDoc.sliceString(clampB(c.fromB), clampB(c.toB));
+        var kind = added ? 'added' : removed ? 'removed' : diffTidy(aText) === diffTidy(bText) ? 'invisible' : 'changed';
+        var top = view.lineBlockAt(clampB(c.fromB)).top;
+        var bottom = removed ? top : view.lineBlockAt(clampB(Math.max(c.fromB, c.toB - 1))).bottom;
+        var where = removed ? lines(aDoc, c.fromA, c.toA, clampA) + ' of the original' : lines(bDoc, c.fromB, c.toB, clampB);
+        return { top: offset + top, bottom: offset + bottom, kind: kind, from: clampB(c.fromB),
+            title: where + (kind === 'added' ? ' added' : kind === 'removed' ? ' removed' : kind === 'invisible' ? ' look the same: only invisible characters differ' : ' changed') };
+    });
+    return { view: view, scroller: scroller, chunks: chunks };
+}
+
+/** The stripe beside the editors, made once each time they are, and kept up to date. */
+function diffStripeMount(widget, output) {
+    output.classList.add('has-cm');
+    var stripe = document.createElement('div');
+    stripe.className = 'diff-stripe';
+    stripe.setAttribute('aria-hidden', 'true');
+    output.appendChild(stripe);
+    widget._stripe = stripe;
+    var model = function() { return diffStripeModel(widget); };
+    var scrollTo = function(clientY) {
+        var m = model();
+        if (!m) return;
+        var r = stripe.getBoundingClientRect();
+        var frac = Math.max(0, Math.min(1, (clientY - r.top) / Math.max(1, r.height)));
+        m.scroller.scrollTop = frac * m.scroller.scrollHeight - m.scroller.clientHeight / 2;
+    };
+    stripe.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        var tick = e.target.closest('.diff-stripe-tick');
+        if (tick) { diffStripeGo(widget, Number(tick.dataset.i)); return; }
+        scrollTo(e.clientY);
+        stripe.setPointerCapture(e.pointerId);
+        var move = function(ev) { scrollTo(ev.clientY); };
+        var up = function() { stripe.removeEventListener('pointermove', move); stripe.removeEventListener('pointerup', up); };
+        stripe.addEventListener('pointermove', move);
+        stripe.addEventListener('pointerup', up);
+    });
+    var m = model();
+    if (m) m.scroller.addEventListener('scroll', function() { diffStripeViewport(widget); diffStripeCount(widget); }, { passive: true });
+    if (window.ResizeObserver) {
+        if (widget._stripeResize) widget._stripeResize.disconnect();
+        widget._stripeResize = new ResizeObserver(function() { diffStripeSchedule(widget); });
+        widget._stripeResize.observe(output);
+    }
+    diffStripeSchedule(widget);
+}
+
+/** After the editors have settled — they work out their changes after the edit that made them. */
+function diffStripeSchedule(widget) {
+    if (widget._stripeFrame) return;
+    widget._stripeFrame = requestAnimationFrame(function() {
+        widget._stripeFrame = null;
+        diffStripeRender(widget);
+    });
+}
+
+function diffStripeRender(widget) {
+    var stripe = widget._stripe, m = diffStripeModel(widget);
+    if (!stripe || !stripe.isConnected || !m) return;
+    var total = Math.max(1, m.scroller.scrollHeight), h = stripe.clientHeight;
+    widget._stripeChunks = m.chunks;
+    stripe.innerHTML = '<div class="diff-stripe-view"></div>' + m.chunks.map(function(c, i) {
+        var top = c.top / total * h, height = Math.max(3, (c.bottom - c.top) / total * h);
+        return '<div class="diff-stripe-tick ' + c.kind + '" data-i="' + i + '" style="top:' + Math.min(top, h - 3).toFixed(1) + 'px;height:' +
+            height.toFixed(1) + 'px" title="' + escapeHtml(c.title) + '"></div>';
+    }).join('');
+    diffStripeViewport(widget);
+    var nav = widget.querySelector('.diff-nav');
+    if (nav) nav.hidden = !m.chunks.length;
+    diffStripeCount(widget);
+}
+
+/** The shaded box: the part of the text on screen now. */
+function diffStripeViewport(widget) {
+    var stripe = widget._stripe, merge = widget._merge;
+    var box = stripe && stripe.querySelector('.diff-stripe-view');
+    if (!box || !merge) return;
+    var scroller = merge.kind === 'split' ? merge.dom : merge.view.scrollDOM;
+    var total = Math.max(1, scroller.scrollHeight), h = stripe.clientHeight;
+    box.style.top = (scroller.scrollTop / total * h).toFixed(1) + 'px';
+    box.style.height = Math.max(6, scroller.clientHeight / total * h).toFixed(1) + 'px';
+}
+
+/** Which change is the one being looked at: the one gone to, else the first on screen. */
+function diffStripeCurrent(widget) {
+    var m = diffStripeModel(widget);
+    if (!m || !m.chunks.length) return { m: m, index: -1 };
+    var top = m.scroller.scrollTop, bottom = top + m.scroller.clientHeight;
+    if (widget._stripeAt != null && m.chunks[widget._stripeAt] && Math.abs(m.scroller.scrollTop - widget._stripeScroll) < 2) return { m: m, index: widget._stripeAt };
+    var on = m.chunks.findIndex(function(c) { return c.bottom >= top && c.top <= bottom; });
+    return { m: m, index: on };
+}
+
+function diffStripeCount(widget) {
+    var count = widget.querySelector('.diff-nav-count');
+    if (!count) return;
+    var cur = diffStripeCurrent(widget), n = cur.m ? cur.m.chunks.length : 0;
+    count.textContent = !n ? '' : cur.index < 0 ? n + (n === 1 ? ' change' : ' changes') : (cur.index + 1) + ' of ' + n;
+}
+
+/** To one change: a third of the way down the view, the caret at its start. */
+function diffStripeGo(widget, index) {
+    var m = diffStripeModel(widget);
+    if (!m || !m.chunks[index]) return;
+    var c = m.chunks[index];
+    m.scroller.scrollTop = Math.max(0, c.top - m.scroller.clientHeight / 3);
+    m.view.dispatch({ selection: { anchor: c.from } });
+    m.view.focus();
+    widget._stripeAt = index;
+    widget._stripeScroll = m.scroller.scrollTop;
+    diffStripeViewport(widget);
+    diffStripeCount(widget);
+}
+
+/** The next change below the one being looked at, or the one before it; round at the ends. */
+function diffStripeStep(el, dir) {
+    var widget = el.classList && el.classList.contains('diff-widget') ? el : diffGetWidget(el);
+    if (!widget) return;
+    var cur = diffStripeCurrent(widget), m = cur.m;
+    if (!m || !m.chunks.length) return;
+    var n = m.chunks.length, index;
+    if (cur.index < 0) {
+        var mark = m.scroller.scrollTop + m.scroller.clientHeight / 3;
+        index = dir > 0 ? m.chunks.findIndex(function(c) { return c.top > mark; }) : -1;
+        if (dir < 0) m.chunks.forEach(function(c, i) { if (c.top < mark) index = i; });
+        if (index < 0) index = dir > 0 ? 0 : n - 1;
+    } else {
+        index = (cur.index + dir + n) % n;
+    }
+    diffStripeGo(widget, index);
 }
 
 /** One way of writing what only looks the same, and nothing that takes no room. */
@@ -2512,6 +2692,8 @@ function diffRenderOutput(widget, toolId) {
     }
     if (window.ToolboardCodeMirror) { diffMountCM(widget, toolId, output, data); return; }
     if (widget._merge) { widget._merge.view.destroy(); widget._merge = null; }
+    output.classList.remove('has-cm');
+    widget._stripe = null;
     const diff = computeDiff(data.original, data.modified, false);
     output.innerHTML = (diffCMState === 'failed' ? '<div class="diff-fallback-note">Editing in place needs ' +
         'plugins/lib/codemirror-merge.js, which did not load: write in the boxes above, and the difference is shown here.</div>' : '') +
@@ -2727,8 +2909,11 @@ function diffUpdateStats(widget, toolId) {
     if (match) {
         var same = data.original === data.modified;
         match.className = 'diff-match ' + (same ? 'same' : !real ? 'looks-same' : 'differ');
+        var shown = widget._merge && diffStripeModel(widget);
+        var n = shown ? shown.chunks.filter(function(c) { return c.kind !== 'invisible'; }).length : real;
+        var alike = shown ? shown.chunks.length - n : 0;
         match.textContent = same ? '\u2713 Identical' : !real ? '\u2248 Look the same \u2014 differ only in invisible characters'
-            : real + (real === 1 ? ' change' : ' changes');
+            : n + (n === 1 ? ' change' : ' changes') + (alike ? ', ' + alike + ' look-alike' + (alike === 1 ? '' : 's') : '');
         match.title = same ? 'The two texts are the same, character for character.' : !real ? 'Every line reads the same; ' + kinds.join(', ') + ' differ. Tidy makes them identical.' : '';
     }
     var tidy = widget.querySelector('.diff-tidy-btn');
@@ -10127,7 +10312,7 @@ function ghdHistoryTooltip(d) {
     // List all functions to export
     const functionsToExport = [
         diffGetToolId, diffGetData, diffSaveData, diffInit, diffOnInput, diffGetWidget, diffResultShowing, diffOnRender, diffSetView,
-        diffLoadCM, diffCMExtensions, diffCMTexts, diffCMChanged, diffCMSet, diffMountCM, diffTidy, diffTidyInvisible, diffSyncScroll, computeDiff, buildLCSMatrix, backtrackDiff,
+        diffLoadCM, diffCMExtensions, diffCMTexts, diffCMChanged, diffCMSet, diffMountCM, diffStripeModel, diffStripeMount, diffStripeSchedule, diffStripeRender, diffStripeViewport, diffStripeCurrent, diffStripeCount, diffStripeGo, diffStripeStep, diffTidy, diffTidyInvisible, diffSyncScroll, computeDiff, buildLCSMatrix, backtrackDiff,
         diffRenderOutput, renderSplitView, renderUnifiedView, renderDiffLine, renderUnifiedLine, diffUpdateStats, diffCanon, diffInvisibleKinds, diffSegments, diffRows, diffShowInvisible, diffSegmentsHtml, diffInvisibleTitle,
         jwtGetToolId, jwtInit, jwtDecode, jwtBase64Decode, jwtSyntaxHighlight, jwtRenderClaims,
         jwtCopyPart, jwtLoadSample, jwtClear,
