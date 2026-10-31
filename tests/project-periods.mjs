@@ -105,6 +105,76 @@ ok('Copy gives the quarters and halves, now marked', copied === [
     '2026 Q4 T2 S3: 2026-12-10 – 2026-12-23 (14 days)', '2026 Q4 planning week: 2026-12-24 – 2026-12-30 (7 days)'].join('\n'), copied);
 ok('and pressing it does not move the divider', (await page.evaluate((i) => (toolCustomizations[i] || {}).projSplit, id)) === undefined);
 
+// 3b. The chart's span: fitted to the plan, or matched to the timeline so each date
+// sits under the same date above.
+const spanState = () => page.evaluate((s) => {
+    const w = document.querySelector(s + '.proj-widget');
+    const tl = w.querySelector('.proj-timeline'), rows = tl.querySelector('.proj-tl-rows'), axis = w.querySelector('.proj-gantt-pane .proj-axis');
+    const r = rows.getBoundingClientRect(), a = axis.getBoundingClientRect();
+    const pick = w.querySelector('.proj-span-pick');
+    const tlToday = tl.querySelector('.proj-tl-today').getBoundingClientRect().left;
+    const chToday = axis.querySelector('.proj-today').getBoundingClientRect().left;
+    const q1 = Array.from(tl.querySelectorAll('.proj-tl-row.quarters .proj-tl-seg')).find(e => e.dataset.name === '2027 Q1').getBoundingClientRect().left;
+    const m = tl._model, spanDays = (m.to - m.from) / 864e5 + 1;
+    const chartQ1 = a.left + ((Date.UTC(2027, 0, 1) - m.from) / 864e5 / spanDays) * a.width;
+    return { matched: w.classList.contains('proj-span-matched'), shown: !!pick && getComputedStyle(pick).display !== 'none',
+        pressed: pick ? pick.querySelector('[aria-pressed="true"]').dataset.span : null,
+        left: r.left - a.left, right: r.right - a.right, today: tlToday - chToday, q1: q1 - chartQ1, inline: rows.style.left };
+}, T);
+let st = await spanState();
+ok('by default the chart fits the plan, and the timeline keeps its full width', !st.matched && st.shown && st.pressed === 'fit' && st.inline === '', JSON.stringify(st));
+await page.click(T + '.proj-span-pick [data-span="periods"]');
+await page.waitForTimeout(300);
+st = await spanState();
+ok('Match periods: saved with the table', (await page.evaluate((i) => projUnits(projGetData(i)).chartSpan, id)) === 'periods' && st.pressed === 'periods' && st.matched);
+ok('the timeline sits over the chart’s bars, edge to edge', Math.abs(st.left) < 1 && Math.abs(st.right) < 1, JSON.stringify(st));
+ok('today is in the same place above and below', Math.abs(st.today) < 2.5, String(st.today));
+ok('and so is a quarter’s first day', Math.abs(st.q1) < 1.5, String(st.q1));
+await page.evaluate((i) => {
+    const d = projGetData(i);
+    d.sizes = Object.assign({}, d.sizes, { L: 600 });
+    d.rows.find(r => r.id === 'r-launch').cells.deadline = '2028-06-01';
+    projSetData(i, d);
+    projRender(document.querySelector('.tool[data-tool="' + i + '"] .proj-widget'), i);
+}, id);
+await page.waitForTimeout(300);
+const clipped = await page.evaluate((s) => {
+    const rows = Array.from(document.querySelectorAll(s + '.proj-gantt-row'));
+    const row = (name) => rows.find(r => r.querySelector('.proj-gantt-name').textContent === name);
+    const bar = (name) => row(name).querySelector('.proj-bar');
+    return { build: bar('Build').className, buildTitle: bar('Build').title, buildEnd: parseFloat(bar('Build').style.left) + parseFloat(bar('Build').style.width),
+        launch: bar('Launch').className, deadline: row('Launch').querySelector('.proj-deadline').className, when: row('Launch').querySelector('.proj-gantt-when').textContent };
+}, T);
+ok('work that runs past the timeline is cut at its edge, and says so', /proj-bar-cut/.test(clipped.build) && Math.abs(clipped.buildEnd - 100) < 0.01 &&
+    /runs past the end of the timeline/.test(clipped.buildTitle), JSON.stringify(clipped));
+ok('work that starts after it is a mark at the edge; a deadline after it too', /proj-bar-beyond/.test(clipped.launch) && /proj-deadline-after/.test(clipped.deadline), JSON.stringify(clipped));
+ok('the row still says its own dates', /2028|\d\d-\d\d/.test(clipped.when), clipped.when);
+await page.evaluate((i) => setToolMode(i, 'render'), id);
+await page.waitForTimeout(300);
+st = await page.evaluate((s) => ({ matched: document.querySelector(s + '.proj-widget').classList.contains('proj-span-matched'),
+    shown: getComputedStyle(document.querySelector(s + '.proj-span-pick')).display !== 'none' }), T);
+ok('with the chart alone there is no timeline to match: no switch, and the chart fits the plan', !st.matched && !st.shown, JSON.stringify(st));
+await page.evaluate((i) => setToolMode(i, 'split'), id);
+await page.waitForTimeout(300);
+ok('back in Both, matched again', (await spanState()).matched);
+await page.waitForTimeout(700);
+await page.click(T + '.proj-span-pick [data-span="fit"]');
+await page.waitForTimeout(300);
+st = await spanState();
+ok('Fit to plan: the timeline has its full width back', !st.matched && st.inline === '' && st.pressed === 'fit', JSON.stringify(st));
+await page.waitForTimeout(700);
+await page.evaluate(() => undoLast());
+await page.waitForTimeout(400);
+ok('and the switch is undone like any other change', (await page.evaluate((i) => projUnits(projGetData(i)).chartSpan, id)) === 'periods' && (await spanState()).matched);
+await page.evaluate((i) => {
+    const d = projGetData(i);
+    d.rows = projSeedData().rows; d.sizes = projSeedData().sizes;
+    d.units = Object.assign({}, projUnits(d), { chartSpan: 'fit' });
+    projSetData(i, d);
+    projRender(document.querySelector('.tool[data-tool="' + i + '"] .proj-widget'), i);
+}, id);
+await page.waitForTimeout(300);
+
 // 4. Counted as the chart counts: a fiscal year, a start of one's own, another ladder.
 await setUnits({ yearMode: 'fiscal', fiscalStartMonth: 10 });
 q = await segs('quarters'); h = await segs('halves');

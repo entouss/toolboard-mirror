@@ -510,8 +510,14 @@ Deleting a parent promotes its sub-items instead of taking them with it.
 ```js
 { daysPerWeek: 7, weeksPerSprint: 2, sprintsPerTimebox: 3, timeboxesPerQuarter: 2,
   planningWeeks: 1, skipWeekends: false, yearMode: 'calendar', fiscalStartMonth: 1,
-  periodStart: '', axis: 'dates' }
+  periodStart: '', axis: 'dates', chartSpan: 'fit' }
 ```
+
+`chartSpan` is how much of the calendar the chart covers: `'fit'` runs from today to
+the last bar or deadline across the whole width; `'periods'` takes the periods
+timeline's own span, and the timeline's rows sit over the chart's bars, so each date
+is under the same date above. Work past either end is cut at the edge with a ▸ and
+its tooltip says so. It applies only in Both, where the timeline is there to match.
 
 `projUnitDays()` turns that into days — week 7, sprint 14, timebox 42, quarter 91 —
 and `projSayDuration()` says a number in the largest rung it fits exactly, which is

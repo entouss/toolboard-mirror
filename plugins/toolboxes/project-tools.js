@@ -163,6 +163,23 @@
     background: var(--input-bg); color: var(--text-primary); font-size: 11px;
 }
 .proj-axis-pick { margin-left: 8px; }
+/* Fit to plan | Match periods: only in Both, where there is a timeline to match. */
+.proj-span-pick { display: none; }
+.tool.authoring-split .proj-span-pick { display: inline-flex; }
+.proj-span-pick button { border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-secondary);
+    font-size: 11px; padding: 1px 6px; cursor: pointer; }
+.proj-span-pick button:first-child { border-radius: 3px 0 0 3px; }
+.proj-span-pick button:last-child { border-radius: 0 3px 3px 0; border-left: none; }
+.proj-span-pick button[aria-pressed="true"] { background: #3498db; border-color: #3498db; color: #fff; }
+/* Matched, the bars end short of the edge, as the timeline's rows do beside its Copy. */
+.proj-span-matched .proj-gantt-grid { padding-right: 28px; }
+/* Work that runs on past the timeline: cut square at the edge, with an arrow. */
+.proj-bar.proj-bar-cut { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.proj-bar.proj-bar-beyond { min-width: 0; }
+.proj-bar.proj-bar-cut::after, .proj-bar.proj-bar-beyond::after { content: '\\25B8'; position: absolute; left: 100%; top: 50%; transform: translateY(-50%);
+    font-size: 13px; line-height: 1; color: var(--text-secondary); padding-left: 1px; }
+.proj-deadline.proj-deadline-after::after { content: '\\25B8'; position: absolute; left: 3px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-secondary); }
+.proj-deadline.proj-deadline-before::after { content: '\\25C2'; position: absolute; right: 3px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-secondary); }
 
 .proj-tickets { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; flex: 0 0 auto; }
 .proj-ticket-base { flex: 0 1 280px; min-width: 120px; font-size: 11px; padding: 2px 4px;
@@ -825,7 +842,12 @@ const PROJ_DEFAULT_UNITS = {
     // sprint rarely begins on the first of a month, and everything above it is
     // counted from wherever it does.
     periodStart: '',
-    axis: 'dates'              // dates | sprints | timeboxes | quarters
+    axis: 'dates',             // dates | sprints | timeboxes | quarters
+    // How much of the calendar the chart covers: from today to the last bar or
+    // deadline, stretched to fill its width ('fit'), or the periods timeline's own
+    // span, so a date on the chart sits under the same date on the timeline
+    // ('periods'). Only in Both, where the timeline is there to match.
+    chartSpan: 'fit'
 };
 
 /** The editable rungs, in order, as the strip draws them. `step` is what a rung is
@@ -2151,7 +2173,7 @@ function projRenderTimeline(widget, data) {
         tl.dataset.wired = '1';
         tl.addEventListener('pointerdown', projSplitDown);
         const split = widget.querySelector('.authoring-split');
-        if (split && window.ResizeObserver) new ResizeObserver(() => projTimelineFit(widget)).observe(split);
+        if (split && window.ResizeObserver) new ResizeObserver(() => { projTimelineFit(widget); projAlignTimeline(widget); }).observe(split);
     }
     projTimelineFit(widget);
     const units = projUnits(data);
@@ -3039,6 +3061,7 @@ function projRenderGantt(widget, data) {
     if (!pane) return;
     if (!data.rows.length) {
         pane.innerHTML = '<div class="proj-empty">Nothing to chart yet.</div>';
+        projAlignTimeline(widget);
         return;
     }
 
@@ -3069,6 +3092,17 @@ function projRenderGantt(widget, data) {
         // invisible: the one deadline most worth seeing was the one that vanished.
         if (d !== null) { dayMax = Math.max(dayMax, d + 1); dayMin = Math.min(dayMin, d); }
     });
+    // Matched, the chart's days are the timeline's: from its first day to the end of
+    // its last. Work past that is cut at the edge and says so, rather than the chart
+    // stretching again and the two no longer lining up.
+    const matched = projChartMatches(widget, units);
+    widget.classList.toggle('proj-span-matched', matched);
+    if (matched) {
+        const m = projTimelineModel(units, today);
+        dayMin = Math.round((m.from - today) / PROJ_DAY);
+        dayMax = Math.round((m.to - today) / PROJ_DAY) + 1;
+    }
+    const clamp = (day) => Math.min(dayMax, Math.max(dayMin, day));
     const span = Math.max(1, dayMax - dayMin);
     const pos = (day) => ((day - dayMin) / span) * 100;
 
@@ -3134,6 +3168,11 @@ function projRenderGantt(widget, data) {
         PROJ_AXIS_MODES.map(m => '<option value="' + m.id + '"' +
             (m.id === mode ? ' selected' : '') + '>' + m.label + '</option>').join('') +
     '</select>';
+    const spanPick = '<span class="proj-span-pick" role="group" aria-label="How much of the calendar the chart covers">' +
+        [['fit', 'Fit to plan', 'From today to the last bar or deadline, across the whole width'],
+         ['periods', 'Match periods', 'The timeline’s own span, so each date sits under the same date above']].map(([v, l, t]) =>
+            '<button type="button" data-span="' + v + '" aria-pressed="' + ((units.chartSpan === 'periods') === (v === 'periods')) + '"' +
+            ' onclick="projOnChartSpan(this)" title="' + escapeHtml(t) + '">' + l + '</button>').join('') + '</span>';
 
     // The bars are coloured by slack rather than by size: size is already in the
     // table, in its own column, in colour — and the question a chart is read for is
@@ -3164,6 +3203,9 @@ function projRenderGantt(widget, data) {
         // work is allowed to be happening on. Nothing left is never missed — the
         // work is done, and a done row draws a dot rather than a bar.
         const missed = d !== null && s.days > 0 && finish - 1 > d;
+        const shownStart = clamp(cal.start), shownEnd = clamp(cal.end);
+        const cut = cal.end > dayMax;
+        const beyond = s.days > 0 && cal.start >= dayMax;
 
         // A finished item has no remaining work and so no bar. It becomes a marker
         // rather than nothing, because "done" and "not in the plan" are different.
@@ -3172,8 +3214,9 @@ function projRenderGantt(widget, data) {
         // anything else, so its colour goes on the outline instead of the fill.
         const bar = s.days > 0
             ? '<span class="proj-bar' + (s.cycle ? ' proj-bar-cycle' : '') +
-                (isParent ? ' proj-bar-parent' : '') + '" style="left:' + pos(cal.start) +
-                '%;width:' + Math.max(0.5, ((cal.end - cal.start) / span) * 100) +
+                (isParent ? ' proj-bar-parent' : '') + (cut ? ' proj-bar-cut' : '') + (beyond ? ' proj-bar-beyond' : '') +
+                '" style="left:' + (beyond ? 100 : pos(shownStart)) +
+                '%;width:' + (beyond ? 0 : Math.max(0.5, ((shownEnd - shownStart) / span) * 100)) +
                 (isParent ? '%;border-color:' + paint : '%;background:' + paint) + '" ' +
                 'title="' + escapeHtml(label) + ' — ' +
                 projSayDuration(Math.round(s.days * 10) / 10, units) + ' left, ' +
@@ -3181,14 +3224,17 @@ function projRenderGantt(widget, data) {
                 projFormatDate(today + Math.max(cal.start, finish - 1) * PROJ_DAY) +
                 (d !== null ? ', deadline ' + projFormatDate(today + d * PROJ_DAY) +
                     (band ? ' — ' + band.title : '') : '') +
-                (s.cycle ? ' — in a dependency loop' : '') + '"></span>'
-            : '<span class="proj-done-dot" style="left:' + pos(d !== null ? d : cal.start) +
+                (s.cycle ? ' — in a dependency loop' : '') +
+                (cut ? ' — runs past the end of the timeline' : '') + '"></span>'
+            : '<span class="proj-done-dot" style="left:' + pos(clamp(d !== null ? d : cal.start)) +
                 '%" title="' + escapeHtml(label) + ' — complete"></span>';
 
+        const off = d === null ? '' : d >= dayMax ? ' proj-deadline-after' : d < dayMin ? ' proj-deadline-before' : '';
         const marker = d === null ? '' :
-            '<span class="proj-deadline' + (missed ? ' proj-missed' : '') + '" style="left:' + pos(d) +
+            '<span class="proj-deadline' + (missed ? ' proj-missed' : '') + off + '" style="left:' + pos(Math.min(dayMax - 0.5, Math.max(dayMin, d))) +
             '%" title="Deadline ' + projFormatDate(today + d * PROJ_DAY) +
-            (missed ? ' — the order of work puts this later' : '') + '"></span>';
+            (missed ? ' — the order of work puts this later' : '') +
+            (off ? (d >= dayMax ? ' — after the end of the timeline' : ' — before the start of the timeline') : '') + '"></span>';
 
         // Today is drawn per row rather than once down the whole grid: the track
         // starts after the label column, so a single line at grid level would need
@@ -3225,7 +3271,7 @@ function projRenderGantt(widget, data) {
 
     pane.innerHTML = '<div class="proj-gantt">' +
         '<div class="proj-gantt-head"><span class="proj-gantt-title">Work remaining, from today</span>' +
-            axisPicker + legend + '</div>' +
+            axisPicker + spanPick + legend + '</div>' +
         '<div class="proj-gantt-scroll"><div class="proj-gantt-grid">' +
             '<div class="proj-axis">' + bands.join('') + ticks.join('') +
                 '<span class="proj-today-label" style="left:' + pos(0) + '%">today</span>' +
@@ -3234,10 +3280,46 @@ function projRenderGantt(widget, data) {
         '</div></div>' + warn +
     '</div>';
     projKeepTicksIn(pane);
+    projAlignTimeline(widget);
     if (!pane.dataset.tickWatch && window.ResizeObserver) {
         pane.dataset.tickWatch = '1';
-        new ResizeObserver(() => projKeepTicksIn(pane)).observe(pane);
+        new ResizeObserver(() => { projKeepTicksIn(pane); projAlignTimeline(widget); }).observe(pane);
     }
+}
+
+/** Whether the chart takes the timeline's span: asked for, and in Both, where the
+ *  timeline is there to be matched. With the chart alone it fits the plan. */
+function projChartMatches(widget, units) {
+    return units.chartSpan === 'periods' && !!(widget && widget.closest('.tool.authoring-split'));
+}
+
+function projOnChartSpan(btn) {
+    const toolId = projToolId(btn);
+    const widget = projWidget(btn);
+    if (!toolId || !widget) return;
+    const data = projGetData(toolId);
+    data.units = { ...projUnits(data), chartSpan: btn.dataset.span === 'periods' ? 'periods' : 'fit' };
+    projSetData(toolId, data);
+    projRenderGantt(widget, data);
+}
+
+/**
+ * Matched, the timeline's rows sit over the chart's bars and no further: past the
+ * column of names on the left, and to where the bars end on the right — so a date
+ * above is the same date below. Otherwise they have the timeline's whole width back.
+ */
+function projAlignTimeline(widget) {
+    const tl = widget.querySelector('.proj-timeline');
+    const rows = tl && tl.querySelector('.proj-tl-rows');
+    if (!rows) return;
+    const axis = widget.classList.contains('proj-span-matched') && widget.querySelector('.proj-gantt-pane .proj-axis');
+    const a = axis && axis.getBoundingClientRect(), t = tl.getBoundingClientRect();
+    if (!a || !a.width || !t.width) {
+        rows.style.left = rows.style.right = '';
+        return;
+    }
+    rows.style.left = (a.left - t.left) + 'px';
+    rows.style.right = (t.right - a.right) + 'px';
 }
 
 /**
@@ -4867,7 +4949,7 @@ function projRowDrop(tr, event) {
         projOnNoteInput, projCloseModal,
         projRolledSize, projSizeStep, projPercentStep, projSchedule,
         projSplitOf, projApplySplit, projSaveSplit, projSplitDown, projSplitKey, projSplitReset,
-        projYearQuarters, projTimelineModel, projQuarterParts, projTimelineFit, projKeepTicksIn, projShortDate, projLongDate, projRenderTimeline, projPeriodsText, projCopyPeriods,
+        projYearQuarters, projTimelineModel, projQuarterParts, projTimelineFit, projChartMatches, projOnChartSpan, projAlignTimeline, projKeepTicksIn, projShortDate, projLongDate, projRenderTimeline, projPeriodsText, projCopyPeriods,
         projAISizeScale, projAIRowSquare, projAISquareUp, projAIRowLine, projAIFocusedRow, projAITarget, projAICleanRows, projAIRowsPreview, projAIApply,
         projInit, projOnRender, projRender, projAutoFit, projRefresh, projRenderSizes,
         projColumnHeadHtml, projCellHtml, projRenderTable, projTickStep, projRenderGantt,
