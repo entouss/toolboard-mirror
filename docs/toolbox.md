@@ -14,7 +14,8 @@ Each toolbox file follows this pattern in order:
 
 - `plugins/toolboxes/core-tools.js` — Checklist (✨ breaks a goal into steps, says what next), Simple Calculator
 - `plugins/toolboxes/productivity-tools.js` — Agenda Timer (✨ drafts a plan, writes up a run), Kanban Board (✨ drafts cards, writes a status update), Pomodoro Timer, Unit Converter, Playback Speed Calc, Calendar, Random Picker, Dice Roller, Stopwatch, YouTube Embed
-- `plugins/toolboxes/developer-tools.js` — Diff Viewer, Sequence Diagram, JWT Decoder, Code Formatter, Cron Expression, Regex Tester, Epoch Converter, IP Address Info, and others
+- `plugins/toolboxes/developer-tools.js` — Diff Viewer (edited in place, side by side or inline, with no Edit/Both/View; says when the two are identical or only look it; invisible characters drawn and tidied), Sequence Diagram, JWT Decoder, Code Formatter, Cron Expression, Regex Tester, Epoch Converter, IP Address Info, and others
+- `plugins/lib/codemirror-merge.js` — CodeMirror 6 and its merge view, bundled into one pinned file by `plugins/lib/build-codemirror.sh` (loaded from a CDN module by module, its packages come at several versions and CodeMirror refuses to mix them). The Diff Viewer loads it when shown, from beside its toolbox; where it cannot, the difference is shown to read.
 - `plugins/toolboxes/diagram-tools.js` — Mermaid Diagram (✨ draws one from a description, changes it, fixes a syntax error, explains it), Sequence Diagram, Family Tree, Diagram
 - `plugins/toolboxes/finance-tools.js` — Investment Calculator, Tax Calculator, Loan Calculator
 - `plugins/toolboxes/creative-tools.js` — Color Picker, Drawing Canvas, Emoticon Picker, Family Tree, Image Viewer

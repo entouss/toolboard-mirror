@@ -14,25 +14,51 @@
 /* How the difference is laid out, and what counts as one — lifted into the mode bar.
    Not what the bar itself offers: those choose whether you are looking at the texts
    or at the difference. */
-.diff-actions { display: flex; align-items: center; gap: 6px; }
+.diff-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding-bottom: 6px; flex-shrink: 0; }
+.diff-body { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; }
+.diff-widget:not(.diff-no-editor) .diff-edit-container { display: none; }
+.diff-match { margin-left: auto; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.diff-match.same { color: #27ae60; }
+.diff-match.looks-same { color: #e67e22; }
+.diff-match.differ { color: var(--text-secondary); font-weight: normal; }
 .diff-view-btn { padding: 2px 7px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-secondary); cursor: pointer; font-size: 10px; border-radius: 3px; white-space: nowrap; }
 .diff-view-btn:hover:not(.active) { background: var(--table-hover); }
 .diff-view-btn.active { background: #27ae60; color: white; border-color: #27ae60; }
 .diff-whitespace-toggle { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-secondary); white-space: nowrap; }
 .diff-whitespace-toggle input { margin: 0; }
-.diff-edit-container { display: flex; gap: 10px; flex: 1 1 55%; min-height: 0; min-width: 0; }
+.diff-edit-container { display: flex; gap: 10px; flex: 1 1 50%; min-height: 0; min-width: 0; }
 .diff-edit-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .diff-edit-pane label { font-weight: 600; margin-bottom: 6px; font-size: 11px; color: var(--text-heading); }
 .diff-edit-pane textarea { flex: 1; resize: none; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: monospace; font-size: 12px; background: var(--input-bg); color: var(--text-primary); min-height: 100px; }
 .diff-edit-pane textarea:focus { outline: none; border-color: #3498db; }
-.diff-view-container { flex: 1 1 45%; min-height: 0; min-width: 0; display: flex; flex-direction: column; }
-.tool.authoring-split .diff-edit-container { padding-right: 10px; }
+.diff-view-container { flex: 1 1 50%; min-height: 0; min-width: 0; display: flex; flex-direction: column; }
 .diff-output { flex: 1; overflow: auto; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-tertiary); font-family: monospace; font-size: 12px; }
-.tool.authoring-render .diff-output { border: none; border-radius: 0; }
-.diff-split-view { display: flex; min-height: 100%; }
-.diff-split-pane { flex: 1; min-width: 0; }
-.diff-split-pane:first-child { border-right: 1px solid var(--border-color); }
-.diff-split-header { padding: 6px 10px; background: var(--bg-tool-header); color: white; font-weight: 600; font-size: 11px; position: sticky; top: 0; }
+.diff-split-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-content: start; min-height: 100%; }
+.diff-split-view > .diff-line:nth-child(odd), .diff-split-view > .diff-split-header:nth-child(odd) { border-right: 1px solid var(--border-color); }
+.diff-split-header { padding: 6px 10px; background: var(--bg-tool-header); color: white; font-weight: 600; font-size: 11px; position: sticky; top: 0; z-index: 1; }
+.diff-word { border-radius: 2px; }
+.diff-line.addition .diff-word { background: rgba(39, 174, 96, 0.45); }
+.diff-line.deletion .diff-word { background: rgba(231, 76, 60, 0.45); text-decoration: line-through; text-decoration-color: rgba(231, 76, 60, 0.8); }
+.diff-line.invisible .diff-word { background: rgba(243, 156, 18, 0.45); text-decoration: none; }
+.diff-line.invisible .diff-gutter::before { content: '≈ '; color: #e67e22; }
+.diff-invis-char { color: #e67e22; font-weight: bold; }
+.diff-stats-invisible { color: #e67e22; }
+.diff-output > .cm-mergeView, .diff-output > .cm-editor { height: 100%; }
+.diff-output .cm-mergeView { overflow: auto; }
+.diff-output .cm-editor { background: var(--bg-primary); color: var(--text-primary); font-size: 12px; }
+.diff-output .cm-editor.cm-focused { outline: none; }
+.diff-output .cm-gutters { background: var(--bg-tertiary); color: var(--text-muted); border-right: 1px solid var(--border-light); }
+.diff-output .cm-content { caret-color: var(--text-primary); }
+.diff-output .cm-activeLine { background: rgba(127, 127, 127, 0.07); }
+.diff-output .cm-mergeView .cm-merge-a .cm-changedLine, .diff-output .cm-deletedChunk { background: rgba(231, 76, 60, 0.15); }
+.diff-output .cm-mergeView .cm-merge-a .cm-changedText, .diff-output .cm-deletedChunk .cm-deletedText { background: rgba(231, 76, 60, 0.45); }
+.diff-output .cm-mergeView .cm-merge-b .cm-changedLine, .diff-output .cm-inlineChangedLine { background: rgba(39, 174, 96, 0.15); }
+.diff-output .cm-mergeView .cm-merge-b .cm-changedText, .diff-output .cm-insertedLine .cm-changedText, .diff-output .cm-changedLine .cm-changedText { background: rgba(39, 174, 96, 0.45); }
+.diff-output .cm-diff-invis { color: #e67e22; font-weight: bold; }
+.diff-output .cm-diff-trailing { background: rgba(243, 156, 18, 0.35); }
+.diff-output .cm-merge-revert button, .diff-output .cm-chunkButtons button { cursor: pointer; }
+.diff-fallback-note { padding: 4px 8px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid var(--border-light); font-family: inherit; }
+.diff-stats-invisible button { margin-left: 6px; font-size: 11px; padding: 0 6px; border: 1px solid var(--border-color); border-radius: 3px; background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; }
 .diff-unified-view { min-height: 100%; }
 .diff-line { display: flex; line-height: 1.5; min-height: 20px; }
 .diff-gutter { width: 40px; padding: 0 6px; text-align: right; color: var(--text-muted); background: var(--bg-tertiary); border-right: 1px solid var(--border-light); flex-shrink: 0; font-size: 10px; user-select: none; }
@@ -1388,13 +1414,11 @@ PluginRegistry.registerTool({
 <div class="diff-actions">
 <button class="diff-view-btn" data-view="split" onclick="diffSetView(this, 'split')" title="The two texts in columns">Side by side</button>
 <button class="diff-view-btn" data-view="unified" onclick="diffSetView(this, 'unified')" title="One list, additions and deletions together">Inline</button>
-<label class="diff-whitespace-toggle">
-<input type="checkbox" onchange="diffToggleWhitespace(this)">
-Ignore spacing
-</label>
+<button class="diff-view-btn diff-tidy-btn" onclick="diffTidyInvisible(this)" disabled title="Make lines that only look the same the same: no-break and other odd spaces become spaces; zero-width characters, trailing spaces and stray carriage returns go; accents are written one way. Undo puts them back.">Tidy invisible characters</button>
+<span class="diff-match" aria-live="polite"></span>
 </div>
-<div class="authoring-split">
-<div class="authoring-source diff-edit-container">
+<div class="diff-body">
+<div class="diff-edit-container">
 <div class="diff-edit-pane">
 <label>Original</label>
 <textarea placeholder="Enter original text..." oninput="diffOnInput(this, 'original')" onscroll="diffSyncScroll(this, 'original')"></textarea>
@@ -1404,28 +1428,15 @@ Ignore spacing
 <textarea placeholder="Enter modified text..." oninput="diffOnInput(this, 'modified')" onscroll="diffSyncScroll(this, 'modified')"></textarea>
 </div>
 </div>
-<div class="authoring-resizer"></div>
-<div class="authoring-result diff-view-container">
+<div class="diff-view-container">
 <div class="diff-output"></div>
 </div>
 </div>
-<div class="diff-stats authoring-chrome"></div>
+<div class="diff-stats"></div>
 </div>`,
-    // Opting in to the shared modes. Its own Edit and View become two of the three,
-    // and Both — which it could not offer, having only one container for each — is
-    // the two texts with the difference beside them, updating as you type.
-    //
-    // Its other pair of buttons stays its own, but had to be renamed: "Split" there
-    // meant the two texts in columns, which is not what Both means here, and one bar
-    // cannot hold two meanings of the same word. They are Side by side and Inline.
-    authoring: {
-        modes: ['edit', 'split', 'render'],
-        defaultMode: 'render',
-        source: '.authoring-source',
-        result: '.authoring-result',
-        actions: '.diff-actions',
-        onRender: 'diffOnRender'
-    },
+    // No Edit, Both and View: the difference is where the two texts are written, so
+    // there is nothing to switch between. The two plain boxes are shown only where
+    // the editors cannot load, above the difference to read.
     contentType: 'html',
     onInit: 'diffInit',
     source: 'external',
@@ -2228,32 +2239,16 @@ function diffInit() {
         widget.querySelectorAll('.diff-view-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.view === (data.viewType || 'split'));
         });
-        const wsCheckbox = widget.querySelector('.diff-whitespace-toggle input');
-        if (wsCheckbox) wsCheckbox.checked = data.hideWhitespace;
 
-        // Hand this tool's private mode over to the framework, once. Its word for
-        // showing only the difference was "view", which the framework stores as
-        // "render"; "edit" already agrees.
-        const customizations = loadToolCustomizations();
-        const stored = customizations[toolId]?.diffData?.mode;
-        if (stored !== undefined && !customizations[toolId].viewMode) {
-            customizations[toolId].viewMode = stored === 'view' ? 'render' : stored;
-            delete customizations[toolId].diffData.mode;
-            saveToolCustomizations(customizations);
-            // The tool was laid out from the framework's key before this ran, so it
-            // needs telling. This renders the difference too, by way of onRender.
-            applyToolMode(tool, toolId);
-        } else {
-            diffOnRender(toolId);
-        }
-        diffUpdateStats(widget, toolId);
+        // Edit, Both and View are gone: whichever a diff was left in, it opens showing
+        // the difference, where both texts are written. Nothing about them is kept.
+        diffOnRender(toolId);
     });
 }
 
-/** Whether the difference is on screen to be kept up to date. */
+/** Whether the difference is on screen to be kept up to date: always, now. */
 function diffResultShowing(widget) {
-    const tool = widget.closest('.tool');
-    return !(tool && tool.classList.contains('authoring-edit'));
+    return true;
 }
 
 /** What the framework calls when the difference needs to be up to date. */
@@ -2291,15 +2286,162 @@ function diffSetView(btn, viewType) {
     if (diffResultShowing(widget)) diffRenderOutput(widget, toolId);
 }
 
-function diffToggleWhitespace(checkbox) {
-    const widget = diffGetWidget(checkbox);
-    const toolId = diffGetToolId(checkbox);
+// ---- Editing the difference in place: CodeMirror's merge view -------------------
+
+/** Bundled by plugins/lib/build-codemirror.sh, beside this toolbox — so from wherever it came. */
+var DIFF_CM_URL = (function() {
+    try { return new URL('../lib/codemirror-merge.js', document.currentScript.src).href; } catch (e) { return 'plugins/lib/codemirror-merge.js'; }
+})();
+var diffCMState = 'idle';
+var diffCMWaiting = [];
+
+/** CodeMirror, once, for every diff on the page: done(true) when it is here, done(false) when it will not be. */
+function diffLoadCM(done) {
+    if (window.ToolboardCodeMirror) { done(true); return; }
+    if (diffCMState === 'failed') { done(false); return; }
+    diffCMWaiting.push(done);
+    if (diffCMState === 'loading') return;
+    diffCMState = 'loading';
+    var script = document.createElement('script');
+    script.src = DIFF_CM_URL;
+    var finish = function(ok) {
+        diffCMState = ok ? 'ready' : 'failed';
+        var waiting = diffCMWaiting; diffCMWaiting = [];
+        waiting.forEach(function(fn) { fn(ok); });
+    };
+    script.onload = function() { finish(!!window.ToolboardCodeMirror); };
+    script.onerror = function() { finish(false); };
+    document.head.appendChild(script);
+}
+
+/** Invisible characters drawn, named — and trailing spaces shaded — in an editor. */
+function diffCMExtensions(CM, onChange, hint) {
+    var invisible = CM.highlightSpecialChars({
+        addSpecialChars: /[\u00A0\u202F\u2000-\u200A\u205F\u3000\u1680\u2060]/,
+        render: function(code) {
+            var ch = String.fromCodePoint(code);
+            var span = document.createElement('span');
+            span.className = 'cm-diff-invis';
+            span.textContent = /[\u200B-\u200D\u2060\uFEFF]/.test(ch) ? '\u2038' : '\u00B7';
+            span.title = DIFF_INVISIBLE_NAMES[ch] || ('U+' + code.toString(16).toUpperCase().padStart(4, '0'));
+            return span;
+        }
+    });
+    var trailing = new CM.MatchDecorator({ regexp: /[ \t]+$/gm, decoration: CM.Decoration.mark({ class: 'cm-diff-trailing', attributes: { title: 'trailing spaces' } }) });
+    var trailingPlugin = CM.ViewPlugin.define(function(view) {
+        return { decorations: trailing.createDeco(view), update: function(u) { this.decorations = trailing.updateDeco(u, this.decorations); } };
+    }, { decorations: function(v) { return v.decorations; } });
+    return [CM.lineNumbers(), CM.history(), CM.drawSelection(), CM.highlightActiveLine(), CM.highlightSelectionMatches(), CM.EditorView.lineWrapping,
+        CM.keymap.of([].concat(CM.defaultKeymap, CM.historyKeymap, CM.searchKeymap)), invisible, trailingPlugin,
+        CM.placeholder(hint || ''), CM.EditorView.updateListener.of(function(u) { if (u.docChanged) onChange(); })];
+}
+
+/** What the editors say now: the two texts. */
+function diffCMTexts(merge) {
+    if (merge.kind === 'split') return { original: merge.view.a.state.doc.toString(), modified: merge.view.b.state.doc.toString() };
+    var CM = window.ToolboardCodeMirror;
+    return { original: CM.getOriginalDoc(merge.view.state).toString(), modified: merge.view.state.doc.toString() };
+}
+
+/** Typing in the difference: kept, a moment after the last key, as typing in the boxes is. */
+function diffCMChanged(widget, toolId) {
+    clearTimeout(widget._diffSave);
+    widget._diffSave = setTimeout(function() {
+        var merge = widget._merge;
+        if (!merge || merge.syncing) return;
+        var texts = diffCMTexts(merge);
+        var data = diffGetData(toolId);
+        if (texts.original === data.original && texts.modified === data.modified) return;
+        data.original = texts.original;
+        data.modified = texts.modified;
+        diffSaveData(toolId, data);
+        var boxes = widget.querySelectorAll('.diff-edit-pane textarea');
+        if (boxes[0] && document.activeElement !== boxes[0]) boxes[0].value = data.original;
+        if (boxes[1] && document.activeElement !== boxes[1]) boxes[1].value = data.modified;
+        diffUpdateStats(widget, toolId);
+    }, 250);
+}
+
+/** An editor's text set from outside — the boxes, Undo, Tidy — without counting as typing. */
+function diffCMSet(view, text) {
+    var now = view.state.doc.toString();
+    if (now === text) return;
+    view.dispatch({ changes: { from: 0, to: now.length, insert: text } });
+}
+
+/**
+ * The difference, editable: side by side, both texts can be typed in, each change marked
+ * to the character, gaps keeping alike lines level, and an arrow on each change that puts
+ * the original back; inline, the modified text is typed in with what the original had
+ * shown where it was, and a button that puts it back. Made once, then kept in step.
+ */
+function diffMountCM(widget, toolId, output, data) {
+    var CM = window.ToolboardCodeMirror;
+    var kind = data.viewType === 'unified' ? 'unified' : 'split';
+    var merge = widget._merge;
+    if (merge && (merge.kind !== kind || !merge.dom.isConnected)) { merge.view.destroy(); merge = widget._merge = null; }
+    if (merge) {
+        merge.syncing = true;
+        if (kind === 'split') { diffCMSet(merge.view.a, data.original); diffCMSet(merge.view.b, data.modified); }
+        else {
+            var old = CM.getOriginalDoc(merge.view.state);
+            if (old.toString() !== data.original) {
+                var changes = CM.EditorState.create({ doc: old }).changes({ from: 0, to: old.length, insert: data.original });
+                merge.view.dispatch({ effects: CM.updateOriginalDoc.of({ doc: changes.apply(old), changes: changes }) });
+            }
+            diffCMSet(merge.view, data.modified);
+        }
+        merge.syncing = false;
+        return;
+    }
+    output.innerHTML = '';
+    var changed = function() { diffCMChanged(widget, toolId); };
+    var view;
+    if (kind === 'split') {
+        view = new CM.MergeView({
+            a: { doc: data.original, extensions: diffCMExtensions(CM, changed, 'Paste or type the original') },
+            b: { doc: data.modified, extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text') },
+            parent: output, highlightChanges: true, gutter: true, revertControls: 'a-to-b',
+            renderRevertControl: function() {
+                var b = document.createElement('button');
+                b.textContent = '\u21E8';
+                b.title = 'Put the original back here';
+                return b;
+            }
+        });
+        merge = { kind: kind, view: view, dom: view.dom };
+    } else {
+        view = new CM.EditorView({
+            doc: data.modified, parent: output,
+            extensions: diffCMExtensions(CM, changed, 'Paste or type the modified text').concat([CM.unifiedMergeView({ original: data.original, highlightChanges: true, gutter: true, mergeControls: true })])
+        });
+        merge = { kind: kind, view: view, dom: view.dom };
+    }
+    widget._merge = merge;
+}
+
+/** One way of writing what only looks the same, and nothing that takes no room. */
+function diffTidy(text) {
+    return String(text).normalize('NFC').replace(/\r/g, '').replace(DIFF_ZERO_WIDTH, '').replace(DIFF_ODD_SPACE, ' ')
+        .split('\n').map(function(l) { return l.replace(/[ \t]+$/, ''); }).join('\n');
+}
+
+/** Tidy: both texts made plain, through the ordinary save, so Undo puts them back. */
+function diffTidyInvisible(btn) {
+    var widget = diffGetWidget(btn), toolId = diffGetToolId(btn);
     if (!widget || !toolId) return;
-    const data = diffGetData(toolId);
-    data.hideWhitespace = checkbox.checked;
+    var data = diffGetData(toolId);
+    var original = diffTidy(data.original), modified = diffTidy(data.modified);
+    if (original === data.original && modified === data.modified) return;
+    data.original = original;
+    data.modified = modified;
     diffSaveData(toolId, data);
+    var boxes = widget.querySelectorAll('.diff-edit-pane textarea');
+    if (boxes[0]) boxes[0].value = original;
+    if (boxes[1]) boxes[1].value = modified;
     if (diffResultShowing(widget)) diffRenderOutput(widget, toolId);
     diffUpdateStats(widget, toolId);
+    if (typeof showToolToast === 'function') showToolToast('Tidied — Undo puts them back');
 }
 
 function diffSyncScroll(textarea, source) {
@@ -2316,7 +2458,7 @@ function computeDiff(original, modified, hideWhitespace) {
     let origLines = original.split('\n');
     let modLines = modified.split('\n');
     if (hideWhitespace) {
-        const normalize = line => line.replace(/\s+/g, ' ').trim();
+        const normalize = line => diffCanon(line).replace(/\s+/g, ' ').trim();
         const origNorm = origLines.map(normalize);
         const modNorm = modLines.map(normalize);
         const lcs = buildLCSMatrix(origNorm, modNorm);
@@ -2359,60 +2501,238 @@ function backtrackDiff(dp, aNorm, bNorm, aOrig, bOrig) {
 function diffRenderOutput(widget, toolId) {
     const data = diffGetData(toolId);
     const output = widget.querySelector('.diff-output');
+    widget.classList.toggle('diff-no-editor', diffCMState === 'failed');
     if (!data.original && !data.modified) {
-        output.innerHTML = '<div class="diff-empty-message">Enter text in both panes to see the diff</div>';
-        return;
+        if (!window.ToolboardCodeMirror) {
+            output.innerHTML = '<div class="diff-empty-message">' + (diffCMState === 'failed' ? 'Enter text in both boxes to see the difference'
+                : 'Loading the editor…') + '</div>';
+            if (diffCMState !== 'failed') diffLoadCM(function(ok) { if (output.isConnected) diffRenderOutput(widget, toolId); });
+            return;
+        }
     }
-    const diff = computeDiff(data.original, data.modified, data.hideWhitespace);
-    output.innerHTML = data.viewType === 'split' ? renderSplitView(diff) : renderUnifiedView(diff);
+    if (window.ToolboardCodeMirror) { diffMountCM(widget, toolId, output, data); return; }
+    if (widget._merge) { widget._merge.view.destroy(); widget._merge = null; }
+    const diff = computeDiff(data.original, data.modified, false);
+    output.innerHTML = (diffCMState === 'failed' ? '<div class="diff-fallback-note">Editing in place needs ' +
+        'plugins/lib/codemirror-merge.js, which did not load: write in the boxes above, and the difference is shown here.</div>' : '') +
+        (data.viewType === 'split' ? renderSplitView(diff) : renderUnifiedView(diff));
+    if (diffCMState !== 'failed') diffLoadCM(function(ok) { if (output.isConnected) { diffRenderOutput(widget, toolId); diffUpdateStats(widget, toolId); } });
+}
+
+// ---- What changed inside a line, and what only looks the same ------------------
+
+/** Characters that take no room: zero-width spaces and joiners, word joiners, BOMs. */
+var DIFF_ZERO_WIDTH = /[\u200B-\u200D\u2060\uFEFF]/g;
+/** Spaces that are not the space bar's: no-break, thin, em and the rest. */
+var DIFF_ODD_SPACE = /[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g;
+
+/** A line as it reads: one way of writing each accent, nothing that takes no room. */
+function diffCanon(s) {
+    return String(s).normalize('NFC').replace(DIFF_ZERO_WIDTH, '').replace(/\r/g, '');
+}
+
+/**
+ * Why two different lines look the same, or null when they do not. Each way two
+ * lines can differ without showing it is tried in turn, and named if it was part of it.
+ */
+function diffInvisibleKinds(a, b) {
+    if (a === b) return null;
+    var steps = [
+        ['line endings', function(s) { return s.replace(/\r/g, ''); }],
+        ['zero-width characters', function(s) { return s.replace(DIFF_ZERO_WIDTH, ''); }],
+        ['accents written two ways', function(s) { return s.normalize('NFC'); }],
+        ['non-breaking spaces', function(s) { return s.replace(/[\u00A0\u202F]/g, ' '); }],
+        ['other kinds of space', function(s) { return s.replace(DIFF_ODD_SPACE, ' '); }],
+        ['trailing spaces', function(s) { return s.replace(/[ \t]+$/, ''); }],
+        ['tabs or spacing', function(s) { return s.replace(/[ \t]+/g, ' ').replace(/^ /, ''); }]
+    ];
+    var kinds = [];
+    for (var k = 0; k < steps.length && a !== b; k++) {
+        var a2 = steps[k][1](a), b2 = steps[k][1](b);
+        if (a2 !== a || b2 !== b) kinds.push(steps[k][0]);
+        a = a2; b = b2;
+    }
+    return a === b ? kinds : null;
+}
+
+/**
+ * The two lines in pieces, each marked changed or not: what is the same at the start
+ * and the end of both is the same, to the character — so one character typed is one
+ * character marked — and what is between is compared word by word.
+ */
+function diffSegments(a, b) {
+    var x = Array.from(a), y = Array.from(b);
+    var pre = 0;
+    while (pre < x.length && pre < y.length && x[pre] === y[pre]) pre++;
+    var suf = 0;
+    while (suf < x.length - pre && suf < y.length - pre && x[x.length - 1 - suf] === y[y.length - 1 - suf]) suf++;
+    var midA = x.slice(pre, x.length - suf).join(''), midB = y.slice(pre, y.length - suf).join('');
+    var head = x.slice(0, pre).join(''), tail = x.slice(x.length - suf).join('');
+    var outA = [], outB = [];
+    var push = function(list, text, changed) {
+        if (!text) return;
+        var last = list[list.length - 1];
+        if (last && last.changed === changed) last.text += text; else list.push({ text: text, changed: changed });
+    };
+    push(outA, head, false); push(outB, head, false);
+    var ta = midA.match(/\s+|[\p{L}\p{N}_]+|[^\s\p{L}\p{N}_]/gu) || [];
+    var tb = midB.match(/\s+|[\p{L}\p{N}_]+|[^\s\p{L}\p{N}_]/gu) || [];
+    if (!ta.length || !tb.length || ta.length * tb.length > 250000) {
+        push(outA, midA, true); push(outB, midB, true);
+    } else {
+        var dp = buildLCSMatrix(ta, tb);
+        var i = ta.length, j = tb.length, stack = [];
+        while (i > 0 || j > 0) {
+            if (i > 0 && j > 0 && ta[i - 1] === tb[j - 1]) { stack.push([ta[i - 1], 0]); i--; j--; }
+            else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) { stack.push([tb[j - 1], 2]); j--; }
+            else { stack.push([ta[i - 1], 1]); i--; }
+        }
+        while (stack.length) {
+            var t = stack.pop();
+            if (t[1] === 0) { push(outA, t[0], false); push(outB, t[0], false); }
+            else if (t[1] === 1) push(outA, t[0], true);
+            else push(outB, t[0], true);
+        }
+    }
+    push(outA, tail, false); push(outB, tail, false);
+    var same = outA.reduce(function(n, s) { return n + (s.changed ? 0 : Array.from(s.text).length); }, 0);
+    return { a: outA, b: outB, similarity: same / Math.max(1, x.length, y.length) };
+}
+
+/**
+ * The difference as rows: an unchanged line on both sides; a changed line beside what
+ * it became, its changes marked inside it; and a line only one side has. Within a run
+ * of changes, old and new lines are paired in order where they are alike enough to be
+ * one line changed — or the same line, but for what cannot be seen.
+ */
+function diffRows(diff) {
+    var rows = [], k = 0;
+    while (k < diff.length) {
+        if (diff[k].type === 'unchanged') { rows.push({ same: diff[k] }); k++; continue; }
+        var dels = [], adds = [];
+        while (k < diff.length && diff[k].type !== 'unchanged') { (diff[k].type === 'deletion' ? dels : adds).push(diff[k]); k++; }
+        for (var n = 0; n < Math.max(dels.length, adds.length); n++) {
+            var d = dels[n], a = adds[n];
+            if (d && a) {
+                var invisible = diffInvisibleKinds(d.content, a.content);
+                var segs = diffSegments(d.content, a.content);
+                if (invisible || segs.similarity >= 0.3) { rows.push({ del: d, add: a, segs: segs, invisible: invisible }); continue; }
+            }
+            if (d) rows.push({ del: d });
+            if (a) rows.push({ add: a });
+        }
+    }
+    return rows;
+}
+
+var DIFF_INVISIBLE_NAMES = { '\u00A0': 'no-break space', '\u202F': 'narrow no-break space', '\u200B': 'zero-width space',
+    '\u200C': 'zero-width non-joiner', '\u200D': 'zero-width joiner', '\u2060': 'word joiner', '\uFEFF': 'byte order mark',
+    '\t': 'tab', ' ': 'space', '\r': 'carriage return' };
+
+/** A changed piece that is all space or nothing at all, drawn so it can be seen. */
+function diffShowInvisible(text) {
+    if (/[^\s\u200B-\u200D\u2060\uFEFF]/.test(text)) return escapeHtml(text);
+    return Array.from(text).map(function(ch) {
+        var mark = ch === '\t' ? '\u2192' : /[\u200B-\u200D\u2060\uFEFF]/.test(ch) ? '\u2038' : ch === '\r' ? '\u21B5' : '\u00B7';
+        var name = DIFF_INVISIBLE_NAMES[ch] || ('U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'));
+        return '<span class="diff-invis-char" title="' + name + '">' + mark + '</span>';
+    }).join('');
+}
+
+/** A line's text with its changed pieces marked. */
+function diffSegmentsHtml(segs) {
+    return segs.map(function(s) {
+        return s.changed ? '<span class="diff-word">' + diffShowInvisible(s.text) + '</span>' : escapeHtml(s.text);
+    }).join('');
+}
+
+function diffInvisibleTitle(kinds) {
+    return 'Looks the same: differs only in ' + kinds.join(', ');
 }
 
 function renderSplitView(diff) {
-    let leftLines = '', rightLines = '';
-    diff.forEach(item => {
-        if (item.type === 'unchanged') {
-            leftLines += renderDiffLine(item.origLine, item.origContent, 'unchanged');
-            rightLines += renderDiffLine(item.modLine, item.modContent, 'unchanged');
-        } else if (item.type === 'deletion') {
-            leftLines += renderDiffLine(item.origLine, item.content, 'deletion');
-            rightLines += renderDiffLine('', '', 'empty');
-        } else if (item.type === 'addition') {
-            leftLines += renderDiffLine('', '', 'empty');
-            rightLines += renderDiffLine(item.modLine, item.content, 'addition');
+    var html = '<div class="diff-split-header">Original</div><div class="diff-split-header">Modified</div>';
+    diffRows(diff).forEach(function(row) {
+        if (row.same) {
+            html += renderDiffLine(row.same.origLine, row.same.origContent, 'unchanged') + renderDiffLine(row.same.modLine, row.same.modContent, 'unchanged');
+        } else if (row.segs) {
+            var extra = row.invisible ? ' invisible' : '';
+            var title = row.invisible ? diffInvisibleTitle(row.invisible) : '';
+            html += renderDiffLine(row.del.origLine, null, 'deletion' + extra, diffSegmentsHtml(row.segs.a), title) +
+                renderDiffLine(row.add.modLine, null, 'addition' + extra, diffSegmentsHtml(row.segs.b), title);
+        } else if (row.del) {
+            html += renderDiffLine(row.del.origLine, row.del.content, 'deletion') + renderDiffLine('', '', 'empty');
+        } else {
+            html += renderDiffLine('', '', 'empty') + renderDiffLine(row.add.modLine, row.add.content, 'addition');
         }
     });
-    return `<div class="diff-split-view"><div class="diff-split-pane"><div class="diff-split-header">Original</div>${leftLines}</div><div class="diff-split-pane"><div class="diff-split-header">Modified</div>${rightLines}</div></div>`;
+    return '<div class="diff-split-view">' + html + '</div>';
 }
 
 function renderUnifiedView(diff) {
-    let lines = '';
-    diff.forEach(item => {
-        if (item.type === 'unchanged') lines += renderUnifiedLine(item.origLine, item.modLine, item.origContent, 'unchanged', ' ');
-        else if (item.type === 'deletion') lines += renderUnifiedLine(item.origLine, '', item.content, 'deletion', '-');
-        else if (item.type === 'addition') lines += renderUnifiedLine('', item.modLine, item.content, 'addition', '+');
+    var lines = '';
+    diffRows(diff).forEach(function(row) {
+        if (row.same) lines += renderUnifiedLine(row.same.origLine, row.same.modLine, row.same.origContent, 'unchanged', ' ');
+        else if (row.segs) {
+            var extra = row.invisible ? ' invisible' : '';
+            var title = row.invisible ? diffInvisibleTitle(row.invisible) : '';
+            lines += renderUnifiedLine(row.del.origLine, '', null, 'deletion' + extra, '-', diffSegmentsHtml(row.segs.a), title) +
+                renderUnifiedLine('', row.add.modLine, null, 'addition' + extra, '+', diffSegmentsHtml(row.segs.b), title);
+        }
+        else if (row.del) lines += renderUnifiedLine(row.del.origLine, '', row.del.content, 'deletion', '-');
+        else lines += renderUnifiedLine('', row.add.modLine, row.add.content, 'addition', '+');
     });
-    return `<div class="diff-unified-view">${lines}</div>`;
+    return '<div class="diff-unified-view">' + lines + '</div>';
 }
 
-function renderDiffLine(lineNum, content, type) {
-    const escapedContent = escapeHtml(content || '');
-    return `<div class="diff-line ${type}"><div class="diff-gutter">${lineNum || ''}</div><div class="diff-content">${escapedContent || '&nbsp;'}</div></div>`;
+function renderDiffLine(lineNum, content, type, html, title) {
+    var body = html != null ? html : escapeHtml(content || '');
+    return '<div class="diff-line ' + type + '"' + (title ? ' title="' + escapeHtml(title) + '"' : '') + '><div class="diff-gutter">' + (lineNum || '') +
+        '</div><div class="diff-content">' + (body || '&nbsp;') + '</div></div>';
 }
 
-function renderUnifiedLine(origLine, modLine, content, type, prefix) {
-    const escapedContent = escapeHtml(content || '');
-    const lineInfo = origLine && modLine ? `${origLine}/${modLine}` : (origLine || modLine || '');
-    return `<div class="diff-line ${type}"><div class="diff-gutter">${lineInfo}</div><div class="diff-prefix">${prefix}</div><div class="diff-content">${escapedContent || '&nbsp;'}</div></div>`;
+function renderUnifiedLine(origLine, modLine, content, type, prefix, html, title) {
+    var body = html != null ? html : escapeHtml(content || '');
+    var lineInfo = origLine && modLine ? origLine + '/' + modLine : (origLine || modLine || '');
+    return '<div class="diff-line ' + type + '"' + (title ? ' title="' + escapeHtml(title) + '"' : '') + '><div class="diff-gutter">' + lineInfo +
+        '</div><div class="diff-prefix">' + prefix + '</div><div class="diff-content">' + (body || '&nbsp;') + '</div></div>';
 }
 
 function diffUpdateStats(widget, toolId) {
-    const data = diffGetData(toolId);
-    const statsEl = widget.querySelector('.diff-stats');
-    if (!data.original && !data.modified) { statsEl.innerHTML = ''; return; }
-    const diff = computeDiff(data.original, data.modified, data.hideWhitespace);
-    let additions = 0, deletions = 0;
-    diff.forEach(item => { if (item.type === 'addition') additions++; if (item.type === 'deletion') deletions++; });
-    statsEl.innerHTML = `<span class="diff-stats-additions">+${additions} addition${additions !== 1 ? 's' : ''}</span><span class="diff-stats-deletions">-${deletions} deletion${deletions !== 1 ? 's' : ''}</span>`;
+    var data = diffGetData(toolId);
+    var statsEl = widget.querySelector('.diff-stats');
+    var match = widget.querySelector('.diff-match');
+    if (!data.original && !data.modified) {
+        statsEl.innerHTML = '';
+        if (match) { match.textContent = ''; match.className = 'diff-match'; }
+        var t0 = widget.querySelector('.diff-tidy-btn'); if (t0) t0.disabled = true;
+        return;
+    }
+    var diff = computeDiff(data.original, data.modified, false);
+    var additions = 0, deletions = 0;
+    diff.forEach(function(item) { if (item.type === 'addition') additions++; if (item.type === 'deletion') deletions++; });
+    var invisible = 0, kinds = [], real = 0;
+    diffRows(diff).forEach(function(row) {
+        if (!row.same && !row.invisible) real++;
+        if (!row.invisible) return;
+        invisible++;
+        row.invisible.forEach(function(k) { if (kinds.indexOf(k) < 0) kinds.push(k); });
+    });
+    statsEl.innerHTML = '<span class="diff-stats-additions">+' + additions + ' addition' + (additions !== 1 ? 's' : '') + '</span>' +
+        '<span class="diff-stats-deletions">-' + deletions + ' deletion' + (deletions !== 1 ? 's' : '') + '</span>' +
+        (invisible ? '<span class="diff-stats-invisible">\u2248 ' + invisible + (invisible === 1 ? ' line looks' : ' lines look') +
+            ' the same but differ' + (invisible === 1 ? 's' : '') + ' in ' + escapeHtml(kinds.join(', ')) +
+            '<button type="button" onclick="diffTidyInvisible(this)">Tidy</button></span>' : '');
+    // Said where it is always seen: the same to the character, or only to the eye.
+    if (match) {
+        var same = data.original === data.modified;
+        match.className = 'diff-match ' + (same ? 'same' : !real ? 'looks-same' : 'differ');
+        match.textContent = same ? '\u2713 Identical' : !real ? '\u2248 Look the same \u2014 differ only in invisible characters'
+            : real + (real === 1 ? ' change' : ' changes');
+        match.title = same ? 'The two texts are the same, character for character.' : !real ? 'Every line reads the same; ' + kinds.join(', ') + ' differ. Tidy makes them identical.' : '';
+    }
+    var tidy = widget.querySelector('.diff-tidy-btn');
+    if (tidy) tidy.disabled = diffTidy(data.original) === data.original && diffTidy(data.modified) === data.modified;
 }
 
 // ==================== JWT Decoder Functions ====================
@@ -9807,8 +10127,8 @@ function ghdHistoryTooltip(d) {
     // List all functions to export
     const functionsToExport = [
         diffGetToolId, diffGetData, diffSaveData, diffInit, diffOnInput, diffGetWidget, diffResultShowing, diffOnRender, diffSetView,
-        diffToggleWhitespace, diffSyncScroll, computeDiff, buildLCSMatrix, backtrackDiff,
-        diffRenderOutput, renderSplitView, renderUnifiedView, renderDiffLine, renderUnifiedLine, diffUpdateStats,
+        diffLoadCM, diffCMExtensions, diffCMTexts, diffCMChanged, diffCMSet, diffMountCM, diffTidy, diffTidyInvisible, diffSyncScroll, computeDiff, buildLCSMatrix, backtrackDiff,
+        diffRenderOutput, renderSplitView, renderUnifiedView, renderDiffLine, renderUnifiedLine, diffUpdateStats, diffCanon, diffInvisibleKinds, diffSegments, diffRows, diffShowInvisible, diffSegmentsHtml, diffInvisibleTitle,
         jwtGetToolId, jwtInit, jwtDecode, jwtBase64Decode, jwtSyntaxHighlight, jwtRenderClaims,
         jwtCopyPart, jwtLoadSample, jwtClear,
         epochInit, epochUpdateNow, epochUpdateReference, epochCopyNow, epochUseNow,
