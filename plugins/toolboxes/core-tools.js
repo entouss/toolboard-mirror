@@ -676,6 +676,62 @@ function checklistOnRender(toolId) {
     if (widget) checklistRender(widget, toolId);
 }
 
+// ---- ✨: Chrome's own model, for a checklist ------------------------------------
+
+var CHECKLIST_AI_SYSTEM = 'You help people plan and get things done. Be brief and concrete. ' +
+    'Reply with the result only: no preface, no closing remarks.';
+var CHECKLIST_AI_MAX = 20;
+var CHECKLIST_AI_MAX_STEPS = 8;
+var CHECKLIST_AI_WORDS = { completed: 'done', in_progress: 'in progress', pending: 'to do' };
+
+/** The list as words the model can read: each item with how it stands. */
+function checklistAIText(items) {
+    var line = function(item, indent) {
+        return indent + '- ' + item.text + ' (' + (CHECKLIST_AI_WORDS[item.status] || 'to do') + ')';
+    };
+    return items.map(function(item) {
+        return [line(item, '')].concat((item.children || []).map(function(c) { return line(c, '  '); })).join('\n');
+    }).join('\n');
+}
+
+function checklistAITarget(toolId) {
+    var items = checklistGetData(toolId);
+    var all = items.reduce(function(n, i) { return n + 1 + (i.children || []).length; }, 0);
+    var done = 0;
+    items.forEach(function(i) { if (i.status === 'completed') done++; (i.children || []).forEach(function(c) { if (c.status === 'completed') done++; }); });
+    return { scope: 'whole', kind: 'checklist', text: items.length ? checklistAIText(items) : '',
+        label: 'On this list (' + all + (all === 1 ? ' item' : ' items') + ', ' + done + ' done)',
+        emptyLabel: 'Nothing on the list yet: break a goal into steps.' };
+}
+
+/** Steps from the model made into items the list can hold — or nothing usable. */
+function checklistAICleanSteps(json) {
+    var text = function(s, n) { return String(s == null ? '' : s).replace(/^\s*(?:[-*+]\s*)?(?:\[[ xX~]?\]\s*)?(?:\d+[.)]\s*)?/, '').replace(/\s+/g, ' ').trim().slice(0, n); };
+    var items = (json && Array.isArray(json.steps) ? json.steps : []).map(function(s) {
+        var children = (Array.isArray(s && s.substeps) ? s.substeps : []).map(function(c) { return text(c, 120); })
+            .filter(Boolean).slice(0, CHECKLIST_AI_MAX_STEPS).map(function(t) { return { text: t, status: 'pending' }; });
+        return { text: text(s && s.step, 120), status: 'pending', children: children };
+    }).filter(function(i) { return i.text; }).slice(0, CHECKLIST_AI_MAX);
+    if (!items.length) throw new Error('No steps came back. Try saying a little more about it.');
+    return items;
+}
+
+function checklistAIStepsPreview(items) {
+    var esc = function(s) { return s.replace(/([\\`*_[\]<>#])/g, '\\$1'); };
+    return items.map(function(i) {
+        return '- [ ] ' + esc(i.text) + i.children.map(function(c) { return '\n    - [ ] ' + esc(c.text); }).join('');
+    }).join('\n');
+}
+
+/** Steps into the list, over it or after it, through the ordinary save so Undo takes them back. */
+function checklistAIApply(toolId, result, how, target, info) {
+    if (!info || info.action !== 'steps' || !Array.isArray(info.data)) return false;
+    var fresh = info.data.map(function(i) { return { text: i.text, status: 'pending', children: i.children.map(function(c) { return { text: c.text, status: 'pending' }; }) }; });
+    checklistSaveData(toolId, how === 'replace' ? fresh : checklistGetData(toolId).concat(fresh));
+    checklistOnRender(toolId);
+    return true;
+}
+
 // ============================================================
 // Simple Calculator Widget
 // ============================================================
@@ -793,7 +849,7 @@ function calcBackspace() {
 (function injectScriptsForExport() {
     if (document.getElementById('core-tools-scripts')) return;
 
-    var checklistFunctions = [checklistGetToolId, checklistGetData, checklistSaveData, checklistInit, checklistRenderItem, checklistRender, checklistGetItemByPath, checklistSetItemByPath, checklistAddItem, checklistAddSub, checklistCycleStatus, checklistUpdateText, checklistTextKeydown, checklistDelete, checklistDragStart, checklistDragOver, checklistDragLeave, checklistDrop, checklistToMarkdown, checklistFromMarkdown, checklistOnSourceInput, checklistOnRender];
+    var checklistFunctions = [checklistGetToolId, checklistGetData, checklistSaveData, checklistInit, checklistRenderItem, checklistRender, checklistGetItemByPath, checklistSetItemByPath, checklistAddItem, checklistAddSub, checklistCycleStatus, checklistUpdateText, checklistTextKeydown, checklistDelete, checklistDragStart, checklistDragOver, checklistDragLeave, checklistDrop, checklistToMarkdown, checklistFromMarkdown, checklistOnSourceInput, checklistOnRender, checklistAIText, checklistAITarget, checklistAICleanSteps, checklistAIStepsPreview, checklistAIApply];
     var calcFunctions = [calcInit, calcKeyHandler, calcInputHandler, calcNum, calcOp, calcEquals, calcClear, calcBackspace];
     var allFunctions = checklistFunctions.concat(calcFunctions);
 
@@ -859,6 +915,33 @@ PluginRegistry.registerTool({
         onRender: 'checklistOnRender'
     },
     onInit: 'checklistInit',
+    // ✨ where Chrome's own model can run: steps for a goal, shown first and put in by
+    // Replace the list or Add to the list; the rest is read, to copy.
+    ai: {
+        target: 'checklistAITarget',
+        apply: 'checklistAIApply',
+        actions: ['ask'],
+        custom: [
+            { id: 'steps', group: 'Checklist', label: 'Break into steps', system: CHECKLIST_AI_SYSTEM, needsText: false,
+                input: 'What is the goal? “move house in March”',
+                applyLabels: { replace: 'Replace the list', insert: 'Add to the list' },
+                schema: { type: 'object', required: ['steps'], properties: { steps: { type: 'array', items: { type: 'object',
+                    required: ['step', 'substeps'], properties: { step: { type: 'string' }, substeps: { type: 'array', items: { type: 'string' } } } } } } },
+                parse: checklistAICleanSteps,
+                preview: checklistAIStepsPreview,
+                prompt: function(text, goal) { return 'Break this goal into the steps that get it done, in the order they happen: ' +
+                    goal + '\n\nGive 4 to 10 steps, each a short action starting with a verb. Give a step substeps only where it ' +
+                    'has a few clear parts, at most 5.' + (text ? '\n\nThe list already has these, so do not repeat them:\n' + text : ''); } },
+            { id: 'next', group: 'Checklist', label: 'What next?', system: CHECKLIST_AI_SYSTEM, apply: false,
+                show: function(t) { return !!t.text; },
+                prompt: function(text) { return 'From the items on this list that are not done, pick the three to do next, most ' +
+                    'useful first, each with one short reason. A Markdown list. If everything is done, say so.\n\n' + text; } },
+            { id: 'progress', group: 'Checklist', label: 'Progress summary', system: CHECKLIST_AI_SYSTEM, apply: false,
+                show: function(t) { return !!t.text; },
+                prompt: function(text) { return 'Summarize how this list stands in at most five short bullets: what is done, ' +
+                    'what is in progress, what is left.\n\n' + text; } }
+        ]
+    },
     defaultWidth: 290,
     defaultHeight: 350,
     source: 'external'

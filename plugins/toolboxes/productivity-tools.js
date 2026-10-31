@@ -4967,6 +4967,66 @@ document.addEventListener('dragend', () => {
     kbDragState = { type: null, colIdx: null, cardIdx: null, sourceColIdx: null, toolId: null };
 });
 
+// ---- ✨: Chrome's own model, for a board ----------------------------------------
+
+var KB_AI_SYSTEM = 'You help a team plan and track work on a kanban board. Be brief and concrete. ' +
+    'Reply with the result only: no preface, no closing remarks.';
+var KB_AI_MAX = 15;
+
+/** The board as words the model can read: each column, its cards in order. */
+function kbAIText(columns) {
+    return columns.map(function(col) {
+        return '## ' + col.title + ' (' + col.cards.length + (col.cards.length === 1 ? ' card' : ' cards') + ')' +
+            (col.cards.length ? '\n' + col.cards.map(function(c) {
+                return '- ' + c.title + (c.desc ? ' — ' + String(c.desc).replace(/\s+/g, ' ') : '') +
+                    (c.tags && c.tags.length ? ' [' + c.tags.join(', ') + ']' : '');
+            }).join('\n') : '');
+    }).join('\n\n');
+}
+
+function kbAITarget(toolId) {
+    var columns = kbGetData(toolId);
+    var cards = columns.reduce(function(n, c) { return n + c.cards.length; }, 0);
+    return { scope: 'whole', kind: 'board', text: cards ? kbAIText(columns) : '', first: (columns[0] || {}).title || '',
+        label: 'On this board (' + cards + (cards === 1 ? ' card' : ' cards') + ' in ' + columns.length + (columns.length === 1 ? ' column' : ' columns') + ')',
+        emptyLabel: 'No cards yet: draft some for a goal.' };
+}
+
+/** Cards from the model made into cards the board can hold — or nothing usable. */
+function kbAICleanCards(json) {
+    var text = function(s, n) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().slice(0, n); };
+    var cards = (json && Array.isArray(json.cards) ? json.cards : []).map(function(c) {
+        var tags = (Array.isArray(c && c.tags) ? c.tags : []).map(function(t) { return text(t, 20).replace(/^#/, ''); })
+            .filter(function(t, i, all) { return t && all.indexOf(t) === i; }).slice(0, 3);
+        var card = { title: text(c && c.title, 100) };
+        var desc = text(c && c.description, 300);
+        if (desc) card.desc = desc;
+        if (tags.length) card.tags = tags;
+        return card;
+    }).filter(function(c) { return c.title; }).slice(0, KB_AI_MAX);
+    if (!cards.length) throw new Error('No cards came back. Try saying a little more about it.');
+    return cards;
+}
+
+function kbAICardsPreview(cards) {
+    var esc = function(s) { return s.replace(/([\\`*_[\]<>#])/g, '\\$1'); };
+    return cards.map(function(c) {
+        return '- **' + esc(c.title) + '**' + (c.desc ? ' — ' + esc(c.desc) : '') + (c.tags ? ' · ' + c.tags.map(function(t) { return '`' + t + '`'; }).join(' ') : '');
+    }).join('\n');
+}
+
+/** Cards into the board's first column, after what is there, through the ordinary save so Undo takes them out. */
+function kbAIApply(toolId, result, how, target, info) {
+    if (!info || info.action !== 'cards' || !Array.isArray(info.data) || how !== 'insert') return false;
+    var columns = kbGetData(toolId);
+    if (!columns.length) columns.push({ title: 'To Do', cards: [] });
+    columns[0].cards = columns[0].cards.concat(info.data.map(function(c) { return Object.assign({}, c, c.tags ? { tags: c.tags.slice() } : {}); }));
+    kbSaveData(toolId, columns);
+    var widget = document.querySelector('.tool[data-tool="' + CSS.escape(toolId) + '"] .kb-widget');
+    if (widget) kbRender(widget, toolId);
+    return true;
+}
+
 function kbInit() {
     document.querySelectorAll('.kb-widget').forEach(widget => {
         const toolId = kbGetToolId(widget);
@@ -6961,7 +7021,7 @@ function agtInit() {
     var diceFunctions = [diceGetWidget, diceGetToolId, diceRenderFace, diceChangeCount, diceRoll, diceAddHistory, diceRollerInit];
     var swFunctions = [swGetWidget, swGetToolId, swGetState, swFormatTime, swUpdateDisplay, swTick, swToggle, swLap, swReset, swRenderLaps, stopwatchInit];
     var ytFunctions = [ytembedGetWidget, ytembedGetToolId, ytembedExtractId, ytembedParseTimestamp, ytembedLoad, ytembedSaveState, ytembedInit];
-    var kbFunctions = [kbGetToolId, kbGetData, kbSaveData, kbRender, kbEsc, kbTagColor, kbAddColumn, kbShowAddForm, kbAddFormKey, kbAddCard, kbCancelAdd, kbEditColTitle, kbColMenu, kbEditCard, kbSaveCard, kbDeleteCard, kbCardDragStart, kbCardDragOver, kbCardDragLeave, kbCardDrop, kbColDragStart, kbColDragOver, kbColDragLeave, kbColDrop, kbInit];
+    var kbFunctions = [kbGetToolId, kbGetData, kbSaveData, kbRender, kbEsc, kbTagColor, kbAddColumn, kbShowAddForm, kbAddFormKey, kbAddCard, kbCancelAdd, kbEditColTitle, kbColMenu, kbEditCard, kbSaveCard, kbDeleteCard, kbCardDragStart, kbCardDragOver, kbCardDragLeave, kbCardDrop, kbColDragStart, kbColDragOver, kbColDragLeave, kbColDrop, kbAIText, kbAITarget, kbAICleanCards, kbAICardsPreview, kbAIApply, kbInit];
     var breathingFunctions = [breathingGetWidget, breathingGetToolId, breathingGetState, breathingInit, breathingToggle, breathingReset, breathingTick, breathingAdvancePhase, breathingUpdateDisplay, breathingSetPreset, breathingApplySettings, breathingToggleSettings];
     var wcFunctions = [wcBuildSearchIndex, wcGetWidget, wcGetToolId, wcGetState, wcFormatTime, wcRender, wcTick, wcAddZone, wcRemoveZone, wcSaveState, wcInit];
     var bnoiseFunctions = [bnoiseGetToolId, bnoiseGetWidget, bnoiseInit, bnoiseBuildBrownBuffer, bnoiseBuildWhiteBuffer, bnoiseBuildBuffer, bnoiseSetupWind, bnoiseSetupRain, bnoiseScheduleRainDrop, bnoiseSetupFire, bnoiseScheduleFireCrackle, bnoiseStart, bnoiseStop, bnoiseDrawIdle, bnoiseDrawFrame, bnoiseToggle, bnoiseSetVolume, bnoiseSetType, bnoiseSetTimer];
@@ -7379,6 +7439,37 @@ PluginRegistry.registerTool({
         '<div class="kb-board"></div>' +
     '</div>',
     onInit: 'kbInit',
+    // ✨ where Chrome's own model can run: cards for a goal, shown first and added to the
+    // board's first column; the rest is read, to copy. Nothing it writes moves a card.
+    ai: {
+        target: 'kbAITarget',
+        apply: 'kbAIApply',
+        actions: ['ask'],
+        custom: [
+            { id: 'cards', group: 'Board', label: 'Draft cards', system: KB_AI_SYSTEM, needsText: false,
+                input: 'What is the goal or project? “launch the new help page”',
+                applyHow: ['insert'],
+                applyLabels: function(t) { return { insert: 'Add to \u201C' + (t.first || 'To Do') + '\u201D' }; },
+                schema: { type: 'object', required: ['cards'], properties: { cards: { type: 'array', items: { type: 'object',
+                    required: ['title', 'description', 'tags'], properties: { title: { type: 'string' }, description: { type: 'string' },
+                    tags: { type: 'array', items: { type: 'string' } } } } } } },
+                parse: kbAICleanCards,
+                preview: kbAICardsPreview,
+                prompt: function(text, goal) { return 'Draft the kanban cards for the work this needs: ' + goal + '\n\nGive 4 to 10 ' +
+                    'cards, each a short title starting with a verb, a one-sentence description, and one or two one-word tags ' +
+                    '(such as design, writing, review).' + (text ? '\n\nThe board already has these, so do not repeat them:\n' + text : ''); } },
+            { id: 'status', group: 'Board', label: 'Status update', system: KB_AI_SYSTEM, apply: false,
+                show: function(t) { return !!t.text; },
+                prompt: function(text) { return 'Write a short status update from this board for a team stand-up, under three ' +
+                    'headings: "Done", "Doing" and "Next", each a few bullets taken from the matching columns. Use only what the ' +
+                    'board says.\n\n' + text; } },
+            { id: 'stuck', group: 'Board', label: 'What’s stuck', system: KB_AI_SYSTEM, apply: false,
+                show: function(t) { return !!t.text; },
+                prompt: function(text) { return 'Look at this board for what may be stuck or unclear: too many cards in progress at ' +
+                    'once, cards with no description, cards whose title says too little to act on. List each finding as a bullet ' +
+                    'naming the card. If nothing stands out, say so.\n\n' + text; } }
+        ]
+    },
     defaultWidth: 700,
     defaultHeight: 450,
     source: 'external'

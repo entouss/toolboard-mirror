@@ -346,7 +346,11 @@ result works and to why not when it does not, and with `repair(text, result, why
 goes back to the model once — still not working, it is said and offered only to copy.
 The Mermaid Diagram uses these: Draw from a description, Change it, Fix the error and
 Explain, every diagram parsed by Mermaid before Use this diagram is offered, and `click`
-lines and `javascript:` addresses dropped (`mermDiagAI*`). An
+lines and `javascript:` addresses dropped (`mermDiagAI*`). `applyLabels` may be a function of the
+target, for a button that names something only the tool knows now: the Kanban Board's
+Draft cards adds to “Backlog” when that is what its first column is called, and is
+never offered over the board. The Checklist's Break into steps replaces or adds to the
+list (`checklistAI*`, `kbAI*`). An
 `apply` that returns `false` refuses, and the popup stays open. The Agenda Timer uses
 all of them: planning, **Draft an agenda…** asks what it is for and fills the plan by
 Replace the plan or Add to the plan; after a run, **Write-up** and **Action items**

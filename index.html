@@ -3504,8 +3504,8 @@ html[data-ai="on"] .tool-header .ai-btn { display: inline-flex; }
 .bai-status { order: 5; flex: 1 1 100%; color: var(--text-muted); line-height: 1.45; }
 .bai-status:empty { display: none; }
 .bai-status.bai-error { color: #e74c3c; text-align: left; }
-.bai-ask { display: flex; gap: 6px; }
-.bai-q { flex: 1; padding: 5px 7px; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-primary); }
+.bai-ask { display: flex; gap: 6px; align-items: flex-end; }
+.bai-q { flex: 1; min-width: 0; min-height: 48px; max-height: 50vh; resize: vertical; font-family: inherit; line-height: 1.4; padding: 5px 7px; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-primary); }
 .bai-hint { font-size: 11px; color: var(--text-secondary); background: var(--bg-secondary); border-radius: 4px; padding: 6px 8px; line-height: 1.5; }
 .bai-hint code { font-size: 11px; }
 .bai-hint .bai-btn { margin-left: 4px; padding: 1px 6px; font-size: 11px; }
@@ -9987,8 +9987,9 @@ function boardAIPopup() {
                 '<span class="bai-what"></span><span class="bai-status" aria-live="polite"></span>' +
                 '<button class="bai-btn bai-stop" onclick="boardAIStop()">Stop</button>' +
             '</div>' +
-            '<div class="bai-ask" hidden><input class="bai-q" placeholder="Ask about it…" ' +
-                'onkeydown="boardAIAskKey(event, this)"><button class="bai-btn" onclick="boardAIAsk()">Ask</button></div>' +
+            '<div class="bai-ask" hidden><textarea class="bai-q" rows="3" placeholder="Ask about it…" ' +
+                'title="Enter to send · Shift+Enter for a new line · drag the corner to make it bigger" ' +
+                'onkeydown="boardAIAskKey(event, this)"></textarea><button class="bai-btn" onclick="boardAIAsk()">Ask</button></div>' +
             '<div class="bai-hint" hidden>Not moving? Chrome says why at ' +
                 '<code>chrome://on-device-internals</code> — open it in a new tab and look at Broker State and Event Logs. ' +
                 '<button class="bai-btn bai-hint-copy" onclick="boardAICopyInternals()">Copy address</button></div>' +
@@ -10200,9 +10201,10 @@ function boardAIBack() {
     boardAIRenderMenu();
 }
 
+/** Enter sends, as it did in the one-line box; Shift+Enter is a new line. */
 function boardAIAskKey(event, input) {
     event.stopPropagation();
-    if (event.key === 'Enter') { event.preventDefault(); boardAIAsk(); }
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); boardAIAsk(); }
 }
 
 function boardAIAsk() {
@@ -10378,7 +10380,8 @@ function boardAIShowFoot() {
     const replace = foot.querySelector('.bai-replace');
     const insert = foot.querySelector('.bai-insert');
     const own = ai && ai.custom.find(a => a.id === st.action);
-    const labels = (own && own.applyLabels) || {};
+    // Labels may say what the tool knows only now — the name of the column cards go into, say.
+    const labels = (own && (typeof own.applyLabels === 'function' ? own.applyLabels(st.target || {}) : own.applyLabels)) || {};
     // An answer is put next to what it answers, never over it; and a tool that
     // cannot take anything back, or an action of its own that it keeps out, offers only Copy.
     const takes = !!ai && !!ai.apply && (!own || own.apply) && !st.checkError;

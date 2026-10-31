@@ -226,9 +226,18 @@ ok('translate: the language is detected, and the translator asked for that pair'
 await page.evaluate(() => { window.__ai.reply = (kind, input) => /Question: Who/.test(input) ? 'Sam.' : 'x'; });
 await pick('ask');
 ok('Ask opens a question box', await page.isVisible(P + '.bai-q') && await page.evaluate(() => document.activeElement === document.querySelector('#boardAIPopup .bai-q')));
-await page.fill(P + '.bai-q', 'Who knows about the hotel?');
+ok('a box of a few lines, that can be made taller', await page.evaluate(() => {
+    const q = document.querySelector('#boardAIPopup .bai-q');
+    return q.nodeName === 'TEXTAREA' && getComputedStyle(q).resize === 'vertical' && q.getBoundingClientRect().height >= 44;
+}));
+await page.keyboard.type('Who knows');
+await page.keyboard.press('Shift+Enter');
+await page.keyboard.type('about the hotel?');
+ok('Shift+Enter is a new line in it, not a question sent', await page.inputValue(P + '.bai-q') === 'Who knows\nabout the hotel?' &&
+    !(await calls()).some(c => c.op === 'prompt' && /Question: Who/.test(c.input)));
 await page.press(P + '.bai-q', 'Enter');
 await done();
+ok('Enter sends it, every line of it', (await calls()).filter(c => c.op === 'prompt').pop().input.includes('Question: Who knows\nabout the hotel?'));
 ok('answered from the note', (await page.textContent(P + '.bai-out')).trim() === 'Sam.' &&
     (await calls()).filter(c => c.op === 'prompt').pop().input.includes('Ask Sam about the hotel'));
 ok('an answer is inserted or copied, not put over the note', !(await page.isVisible(P + '.bai-replace')) && await page.isVisible(P + '.bai-insert'));
