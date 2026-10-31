@@ -389,6 +389,73 @@ await page.check('#boardAIEnabled');
 await page.waitForTimeout(200);
 ok('on again, it is back', await page.evaluate(() => document.documentElement.dataset.ai) === 'on');
 
+// A person's own instructions, added to every request after the tool's own.
+const lastCreate = (kind) => page.evaluate((k) => window.__ai.calls.filter(c => c.op === 'create' && c.kind === k).pop(), kind);
+const systemOf = (c) => c && c.opts && c.opts.initialPrompts && c.opts.initialPrompts[0] ? c.opts.initialPrompts[0].content : null;
+ok('Settings has a box for them, empty to begin with', await page.isVisible('#boardAIInstructions') && await page.inputValue('#boardAIInstructions') === '' &&
+    (await page.textContent('#boardAIInstructionsCount')) === '0 / 1000' && !(await page.isEnabled('#boardAIInstructionsReset')));
+await page.fill('#boardAIInstructions', 'Use British spelling.');
+await page.waitForTimeout(100);
+ok('kept by this browser as they are typed', await page.evaluate(() => localStorage.getItem('toolboard_onDeviceAIInstructions')) === 'Use British spelling.' &&
+    (await page.textContent('#boardAIInstructionsCount')) === '21 / 1000' && await page.isEnabled('#boardAIInstructionsReset'));
+ok('and not by the board', !(await page.evaluate(() => Object.keys(localStorage).filter(k => k !== 'toolboard_onDeviceAIInstructions')
+    .some(k => (localStorage.getItem(k) || '').includes('British spelling')))));
+await page.click('#boardAIToolPrompts summary');
+const listed = await page.textContent('#boardAIToolPrompts');
+const expected = await page.evaluate(() => PluginRegistry.getAllTools().filter(t => t.ai && Array.isArray(t.ai.custom))
+    .flatMap(t => t.ai.custom.map(a => (t.name || t.title) + ': ' + a.label)));
+ok('what each tool asks for can be read beside them, every tool that asks', /Rewrite and reshape, in any tool/.test(listed) && /Ask, in any tool/.test(listed) &&
+    expected.every(e => listed.includes(e)), JSON.stringify(expected.filter(e => !listed.includes(e))));
+await page.evaluate(() => document.getElementById('pluginSettingsModal').classList.remove('open'));
+await page.waitForTimeout(200);
+await page.evaluate(() => { window.__ai.reply = () => 'Short.'; });
+await pick('shorter');
+await done();
+let sys = systemOf(await lastCreate('prompt'));
+ok('a rewrite gets the tool’s own instructions, then the person’s', sys === await page.evaluate(() => BOARD_AI_SYSTEM) + '\n\nThe person’s own instructions. They decide the wording, tone and formatting; the instructions above still decide what goes in: Use British spelling.',
+    JSON.stringify(sys));
+await page.evaluate(() => { window.__ai.reply = () => 'Sam.'; });
+await pick('ask');
+await page.fill(P + '.bai-q', 'Who?');
+await page.press(P + '.bai-q', 'Enter');
+await done();
+sys = systemOf(await lastCreate('prompt'));
+const REMIND = '\n\nAlso follow these instructions from the person ' + String.fromCharCode(0x2014) + ' they decide the wording, tone and formatting: Use British spelling.';
+ok('and are said again as the request’s last words, where a small model heeds them', (await page.evaluate(() => window.__ai.calls.filter(c => c.op === 'prompt').pop().input)).endsWith(REMIND));
+ok('so does a question', sys.startsWith(await page.evaluate(() => BOARD_AI_ASK_SYSTEM)) && sys.endsWith('Use British spelling.'));
+await page.click(P + '.bai-x');
+await page.evaluate(() => BoardAI.prompt('hi'));
+ok('and a script’s own request, with no instructions of its own', systemOf(await lastCreate('prompt')) ===
+    'The person’s own instructions. They decide the wording, tone and formatting; the instructions above still decide what goes in: Use British spelling.');
+await page.evaluate(() => BoardAI.summarize('Some words to sum up.', { context: 'A note.' }));
+ok('a script’s request is reminded too', (await page.evaluate(() => window.__ai.calls.filter(c => c.op === 'prompt').pop().input)) === 'hi' + REMIND);
+await page.evaluate(() => BoardAI.prompt('json please', { schema: { type: 'object' } }));
+ok('but not one that has to come back as JSON, nor one that asks not to be', (await page.evaluate(() => window.__ai.calls.filter(c => c.op === 'prompt').pop().input)) === 'json please' &&
+    (await page.evaluate(() => BoardAI.prompt('code', { remind: false }).then(() => window.__ai.calls.filter(c => c.op === 'prompt').pop().input))) === 'code');
+ok('a summary is given them as context', (await lastCreate('summarize')).opts.sharedContext === 'A note.\n\nUse British spelling.',
+    JSON.stringify((await lastCreate('summarize')).opts.sharedContext));
+const offsiteBefore = offsite.length;
+await page.reload();
+await page.waitForSelector('#toolboard', { timeout: 20000 });
+await page.waitForTimeout(800);
+// A reload fetches the page's own libraries again; that is the page, not BoardAI.
+offsite.length = offsiteBefore;
+await page.evaluate(() => openPluginSettingsModal());
+await page.waitForSelector('#boardAIInstructions');
+await page.waitForTimeout(300);
+ok('still there after a reload', await page.inputValue('#boardAIInstructions') === 'Use British spelling.');
+await page.fill('#boardAIInstructions', 'x'.repeat(1200));
+ok('a thousand characters at most', (await page.inputValue('#boardAIInstructions')).length === 1000 &&
+    await page.evaluate(() => BoardAI.instructions().length) === 1000);
+await page.click('#boardAIInstructionsReset');
+await page.waitForTimeout(100);
+ok('Reset empties them, and the browser keeps nothing', await page.inputValue('#boardAIInstructions') === '' &&
+    await page.evaluate(() => localStorage.getItem('toolboard_onDeviceAIInstructions')) === null);
+await page.evaluate(() => BoardAI.prompt('hi', { system: 'Only this.' }));
+ok('then a request has the tool’s instructions alone, as before', systemOf(await lastCreate('prompt')) === 'Only this.');
+ok('and nothing is added to the request', (await page.evaluate(() => window.__ai.calls.filter(c => c.op === 'prompt').pop().input)) === 'hi');
+await page.evaluate(() => document.getElementById('pluginSettingsModal').classList.remove('open'));
+
 // Off until turned on: a browser that never chose has no ✨, even with a model.
 const fresh = await browser.newContext({ viewport: { width: 1300, height: 900 } });
 await fresh.addInitScript(() => {

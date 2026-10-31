@@ -208,6 +208,7 @@ function (el, data, api) {
 | Call | What it does |
 |---|---|
 | `BoardAI.enabled()` | Whether the user has turned it on in Plugin Settings (off until they do) |
+| `BoardAI.instructions()` | The user's own instructions from Plugin Settings; `prompt()` and `summarize()` already add them after yours |
 | `BoardAI.status(kind)` | `'prompt'`, `'summarize'` or `'translate'`, as above |
 | `BoardAI.usable(status)` / `BoardAI.why(status)` | Whether it can run; why not, in a sentence |
 | `BoardAI.prompt(text, { system, schema, signal, onChunk, onProgress })` | A reply; with a JSON Schema in `schema`, a JSON string in that shape |

@@ -163,6 +163,19 @@ await run('rows', 'anything');
 ok('nor are rows with no task', /No rows came back/.test(await page.textContent(P + '.bai-status')));
 ok('the model is told what it is for', await page.evaluate(() => window.__ai.calls.some(c => c.op === 'create' && c.system === PROJ_AI_SYSTEM)));
 
+// 6. The person's own instructions: said last on a status update, where a small model
+// heeds them; not on a draft, which has to come back as JSON.
+await page.evaluate((t) => BoardAI.setInstructions(t), 'When providing feedback, use 🟩 good, 🟥 late, 🟧 warning.');
+await page.evaluate((i) => { const d = projGetData(i); d.rows = projSeedData().rows; projSetData(i, d); projRender(document.querySelector('.tool[data-tool="' + i + '"] .proj-widget'), i); }, id);
+await page.waitForTimeout(300);
+await replies(['- ok']);
+await run('status');
+ok('a status update ends with the person’s instructions', (await prompts())[0].input.endsWith('they decide the wording, tone and formatting: When providing feedback, use 🟩 good, 🟥 late, 🟧 warning.'),
+    (await prompts())[0].input.slice(-160));
+await replies([JSON.stringify({ rows: [{ task: 'One', size: 'S', after: 0 }] })]);
+await run('rows', 'anything');
+ok('a draft does not: its shape is the point', !(await prompts())[0].input.includes('When providing feedback, use 🟩 good, 🟥 late, 🟧 warning.'));
+await page.evaluate(() => BoardAI.setInstructions(''));
 ok('no page errors', errors.length === 0, JSON.stringify(errors).slice(0, 300));
 console.log('  (all ' + count + ' assertions reached)');
 await browser.close();

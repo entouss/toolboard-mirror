@@ -317,7 +317,17 @@ one-time download only when there is one (Chrome tells every new session 0% and
 page `html[data-ai="on" | "none" | "off"]`. It is **off until turned on**: Plugin
 Settings ▸ On-device AI turns it on for this browser (`toolboard_onDeviceAI` = `on`,
 not a board setting: boards are shared, and the choice is the person's). Off, no tool
-shows ✨ and `BoardAI.prompt()` and the rest refuse.
+shows ✨ and `BoardAI.prompt()` and the rest refuse. Under the switch, **your instructions** (`toolboard_onDeviceAIInstructions`, this
+browser's too, at most 1,000 characters) are added to every request: after a tool's
+own system prompt in `BoardAI.prompt()` (`BoardAI._system`), as context to the
+Summarizer; the Translator takes none. Added to, never in place of: a tool's own
+instructions decide what goes in, the person's the wording, tone and formatting. They
+are also said again as the request's last words (`BoardAI._remind`), because a model
+this small follows the message in front of it far more than its system prompt — asked
+there for "a few bullets", it let an instruction to mark them with coloured squares
+go. Not for a request that must come back as JSON (`schema`) or code (a tool action
+with `clean`, or `remind: false`): there the shape is the point. A fold-
+out lists what each loaded tool asks for (`boardAIToolPrompts`).
 
 A tool offers it by declaring what it can work on, and nothing about how it looks:
 

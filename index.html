@@ -9687,13 +9687,59 @@ function applyLineTransforms(text, transforms) {
 // one-time model download through onProgress(0..1).
 
 const BOARD_AI_KEY = 'toolboard_onDeviceAI';
+/** A person's own instructions for every request, kept by this browser like the switch. */
+const BOARD_AI_INSTRUCTIONS_KEY = 'toolboard_onDeviceAIInstructions';
+/** The on-device model's input is small: what is added to every request stays short. */
+const BOARD_AI_INSTRUCTIONS_MAX = 1000;
 
 const BoardAI = {
     /** Off until turned on in Plugin Settings — by this browser: a person's choice, so
      *  not the board's. Where the browser keeps nothing, the choice lasts this page. */
     _on: false,
+    _instructions: '',
     enabled() {
         try { return localStorage.getItem(BOARD_AI_KEY) === 'on'; } catch (e) { return this._on; }
+    },
+
+    /** What the person asks of every answer, as they wrote it; '' when nothing. */
+    instructions() {
+        let text;
+        try { text = localStorage.getItem(BOARD_AI_INSTRUCTIONS_KEY); } catch (e) { text = this._instructions; }
+        return String(text == null ? '' : text).slice(0, BOARD_AI_INSTRUCTIONS_MAX).trim();
+    },
+
+    setInstructions(text) {
+        const kept = String(text == null ? '' : text).slice(0, BOARD_AI_INSTRUCTIONS_MAX);
+        this._instructions = kept;
+        try {
+            if (kept.trim()) localStorage.setItem(BOARD_AI_INSTRUCTIONS_KEY, kept);
+            else localStorage.removeItem(BOARD_AI_INSTRUCTIONS_KEY);
+        } catch (e) { /* kept for this page only */ }
+    },
+
+    /**
+     * A request's instructions: the tool's own, and the person's after them. Added
+     * to, never in place of: a tool's instructions decide what goes in — the headings,
+     * the rows, the facts — and the person's how it reads.
+     */
+    _system(system) {
+        const mine = this.instructions();
+        if (!mine) return system || '';
+        return (system ? system + '\n\n' : '') + 'The person\u2019s own instructions. They decide the wording, tone and ' +
+            'formatting; the instructions above still decide what goes in: ' + mine;
+    },
+
+    /**
+     * The person's instructions again, as the last thing the request says. A model this
+     * small follows the message in front of it far more closely than its system prompt:
+     * asked there for "a few bullets", it wrote bullets and let an instruction to mark
+     * them with coloured squares go. Not for an answer that has to be JSON or code —
+     * there the shape is the point, and a reminder about formatting pulls against it.
+     */
+    _remind(text, opts) {
+        const mine = this.instructions();
+        if (!mine || opts.schema || opts.remind === false) return text;
+        return text + '\n\nAlso follow these instructions from the person \u2014 they decide the wording, tone and formatting: ' + mine;
     },
 
     setEnabled(on) {
@@ -9787,12 +9833,12 @@ const BoardAI = {
         if (!self.LanguageModel) throw new Error(this.why('unsupported'));
         const session = await LanguageModel.create({
             ...BOARD_AI_TEXT,
-            initialPrompts: opts.system ? [{ role: 'system', content: opts.system }] : undefined,
+            initialPrompts: this._system(opts.system) ? [{ role: 'system', content: this._system(opts.system) }] : undefined,
             signal: opts.signal,
             monitor: await this._monitor('prompt', BOARD_AI_TEXT, opts.onProgress)
         });
         try {
-            const stream = session.promptStreaming(text, { signal: opts.signal, responseConstraint: opts.schema });
+            const stream = session.promptStreaming(this._remind(text, opts), { signal: opts.signal, responseConstraint: opts.schema });
             return await this._collect(stream, opts.onChunk, opts.signal);
         } finally {
             if (session.destroy) session.destroy();
@@ -9805,7 +9851,7 @@ const BoardAI = {
         if (!self.Summarizer) throw new Error(this.why('unsupported'));
         const summarizer = await Summarizer.create({
             type: opts.type || 'key-points', length: opts.length || 'medium', format: opts.format || 'markdown',
-            sharedContext: opts.context, expectedInputLanguages: ['en'], outputLanguage: 'en',
+            sharedContext: [opts.context, this.instructions()].filter(Boolean).join('\n\n') || undefined, expectedInputLanguages: ['en'], outputLanguage: 'en',
             signal: opts.signal, monitor: await this._monitor('summarize', undefined, opts.onProgress)
         });
         try {
@@ -9864,10 +9910,49 @@ function boardAILanguageName(code) {
 setTimeout(() => { BoardAI.refresh(); }, 0);
 
 /** Plugin Settings: the switch, and what this computer can do. */
+/** The instructions every tool sends, by tool and action, each once — what the
+ *  person's own instructions will be added to. */
+function boardAIToolPrompts() {
+    const out = [{ who: 'Rewrite and reshape, in any tool', system: BOARD_AI_SYSTEM }, { who: 'Ask, in any tool', system: BOARD_AI_ASK_SYSTEM }];
+    const seen = {};
+    out.forEach(o => { seen[o.system] = o; });
+    const sources = Object.values(NOTE_TEMPLATES).concat(PluginRegistry.getAllTools());
+    sources.forEach(tool => {
+        const custom = tool && tool.ai && Array.isArray(tool.ai.custom) ? tool.ai.custom : [];
+        custom.forEach(a => {
+            const system = typeof a.system === 'string' && a.system ? a.system : BOARD_AI_SYSTEM;
+            const who = (tool.name || tool.title || 'A tool') + ': ' + a.label;
+            if (seen[system]) { if (seen[system].who.indexOf(who) < 0) seen[system].who += ' \u00B7 ' + who; return; }
+            seen[system] = { who: who, system: system };
+            out.push(seen[system]);
+        });
+    });
+    return out;
+}
+
+function boardAIRenderInstructions() {
+    const area = document.getElementById('boardAIInstructions');
+    const count = document.getElementById('boardAIInstructionsCount');
+    const reset = document.getElementById('boardAIInstructionsReset');
+    if (!area) return;
+    if (document.activeElement !== area) area.value = BoardAI.instructions();
+    const say = () => {
+        if (count) count.textContent = area.value.length + ' / ' + BOARD_AI_INSTRUCTIONS_MAX;
+        if (reset) reset.disabled = !area.value;
+    };
+    area.oninput = () => { BoardAI.setInstructions(area.value); say(); };
+    if (reset) reset.onclick = () => { area.value = ''; BoardAI.setInstructions(''); say(); };
+    say();
+    const list = document.querySelector('#boardAIToolPrompts .plugin-ai-prompts-list');
+    if (list) list.innerHTML = boardAIToolPrompts().map(o => '<div class="plugin-ai-prompt"><b>' + escapeHtml(o.who) + '</b><p>' +
+        escapeHtml(o.system) + '</p></div>').join('');
+}
+
 async function boardAIRenderSettings() {
     const box = document.getElementById('boardAIEnabled');
     const line = document.getElementById('boardAIStatus');
     if (!box || !line) return;
+    boardAIRenderInstructions();
     box.checked = BoardAI.enabled();
     box.onchange = async () => { await BoardAI.setEnabled(box.checked); boardAIRenderSettings(); };
     const s = await BoardAI.statuses();
@@ -9918,6 +10003,8 @@ const BOARD_AI_ACTIONS = [
 ];
 
 const BOARD_AI_GROUP_NAMES = { summarize: 'Summarize', rewrite: 'Rewrite', reshape: 'Reshape', ask: 'Ask', translate: 'Translate' };
+
+const BOARD_AI_ASK_SYSTEM = 'You answer questions about a text. Be brief and exact.';
 
 const BOARD_AI_SYSTEM = 'You work on text written in Markdown. Keep its meaning, its links, its code and its ' +
     'Markdown formatting. Reply with the result only: no preface, no explanation, no closing remarks.';
@@ -10305,7 +10392,9 @@ async function boardAIRun(action, extra) {
             st.data = data;
             result = own.preview(data);
         } else if (own) {
-            const ask = (input) => BoardAI.prompt(input, { ...base, system: own.system || BOARD_AI_SYSTEM });
+            // Code is what comes back when the tool cleans it; a reminder about how prose
+            // reads would only pull it away from being code.
+            const ask = (input) => BoardAI.prompt(input, { ...base, system: own.system || BOARD_AI_SYSTEM, remind: !own.clean });
             const tidy = (r) => own.clean ? own.clean(String(r || '')) : r;
             result = tidy(await ask(own.prompt(text, extra.question, st.target)));
             // A tool that can tell whether the answer works says so before it is offered;
@@ -10351,7 +10440,7 @@ async function boardAIRun(action, extra) {
         } else if (action === 'ask') {
             result = await BoardAI.prompt('Answer the question from this text alone. If it does not say, say so ' +
                 'in a sentence.\n\nText:\n' + text + '\n\nQuestion: ' + extra.question, { ...base,
-                    system: 'You answer questions about a text. Be brief and exact.' });
+                    system: BOARD_AI_ASK_SYSTEM });
         }
         if (!mine()) return;
         st.result = String(result || '').trim();
@@ -16424,6 +16513,18 @@ function openPluginSettingsModal() {
                     <h3>On-device AI</h3>
                     <label class="plugin-ai-toggle"><input type="checkbox" id="boardAIEnabled"> Offer ✨ AI in the tools that support it, using Chrome’s own built-in model</label>
                     <p class="plugin-hint" id="boardAIStatus"></p>
+                    <label class="plugin-ai-instr-label" for="boardAIInstructions">Your instructions, added to every ✨ request</label>
+                    <textarea id="boardAIInstructions" class="plugin-ai-instr" rows="3" maxlength="1000" spellcheck="true"
+                        placeholder="Use British spelling. Keep answers short. Our team calls sprints iterations."></textarea>
+                    <div class="plugin-ai-instr-foot">
+                        <span class="plugin-hint" id="boardAIInstructionsCount"></span>
+                        <button type="button" class="plugin-ai-instr-reset" id="boardAIInstructionsReset">Reset</button>
+                    </div>
+                    <p class="plugin-hint">Kept by this browser, not the board. They follow each tool’s own instructions, which still decide the shape of what comes back — a table, a list, a diagram — so yours are about how it reads. Translation takes no instructions.</p>
+                    <details class="plugin-ai-prompts" id="boardAIToolPrompts">
+                        <summary>See what each tool asks for <span class="plugin-hint">— those whose toolbox has loaded</span></summary>
+                        <div class="plugin-ai-prompts-list"></div>
+                    </details>
                 </div>
 
                 <div class="plugin-section">
@@ -16532,6 +16633,23 @@ function openPluginSettingsModal() {
                 color: var(--text-muted);
                 margin-top: 8px;
             }
+            .plugin-ai-instr-label { display: block; margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+            .plugin-ai-instr {
+                display: block; width: 100%; box-sizing: border-box; margin-top: 4px; min-height: 52px; resize: vertical;
+                padding: 6px 8px; font: inherit; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px;
+                background: var(--input-bg); color: var(--text-primary);
+            }
+            .plugin-ai-instr-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+            .plugin-ai-instr-foot .plugin-hint { margin-top: 4px; }
+            .plugin-ai-instr-reset { margin-top: 4px; font-size: 11px; padding: 2px 8px; border: 1px solid var(--border-color); border-radius: 3px;
+                background: var(--bg-tertiary); color: var(--text-primary); cursor: pointer; }
+            .plugin-ai-instr-reset:disabled { opacity: 0.5; cursor: default; }
+            .plugin-ai-prompts { margin-top: 8px; font-size: 11px; }
+            .plugin-ai-prompts summary { cursor: pointer; color: var(--text-secondary); }
+            .plugin-ai-prompts-list { max-height: 220px; overflow: auto; margin-top: 6px; }
+            .plugin-ai-prompt { margin: 0 0 8px; }
+            .plugin-ai-prompt b { color: var(--text-primary); font-weight: 600; }
+            .plugin-ai-prompt p { margin: 2px 0 0; color: var(--text-muted); white-space: pre-wrap; }
             .loaded-plugins-list, .plugin-urls-list {
                 display: flex;
                 flex-direction: column;

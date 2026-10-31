@@ -162,6 +162,12 @@ ok('chatter before the diagram goes, front matter stays', await page.evaluate(()
     mermDiagAIClean('Sure! Here it is.\n---\ntitle: T\n---\nflowchart LR\n  A --> B') === '---\ntitle: T\n---\nflowchart LR\n  A --> B'));
 ok('the model is told it writes Mermaid', await page.evaluate(() => window.__ai.calls.some(c => c.op === 'create' && c.system === MERMAID_AI_SYSTEM)));
 
+await page.evaluate(() => BoardAI.setInstructions('Use British spelling.'));
+await replies(['flowchart TD\n  A --> B']);
+await run('draw', 'a flow');
+ok('a diagram, being code, is not reminded of the person’s instructions about prose', !(await prompts())[0].includes('British spelling'));
+await page.click(P + '.bai-x');
+await page.evaluate(() => BoardAI.setInstructions(''));
 ok('no page errors', errors.length === 0, JSON.stringify(errors).slice(0, 300));
 console.log('  (all ' + count + ' assertions reached)');
 await browser.close();
